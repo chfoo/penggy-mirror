@@ -34,4 +34,5 @@ EXTRA_DIST = 	config.h		\
 		p30data.h		\
 		p30tcpip.h		\
 		utils.h			\
-		log.h
+		log.h			\
+		common.h

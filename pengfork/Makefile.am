@@ -20,7 +20,7 @@
 #
 
 
-SUBDIRS = config include src
+SUBDIRS = config include lib src
 
 archcheck: 
 	@echo "Arch dir : @ARCH_DIR@"

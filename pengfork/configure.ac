@@ -66,6 +66,14 @@ case $host in
 esac
 AC_SUBST([ARCH_DIR])
 
+# Enable -Werror flag
+AC_ARG_ENABLE(werror,
+  [  --enable-werror	Set warnings as errors. ],
+  if test "$enableval" != "no"; then
+     CFLAGS="$CFLAGS -Werror"
+  fi
+)
+
 # Modem driver
 AC_ARG_ENABLE(modem,
   [  --enable-modem	Enable modem driver (default) ], 
@@ -90,6 +98,7 @@ AM_CONFIG_HEADER(config.h)
 # Output Files
 AC_CONFIG_FILES([Makefile 
 		  config/Makefile 
+		  lib/Makefile
 		  src/Makefile 
 		    src/linux/Makefile 
 		    src/openbsd/Makefile

@@ -20,8 +20,8 @@
  *                
  */
 
-#ifndef __MODEM_H__
-# define __MODEM_H__
+#ifndef __LOG_H__
+# define __LOG_H__
 
 /* allow easier usage */
 # include <syslog.h>
@@ -30,4 +30,4 @@ int init_log(void);
 int log (int level, char *format, ...);
 int debug (int level, char *format, ...);
 
-#endif /* __MODEM_H__ */
+#endif /* __LOG_H__ */

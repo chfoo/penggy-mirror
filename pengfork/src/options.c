@@ -23,10 +23,14 @@
 
 #include "config.h"
 
+#include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <getopt.h>
+#include <assert.h>
 
+#include "common.h"
 #include "options.h"
 #include "utils.h"
 #include "access.h"
@@ -36,154 +40,298 @@
 
 param_t param[PARAM_MAX] = {
   /* GENERAL CONFIGURATION */
-{NULL, "access-method", "access_method", string, false, {string:"modem"}
+{opt_none, "access_method", string, false, {string:"modem"}
    }
   ,
-{NULL, "protocol", "protocol", string, false, {string:"aol30"}
+{opt_none, "protocol", string, false, {string:"aol30"}
    }
   ,
-{"it", "interface-type", "interface_type", string, false, {string:"tun"}
+{opt_interface_type, "interface_type", string, false, {string:"tun"}
    }
   ,
-{"i", "interface", "interface_name", string, false, {string:"tun0"}
+{opt_interface_name, "interface_name", string, false, {string:"tun0"}
    }
   ,
-{"u", "user", "user", string, false, {string:NULL}
+{opt_user, "user", string, false, {string:NULL}
    }
   ,
-{"p", "pass", "pass", string, false, {string:NULL}
+{opt_pass, "pass", string, false, {string:NULL}
    }
   ,
-{"r", "auto-reconnect", "auto_reconnect", boolean, false, {boolean:false}
+{opt_auto_reconnect, "auto_reconnect", boolean, false, {boolean:false}
    }
   ,
-{NULL, "reconnect-delay", "reconnect_delay", integer, false, {integer:0}
+{opt_none, "reconnect_delay", integer, false, {integer:0}
    }
   ,
-{"d", "daemon", "daemon", boolean, false, {boolean:false}
+{opt_daemon, "daemon", boolean, false, {boolean:false}
    }
   ,
-{"D", "debug-level", "debug_level", integer, false, {integer:-1}
+{opt_debug_level, "debug_level", integer, false, {integer:-1}
    }
   ,
-{NULL, "dns", "set_dns", boolean, false, {boolean:true}
+{opt_none, "set_dns", boolean, false, {boolean:true}
    }
   ,
-{NULL, "pid", "pid_file", string, false, {string:"/var/run/pengaol.pid"}
+{opt_pid_file, "pid_file", string, false, {string:"/var/run/pengaol.pid"}
    }
   ,
-{NULL, "ip-up", "ip-up_script", string, false, {string:"/etc/pengaol/ip-up"}
+{opt_ip_up, "ip-up_script", string, false, {string:NULL}
    }
   ,
-{NULL, "ip-down", "ip-down_script", string, false, {string:"/etc/pengaol/ip-down"}
+{opt_ip_down, "ip-down_script", string, false, {string:NULL}
    }
   ,
 
   /* MODEM SPECIFIC */
-{"m", "modem", "modem_device", string, false, {string:"/dev/modem"}
+{opt_modem, "modem_device", string, false, {string:"/dev/modem"}
    }
   ,
-{NULL, "rtscts", "rtscts", boolean, false, {boolean:true}
+{opt_rtscts, "rtscts", boolean, false, {boolean:true}
    }
   ,
-{NULL, "init-str", "initstr1", string, false, {string:"ATZ"}
+{opt_init_str, "initstr1", string, false, {string:"ATZ"}
    }
   ,
-{NULL, NULL, "initstr2", string, false, {string:NULL}
+{opt_none, "initstr2", string, false, {string:NULL}
    }
   ,
-{NULL, NULL, "initstr3", string, false, {string:NULL}
+{opt_none, "initstr3", string, false, {string:NULL}
    }
   ,
-{NULL, NULL, "initstr4", string, false, {string:NULL}
+{opt_none, "initstr4", string, false, {string:NULL}
    }
   ,
-{NULL, NULL, "initstr5", string, false, {string:NULL}
+{opt_none, "initstr5", string, false, {string:NULL}
    }
   ,
-{NULL, NULL, "initstr6", string, false, {string:NULL}
+{opt_none, "initstr6", string, false, {string:NULL}
    }
   ,
-{NULL, NULL, "initstr7", string, false, {string:NULL}
+{opt_none, "initstr7", string, false, {string:NULL}
    }
   ,
-{NULL, NULL, "initstr8", string, false, {string:NULL}
+{opt_none, "initstr8", string, false, {string:NULL}
    }
   ,
-{NULL, NULL, "initstr9", string, false, {string:NULL}
+{opt_none, "initstr9", string, false, {string:NULL}
    }
   ,
-{NULL, "dial-str", "dialstr", string, false, {string:"ATDT"}
+{opt_dial_str, "dialstr", string, false, {string:"ATDT"}
    }
   ,
-{NULL, NULL, "dial_prefix", string, false, {string:NULL}
+{opt_none, "dial_prefix", string, false, {string:NULL}
    }
   ,
-{"n", "phone", "phone", string, false, {string:NULL}
+{opt_phone, "phone", string, false, {string:NULL}
    }
   ,
-{NULL, NULL, "phone1", string, false, {string:NULL}
+{opt_none, "phone1", string, false, {string:NULL}
    }
   ,
-{NULL, NULL, "phone2", string, false, {string:NULL}
+{opt_none, "phone2", string, false, {string:NULL}
    }
   ,
-{NULL, NULL, "phone3", string, false, {string:NULL}
+{opt_none, "phone3", string, false, {string:NULL}
    }
   ,
-{NULL, NULL, "phone4", string, false, {string:NULL}
+{opt_none, "phone4", string, false, {string:NULL}
    }
   ,
-{NULL, NULL, "phone5", string, false, {string:NULL}
+{opt_none, "phone5", string, false, {string:NULL}
    }
   ,
-{"s", "line-speed", "line_speed", integer, false, {integer:115200}
+{opt_speed, "line_speed", integer, false, {integer:115200}
    }
   ,
-{NULL, NULL, "login_prompt", string, false, {string:"ogin:"}
+{opt_none, "login_prompt", string, false, {string:"ogin:"}
    }
   ,
-{NULL, NULL, "server_pass_prompt", string, false, {string:"assword:"}
+{opt_none, "server_pass_prompt", string, false, {string:"assword:"}
    }
   ,
-{"sl", "server-login", "server_login", string, false, {string:"aol"}
+{opt_server_login, "server_login", string, false, {string:"aol"}
    }
   ,
-{"sp", "server-pass", "server_pass", string, false, {string:"aol"}
+{opt_server_pass, "server_pass", string, false, {string:"aol"}
    }
   ,
-{NULL, NULL, "server_connected", string, false, {string:"onnected"}
+{opt_none, "server_connected", string, false, {string:"onnected"}
    }
   ,
-{NULL, NULL, "server_bad_passwd", string, false, {string:"assword"}
+{opt_none, "server_bad_passwd", string, false, {string:"assword"}
    }
   ,
-{NULL, NULL, "dial_retry", integer, false, {integer:3}
+{opt_none, "dial_retry", integer, false, {integer:3}
    }
   ,
-{NULL, NULL, "retry_delay", integer, false, {integer:0}
+{opt_none, "retry_delay", integer, false, {integer:0}
    }
   ,
-{NULL, NULL, "abort_busy", boolean, false, {boolean:true}
+{opt_none, "abort_busy", boolean, false, {boolean:true}
    }
   ,
-{NULL, NULL, "abort_dialtone", boolean, false, {boolean:true}
+{opt_none, "abort_dialtone", boolean, false, {boolean:true}
    }
   ,
 
   /* CABLE SPECIFIC */
-{NULL, NULL, "aol_host", string, false, {string:"americaonline.aol.com"}
+{opt_none, "aol_host", string, false, {string:"americaonline.aol.com"}
    }
   ,
-{NULL, NULL, "aol_port", integer, false, {integer:5190}
+{opt_none, "aol_port", integer, false, {integer:5190}
    }
   ,
-{NULL, NULL, "cable_iface", string, false, {string:"eth0"}
+{opt_none, "cable_iface", string, false, {string:"eth0"}
    }
   ,
-{NULL, NULL, "connect_ip", string, false, {string:"0.0.0.0"}
+{opt_none, "connect_ip", string, false, {string:"0.0.0.0"}
    }
 };
+
+/*
+ * Command line options
+ */
+
+/* Be sure to keep both sync. */
+static const char short_options[] = "hVrt:i:u:p:dD:m:n:s:l:w:";
+
+int toto;
+
+static struct option const long_options[] =
+{
+  {"help",		    no_argument,  0,	opt_help},
+  {"version",		    no_argument,  0,	opt_version},
+  {"interface-type",  required_argument,  0,	opt_interface_type},
+  {"interface_name",  required_argument,  0,	opt_interface_name},
+  {"user",            required_argument,  0,	opt_user},
+  {"password",        required_argument,  0,	opt_pass},
+  {"auto-reconnect",        no_argument,  0,    opt_auto_reconnect},
+  {"daemon",                no_argument,  0,    opt_daemon},
+  {"debug-level",     required_argument,  0,	opt_debug_level},
+  {"modem-device",    required_argument,  0,	opt_modem},
+  {"phone",           required_argument,  0,	opt_phone},
+  {"speed",           required_argument,  0,	opt_speed},
+  {"server-login",    required_argument,  0,	opt_server_login},
+  {"server-password", required_argument,  0,	opt_server_pass},
+  {"pid-file",        required_argument,  0,	opt_pid_file},
+  {"rtscts",          required_argument,  0,	opt_rtscts},
+  {"init-str",        required_argument,  0,	opt_init_str},
+  {"dial-str",        required_argument,  0,	opt_dial_str},
+  {NULL, 0, NULL, 0}
+};
+
+void 
+usage ()
+{
+  printf("Usage : %s [OPTIONS]\n
+Operation modes :
+      -h, --help		 print this help, then exit.
+      -V, --version		 print version, then exit.
+
+Network interface properties :
+      [-t] --interface-type=TYPE set interface type (tun).
+      [-i] --interface-name=NAME set interface name (tun0).
+
+Modem properties : 
+      [-m] --modem-device=DEV    set modem device name (ttyS0).
+      [-n] --phone=PHONE         set phone number.
+      [-s] --speed=SPEED         set modem speed.
+      --rtscts                   enable modem rtscts.
+      --init-str=STR             set modem init string.
+      --dial-str=STR             set modem dialing string.
+
+User authentification : 
+      [-u] --user=NAME		 set username.
+      [-p] --password=password   set password.
+      [-l] --server-login        set server login.
+      [-w] --server-password     set server password.
+
+Misc : 
+      [-r] --auto-reconnect      enable autoreconnection.
+      [-d] --daemon              daemon mode, run in background.
+      [-D] --debug-level=LEVEL   set debug verbose level.      
+      --pid-file=NAME            name of pid file (/var/run/pengaol.pid).
+\n", program_name);
+  exit (0);
+}
+
+void 
+version (void)
+{
+  printf ("%s (" PACKAGE ") v" VERSION "\n", program_name);
+  exit (0);
+}
+
+static int
+set_opt_param (option_e opt_id)
+{
+  int i;
+
+  for (i = 0; i < PARAM_MAX && param[i].opt_id != opt_id; i++)
+    ;
+  if (i == PARAM_MAX)
+    return 1;
+  if (param[i].opt_id == opt_id)
+    {
+      /* We now we have a parameter */
+      assert ((param[i].type == boolean) || (optarg != NULL));
+
+      switch (param[i].type)
+	{
+	case boolean:
+	  param[i].value.boolean = true;
+	  break;
+	case integer:
+	  param[i].value.integer = atoi (optarg);
+	  break;
+	case string:
+	  if (param[i].defined && (param[i].value.string != NULL))
+	    free (param[i].value.string);
+	  param[i].value.string = strdup (optarg);
+	}
+    }
+  return 0;
+}
+
+int
+parse_command_line (argc, argv)
+     int argc;
+     char **argv;
+{
+  int c;
+  
+  while ((c = getopt_long (argc, argv, short_options, long_options,
+			   NULL)) != -1)
+    switch (c)
+      {
+      case 0:
+	/* Options that set a flag. */
+	break;
+
+      case opt_help:
+	usage ();
+	break;
+	
+      case opt_version:
+	version ();
+	break;
+	
+      default:
+	if (set_opt_param (c))
+	  {
+	    fprintf (stderr, "Try `%s --help' for more information.\n", 
+		     program_name);
+	    exit (1);
+	  }
+      }
+  return 0;
+}
+
+
+/*
+ * Config file
+ */
 
 int
 parse_config ()
@@ -194,14 +342,15 @@ parse_config ()
   home=getenv ("HOME");
   snprintf (homeconfig,249,"%s/.%s",home,HOME_CONFIG);
 
-  if (parse_config_file(DEFAULT_CONFIG))
-      return 1;
-  if (parse_config_file(homeconfig));
+  if (!parse_config_file(DEFAULT_CONFIG))
+    return 0;
+  if (!parse_config_file(homeconfig))
     {
       printf ("Warning, no personnal config found !\n");
       printf ("Create your personnal config file in %s.\n\n",homeconfig);
-      return 0;
+      return 1;
     }
+  return 1;
 }
 
 int
@@ -217,7 +366,7 @@ parse_config_file (filename)
   if (f == NULL)
     {
       perror (filename);
-      return 1;
+      return 0;
     }
   while (!feof (f))
     {
@@ -237,7 +386,7 @@ parse_config_file (filename)
             }
         }
     }
-  return 0;
+  return 1;
 }
 
 void

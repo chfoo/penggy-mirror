@@ -28,6 +28,7 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "log.h"
 #include "access.h"
 #include "if.h"
 #include "buffer.h"
@@ -164,12 +165,12 @@ prot30_loop ()
           else
             {
               timedout = 1;
-              printf ("Timed out\n");
+              log (LOG_ERR, "Timed out\n");
             }
         }
       else
         {
-          printf ("Your connection has been closed!\n");
+          log (LOG_ERR, "Your connection has been closed!\n");
           prot30_set_state (exiting);
         }
     }
@@ -237,27 +238,28 @@ prot30_treat_input ()
           switch (header->type)
             {
             case TYPE_DATA:
-              printf ("Received a data packet:\n");
-              prot30_dump_raw (((char *) header),
-                               data_size + AOL_DATA_OFFSET + 1);
+              debug (2, "Received a data packet:\n");
+	      if (PARAM_DEBUG_LEVEL >= 3)
+		prot30_dump_raw (((char *) header),
+				 data_size + AOL_DATA_OFFSET + 1);
               prot30_rcv_data (data, data_size);
               break;
             case TYPE_INIT:
-              printf ("Received an init packet\n");
+              debug (2, "Received an init packet\n");
               /* AFAIK should not happen */
               prot30_rcv_init ((aol_init_packet_t *) data, data_size);
               break;
             case TYPE_ACK:
-              printf ("Received an ack packet\n");
+              debug (2, "Received an ack packet\n");
               /* Nothing to do */
               break;
             case TYPE_PING:
-              printf ("Received a ping packet\n");
+              debug (2, "Received a ping packet\n");
               /* OK we send an ack */
               prot30_send_packet (TYPE_ACK, NULL, 0);
               break;
             case TYPE_RESYNC:
-              printf ("Received a resync packet\n");
+              debug (2, "Received a resync packet\n");
               /* The server did not receive some packets */
 
               /* $$$ TODO $$$ */
@@ -268,8 +270,8 @@ prot30_treat_input ()
               client_seq = header->ack;
               break;
             default:
-              printf ("Unknow packet type receive: type=0x%x\n",
-                      header->type);
+              debug (0, "Unknow packet type receive: type=0x%x\n",
+		     header->type);
             }
         }
       buffer_free (&access_in, data_size + AOL_DATA_OFFSET + 1);
@@ -343,7 +345,7 @@ prot30_get_packet (header, data, data_size)
 
       if (!prot30_check_header (h))
         {
-          printf ("Bad header received\n");
+          debug (0, "Bad header received\n");
           prot30_sync_buffer ();
           continue;
         }
@@ -363,7 +365,7 @@ prot30_get_packet (header, data, data_size)
         }
       else
         {
-          printf ("Bad packet received\n");
+          debug (0, "Bad packet received\n");
           prot30_sync_buffer ();
         }
     }
@@ -390,7 +392,7 @@ prot30_sync_buffer ()
     len = (int) p - (int) buffer_start (&access_in);
   else
     len = access_in.used;
-  printf ("%d bytes dropped from buffer!\n", len);
+  debug (0, "%d bytes dropped from buffer!\n", len);
   buffer_free (&access_in, len);
 }
 
@@ -499,13 +501,13 @@ prot30_set_state (_state)
 {
   if (_state != state)
     {
-      printf ("Change state: ");
+      debug (0, "Change state: ");
       prot30_print_state (state);
-      printf (" -> ");
+      debug (0, " -> ");
       state = _state;
       newstate = 1;
       prot30_print_state (_state);
-      printf ("\n");
+      debug (0, "\n");
     }
 }
 
@@ -528,9 +530,9 @@ prot30_print_state (state)
     "disconnect", "exiting"
   };
   if (state < uninit || state > exiting)
-    printf ("** ERROR **");
+    debug (0, "** ERROR in prot30_print_state **");
   else
-    printf (statestr[state]);
+    debug (0, statestr[state]);
 }
 
 /* Make a human readable dump of a packet
@@ -544,32 +546,32 @@ prot30_dump_raw (packet, size)
   int i, j;
   unsigned char *p = packet;
 
-  printf ("Raw dump: \n");
+  debug (3, "Raw dump: \n");
   for (i = 0; i < size; i += 16)
     {
-      printf ("  %04x: ", i);
+      debug (3, "  %04x: ", i);
       for (j = 0; j < 8; j++)
         if (i + j < size)
-          printf ("%c", (p[i + j] > 32 && p[i + j] < 127) ? p[i + j] : '.');
+          debug (3, "%c", (p[i + j] > 32 && p[i + j] < 127) ? p[i + j] : '.');
         else
-          printf (" ");
+          debug (3, " ");
 
-      printf (" ");
+      debug (3, " ");
 
       for (j = 8; j < 16; j++)
         if (i + j < size)
-          printf ("%c", (p[i + j] > 32 && p[i + j] < 127) ? p[i + j] : '.');
+          debug (3, "%c", (p[i + j] > 32 && p[i + j] < 127) ? p[i + j] : '.');
         else
-          printf (" ");
+          debug (3, " ");
 
-      printf ("  |  ");
+      debug (3, "  |  ");
 
       for (j = 0; i + j < size && j < 8; j++)
-        printf ("%02x", p[i + j]);
-      printf (" ");
+        debug (3, "%02x", p[i + j]);
+      debug (3, " ");
       for (j = 8; i + j < size && j < 16; j++)
-        printf ("%02x", p[i + j]);
-      printf ("\n");
+        debug (3, "%02x", p[i + j]);
+      debug (3, "\n");
     }
-  printf ("\n");
+  debug (3, "\n");
 }

@@ -34,6 +34,7 @@
 #include <termios.h>
 #include <unistd.h>
 
+#include "log.h"
 #include "modem.h"
 #include "devlock.h"
 #include "options.h"
@@ -141,7 +142,7 @@ modem_connect ()
   if (!modem_open
       (PARAM_MODEM_DEVICE, PARAM_MODEM_LINE_SPEED, PARAM_MODEM_RTSCTS))
     return 0;
-  printf ("Device %s opened\n", PARAM_MODEM_DEVICE);
+  debug (1, "Device %s opened\n", PARAM_MODEM_DEVICE);
 
   if (!modem_init () || !modem_dial ())
     return 0;
@@ -235,7 +236,7 @@ modem_dial_to (phone)
   switch (modem_response_value (response))
     {
     case RESPONSE_ERROR:       /* ERROR */
-      fprintf (stderr, "Bad string\n"
+      log (LOG_ERR, "Bad string\n"
                "Please verify the phone number, dial string and prefix\n");
       return 0;
       break;
@@ -245,38 +246,38 @@ modem_dial_to (phone)
       break;
 
     case RESPONSE_NO_CARRIER:  /* NO CARRIER */
-      fprintf (stderr, "No carrier detected\n");
+      log (LOG_ERR, "No carrier detected\n");
       return 0;
       break;
 
     case RESPONSE_NO_DIALTONE: /* NO DIALTONE */
-      fprintf (stderr, "No dial tone detected\n");
+      log (LOG_ERR, "No dial tone detected\n");
       return 0;
       break;
 
     case RESPONSE_BUSY:        /* BUSY */
-      fprintf (stderr, "Provider is busy\n");
+      log (LOG_ERR, "Provider is busy\n");
       return 0;
       break;
 
     case RESPONSE_DELAYED:     /* DELAYED */
-      fprintf (stderr, "?\n");
+      log (LOG_ERR, "Response delayed\n");
       return 0;
       break;
 
     case RESPONSE_VOICE:       /* VOICE */
-      fprintf (stderr, "?\n");
+      log (LOG_ERR, "Response voice\n");
       return 0;
       break;
 
     case RESPONSE_FAX:         /* FCLASS */
-      fprintf (stderr, "You have been connected to a fax\n"
+      log (LOG_ERR, "You have been connected to a fax\n"
                "Please verify the phone number\n");
       return 0;
       break;
 
     case RESPONSE_NO_ANSWER:   /* NO ANSWER */
-      fprintf (stderr, "There was no answer\n");
+      log (LOG_ERR, "There was no answer\n");
       return 0;
       break;
 
@@ -284,7 +285,7 @@ modem_dial_to (phone)
       break;
 
     default:                   /* TIMEOUT */
-      fprintf (stderr, "Modem timed out during dialing\n");
+      log (LOG_ERR, "Modem timed out during dialing\n");
       return 0;
     }
   return 0;
@@ -293,23 +294,23 @@ modem_dial_to (phone)
 int
 modem_log_into_aol ()
 {
-  printf ("Waiting for login prompt\n");
+  debug (1, "Waiting for login prompt\n");
   if (!modem_wait_for (PARAM_MODEM_LOGIN_PROMPT, 60 * 1000))
     return 0;
-  printf ("Sending server's login\n");
+  debug (1, "Sending server's login\n");
   write (fd, PARAM_MODEM_SERVER_LOGIN, strlen (PARAM_MODEM_SERVER_LOGIN));
   write (fd, "\r", 1);
   tcdrain (fd);
-  printf ("Waiting for password prompt\n");
+  debug (1, "Waiting for password prompt\n");
   if (!modem_wait_for (PARAM_MODEM_PASS_PROMPT, 60 * 1000))
     return 0;
-  printf ("Sending server's password\n");
+  debug (1, "Sending server's password\n");
   write (fd, PARAM_MODEM_SERVER_PASS, strlen (PARAM_MODEM_SERVER_PASS));
   write (fd, "\r", 1);
   tcdrain (fd);
   if (!modem_wait_for ("onnected", 60 * 1000))
     return 0;
-  printf ("Logged into server\n");
+  debug (0, "Logged into server\n");
   return 1;
 }
 
@@ -324,7 +325,7 @@ modem_open (filename, _baud, rtscts)
 
   if (!device_lock (filename))
     {
-      fprintf (stderr, "Device %s is locked\n", filename);
+      log (LOG_ERR, "Device %s is locked\n", filename);
       return 0;
     }
 
@@ -572,7 +573,7 @@ modem_send_command (command, timeout, response, size)
      char *response;
      size_t size;
 {
-  printf ("Sending: %s\n", command);
+  debug (2, "Sending: %s\n", command);
 
   write (fd, command, strlen (command));
   write (fd, "\r", 1);
@@ -587,7 +588,7 @@ modem_send_command (command, timeout, response, size)
         return 0;
     }
 
-  printf ("Received line : %s\n", response);
+  debug (2, "Received line : %s\n", response);
   return 1;
 }
 

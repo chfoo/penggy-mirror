@@ -38,6 +38,6 @@ pengfork_SOURCES = 	buffer.c		\
 			utils.c			\
 			log.c
 
-INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)
+INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib
 
 pengfork_LDADD = $(top_srcdir)/src/@ARCH_DIR@/libsystem.a

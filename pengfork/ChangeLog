@@ -1,9 +1,19 @@
+2002-08-29  Nicolas Burrus  <nes@lrde.epita.fr>
+
+	* src/modem.c: Update with log and debug.
+	* configure.ac: Add enable-werror and lib/ handling.
+	* src/misc.c: Call ip-up/ip-down scripts only when non null path.
+	* include/common.h, lib/Makefile.am, lib/getopt.c, lib/getopt.h, 
+	lib/getopt1.c: New files.
+	* src/main.c, src/options.c, src/options.h: Add command line options 
+	handling.
+
 2002-08-29  Jean-Charles Salzeber <jc@varspool.net>
 
-	* src/modem.c: trivial cleanups
-	* include/prot30.h, src/p30tcpip.c, src/prot30.c: More robust protocol 
-	handling
-	* src/modem.c: fixed a bug in wait_for
+	* src/modem.c: Trivial cleanups.
+	* include/prot30.h, src/p30tcpip.c, src/prot30.c: More robust protocol
+	handling.
+	* src/modem.c: Fixed a bug in wait_for.
 	
 2002-08-29  Nicolas Burrus  <nes@lrde.epita.fr>
 

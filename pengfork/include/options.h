@@ -28,10 +28,38 @@ typedef enum
 { false = 0, true }
 bool_t;
 
+/* command line getopt values */
+typedef enum
+  {
+    /* use this if no command line option is associated */
+    opt_none = 256,
+    /* letter correspond to short option alias */
+    opt_help = 'h',
+    opt_version = 'V',
+    opt_interface_type = 't',
+    opt_interface_name = 'i',
+    opt_user = 'u',
+    opt_pass = 'p',
+    opt_auto_reconnect = 'r',
+    opt_daemon = 'd',
+    opt_debug_level = 'D',
+    opt_modem = 'm',
+    opt_phone = 'n',
+    opt_speed = 's',
+    opt_server_login = 'l',
+    opt_server_pass = 'w',
+    /* numeric opt_id, not associated with any short option */
+    opt_pid_file = 300,
+    opt_ip_up = 301,
+    opt_ip_down = 302,
+    opt_rtscts = 303,
+    opt_init_str = 304,
+    opt_dial_str = 305
+  } option_e;
+
 typedef struct
 {
-  char *shortopt;
-  char *longopt;
+  option_e opt_id;
   char *name;
   enum
   { boolean, integer, string }
@@ -58,7 +86,7 @@ param_t;
 #define PARAM_AOL_USER                param[4].value.string
 #define PARAM_AOL_PASS                param[5].value.string
 #define PARAM_AUTO_RECONNECT          param[6].value.boolean
-#define PARAM_RECONNECT_DELAY         param[7].value.boolean
+#define PARAM_RECONNECT_DELAY         param[7].value.integer
 #define PARAM_DAEMON                  param[8].value.boolean
 #define PARAM_DEBUG_LEVEL             param[9].value.integer
 #define PARAM_SET_DNS                 param[10].value.boolean
@@ -107,6 +135,7 @@ param_t;
 
 extern param_t param[PARAM_MAX];
 
+int parse_command_line (int argc, char **argv);
 int parse_config( void );
 int parse_config_file (char *filename);
 void try_param (param_t * param, char *filename, int lineno, char *name,

@@ -48,7 +48,7 @@ log (int level, char *format, ...)
   vfprintf (stderr, format, ap);
 #endif
   syslog (level, format, ap);
-  return 1;
+  return 0;
 }
 
 int 
@@ -60,5 +60,5 @@ debug (int level, char *format, ...)
   if (level <= PARAM_DEBUG_LEVEL)
     vfprintf (stderr, format, ap);
 
-  return 1;
+  return 0;
 }

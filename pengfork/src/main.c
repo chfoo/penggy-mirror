@@ -24,24 +24,36 @@
 #include <stdlib.h>
 #include <getopt.h>
 
+#include "common.h"
 #include "log.h"
 #include "prot30.h"
 #include "options.h"
 #include "access.h"
 #include "if.h"
 
+char *program_name;
+
 int
 main (argc, argv)
      int argc;
      char **argv;
 {
+  program_name = argv[0];
+
   init_log ();
 
-  if (parse_config ())
+  if (parse_command_line (argc, argv))
+    {
+      fprintf (stderr, "Error parsing command line, exiting !\n");
+      exit (1);
+    }
+
+  if (!parse_config ())
     {
       fprintf (stderr, "Error parsing configuration files, exiting !\n");
       exit (1);
     }
+
   if (!config_set_functions ())
     {
       fprintf (stderr, "Fatal error, exiting.\n");
