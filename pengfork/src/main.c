@@ -19,7 +19,9 @@
  * 02111-1307, USA.
  *                
  */
+
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "prot30.h"
 #include "config.h"
@@ -34,12 +36,19 @@ main (argc, argv)
 {
 
   parse_config_file ("peng.cf");
-  config_set_functions ();
+  if (!config_set_functions ())
+    {
+      fprintf (stderr, "Fatal error, exiting.\n");
+      exit (1);
+    }
 
   if (if_connect () && access_connect ())
     prot30_start ();
   else
-    fprintf (stderr, "Exiting.\n");
+    {
+      fprintf (stderr, "Fatal error, exiting.\n");
+      exit (1);
+    }
 
   return 0;
 }
