@@ -6,7 +6,7 @@ penggy 0.1.0 INSTALL instructions
 
   DISCLAIMER:
     AOL is a registered trademark of America Online, Inc.
-    Penggy is not endorsed by or affiliated with AOL trademark.
+    Penggy is not endorsed by or affiliated with the AOL trademark.
 
   Penggy is a free Linux client for AOL. It allows Linux users to connect
   to the Internet using AOL, through an IP tunneling system.
@@ -27,7 +27,7 @@ penggy 0.1.0 INSTALL instructions
  ===============
 
   2.1. Universal TUN/TAP device driver
-  ===================================
+  ====================================
 
   Penggy uses the Universal TUN/TAP device driver, written by 
   Maxim Krasnyansky.
@@ -35,30 +35,30 @@ penggy 0.1.0 INSTALL instructions
   Make sure that "Universal TUN/TAP device driver support" is enabled in
   your kernel.
 
-  If TUN/TAP support is already present and penggy always have trouble with
+  If TUN/TAP support is already present and penggy still has trouble with
   it, follow these instructions:
 
   Create device node:
      # mknod /dev/net/tun c 10 200
 
-  Driver module autoloading
+  Driver module autoloading :
      Make sure that "Kernel module loader" - module auto-loading support is
      enabled in your kernel. 
 
-     Add following line to the /etc/modules.conf:
+     Add the following line to the /etc/modules.conf:
         alias char-major-10-200 tun
      
      Run:
        # depmod -a 
 
-     Driver will be automatically loaded when application 
-     access /dev/net/tun.
+     The driver will be automatically loaded whenever the application 
+     tries to access /dev/net/tun.
 
   2.2. Guile, Project GNU's extension language library
   ====================================================
 
   You must install libguile and libguile-dev packages on your system in
-  order to run and compile penggy.
+  order to be able to run and compile penggy.
 
   The Guile WWW page is at
     http://www.gnu.org/software/guile/guile.html
@@ -72,7 +72,7 @@ penggy 0.1.0 INSTALL instructions
  3. Installation
  ===============
 
-  Penggyk can be obtained at https://savannah.nongnu.org/projects/pengfork/
+  Penggy can be obtained at https://savannah.nongnu.org/projects/pengfork/
 
   Make sure to download the last stable version. If you feel more 
   adventurous, you can try the CVS version, but this is not guaranteed
@@ -83,14 +83,14 @@ penggy 0.1.0 INSTALL instructions
   uncompress and untar the files contained within the archive. That can be 
   done very simply (we'll assume your archive is version 0.1.0)
 
-  $ tar xvzf penggy-0.1.0.tar.gz
+  # tar xvzf penggy-0.1.0.tar.gz
 
   The files should have been decompressed to a directory called penggy-0.1.0
   You now need to go to that directory and compile the program :
 
-  $ cd penggy-0.1.0
-  $ ./configure
-  $ make
+  # cd penggy-0.1.0
+  # ./configure
+  # make
   # make install
 
   If you need any particular option, such as cross-compiling, you can get 
@@ -104,24 +104,25 @@ penggy 0.1.0 INSTALL instructions
  4. Configuration
  ================
 
-  In the install process, the directory /etc/penggy had been created with
-  several files within it.
+  During the install process, the /etc/penggy directory was created, and it
+  has withing it several files we need to look at.
 
-  If files were previously installed on your system, the install process
+  If these files were previously installed on your system, the install process
   will not overwrite them but will create files with .new suffixes instead.
 
   Last step is configuration. Quite many options are available here.
 
-  You need to modify your configuration files and make it look like as 
+  You need to modify your configuration files and make them look like as 
   follows :
 
-  In /etc/penggy/aol-secrets put your AOL account infos:
+  In /etc/penggy/aol-secrets put your AOL account(s) information :
     [YourScreenName]	[YourPassword]
     [AnotherScreenName]	[AnotherPassword]
     ....
 
-  The file /etc/penggy/penggy.cfg is self-documented but commonly used
-  options are:
+  The file /etc/penggy/penggy.cfg is self-documented but the most commonly
+  used options are:
+
     screen_name = [YourScreenName]
     # auto_reconnect = yes
     # daemon = yes
@@ -140,15 +141,15 @@ penggy 0.1.0 INSTALL instructions
  5. Usage
  ========
 
-  Near all options specified in the config file might changed on the
-  command line. For more information run:
-    $ penggy --help
+  Most of the options available in the congiguration file can be overidden
+  from the command line. For more information type :
+    $ penggy --help        
 
   The last step after compiling, installing and configuring is running the
   software, and praying for it to work :
     # penggy
 
-  Penggy must be run as root, if you're looking for a way to run it as user
+  Penggy must be run as root. If you're looking for a way to run it as a user
   the use of sudo is greatly recommended (see sudo(8) and sudoers(5))
 
   Have fun!
@@ -166,3 +167,6 @@ penggy 0.1.0 INSTALL instructions
 
   The program itself was coded by Jean-Charles Salzeber <jc@varspool.net>. 
   Greetings to him and to his genius :)
+  
+  Last update : Nov 8th, 2002.
+  Reviewed by Jean-Charles
