@@ -62,7 +62,7 @@ tcpip_connect ()
   struct sockaddr_in intcable;
   struct hostent *hp;
 
-  log(LOG_NOTICE, "Resolving %s...", hostname);
+  log(LOG_NOTICE, "Resolving %s...\n", hostname);
   if ((hp = gethostbyname (hostname)) == 0)
     {
       log (LOG_ERR, "Unable to resolve %s: %s (%d)\n",hostname,
@@ -78,25 +78,26 @@ tcpip_connect ()
 
   if ((tcpipfd = socket (PF_INET, SOCK_STREAM, 0)) < 0)
     {
-      log (LOG_ERR, "Error while opening socket: %s (%d)",strerror(errno), errno);
+      log (LOG_ERR, "Error while opening socket: %s (%d)\n",
+	 strerror(errno), errno);
       return 0;
     }
 
-  log(LOG_NOTICE,"Connecting to %d.%d.%d.%d:%d ...", 
+  log(LOG_NOTICE,"Connecting to %d.%d.%d.%d:%d ...\n", 
       address>>24 & 0xff, address>>16 & 0xff, address>>8 & 0xff, address & 0xff, 
       port);
       
   if (connect (tcpipfd, (struct sockaddr *) &intcable,
                sizeof (struct sockaddr_in)) == -1)
     {
-      log (LOG_ERR, "Error while connecting to AOL: %s (%d)",strerror(errno), 
+      log (LOG_ERR, "Error while connecting to AOL: %s (%d)\n",strerror(errno), 
 	 errno);
       return 0;
     }
 
   if (fcntl(tcpipfd, F_SETFL, O_NONBLOCK) < 0)
     {
-      log (LOG_ERR, "Error while putting the socket non-blocking: %s(%d)",
+      log (LOG_ERR, "Error while putting the socket non-blocking: %s(%d)\n",
 	 strerror(errno), errno);
       return 0;
     }
@@ -111,7 +112,7 @@ tcpip_close ()
     {
       if ((close (tcpipfd)) == -1)
         {
-          log (LOG_WARNING, "Error while closing socket: %s(%d)", 
+          log (LOG_WARNING, "Error while closing socket: %s(%d)\n", 
 	     strerror(errno), errno);
           return 0;
         }
