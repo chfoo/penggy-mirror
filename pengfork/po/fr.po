@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: pengfork 0.1\n"
-"POT-Creation-Date: 2002-12-01 02:27+0100\n"
+"POT-Creation-Date: 2002-12-01 15:46+0100\n"
 "PO-Revision-Date: 2002-12-01 00:39+0100\n"
 "Last-Translator: Jean-Charles Salzeber <jc@varspool.net>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -83,8 +83,9 @@ msgstr ""
 "connecté\n"
 
 #: src/fdo/login.c:47
-msgid "Loging into provider\n"
-msgstr "Authentification auprés du fournisseur\n"
+#, c-format
+msgid "Loging into provider as '%s'\n"
+msgstr "Authentification auprés du fournisseur en tant que '%s'\n"
 
 #: src/tun/linux/tun.c:75
 #, c-format
@@ -166,26 +167,26 @@ msgstr "Script: Succés du dialogue\n"
 msgid "Script: Chat failure\n"
 msgstr "Script: Echec du dialogue\n"
 
-#: src/modem/script.c:67
+#: src/modem/script.c:68
 #, c-format
 msgid "Script: Send '%s'\n"
 msgstr "Script: Envoi de '%s'\n"
 
-#: src/modem/script.c:100
+#: src/modem/script.c:101
 #, c-format
 msgid "Script: String '%s' matched\n"
 msgstr "Script: Chaîne '%s' reconnue\n"
 
-#: src/modem/script.c:150
+#: src/modem/script.c:151
 msgid "Script: No string matched\n"
 msgstr "Script: Aucune chaîne reconnue\n"
 
-#: src/modem/script.c:226
+#: src/modem/script.c:227
 #, c-format
 msgid "%s: returned value isn't a boolean.\n"
 msgstr "%s: la valeur retournée n'est pas un booléen.\n"
 
-#: src/modem/script.c:228
+#: src/modem/script.c:229
 msgid "Couldn't continue, exiting.\n"
 msgstr "Ne peut continuer, sortie.\n"
 
@@ -225,7 +226,7 @@ msgstr "Accés au fournisseur...\n"
 
 #: src/modem/modem.c:254
 msgid "Too many failures, dialing process aborted.\n"
-msgstr "Trop d'échecs, la connection est abandonée.\n"
+msgstr "Trop d'échecs, la connexion est abandonée.\n"
 
 #: src/modem/modem.c:270
 #, c-format
@@ -519,11 +520,11 @@ msgstr "définit le pseudo à utiliser."
 
 #: src/options.c:111
 msgid "enable autoreconnection."
-msgstr "active l'auto-reconnéxion."
+msgstr "active l'auto-reconnexion."
 
 #: src/options.c:114
 msgid "set the delay between reconnections."
-msgstr "définit le délai entre les reconnéxions."
+msgstr "définit le délai entre les reconnexions."
 
 #: src/options.c:117
 msgid "enable daemon mode, run in background."
@@ -535,7 +536,7 @@ msgstr "définit le niveau de baratin en debug."
 
 #: src/options.c:123
 msgid "set the dns when connected."
-msgstr "assigne le DNS à la connéxion."
+msgstr "assigne le DNS à la connexion."
 
 #: src/options.c:126
 msgid "set the PID file to create"

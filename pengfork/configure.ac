@@ -106,7 +106,7 @@ AC_CHECK_FUNCS([__argz_count __argz_next __argz_stringify bzero dup2 getcwd geth
 AM_CONDITIONAL(NEED_GETOPT, test "$ac_cv_func_getopt_long" != yes)
 
 AM_GNU_GETTEXT([no-libtool])
-AM_GNU_GETTEXT_VERSION
+AM_GNU_GETTEXT_VERSION(0.11.5)
 AM_ICONV
 
 AC_ARG_WITH(confdir,

@@ -44,7 +44,7 @@ logon ()
   char *pass;
   char login[10];
 
-  log (LOG_NOTICE, gettext ("Loging into provider\n"));
+  log (LOG_NOTICE, gettext ("Loging into provider as '%s'\n"), sn);
   get_password (sn, &pass);
   len = strlen (sn);
   if (len >= 10)
