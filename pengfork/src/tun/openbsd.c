@@ -143,6 +143,7 @@ tun_ready ()
 
 int
 tun_have_packet (buffer)
+     buffer_t *buffer;
 {
   struct ip *ip;
 

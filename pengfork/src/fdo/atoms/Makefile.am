@@ -23,8 +23,6 @@
 # $Id$
 #
 
-INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib -I$(top_srcdir)/intl
-
 noinst_LIBRARIES = libatoms.a
 libatoms_a_SOURCES = act.c		\
                      activex.c		\

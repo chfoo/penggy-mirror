@@ -23,20 +23,10 @@
 # $Id$
 #
 
-INCLUDES = -I$(srcdir)/include -I..
+INCLUDES = -I$(srcdir)/include
 
-noinst_LIBRARIES = lib.a
+noinst_LIBRARIES = liblib.a
+liblib_a_SOURCES = dummy.c
+liblib_a_LIBADD = @LIBOBJS@ @ALLOCA@
 
-if NEED_GETOPT
-
-getopt_sources = getopt.c getopt1.c
-
-else !NEED_GETOPT
-
-getopt_extra = getopt.c getopt1.c
-
-endif !NEED_GETOPT
-
-EXTRA_DIST = getopt.h gettext.h $(getopt_extra)
-
-lib_a_SOURCES = $(getopt_sources) dummy.c
+noinst_HEADERS = getopt.h gettext.h

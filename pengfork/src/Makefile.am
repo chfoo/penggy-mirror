@@ -26,8 +26,6 @@
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@
 
-INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib -I$(top_srcdir)/intl
-
 datadir = @datadir@
 localedir = $(datadir)/locale
 DEFS = -DLOCALEDIR=\"$(localedir)\" @DEFS@
@@ -84,7 +82,7 @@ SUBDIRS = fdo iptunnel modem cable dsl tcpip tun p3 flap
 penggy_LDADD = 	$(top_builddir)/src/fdo/libfdo.a		\
 		$(top_builddir)/src/fdo/atoms/libatoms.a        \
 			$(top_builddir)/src/iptunnel/libiptunnel.a	\
-			$(top_builddir)/lib/lib.a			\
+			$(top_builddir)/lib/liblib.a			\
 			$(MODEM_LIBS)					\
 			$(CABLE_LIBS)					\
 			$(DSL_LIBS)					\

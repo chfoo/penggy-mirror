@@ -25,13 +25,6 @@
 
 SUBDIRS = m4 config include lib intl src doc po
 
-CPPFLAGS += 	-DDATADIR="$(datadir)" \
-		-DSYSCONFDIR="$(sysconfdir)" \
-		-DLOCALSTATEDIR="$(localstatedir)"
-
-archcheck: 
-	@echo "Arch dir : @ARCH_DIR@"
-
 ACLOCAL_AMFLAGS = -I m4
 
 EXTRA_DIST = config/config.rpath DISCLAIMER README.redhat

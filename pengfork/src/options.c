@@ -436,7 +436,8 @@ set_opt_param_long (opt)
 {
   int i;
 
-  for (i = 0; i < PARAM_MAX && strcmp(opt,param[i].longopt); i++);
+  for (i = 0; i < PARAM_MAX; i++)
+    if(param[i].longopt && !strcmp(opt, param[i].longopt)) break;
   if (i == PARAM_MAX)
     return 0;
 

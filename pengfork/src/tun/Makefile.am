@@ -23,8 +23,6 @@
 # $Id$
 #
 
-INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib -I$(top_srcdir)/intl
-
 tun_c = tun.c linux.c freebsd.c generic.c openbsd.c
 
 if BUILD_TUN

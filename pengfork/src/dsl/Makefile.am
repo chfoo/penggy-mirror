@@ -23,8 +23,6 @@
 # $Id$
 #
 
-INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib -I$(top_srcdir)/intl
-
 dsl_c = dummy.c
 
 if BUILD_DSL

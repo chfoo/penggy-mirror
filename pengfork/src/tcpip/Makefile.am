@@ -23,8 +23,6 @@
 # $Id$
 #
 
-INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib -I$(top_srcdir)/intl
-
 tcpip_c = tcpip.c
 
 if BUILD_TCPIP

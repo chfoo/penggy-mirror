@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: penggy 0.1\n"
 "POT-Creation-Date: 2003-02-08 00:02+0100\n"
-"PO-Revision-Date: 2003-02-08 00:25+0100\n"
+"PO-Revision-Date: 2003-02-09 15:54+0100\n"
 "Last-Translator: Sebastian Schmidt <yath@yath.eu.org>\n"
 "Language-Team: German <yath@yath.eu.org>\n"
 "MIME-Version: 1.0\n"
@@ -125,7 +125,7 @@ msgstr ""
 
 #: src/tun/linux.c:262
 msgid "IP buffer is full, packet queued"
-msgstr "IP Puffer ist voll, Packet der Warteschlange hinzugefügt"
+msgstr "IP Puffer ist voll, Paket der Warteschlange hinzugefügt"
 
 #: src/tun/freebsd.c:122 src/tun/openbsd.c:118
 #, c-format

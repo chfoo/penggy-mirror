@@ -26,8 +26,8 @@
 # Autoconf 2.53 needed so that buggy PATH_SEPARATOR is fixed.
 AC_PREREQ(2.53)
 
-AC_INIT(penggy, 0.2.1)
-AC_CONFIG_HEADER([config.h])
+AC_INIT(penggy, 0.2.1+CVS)
+AC_CONFIG_HEADER([include/config.h])
 
 # Auxiliary files
 AC_CONFIG_AUX_DIR(config)
@@ -105,12 +105,8 @@ AC_TYPE_PID_T
 AC_TYPE_SIZE_T
 AC_HEADER_TIME
 AC_HEADER_SYS_WAIT
-
-#HAVE_IN_ADDR_T, HAVE_SOCKLEN_T
-#AC_CHECK_TYPE([in_addr_t],,
-#              [AC_DEFINE_UNQUOTED([in_addr_t], [default],
-#                                  [Define to `default' if
-#                                   <sys/types.h> does not define.])])
+AC_HEADER_STAT
+AC_CHECK_TYPE([in_addr_t],, [AC_DEFINE([in_addr_t], [int], [Define to `int' if <sys/types.h> does not define.])])
 
 # Checks for library functions.
 AM_GNU_GETTEXT
@@ -124,17 +120,21 @@ AC_FUNC_SELECT_ARGTYPES
 AC_TYPE_SIGNAL
 AC_FUNC_STAT
 AC_FUNC_VPRINTF
-AC_CHECK_FUNCS([bzero dup2 memchr memmove memset nl_langinfo select strchr strcspn strerror strrchr strstr strtol])
+AC_CHECK_FUNCS([bzero nl_langinfo select strchr strcspn strrchr])
 
 # Customized checks
-AC_CHECK_FUNCS([getopt_long])
+AC_CHECK_FUNC(getopt_long,, [
+  AC_LIBOBJ(getopt)
+  AC_LIBOBJ(getopt1)
+  AC_CONFIG_LINKS([include/getopt.h:lib/getopt.h])
+])
 AC_SEARCH_LIBS(socket, socket)
 AC_SEARCH_LIBS(inet_ntoa, nsl)
-AC_SEARCH_LIBS(gethostbyname, resolv nsl)
-AC_SEARCH_LIBS(hstrerror, resolv nsl inetutils,, need_hstrerror=yes)
-
-AM_CONDITIONAL(NEED_GETOPT, test "$ac_cv_func_getopt_long" != yes)
-AM_CONDITIONAL(NEED_HSTRERROR, test "$need_hstrerror" = yes)
+AC_SEARCH_LIBS(gethostbyname, resolv)
+AC_SEARCH_LIBS(hstrerror, resolv inetutils)
+AC_SEARCH_LIBS(dirname, fileutils)
+AC_CHECK_FUNC(h_errlist)
+AC_REPLACE_FUNCS(dirname dup2 hstrerror memchr memcpy memmove memset putenv rename strerror strtol strtoul strstr)
 
 #########################################
 # Conditional compile options
@@ -157,7 +157,6 @@ else
   CFLAGS="$CFLAGS -O2"
   LDFLAGS="$LDFLAGS -s"
 fi
-AM_CONDITIONAL(DEBUG, test "$debug" = yes)
 
 	   
 # Enable -Werror flag
@@ -174,7 +173,6 @@ AC_ARG_ENABLE(werror,
 if test "$werror" = yes; then
   CFLAGS="$CFLAGS -Werror"
 fi
-AM_CONDITIONAL(WERROR, test "$werror" = yes)
 
 
 # Modem driver
@@ -358,6 +356,13 @@ if test "$tun" != yes; then
 ************************************************************
 ])
 fi
+
+AC_CONFIG_LINKS([include/gettext.h:lib/gettext.h])
+if test "$gt_included_intl" = yes; then
+  AC_CONFIG_LINKS([include/libintl.h:intl/libgnuintl.h])
+fi
+
+DEFAULT_INCLUDES="-I\$(top_builddir)/include"
 
 CPPFLAGS="$CPPFLAGS	-DPKGDATADIR=\\\"\$(pkgdatadir)\\\""
 CPPFLAGS="$CPPFLAGS -DSYSCONFDIR=\\\"\$(sysconfdir)\\\""
