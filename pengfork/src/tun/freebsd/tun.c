@@ -45,37 +45,43 @@ extern int tun_fd;
  * Allocate TUN device
  */
 int
-tun_open()
+tun_open ()
 {
   char tunname[14];
   int i;
-  
-  if (PARAM_INTERFACE_NAME) {
-    sprintf(tunname, "/dev/%s", PARAM_INTERFACE_NAME);
-    tun_fd = open(tunname, O_RDWR | O_NONBLOCK);
-  } else {
-    for (i = 0; i < 255; i++) {
-      sprintf(tunname, "/dev/tun%d", i);
-      /* Open device */
-      if ((tun_fd = open(tunname, O_RDWR| O_NONBLOCK)) > 0) {
-        sprintf(PARAM_INTERFACE_NAME, "tun%d", i);
-        break;
-      }
+
+  if (PARAM_INTERFACE_NAME)
+    {
+      sprintf (tunname, "/dev/%s", PARAM_INTERFACE_NAME);
+      tun_fd = open (tunname, O_RDWR | O_NONBLOCK);
     }
-  }
-  if (fd > -1) {
-    i = 0;
-    /* Disable extended modes */
-    ioctl(tun_fd, TUNSLMODE, &i);
-    ioctl(tun_fd, TUNSIFHEAD, &i);
-  }
-  return tun_ready();
+  else
+    {
+      for (i = 0; i < 255; i++)
+        {
+          sprintf (tunname, "/dev/tun%d", i);
+          /* Open device */
+          if ((tun_fd = open (tunname, O_RDWR | O_NONBLOCK)) > 0)
+            {
+              sprintf (PARAM_INTERFACE_NAME, "tun%d", i);
+              break;
+            }
+        }
+    }
+  if (fd > -1)
+    {
+      i = 0;
+      /* Disable extended modes */
+      ioctl (tun_fd, TUNSLMODE, &i);
+      ioctl (tun_fd, TUNSIFHEAD, &i);
+    }
+  return tun_ready ();
 }
 
 int
-tun_close()
+tun_close ()
 {
-  close(tun_fd);
+  close (tun_fd);
   tun_fd = -1;
   return 1;
 }
@@ -87,37 +93,37 @@ tun_ready ()
 }
 
 int
-tun_get(buffer, data, data_size)
+tun_get (buffer, data, data_size)
      buffer_t *buffer;
      char **data;
      size_t *data_size;
 {
   struct ip *ip;
 
-  ip=buffer_start(buffer);
-  *data=NULL;
-  *data_size=0;
-  if(buffer->used < sizeof(struct ip))
+  ip = buffer_start (buffer);
+  *data = NULL;
+  *data_size = 0;
+  if (buffer->used < sizeof (struct ip))
     return 0;
-  if(buffer->used < ip->ip_len)
+  if (buffer->used < ip->ip_len)
     return 0;
 
-  *data=ip;
-  *data_size=ip->ip_len;
-  buffer_free(buffer,ip->ip_len);
+  *data = ip;
+  *data_size = ip->ip_len;
+  buffer_free (buffer, ip->ip_len);
   return 1;
 }
 
 int
-tun_put(buffer, data, data_size)
+tun_put (buffer, data, data_size)
      buffer_t *buffer;
      char *data;
      size_t data_size;
 {
   char *p;
 
-  p=buffer_end(buffer);
-  buffer_alloc(buffer,data_size);
-  memcpy(p,data,data_size);
+  p = buffer_end (buffer);
+  buffer_alloc (buffer, data_size);
+  memcpy (p, data, data_size);
   return 1;
 }

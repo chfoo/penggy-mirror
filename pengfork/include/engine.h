@@ -24,8 +24,30 @@
 #ifndef __ENGINE_H__
 #define __ENGINE_H__
 
+#include <sys/types.h>
+
+#include "buffer.h"
+
+/* the timeout in seconds */
+#define ENGINE_TIMEOUT  5
+
+typedef void (*init_fn_t) (buffer_t *, buffer_t *);
+typedef int (*want_read_fn_t) (buffer_t *, buffer_t *);
+typedef void (*readfn_fn_t) (buffer_t *, buffer_t *, int);
+typedef int (*end_fn_t) (buffer_t *, buffer_t *);
+
 int engine_init (void);
 void engine_loop (void);
+void engine_stop (void);
+void engine_register (int fd, int timeout_notify, init_fn_t init,
+                      want_read_fn_t want_read, readfn_fn_t readfn,
+                      end_fn_t end);
+void engine_unregister (int fd);
+void engine_set_readers (fd_set * fdset, int *maxfd);
+void engine_set_writers (fd_set * fdset, int *maxfd);
+void engine_read (fd_set * fdset);
+void engine_write (fd_set * fdset);
+void engine_timeout (int timeouts);
 
 
 #endif /* __ENGINE_H__ */

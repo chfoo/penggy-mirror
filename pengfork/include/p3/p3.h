@@ -26,6 +26,7 @@
 #include <sys/types.h>
 
 #include "buffer.h"
+#include "access.h"
 #include "p3/header.h"
 
 struct p3state
@@ -36,8 +37,8 @@ struct p3state
   int nackwin;
 };
 
-#define WINDOW_SIZE 16     /* Packet we can send/receive without ack */
-#define WINDOW_HIGH  8     /* when the window is considered near closed */
+#define WINDOW_SIZE 16          /* Packet we can send/receive without ack */
+#define WINDOW_HIGH  8          /* when the window is considered near closed */
 
 /* each buffer can handle 2 full packets */
 #define BUFFER_SIZE P3_MAX_SIZE*2
@@ -47,12 +48,14 @@ extern int nack_win[WINDOW_SIZE];
 
 extern struct p3state cli, srv;
 
-void p3_init (buffer_t *bufin, buffer_t *bufout);
-void p3_loop (buffer_t *bufin, buffer_t *bufout, int timeout);
-void p3_put_data(buffer_t *buffer, char *data, size_t data_size);
-int p3_get_packet (buffer_t *buffer, struct p3hdr **header, char **data, 
-	         size_t *data_size);
-void p3_put_packet (buffer_t *buffer, int type, char *data, size_t data_size);
+void p3_register_to_engine (const access_t * myaccess);
+void p3_init (buffer_t * bufin, buffer_t * bufout);
+void p3_loop (buffer_t * bufin, buffer_t * bufout, int timeout);
+void p3_put_data (buffer_t * buffer, char *data, size_t data_size);
+int p3_get_packet (buffer_t * buffer, struct p3hdr **header, char **data,
+                   size_t * data_size);
+void p3_put_packet (buffer_t * buffer, int type, char *data,
+                    size_t data_size);
 
 
 #endif /* __P3_P3_H__ */

@@ -44,7 +44,7 @@ static int fd = -1;
 const access_t modem_access = (access_t) {
   modem_connect,
   modem_close,
-  modem_carrier, 
+  modem_carrier,
   &fd
 };
 
@@ -53,27 +53,51 @@ const struct speed_lookup
   int baud;
   speed_t speedt;
 }
-speeds[] = {
+speeds[] =
+{
 #ifdef B460800
-  {460800, B460800},
+  {
+  460800, B460800}
+  ,
 #endif /* B460800 */
 #ifdef B230400
-  {230400, B230400},
+  {
+  230400, B230400}
+  ,
 #endif /* B230400 */
-  {115200, B115200},
-  {57600, B57600},
-  {38400, B38400},
-  {19200, B19200},
-  {9600, B9600},
-  {4800, B4800},
-  {2400, B2400},
-  {1200, B1200},
-  {300, B300}
+  {
+  115200, B115200}
+  ,
+  {
+  57600, B57600}
+  ,
+  {
+  38400, B38400}
+  ,
+  {
+  19200, B19200}
+  ,
+  {
+  9600, B9600}
+  ,
+  {
+  4800, B4800}
+  ,
+  {
+  2400, B2400}
+  ,
+  {
+  1200, B1200}
+  ,
+  {
+  300, B300}
 };
 
-enum{ RESPONSE_OK, RESPONSE_ERROR, RESPONSE_CONNECT, RESPONSE_NO_CARRIER, 
-        RESPONSE_NO_DIALTONE, RESPONSE_BUSY, RESPONSE_DELAYED, RESPONSE_VOICE, 
-        RESPONSE_FAX, RESPONSE_NO_ANSWER, RESPONSE_TIMEDOUT};
+enum
+{ RESPONSE_OK, RESPONSE_ERROR, RESPONSE_CONNECT, RESPONSE_NO_CARRIER,
+  RESPONSE_NO_DIALTONE, RESPONSE_BUSY, RESPONSE_DELAYED, RESPONSE_VOICE,
+  RESPONSE_FAX, RESPONSE_NO_ANSWER, RESPONSE_TIMEDOUT
+};
 
 const struct
 {
@@ -148,15 +172,15 @@ modem_connect ()
 int
 modem_init ()
 {
-  if (!modem_send_init_string (PARAM_MODEM_INITSTR(1)) ||
-      !modem_send_init_string (PARAM_MODEM_INITSTR(2)) ||
-      !modem_send_init_string (PARAM_MODEM_INITSTR(3)) ||
-      !modem_send_init_string (PARAM_MODEM_INITSTR(4)) ||
-      !modem_send_init_string (PARAM_MODEM_INITSTR(5)) ||
-      !modem_send_init_string (PARAM_MODEM_INITSTR(6)) ||
-      !modem_send_init_string (PARAM_MODEM_INITSTR(7)) ||
-      !modem_send_init_string (PARAM_MODEM_INITSTR(8)) ||
-      !modem_send_init_string (PARAM_MODEM_INITSTR(9)))
+  if (!modem_send_init_string (PARAM_MODEM_INITSTR (1)) ||
+      !modem_send_init_string (PARAM_MODEM_INITSTR (2)) ||
+      !modem_send_init_string (PARAM_MODEM_INITSTR (3)) ||
+      !modem_send_init_string (PARAM_MODEM_INITSTR (4)) ||
+      !modem_send_init_string (PARAM_MODEM_INITSTR (5)) ||
+      !modem_send_init_string (PARAM_MODEM_INITSTR (6)) ||
+      !modem_send_init_string (PARAM_MODEM_INITSTR (7)) ||
+      !modem_send_init_string (PARAM_MODEM_INITSTR (8)) ||
+      !modem_send_init_string (PARAM_MODEM_INITSTR (9)))
     return 0;
 
   return 1;
@@ -171,7 +195,7 @@ modem_send_init_string (string)
   if (!string)
     return 1;
 
-  if (!modem_send_command (string, 1000, response, sizeof(response)))
+  if (!modem_send_command (string, 1000, response, sizeof (response)))
     return 0;
   switch (modem_response_value (response))
     {
@@ -194,12 +218,12 @@ modem_dial ()
   int i;
 
   for (i = 0; i < PARAM_MODEM_DIAL_RETRY; i++)
-    if (modem_dial_to (PARAM_MODEM_PHONE(0)) ||
-        modem_dial_to (PARAM_MODEM_PHONE(1)) ||
-        modem_dial_to (PARAM_MODEM_PHONE(2)) ||
-        modem_dial_to (PARAM_MODEM_PHONE(3)) ||
-        modem_dial_to (PARAM_MODEM_PHONE(4)) ||
-        modem_dial_to (PARAM_MODEM_PHONE(5)))
+    if (modem_dial_to (PARAM_MODEM_PHONE (0)) ||
+        modem_dial_to (PARAM_MODEM_PHONE (1)) ||
+        modem_dial_to (PARAM_MODEM_PHONE (2)) ||
+        modem_dial_to (PARAM_MODEM_PHONE (3)) ||
+        modem_dial_to (PARAM_MODEM_PHONE (4)) ||
+        modem_dial_to (PARAM_MODEM_PHONE (5)))
       break;
   if (i >= PARAM_MODEM_DIAL_RETRY)
     return 0;
@@ -217,18 +241,18 @@ modem_dial_to (phone)
     return 0;
 
   if (!PARAM_MODEM_DIAL_PREFIX)
-    snprintf (dialcmd, sizeof(dialcmd), "%s%s", PARAM_MODEM_DIALSTR, phone);
+    snprintf (dialcmd, sizeof (dialcmd), "%s%s", PARAM_MODEM_DIALSTR, phone);
   else
-    snprintf (dialcmd, sizeof(dialcmd), "%s%s%s", PARAM_MODEM_DIALSTR,
+    snprintf (dialcmd, sizeof (dialcmd), "%s%s%s", PARAM_MODEM_DIALSTR,
               PARAM_MODEM_DIAL_PREFIX, phone);
 
-  if (!modem_send_command (dialcmd, 60 * 1000, response, sizeof(response)))
+  if (!modem_send_command (dialcmd, 60 * 1000, response, sizeof (response)))
     return 0;
   switch (modem_response_value (response))
     {
     case RESPONSE_ERROR:       /* ERROR */
       log (LOG_ERR, "Bad string\n"
-               "Please verify the phone number, dial string and prefix\n");
+           "Please verify the phone number, dial string and prefix\n");
       return 0;
       break;
 
@@ -263,7 +287,7 @@ modem_dial_to (phone)
 
     case RESPONSE_FAX:         /* FCLASS */
       log (LOG_ERR, "You have been connected to a fax\n"
-               "Please verify the phone number\n");
+           "Please verify the phone number\n");
       return 0;
       break;
 
@@ -290,14 +314,16 @@ modem_log_into_aol ()
     return 0;
 
   debug (1, "Sending server's login\n");
-  modem_sync_write (fd, PARAM_MODEM_SERVER_LOGIN, strlen (PARAM_MODEM_SERVER_LOGIN));
+  modem_sync_write (fd, PARAM_MODEM_SERVER_LOGIN,
+                    strlen (PARAM_MODEM_SERVER_LOGIN));
   modem_sync_write (fd, "\r", 1);
   tcdrain (fd);
   debug (1, "Waiting for password prompt\n");
   if (!modem_wait_for (PARAM_MODEM_PASS_PROMPT, 60 * 1000))
     return 0;
   debug (1, "Sending server's password\n");
-  modem_sync_write (fd, PARAM_MODEM_SERVER_PASS, strlen (PARAM_MODEM_SERVER_PASS));
+  modem_sync_write (fd, PARAM_MODEM_SERVER_PASS,
+                    strlen (PARAM_MODEM_SERVER_PASS));
   modem_sync_write (fd, "\r", 1);
   tcdrain (fd);
   if (!modem_wait_for ("onnected", 60 * 1000))
@@ -351,7 +377,7 @@ setup_modem (rtscts)
 
   tcdrain (fd);
 
-  modem_setattr(rtscts);
+  modem_setattr (rtscts);
 
   /* make sure we leave the modem in CLOCAL when we exit, so normal user
      tasks can open the modem without using nonblocking. */
@@ -381,7 +407,7 @@ setup_modem (rtscts)
 
   if (modem_carrier ())
     {
-      modem_hangup();
+      modem_hangup ();
       usleep (500 * 1000);
     }
 
@@ -389,7 +415,7 @@ setup_modem (rtscts)
 }
 
 void
-modem_setattr(rtscts)
+modem_setattr (rtscts)
      int rtscts;
 {
   /* set up the terminal characteristics.
@@ -406,6 +432,7 @@ modem_setattr(rtscts)
   tcsetattr (fd, TCSANOW, &t);
 
 }
+
 int
 modem_close ()
 {
@@ -458,9 +485,9 @@ modem_hangup ()
   if (modem_carrier ())
     {
       /* need to do +++ manual-disconnect stuff */
-      modem_sync_write (fd, "+++", 3);     /* command line mode */
+      modem_sync_write (fd, "+++", 3);  /* command line mode */
       usleep (1500 * 1000);
-      modem_sync_write (fd, "ATH\r", 4);   /* hang-up command */
+      modem_sync_write (fd, "ATH\r", 4);        /* hang-up command */
 
       for (i = 0; modem_carrier () && i < 5; i++)
         usleep (100 * 1000);
@@ -571,12 +598,12 @@ modem_send_command (command, timeout, response, size)
   modem_sync_write (fd, "\r", 1);
 
   /* Get the response from the modem with/without echo enabled */
-  if (!modem_readline(response, timeout, size))
+  if (!modem_readline (response, timeout, size))
     return 0;
- 
-  if(!strcmp (response, command))
+
+  if (!strcmp (response, command))
     {
-      if (!modem_readline(response, timeout, size))
+      if (!modem_readline (response, timeout, size))
         return 0;
     }
 
@@ -612,12 +639,12 @@ modem_wait_for (prompt, timeout)
 
   p = buffer;
   nread = 0;
-  while (nread < sizeof(buffer))
+  while (nread < sizeof (buffer))
     {
       if (!modem_data_ready (timeout))
         return 0;
-      if ((count = read (fd, p, sizeof(buffer) - nread)) < 0)
-	return 0;
+      if ((count = read (fd, p, sizeof (buffer) - nread)) < 0)
+        return 0;
       nread += count;
       p += count;
       *p = '\0';
@@ -647,7 +674,7 @@ modem_readline (response, timeout, size)
       if (!modem_data_ready (timeout))
         return 0;
       if (read (fd, p, 1) <= 0)
-	return 0;
+        return 0;
     }
   while (*p == '\r' || *p == '\n');
 
@@ -656,10 +683,10 @@ modem_readline (response, timeout, size)
   while (nread < size && (*p != '\r' && *p != '\n'))
     {
       if (!modem_data_ready (timeout))
-	return 0;
+        return 0;
       p++;
       if (read (fd, p, 1) <= 0)
-	return 0;
+        return 0;
       nread++;
     }
   *p = '\0';
@@ -669,37 +696,37 @@ modem_readline (response, timeout, size)
 
 /* Simulate a synchronous write */
 int
-modem_sync_write(fd,string,size)
+modem_sync_write (fd, string, size)
      int fd;
      char *string;
      size_t size;
 {
   fd_set writefd;
   struct timeval tv;
-  int sel,total,nwrote;
+  int sel, total, nwrote;
   char *p;
 
   if (fd == -1)
     return 0;
 
   FD_ZERO (&writefd);
-  total=0;
-  p=string;
-  while(total<size)
+  total = 0;
+  p = string;
+  while (total < size)
     {
       FD_SET (fd, &writefd);
-      
+
       tv.tv_sec = 0;
       tv.tv_usec = 1000;
-      
+
       sel = select (fd + 1, NULL, &writefd, NULL, &tv);
       if (sel <= 0)
         return 0;
-      nwrote=write(fd, string, size-total);
-      if(nwrote<=0)
+      nwrote = write (fd, string, size - total);
+      if (nwrote <= 0)
         return 0;
-      p+=nwrote;
-      total+=nwrote;
+      p += nwrote;
+      total += nwrote;
     }
 
   return 1;

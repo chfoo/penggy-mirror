@@ -57,13 +57,13 @@ send_ip_config (buffer)
 {
   char *fdo;
   struct ip_config_request *request;
-  
-  fdo = malloc(sizeof(token_t) + sizeof(struct ip_config_request));
-  request = (struct ip_config_request *) (fdo + sizeof(token_t));
+
+  fdo = malloc (sizeof (token_t) + sizeof (struct ip_config_request));
+  request = (struct ip_config_request *) (fdo + sizeof (token_t));
   *request = DEFAULT_IP_CONFIG_REQUEST;
 
-  fdo_send (buffer, TOKEN("ya"), (char *)request, sizeof (request));
-  free(fdo);
+  fdo_send (buffer, TOKEN ("ya"), (char *) request, sizeof (request));
+  free (fdo);
 }
 
 void
@@ -87,7 +87,7 @@ get_ip_config (data, data_size)
        config->dns_address >> 24 & 0xff,
        config->dns_address >> 16 & 0xff,
        config->dns_address >> 8 & 0xff, config->dns_address & 0xff);
-  
+
   end = memchr (&config->hostname, 0x0c, data_size - sizeof (*config));
   len = (int) end - (int) &config->hostname;
   if (len > 255)
@@ -95,12 +95,12 @@ get_ip_config (data, data_size)
   strncpy (hostname, &config->hostname, len);
   hostname[len] = '\0';
   log (LOG_NOTICE, "IP TUNNEL - Hostname: %s\n", hostname);
-  
+
   launch_ip_up (PARAM_INTERFACE_NAME,
-	      config->address, 0xffffffff,
-	      config->address & 0xffffff00,
-	      config->address | 0x000000ff, config->address);
-  
+                config->address, 0xffffffff,
+                config->address & 0xffffff00,
+                config->address | 0x000000ff, config->address);
+
   vj_compress_init (&vj_comp, -1);
 }
 
@@ -117,16 +117,16 @@ get_ip (data, data_size)
     /* This packet is a long ip (>128 bytes) */
     {
       debug (1, "IP TUNNEL - Received a big packet\n");
-      if(data_size - 3 != big->len)
-        log(LOG_WARNING,"IP TUNNEL - bad size for a big packet\n");
+      if (data_size - 3 != big->len)
+        log (LOG_WARNING, "IP TUNNEL - bad size for a big packet\n");
       else
         get_uncompressed_ip (big->ip_data, big->len & LONG_IP_MASK);
     }
   else
     {
       debug (1, "IP TUNNEL - Received a small packet\n");
-      if(data_size - 2 != small->len)
-        log(LOG_WARNING,"IP TUNNEL - bad size for a small packet\n");
+      if (data_size - 2 != small->len)
+        log (LOG_WARNING, "IP TUNNEL - bad size for a small packet\n");
       else
         get_uncompressed_ip (small->ip_data, small->len);
     }
@@ -157,8 +157,8 @@ send_ip ()
   struct long_ip *big;
 
   debug (1, "IP TUNNEL - Sending IP...\n");
-  small = (struct short_ip *) (data + sizeof(token_t));
-  big = (struct long_ip *) (data + sizeof(token_t));
+  small = (struct short_ip *) (data + sizeof (token_t));
+  big = (struct long_ip *) (data + sizeof (token_t));
   while (if_get (&if_in, &ip, &ip_size))
     {
       if (ip_size > 0x7f)
@@ -168,7 +168,7 @@ send_ip ()
           big->ipnum = ipnum;
           big->len = ip_size | ~LONG_IP_MASK;
           memcpy (big->ip_data, ip, ip_size);
-          prot30_send_data ( TOKEN("yc"), &data, ip_size + 3);
+          prot30_send_data (TOKEN ("yc"), &data, ip_size + 3);
         }
       else
         {
@@ -176,7 +176,7 @@ send_ip ()
           small->ipnum = ipnum;
           small->len = ip_size;
           memcpy (small->ip_data, ip, ip_size);
-          prot30_send_data ( TOKEN("yc"), &data, ip_size + 2);
+          prot30_send_data (TOKEN ("yc"), &data, ip_size + 2);
         }
     }
 }
@@ -197,10 +197,10 @@ get_uncompressed_ip (vjip, vjiplen)
                                     &vj_comp, &iphdr, &iphdrlen);
       /* allocate a buffer to contruct the uncompressed packet */
       iplen = iphdrlen + (vjiplen - vjhdrlen);
-      if(iplen == -1)
+      if (iplen == -1)
         {
-	log(LOG_WARNING, "IP TUNNEL - Unable to uncompress the packet");
-	return;
+          log (LOG_WARNING, "IP TUNNEL - Unable to uncompress the packet");
+          return;
         }
       tmp = malloc (iplen);
       if (tmp)
@@ -227,7 +227,7 @@ get_uncompressed_ip (vjip, vjiplen)
           if_put (&if_out, vjip, vjiplen);
         }
       else
-        log(LOG_WARNING, "IP TUNNEL - Unable to uncompress the packet");
+        log (LOG_WARNING, "IP TUNNEL - Unable to uncompress the packet");
     }
   else if ((vjip[0] & TYPE_IP) == TYPE_IP)
     {

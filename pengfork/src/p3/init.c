@@ -35,30 +35,31 @@ p3_send_init_packet (buffer)
    *  FIXME: fields are in big endian, systems in little endian should take care
    *  of this
    */
-  init_data = (p3_init30_t) {
-    0x03, /* plateform = PC */
-    139,  /* version is an AOL 3.0 */
-    109,  /* subversion */
-    0,    /* unused */
-    16,   /* machinmem always 16 */
-    0,    /* appmem always 0 */
-    0,    /* pctype always 0 */
-    5,    /* release_month alway 5 */
-    15,   /* release_day alway 15 */
-    0,    /* customer_class always 0 */
-    0x256eb24d, /* timestamp */
-    0xc000, /* dos version :) */
-    0x14c0, /* flags */
-    8,    /* video (8=??) */
-    5,    /* processor (5=??) */
-    0,    /* media ??? */
-    0x040a0000, /* windows version :) */
-    1,    /* windows mode 1=enhanced :) */
-    1024, 768, 65535, /* Resolution 1024x768, 16/24 bits */
-    0,    /* filler always 0 */
-    0,    /* region */
-    LANGUAGE_FRENCH, /* the language */ 
-    0x17  /* connection speed */
+  init_data = (p3_init30_t)
+  {
+    0x03,                       /* plateform = PC */
+      139,                      /* version is an AOL 3.0 */
+      109,                      /* subversion */
+      0,                        /* unused */
+      16,                       /* machinmem always 16 */
+      0,                        /* appmem always 0 */
+      0,                        /* pctype always 0 */
+      5,                        /* release_month alway 5 */
+      15,                       /* release_day alway 15 */
+      0,                        /* customer_class always 0 */
+      0x4db26e25,               /* timestamp */
+      0x00c0,                   /* dos version :) */
+      0xc014,                   /* flags */
+      8,                        /* video (8=??) */
+      5,                        /* processor (5=??) */
+      0,                        /* media ??? */
+      0x00000a04,               /* windows version :) */
+      1,                        /* windows mode 1=enhanced :) */
+      1024, 768, 65535,         /* Resolution 1024x768, 16/24 bits */
+      0,                        /* filler always 0 */
+      0,                        /* region */
+      LANGUAGE_FRENCH,          /* the language */
+      0x17                      /* connection speed */
   };
   p3_put_packet (buffer, TYPE_INIT, (char *) &init_data, sizeof (init_data));
 }

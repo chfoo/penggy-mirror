@@ -27,17 +27,17 @@
 #include "fdo/login.h"
 
 void
-init_register()
+init_register ()
 {
-  fdo_register (TOKEN("SD"), init_token);
+  fdo_register (TOKEN ("SD"), init_token);
 }
 
 void
-init_token(token, data, data_size, out)
-     token_handler_t token;
+init_token (token, data, data_size, out)
+     token_t token;
      char *data;
      size_t data_size;
      buffer_t *out;
 {
-  logon(out);
+  logon (out);
 }

@@ -42,14 +42,15 @@ p3_sync_buffer (buffer)
     {
       len = buffer->used;
     }
-  else {
-    p = memchr (buffer_start (buffer) + 1, P3_MAGIC, buffer->used - 1);
-    if (p)
-      len = (int) p - (int) buffer_start (buffer);
-    else
-      len = buffer->used;
-  }
-  
+  else
+    {
+      p = memchr (buffer_start (buffer) + 1, P3_MAGIC, buffer->used - 1);
+      if (p)
+        len = (int) p - (int) buffer_start (buffer);
+      else
+        len = buffer->used;
+    }
+
   debug (0, "P3 - %d bytes dropped from buffer!\n", len);
   buffer_free (buffer, len);
 }
@@ -59,14 +60,14 @@ int
 p3_next_seq (seq)
      int seq;
 {
-  return p3_add_seq(seq,1);
+  return p3_add_seq (seq, 1);
 }
 
 int
-p3_add_seq(seq,add) 
+p3_add_seq (seq, add)
      int seq;
      int add;
 {
-  return (seq - PACKET_MIN_SEQ + add) % (PACKET_MAX_SEQ - PACKET_MIN_SEQ + 1) + 
-    PACKET_MIN_SEQ;
+  return (seq - PACKET_MIN_SEQ + add) % (PACKET_MAX_SEQ - PACKET_MIN_SEQ +
+                                         1) + PACKET_MIN_SEQ;
 }

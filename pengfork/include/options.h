@@ -53,7 +53,8 @@ param_t;
 #define PARAM_BOOLEAN(x)              param[x].value.boolean
 #define PARAM_INTEGER(x)              param[x].value.integer
 
-enum {
+enum
+{
   __access_method,
   __protocol,
   __interface_type,
@@ -118,7 +119,7 @@ enum {
   __cable_interface,
   __cable_connect_ip,
 
-  __last_param  /* not a parameter */
+  __last_param                  /* not a parameter */
 };
 
 #define PARAM_ACCESS_METHOD           PARAM_STRING(__access_method)
@@ -166,7 +167,7 @@ enum {
 extern param_t param[PARAM_MAX];
 
 int parse_command_line (int argc, char **argv);
-int parse_config( void );
+int parse_config (void);
 int parse_config_file (char *filename);
 void try_param (param_t * param, char *filename, int lineno, char *name,
                 char *value);

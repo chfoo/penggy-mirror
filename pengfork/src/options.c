@@ -39,7 +39,7 @@ param_t param[PARAM_MAX] = {
 {0, "access-method", "access_method", string, false, {string:"modem"}
    }
   ,
-{0, "protocol", "protocol", string, false, {string:"P3"}
+{0, "protocol", "protocol", string, false, {string:"p3"}
    }
   ,
 {'t', "interface-type", "interface_type", string, false, {string:"tun"}
@@ -116,7 +116,7 @@ param_t param[PARAM_MAX] = {
   ,
 {0, "ip-down", "ip-down_script", string, false, {string:"/etc/pengfork/ip-down"}
    }
-  ,   /* MODEM SPECIFIC */
+  ,                             /* MODEM SPECIFIC */
 {'m', "modem", "modem_device", string, false, {string:"/dev/modem"}
    }
   ,
@@ -206,7 +206,7 @@ param_t param[PARAM_MAX] = {
   ,
 {0, NULL, "abort_dialtone", boolean, false, {boolean:true}
    }
-  ,   /* CABLE SPECIFIC */
+  ,                             /* CABLE SPECIFIC */
 {0, NULL, "aol_host", string, false, {string:"americaonline.aol.com"}
    }
   ,
@@ -227,26 +227,25 @@ param_t param[PARAM_MAX] = {
 
 /* Extra options */
 enum option_e
-  {
-    opt_help = 'h',
-    opt_version = 'V'
-  };
+{
+  opt_help = 'h',
+  opt_version = 'V'
+};
 
 /* short_options merged with generated ones. */
 static const char short_options_head[] = "hV";
 
 /* long_options merged with generated ones. */
-static struct option const long_options_head[] =
-{
-  {"help",		    no_argument,  0,	opt_help},
-  {"version",		    no_argument,  0,	opt_version},
+static struct option const long_options_head[] = {
+  {"help", no_argument, 0, opt_help},
+  {"version", no_argument, 0, opt_version},
   {NULL, 0, NULL, 0}
 };
 
-static void 
+static void
 usage ()
 {
-  printf("Usage : %s [OPTIONS]\n
+  printf ("Usage : %s [OPTIONS]\n
 Operation modes :
       -h, --help		 print this help, then exit.
       -V, --version		 print version, then exit.
@@ -278,7 +277,7 @@ Misc :
   exit (0);
 }
 
-static void 
+static void
 version (void)
 {
   printf ("%s (" PACKAGE ") v" VERSION "\n", program_name);
@@ -300,52 +299,52 @@ set_opt_param (int opt_id)
       assert ((param[i].type == boolean) || (optarg != NULL));
 
       switch (param[i].type)
-	{
-	case boolean:
-	  param[i].value.boolean = true;
-	  break;
-	case integer:
-	  param[i].value.integer = atoi (optarg);
-	  break;
-	case string:
-	  if (param[i].defined && (param[i].value.string != NULL))
-	    free (param[i].value.string);
-	  param[i].value.string = strdup (optarg);
-	}
+        {
+        case boolean:
+          param[i].value.boolean = true;
+          break;
+        case integer:
+          param[i].value.integer = atoi (optarg);
+          break;
+        case string:
+          if (param[i].defined && (param[i].value.string != NULL))
+            free (param[i].value.string);
+          param[i].value.string = strdup (optarg);
+        }
     }
   return 1;
 }
 
-static char*
+static char *
 generate_short_options (void)
 {
   char *tab, *p;
   int i;
-  
+
   /* FIXME: should alloc less memory */
-  tab = (char*) malloc ((PARAM_MAX * 2) * sizeof(char) + 
-			strlen (short_options_head));
+  tab = (char *) malloc ((PARAM_MAX * 2) * sizeof (char) +
+                         strlen (short_options_head));
   p = tab;
   strcpy (p, short_options_head);
   p += strlen (short_options_head);
   for (i = 0; i < PARAM_MAX; i++)
     {
       if (param[i].shortopt != 0)
-	{
-	  *p++ = param[i].shortopt;
-	  if (param[i].type != boolean) /* we need an argument */
-	    *p++ = ':';
-	}
+        {
+          *p++ = param[i].shortopt;
+          if (param[i].type != boolean) /* we need an argument */
+            *p++ = ':';
+        }
     }
   *p = '\0';
   return tab;
 }
 
-static struct option*
+static struct option *
 generate_long_options (void)
 {
-  struct option* tab;
-  struct option* p;
+  struct option *tab;
+  struct option *p;
   int i;
   /* 
    * Needed for long options without any corresponding short options
@@ -358,23 +357,23 @@ generate_long_options (void)
     ;
 
   /* FIXME: malloc smaller size */
-  tab = (struct option*) malloc ((PARAM_MAX + i) * sizeof (struct option));
+  tab = (struct option *) malloc ((PARAM_MAX + i) * sizeof (struct option));
   p = tab;
   for (i = 0; long_options_head[i].name != 0; i++)
-    memcpy (p++, &long_options_head[i], sizeof(struct option));
+    memcpy (p++, &long_options_head[i], sizeof (struct option));
   for (i = 0; i < PARAM_MAX; i++)
     {
       if (param[i].longopt)
-	{
-	  p->name = param[i].longopt;
-	  if (param[i].type == boolean)
-	    p->has_arg = no_argument;
-	  else
-	    p->has_arg = required_argument;
-	  p->flag = NULL;
-	  p->val = (param[i].shortopt ? param[i].shortopt : last_free_id++);
-	  p++;
-	}
+        {
+          p->name = param[i].longopt;
+          if (param[i].type == boolean)
+            p->has_arg = no_argument;
+          else
+            p->has_arg = required_argument;
+          p->flag = NULL;
+          p->val = (param[i].shortopt ? param[i].shortopt : last_free_id++);
+          p++;
+        }
     }
 
   p->name = NULL;
@@ -398,30 +397,30 @@ parse_command_line (argc, argv)
   long_options = generate_long_options ();
 
   while ((c = getopt_long (argc, argv, short_options, long_options,
-			   NULL)) != -1)
+                           NULL)) != -1)
     switch (c)
       {
       case 0:
-	/* Options that set a flag. */
-	break;
+        /* Options that set a flag. */
+        break;
 
       case opt_help:
-	usage ();
-	break;
-	
+        usage ();
+        break;
+
       case opt_version:
-	version ();
-	break;
-	
+        version ();
+        break;
+
       default:
-	if (!set_opt_param (c))
-	  {
-	    fprintf (stderr, "Try `%s --help' for more information.\n", 
-		     program_name);
-	    exit (1);
-	  }
+        if (!set_opt_param (c))
+          {
+            fprintf (stderr, "Try `%s --help' for more information.\n",
+                     program_name);
+            exit (1);
+          }
       }
-  
+
   if (short_options)
     free (short_options);
   if (long_options)
@@ -441,15 +440,15 @@ parse_config ()
   char *home;
   char homeconfig[250];
 
-  home=getenv ("HOME");
-  snprintf (homeconfig,249,"%s/.%s",home,HOME_CONFIG);
+  home = getenv ("HOME");
+  snprintf (homeconfig, 249, "%s/.%s", home, HOME_CONFIG);
 
-  if (!parse_config_file(DEFAULT_CONFIG))
+  if (!parse_config_file (DEFAULT_CONFIG))
     return 0;
-  if (!parse_config_file(homeconfig))
+  if (!parse_config_file (homeconfig))
     {
       printf ("Warning, no personnal config found !\n");
-      printf ("Create your personnal config file in %s.\n\n",homeconfig);
+      printf ("Create your personnal config file in %s.\n\n", homeconfig);
       return 1;
     }
   return 1;

@@ -27,19 +27,19 @@
 
 #include "buffer.h"
 
-typedef struct 
+typedef struct
 {
   int (*connect) (void);
   int (*disconnect) (void);
   int (*is_connected) (void);
   int *fd;
-  
+
   int (*put) (buffer_t * buffer, char *data, size_t data_size);
   int (*get) (buffer_t * buffer, char **data, size_t * data_size);
 }
 iface_t;
 
-extern iface_t *iface;
+extern const iface_t *iface;
 
 #ifdef WITH_TUN
 extern const iface_t tun_iface;

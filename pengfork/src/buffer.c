@@ -31,6 +31,16 @@
 #include "buffer.h"
 
 void
+init_buffer (buffer)
+     buffer_t *buffer;
+{
+  buffer->size = 0;
+  buffer->start = 0;
+  buffer->used = 0;
+  buffer->data = NULL;
+}
+
+void
 create_buffer (buffer, size)
      buffer_t *buffer;
      size_t size;

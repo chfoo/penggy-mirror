@@ -24,8 +24,8 @@
 #define __RESOLVER_H__
 
 int resolve_functions (void);
-int resolve_access(void);
-int resolve_iface(void);
-int resolve_protocol(void);
+int resolve_access (void);
+int resolve_iface (void);
+int resolve_protocol (void);
 
 #endif /* __RESOLVER_H__ */

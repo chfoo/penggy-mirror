@@ -77,27 +77,27 @@ launch_ip_up (if_name, if_addr, if_netmask, if_network, if_broadcast,
 
       pid = fork ();
       if (pid == 0)
-	{
-	  if (putenv (name) ||
-	      putenv (addr) ||
-	      putenv (netmask) ||
-	      putenv (network) || putenv (broadcast) || putenv (gateway))
-	    perror ("putenv");
-	  
-	  /* execlp allows shell script execution */
-	  if (execlp (PARAM_IP_UP, PARAM_IP_UP, NULL))
-	    perror ("execlp");
-	  exit (-1);
-	}
+        {
+          if (putenv (name) ||
+              putenv (addr) ||
+              putenv (netmask) ||
+              putenv (network) || putenv (broadcast) || putenv (gateway))
+            perror ("putenv");
+
+          /* execlp allows shell script execution */
+          if (execlp (PARAM_IP_UP, PARAM_IP_UP, NULL))
+            perror ("execlp");
+          exit (-1);
+        }
       else if (pid > 0)
-	{
-	  return 1;
-	}
+        {
+          return 1;
+        }
       else
-	{
-	  perror ("fork");
-	  return 0;
-	}
+        {
+          perror ("fork");
+          return 0;
+        }
     }
   return 1;
 }
@@ -149,25 +149,25 @@ launch_down_up (if_name, if_addr, if_netmask, if_network, if_broadcast,
 
       pid = fork ();
       if (pid > 0)
-	{
-	  if (putenv (name) ||
-	      putenv (addr) ||
-	      putenv (netmask) ||
-	      putenv (network) || putenv (broadcast) || putenv (gateway))
-	    perror ("putenv");
-	  
-	  if (execlp (PARAM_IP_DOWN, PARAM_IP_DOWN, NULL))
-	    perror ("execv");
-	  exit (-1);
-	}
+        {
+          if (putenv (name) ||
+              putenv (addr) ||
+              putenv (netmask) ||
+              putenv (network) || putenv (broadcast) || putenv (gateway))
+            perror ("putenv");
+
+          if (execlp (PARAM_IP_DOWN, PARAM_IP_DOWN, NULL))
+            perror ("execv");
+          exit (-1);
+        }
       else if (pid == 0)
-	{
-	}
+        {
+        }
       else
-	{
-	  perror ("fork");
-	  return 0;
-	}
+        {
+          perror ("fork");
+          return 0;
+        }
     }
   return 1;
 }

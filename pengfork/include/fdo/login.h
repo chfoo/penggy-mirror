@@ -49,7 +49,8 @@ struct login_info
  0, NULL, \
  { 0x01, 0x1d, 0x00, 0x00, 0x02, 0x00 } }
 
-void logon (buffer_t *buffer);
-void login_confirm (token_t token, char *data, size_t data_size, buffer_t *out);
+void logon (buffer_t * buffer);
+void login_confirm (token_t token, char *data, size_t data_size,
+                    buffer_t * out);
 
 #endif /* __FDO_LOGIN_H__ */

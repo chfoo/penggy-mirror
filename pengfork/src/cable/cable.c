@@ -44,7 +44,7 @@ static int cablefd = -1;
 const access_t cable_access = (access_t) {
   cable_connect,
   cable_close,
-  cable_connected, 
+  cable_connected,
   &cablefd
 };
 
@@ -59,26 +59,26 @@ cable_connect ()
   struct sockaddr_in intcable;
   struct hostent *hp;
 
-  if ((hp = gethostbyname (hostname))== 0)
+  if ((hp = gethostbyname (hostname)) == 0)
     {
-    perror ("error gethostbyname() !\n");
-    return 1;
+      perror ("error gethostbyname() !\n");
+      return 1;
     }
-  memset((char *) &intcable, 0, sizeof (struct sockaddr_in));
+  memset ((char *) &intcable, 0, sizeof (struct sockaddr_in));
   intcable.sin_family = AF_INET;
-  intcable.sin_port = htons(port);
+  intcable.sin_port = htons (port);
   intcable.sin_addr.s_addr = *((unsigned long *) hp->h_addr);
-  /*  strcpy(PARAM_CABLE_CONNECT_IP,inet_ntoa(adresse));*/
+  /*  strcpy(PARAM_CABLE_CONNECT_IP,inet_ntoa(adresse)); */
 
-  if ((cablefd = socket (PF_INET, SOCK_STREAM, 0))<0)
+  if ((cablefd = socket (PF_INET, SOCK_STREAM, 0)) < 0)
     {
-    perror ("error while opening socket !\n");
-    return 1;
+      perror ("error while opening socket !\n");
+      return 1;
     }
 
 
-  if (connect (cablefd, (struct sockaddr *) &intcable, 
-	     sizeof (struct sockaddr_in)) == 0)
+  if (connect (cablefd, (struct sockaddr *) &intcable,
+               sizeof (struct sockaddr_in)) == 0)
     return 1;
 
   return 0;
@@ -89,11 +89,11 @@ cable_close ()
 {
   if (cablefd != -1)
     {
-    if ((close (cablefd)) == -1)
-      {
-      perror ("error closing socket !\n");
-      return 1;
-      }
+      if ((close (cablefd)) == -1)
+        {
+          perror ("error closing socket !\n");
+          return 1;
+        }
       return 0;
     }
   perror ("error closing socket !\n");

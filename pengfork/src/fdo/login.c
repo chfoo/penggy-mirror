@@ -36,8 +36,8 @@ logon (buffer)
   char *data;
   struct login_info login_info = DEFAULT_LOGIN_INFO;
   int len;
-  char *sn = PARAM_SCREEN_NAME(PARAM_USE_SCREEN_NAME);
-  char *pass = PARAM_PASSWORD(PARAM_USE_SCREEN_NAME);
+  char *sn = PARAM_SCREEN_NAME (PARAM_USE_SCREEN_NAME);
+  char *pass = PARAM_PASSWORD (PARAM_USE_SCREEN_NAME);
   char login[10];
 
   len = strlen (sn);
@@ -56,15 +56,12 @@ logon (buffer)
 
   login_info.pass_size = strlen (pass);
   login_info.pass = pass;
-  
-  fdo=malloc( sizeof(token_t) +
-	    21 + 1 + 
-	    login_info.login_size + 
-	    15 + 1 + 
-	    login_info.pass_size +
-	    6);
-  data = fdo + sizeof(token_t);
-  
+
+  fdo = malloc (sizeof (token_t) +
+                21 + 1 +
+                login_info.login_size + 15 + 1 + login_info.pass_size + 6);
+  data = fdo + sizeof (token_t);
+
   memcpy (data, &login_info, 21 + 1);
   len = 21 + 1;
   memcpy (&data[len], login_info.login, login_info.login_size);
@@ -76,10 +73,10 @@ logon (buffer)
   memcpy (&data[len], login_info.unknow3, 6);
   len += 6;
 
-  fdo_send (buffer, TOKEN("Dd"), data, len);
-  free(fdo);
+  fdo_send (buffer, TOKEN ("Dd"), data, len);
+  free (fdo);
 
-  fdo_register( TOKEN("AT"), login_confirm);
+  fdo_register (TOKEN ("AT"), login_confirm);
 }
 
 void
@@ -89,5 +86,5 @@ login_confirm (token, data, data_size, out)
      size_t data_size;
      buffer_t *out;
 {
-  fdo_unregister( TOKEN("AT") );
+  fdo_unregister (TOKEN ("AT"));
 }

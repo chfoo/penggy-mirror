@@ -45,7 +45,7 @@ p3_check_header (header)
     return 0;
 
   /* Check type */
-  if(header->type < TYPE_DATA || header->type > TYPE_PING)
+  if (header->type < TYPE_DATA || header->type > TYPE_PING)
     return 0;
 
   return 1;
@@ -80,8 +80,7 @@ int
 p3_check_ordering (header)
      struct p3hdr *header;
 {
-  if (header->type == TYPE_DATA && 
-      header->seq != p3_next_seq (srv.lastseq))
+  if (header->type == TYPE_DATA && header->seq != p3_next_seq (srv.lastseq))
     /* packet is data and the seq isn't what we are waiting for */
     return 0;
   if (header->type != TYPE_DATA && header->seq != srv.lastseq)
@@ -118,4 +117,3 @@ p3_crc16 (buffer, length)
 
   return (crc);
 }
-

@@ -33,22 +33,22 @@
 #include "protocol.h"
 #include "if.h"
 
-access_t *haccess;
-protocol_t *protocol;
-iface_t *iface;
+const access_t *haccess;
+const protocol_t *protocol;
+const iface_t *iface;
 
 int
 resolve_functions ()
 {
-  return resolve_access() && resolve_iface() && resolve_protocol();
+  return resolve_access () && resolve_iface () && resolve_protocol ();
 }
 
 int
-resolve_access()
+resolve_access ()
 {
   if (PARAM_DEFINED (__access_method))
     lowerize (PARAM_ACCESS_METHOD);
-  
+
   if (strstr (PARAM_ACCESS_METHOD, "modem"))
     {
 #ifdef WITH_MODEM
@@ -59,7 +59,7 @@ resolve_access()
 #endif
     }
 
-  if (strstr (PARAM_ACCESS_METHOD, "cable"))
+  else if (strstr (PARAM_ACCESS_METHOD, "cable"))
     {
 #ifdef WITH_CABLE
       haccess = &cable_access;
@@ -68,12 +68,12 @@ resolve_access()
       return 0;
 #endif
     }
-  
+
   return 1;
 }
 
 int
-resolve_iface()
+resolve_iface ()
 {
   if (PARAM_DEFINED (__interface_type))
     lowerize (PARAM_INTERFACE_TYPE);
@@ -91,7 +91,7 @@ resolve_iface()
 }
 
 int
-resolve_protocol()
+resolve_protocol ()
 {
   if (PARAM_DEFINED (__protocol))
     lowerize (PARAM_PROTOCOL);

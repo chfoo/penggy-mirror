@@ -28,17 +28,17 @@
 #include "config.h"
 
 #include "buffer.h"
+#include "access.h"
 
 typedef struct
 {
-  void (*init) (buffer_t *bufin, buffer_t *bufout);
-  void (*loop) (buffer_t *bufin, buffer_t *bufout, int timeout);
-  void (*put_data) (buffer_t *buffer, char *data, size_t data_size);
+  void (*register_to_engine) (const access_t *);
+  void (*put_data) (buffer_t *, char *, size_t);
   size_t max_data;
 }
 protocol_t;
 
-extern protocol_t *protocol;
+extern const protocol_t *protocol;
 
 #ifdef WITH_P3
 extern const protocol_t p3_protocol;

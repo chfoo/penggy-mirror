@@ -29,6 +29,8 @@
 #include "buffer.h"
 #include "utils.h"
 #include "protocol.h"
+#include "engine.h"
+#include "fdo.h"
 
 #include "p3/header.h"
 #include "p3/p3.h"
@@ -42,23 +44,36 @@ int nack_win[WINDOW_SIZE];
 struct p3state cli, srv;
 
 const protocol_t p3_protocol = (protocol_t) {
-  p3_init,
-  p3_loop,
+  p3_register_to_engine,
   p3_put_data,
   (P3_MAX_SIZE - P3_DATA_OFFSET - 1)
 };
 
-void p3_init (bufin, bufout)
+void
+p3_register_to_engine (myaccess)
+     const access_t *myaccess;
+{
+  if (myaccess->is_connected ())
+    engine_register (*(myaccess->fd), 1, p3_init, NULL, p3_loop, NULL);
+  else
+    log (LOG_ERR,
+         "P3 - Unable to register functions, access is not connected\n");
+}
+
+void
+p3_init (bufin, bufout)
      buffer_t *bufin;
      buffer_t *bufout;
 {
   cli.lastseq = PACKET_MAX_SEQ;
   cli.lastack = PACKET_MAX_SEQ;
-  srv.lastack = 0;           /* We have never received a packet */
+  srv.lastack = 0;              /* We have never received a packet */
   srv.lastseq = PACKET_MAX_SEQ;
 
   create_buffer (bufin, BUFFER_SIZE);
   create_buffer (bufout, BUFFER_SIZE);
+  p3_send_init_packet (bufout);
+  dump_raw (buffer_start (bufout), bufout->used);
 }
 
 void
@@ -86,26 +101,26 @@ p3_loop (bufin, bufout, timeout)
             case TYPE_DATA:
               debug (2, "P3 - Received a data packet:\n");
 
-	    dump_raw ((char *) header, data_size + P3_DATA_OFFSET + 1);
+              dump_raw ((char *) header, data_size + P3_DATA_OFFSET + 1);
 
-	    /* p3_rcv_data (data, data_size); */
+              fdo_recv (bufout, data, data_size);
 
-	    /* FIXME: should not always be sent */
-              p3_put_packet (bufout,TYPE_ACK, NULL, 0);
+              /* FIXME: should not always be sent */
+              p3_put_packet (bufout, TYPE_ACK, NULL, 0);
               break;
 
             case TYPE_SS:
-	    debug (2, "P3 - Received a ss packet\n");
-	    break;
+              debug (2, "P3 - Received a ss packet\n");
+              break;
 
             case TYPE_SSR:
-	    debug (2, "P3 - Received a ssr packet\n");
-	    break;
+              debug (2, "P3 - Received a ssr packet\n");
+              break;
 
             case TYPE_INIT:
               debug (2, "P3 - Received an init packet\n");
               /* AFAIK should not happen */
-              p3_recv_init_packet ((char *)data, data_size);
+              p3_recv_init_packet ((char *) data, data_size);
               break;
 
             case TYPE_ACK:
@@ -141,12 +156,12 @@ p3_loop (bufin, bufout, timeout)
 }
 
 void
-p3_put_data(buffer, data, data_size)
+p3_put_data (buffer, data, data_size)
      buffer_t *buffer;
      char *data;
      size_t data_size;
 {
-  p3_put_packet(buffer, TYPE_DATA, data, data_size);
+  p3_put_packet (buffer, TYPE_DATA, data, data_size);
 }
 
 int
@@ -240,7 +255,7 @@ p3_put_packet (buffer, type, data, data_size)
       header->magic = P3_MAGIC;
       header->size = htons (data_size + P3_SIZE_OFFSET);
       if (type == TYPE_DATA)
-        cli.lastseq = p3_next_seq(cli.lastseq);
+        cli.lastseq = p3_next_seq (cli.lastseq);
       header->seq = cli.lastseq;
       header->ack = srv.lastseq;
       header->client = 1;
@@ -252,7 +267,7 @@ p3_put_packet (buffer, type, data, data_size)
       pdata[data_size] = P3_STOP;
 
       buffer_alloc (buffer, data_size + P3_DATA_OFFSET + 1);
-      
+
     }
   else
     log (LOG_WARNING, "P3 - Unable to send packet, buffer full.\n");

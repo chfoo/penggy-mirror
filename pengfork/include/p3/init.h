@@ -126,68 +126,68 @@
 
 typedef struct
 {
-  u_int8_t magic; /* 0x03 for windows , 0x0c for Mac */
-  u_int8_t version; /* see above */
+  u_int8_t magic;               /* 0x03 for windows , 0x0c for Mac */
+  u_int8_t version;             /* see above */
   u_int8_t subversion;
   u_int8_t unused;
-  u_int8_t machinemem; /* unused alway 0 */
-  u_int8_t appmem; /* unused always 16 */
-  u_int16_t pctype; /* unused always 0 */
-  u_int8_t release_month; /* unused alway 5 */
-  u_int8_t release_day; /* unused alway 15 */
-  u_int16_t customer_class; /* unused always 0 */
-  u_int32_t timestamp; /* timestamp of the version */
+  u_int8_t machinemem;          /* unused alway 0 */
+  u_int8_t appmem;              /* unused always 16 */
+  u_int16_t pctype;             /* unused always 0 */
+  u_int8_t release_month;       /* unused alway 5 */
+  u_int8_t release_day;         /* unused alway 15 */
+  u_int16_t customer_class;     /* unused always 0 */
+  u_int32_t timestamp;          /* timestamp of the version */
   u_int16_t dosversion;
-  u_int16_t flags; /* curently don't know what they are for */
-  u_int8_t video; 
-  u_int8_t processor; 
+  u_int16_t flags;              /* curently don't know what they are for */
+  u_int8_t video;
+  u_int8_t processor;
   u_int32_t media;
   u_int32_t winversion;
-  u_int8_t winmode; /* an old remanant field ;) alaways 1 */
+  u_int8_t winmode;             /* an old remanant field ;) alaways 1 */
   u_int16_t xres;
   u_int16_t yres;
-  u_int16_t nbcolors; /* for 16&24 bits depth: 0xffff */
-  u_int8_t filler; /* unused alway 0 */
-  u_int16_t region; /* it seems always 0 */
+  u_int16_t nbcolors;           /* for 16&24 bits depth: 0xffff */
+  u_int8_t filler;              /* unused alway 0 */
+  u_int16_t region;             /* it seems always 0 */
   u_int16_t languages[4];
-  u_int8_t speed; /* don't know how it is coded */
+  u_int8_t speed;               /* don't know how it is coded */
 }
 __attribute__ ((packed)) p3_init30_t;
 
 typedef struct
 {
-  u_int8_t platform; /* 0x03 for windows , 0x0c for Mac */
-  u_int8_t version; /* see above */
+  u_int8_t platform;            /* 0x03 for windows , 0x0c for Mac */
+  u_int8_t version;             /* see above */
   u_int8_t subversion;
-  char build; /* used only on AOL 5.0 */
-  u_int8_t machinemem; /* unused alway 0 */
-  u_int8_t appmem; /* unused always 16 */
-  u_int16_t pctype; /* unused always 0 */
-  u_int8_t release_month; /* unused alway 5 */
-  u_int8_t release_day; /* unused alway 15 */
-  u_int16_t customer_class; /* unused always 0 */
-  u_int32_t timestamp; /* timestamp of the version */
+  char build;                   /* used only on AOL 5.0 */
+  u_int8_t machinemem;          /* unused alway 0 */
+  u_int8_t appmem;              /* unused always 16 */
+  u_int16_t pctype;             /* unused always 0 */
+  u_int8_t release_month;       /* unused alway 5 */
+  u_int8_t release_day;         /* unused alway 15 */
+  u_int16_t customer_class;     /* unused always 0 */
+  u_int32_t timestamp;          /* timestamp of the version */
   u_int16_t dosversion;
-  u_int16_t flags; /* curently don't know what they are for */
-  u_int8_t video; 
-  u_int8_t processor; 
+  u_int16_t flags;              /* curently don't know what they are for */
+  u_int8_t video;
+  u_int8_t processor;
   u_int32_t media;
   u_int32_t winversion;
-  u_int8_t winmode; /* an old remanant field ;) alaways 1 */
+  u_int8_t winmode;             /* an old remanant field ;) alaways 1 */
   u_int16_t xres;
   u_int16_t yres;
-  u_int16_t nbcolors; /* for 16&24 bits depth: 0xffff */
-  u_int8_t filler; /* unused alway 0 */
-  u_int16_t region; /* it seems always 0 */
+  u_int16_t nbcolors;           /* for 16&24 bits depth: 0xffff */
+  u_int8_t filler;              /* unused alway 0 */
+  u_int16_t region;             /* it seems always 0 */
   u_int16_t languages[4];
   u_int16_t unknow;
-  u_int16_t speed; /* connection speed of the modem */
+  u_int16_t speed;              /* connection speed of the modem */
 }
 __attribute__ ((packed)) p3_init40_t;
 
-#define LANGUAGE_FRENCH {0x0001, 0x0000, 0xfffe, 0x0000}
+#define LANGUAGE_FRENCH {0x0100, 0x0000, 0xfeff, 0x0000}
 
-void p3_send_init_packet (buffer_t *buffer);
-void p3_recv_init_packet (char * data, size_t data_size);
+void p3_send_init_packet (buffer_t * buffer);
+void p3_recv_init_packet (char *data, size_t data_size);
 
 #endif /* __P30INIT_H__ */

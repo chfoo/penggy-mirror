@@ -44,17 +44,30 @@
 
 #include <stdlib.h>
 #include <getopt.h>
+#include <signal.h>
 
 #include "common.h"
 #include "log.h"
 #include "options.h"
 #include "resolver.h"
+#include "sighndl.h"
 #include "engine.h"
 #include "access.h"
+#include "protocol.h"
+#include "fdo.h"
 #include "if.h"
 
-/* defined in common.hh */
+/* defined in common.h */
 char *program_name;
+
+void
+handle_signals ()
+{
+  signal (SIGINT, sig_exit);
+  signal (SIGTERM, sig_exit);
+  if (!PARAM_DAEMON)
+    signal (SIGHUP, sig_exit);
+}
 
 int
 main (argc, argv)
@@ -77,6 +90,8 @@ main (argc, argv)
       exit (1);
     }
 
+  handle_signals ();
+
   if (!resolve_functions ())
     {
       log (LOG_ERR, "Fatal error, exiting.\n");
@@ -85,12 +100,17 @@ main (argc, argv)
 
   if (iface->connect () && haccess->connect ())
     {
-      if ( !engine_init () )
-	{
-	  log (LOG_ERR, "Fatal error, exiting.\n");
-	  exit (1);
-	}
+      if (!engine_init ())
+        {
+          log (LOG_ERR, "Fatal error, exiting.\n");
+          exit (1);
+        }
+
+      protocol->register_to_engine (haccess);
+      fdo_init ();
       engine_loop ();
+      haccess->disconnect ();
+      iface->disconnect ();
     }
   else
     {

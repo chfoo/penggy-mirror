@@ -35,6 +35,7 @@ typedef struct
 }
 buffer_t;
 
+void init_buffer (buffer_t * buffer);
 void create_buffer (buffer_t * buffer, size_t size);
 void destroy_buffer (buffer_t * buffer);
 int buffer_reserve (buffer_t * buffer, size_t size);
@@ -45,7 +46,7 @@ char *buffer_end (buffer_t * buffer);
 int buffer_recv (buffer_t * buffer, int fd);
 int buffer_send (buffer_t * buffer, int fd);
 void buffer_align (buffer_t * buffer);
-int buffer_percent_free (buffer_t *buffer);
+int buffer_percent_free (buffer_t * buffer);
 
 
 #endif /* __BUFFER_H__ */

@@ -25,7 +25,7 @@
 
 #include "config.h"
 
-typedef struct 
+typedef struct
 {
   int (*connect) (void);
   int (*disconnect) (void);
@@ -34,7 +34,7 @@ typedef struct
 }
 access_t;
 
-extern access_t *haccess;
+extern const access_t *haccess;
 
 #ifdef WITH_MODEM
 extern const access_t modem_access;

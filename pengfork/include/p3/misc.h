@@ -25,9 +25,9 @@
 
 #include "buffer.h"
 
-void p3_sync_buffer (buffer_t *buffer);
+void p3_sync_buffer (buffer_t * buffer);
 int p3_next_seq (int seq);
-int p3_add_seq(int seq, int add);
+int p3_add_seq (int seq, int add);
 
 
 #endif /* __P3_MISC_H__ */

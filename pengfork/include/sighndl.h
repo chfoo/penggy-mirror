@@ -20,17 +20,10 @@
  *                
  */
 
-#ifndef __LOG_H__
-# define __LOG_H__
 
-/* allow easier usage */
-# include <syslog.h>
+#ifndef __SIGHNDL_H__
+#define __SIGHNDL_H__
 
-#include <sys/types.h>
+void sig_exit (int signum);
 
-int init_log (void);
-int log (int level, char *format, ...);
-int debug (int level, char *format, ...);
-void dump_raw (char *packet, size_t size);
-
-#endif /* __LOG_H__ */
+#endif /* __SIGHNDL_H__ */

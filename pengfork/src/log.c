@@ -27,7 +27,7 @@
 #include "log.h"
 #include "options.h"
 
-int 
+int
 init_log (void)
 {
   if (PARAM_DAEMON)
@@ -35,12 +35,12 @@ init_log (void)
   return 1;
 }
 
-int 
+int
 log (int level, char *format, ...)
 {
   va_list ap;
   va_start (ap, format);
-  
+
   if (!PARAM_DAEMON)
     switch (level)
       {
@@ -49,10 +49,10 @@ log (int level, char *format, ...)
       case LOG_CRIT:
       case LOG_ERR:
       case LOG_WARNING:
-	vfprintf (stderr, format, ap);
-	break;
+        vfprintf (stderr, format, ap);
+        break;
       default:
-	vfprintf (stdout, format, ap);
+        vfprintf (stdout, format, ap);
       }
 
   else
@@ -60,7 +60,7 @@ log (int level, char *format, ...)
   return 1;
 }
 
-int 
+int
 debug (int level, char *format, ...)
 {
   va_list ap;

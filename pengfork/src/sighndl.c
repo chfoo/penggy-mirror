@@ -20,17 +20,38 @@
  *                
  */
 
-#ifndef __LOG_H__
-# define __LOG_H__
+#include <stdlib.h>
+#include <signal.h>
 
-/* allow easier usage */
-# include <syslog.h>
+#include "sighndl.h"
+#include "log.h"
+#include "engine.h"
+#include "access.h"
+#include "if.h"
 
-#include <sys/types.h>
+void
+sig_exit (signum)
+     int signum;
+{
+  char *string = "%s received, exiting.\n";
 
-int init_log (void);
-int log (int level, char *format, ...);
-int debug (int level, char *format, ...);
-void dump_raw (char *packet, size_t size);
+  switch (signum)
+    {
+    case SIGTERM:
+      log (LOG_NOTICE, string, "SIGTERM");
+      break;
+    case SIGINT:
+      log (LOG_NOTICE, string, "SIGINT");
+      break;
+    case SIGHUP:
+      log (LOG_NOTICE, string, "SIGINT");
+      break;
+    }
+  engine_stop ();
+  if (haccess != NULL && haccess->is_connected ())
+    haccess->disconnect ();
+  if (iface != NULL && iface->is_connected ())
+    iface->disconnect ();
 
-#endif /* __LOG_H__ */
+  exit (0);
+}
