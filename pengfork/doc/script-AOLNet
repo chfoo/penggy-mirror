@@ -1,0 +1,117 @@
+#
+# Copyright (C) 2002  Jean-Charles Salzeber <jc@varspool.net>
+#
+# This file is part of pengfork.
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+# 02111-1307, USA.
+#                
+
+#
+# Script for logon into AOLnet servers
+#
+
+# general end function
+function AOLConnect is {
+   try(120) {
+     on "Connected" do success;
+     on "Open" do success;
+     on "Unavailable" do failure;
+     on "Connect Failed" do failure;
+     on "Not Available" do failure;
+     on "Unreachable" do failure;
+     on "No Connection" do failure;
+     on "Bad Password" do failure;
+     on "Login Invalid" do failure;
+     on "NO CARRIER" do failure;
+   }
+   else failure;
+}
+
+# Login into an ANS server type
+function ANSLogin is {
+  try(20)
+  {
+    on "login" do {
+      send "aol";
+      sub(AOLConnect);
+    }
+    on "NO CARRIER" do failure;
+  }
+  else failure;
+}
+
+# Login into a BBN server type
+function BBNLogin2 is {
+   send "aolnet";
+   try(20) {
+     on "Password" do {
+       send "A0L2aNet";
+       sub(AOLConnect);
+     }
+     on "NO CARRIER" do failure;
+   }
+   else failure;
+}
+
+function BBNLogin is {
+  try(20)
+  {
+    on "login" do sub(BBNTalkToNetwork);
+    on "NO CARRIER" do failure;
+  }
+  else failure;
+}
+
+# Login into a Sprint server type
+function SprintLogin2 is {
+   send "aol";
+   try(20)
+   {
+     on "Password" do {
+       send "aol";
+       sub(AOLConnect);
+     }
+     on "NO CARRIER" do failure;
+   }
+   else failure;
+}
+
+function SprintLogin is {
+  try(20)
+  {
+    on "Username" do sub(SprintLogin2);
+    on "login" do sub(SprintLogin2);
+    on "NO CARRIER" do failure;
+  }
+  else failure;
+}
+
+
+# Main entry point, this try to determine server type
+chat {
+  try(20) {
+    on "ANSNet" do sub(ANSLogin);
+    on "UU.Net" do sub(BBNLogin);
+    on "Saturn.BBN" do sub(BBNLogin);
+    on "Sprint-IP" do sub(SprintLogin);
+    on "UQKT1" do sub(ANSLogin);
+    on "UQKT2" do sub(SprintLogin);
+    on "Connected" do success;
+    on "NO CARRIER" do failure;
+  }
+  else failure;
+}
+
