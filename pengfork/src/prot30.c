@@ -59,12 +59,7 @@ int
 prot30_start ()
 {
   access_fd = access_getfd ();
-  if ((if_fd = if_getfd ()) < 0)
-    {
-      fprintf (stderr, "Could not open interface file descriptor\n");
-      /* FIXME: uncomment line when ready */
-      /* return 0; */
-    }
+  if_fd = if_getfd ();
 
   client_seq = PACKET_MAX_SEQ;
   server_lastack = 0;           /* We have never received a packet */
@@ -118,18 +113,16 @@ prot30_loop ()
 
         case normal:
           FD_SET (access_fd, &rfdset);
-          if (if_fd >= 0 &&     /* FIXME: remove when ready */
-              buffer_percent_free (&access_out) > 20)
-            /* Make sure we have enough space for some ACK */
-            FD_SET (if_fd, &rfdset);
-
           if (access_out.used > 0)
             FD_SET (access_fd, &wfdset);
-          if (if_fd >= 0 && if_out.used > 0)    /* FIXME: remove when ready */
+
+          if (buffer_percent_free (&access_out) > 20)
+            /* Make sure we have enough space for some ACK */
+            FD_SET (if_fd, &rfdset);
+          if (if_out.used > 0)
             FD_SET (if_fd, &wfdset);
 
-          if (if_fd >= 0 &&     /* FIXME: remove when ready */
-              (FD_ISSET (if_fd, &rfdset) || FD_ISSET (if_fd, &wfdset)))
+          if (FD_ISSET (if_fd, &rfdset) || FD_ISSET (if_fd, &wfdset))
             maxfd = MAX (access_fd, if_fd) + 1;
           else
             maxfd = access_fd + 1;
@@ -154,23 +147,24 @@ prot30_loop ()
               if (FD_ISSET (access_fd, &wfdset))
                 buffer_send (&access_out, access_fd);
 
-              if (if_fd != -1 && FD_ISSET (if_fd, &rfdset))
+              if (FD_ISSET (if_fd, &rfdset))
                 {
                   buffer_recv (&if_in, if_fd);
                   prot30_send_ip ();
                 }
-              if (if_fd != -1 && FD_ISSET (if_fd, &wfdset))
+              if (FD_ISSET (if_fd, &wfdset))
                 buffer_send (&if_out, if_fd);
             }
           else
             {
               timedout = 1;
-              log (LOG_ERR, "Timed out\n");
+              prot30_send_packet (TYPE_PING, NULL, 0);
+              log (LOG_ERR, "P3 - Timed out\n");
             }
         }
       else
         {
-          log (LOG_ERR, "Your connection has been closed!\n");
+          log (LOG_ERR, "P3 - Your physical connection has been closed!\n");
           prot30_set_state (exiting);
         }
     }
@@ -215,7 +209,7 @@ prot30_send_packet (type, data, data_size)
           client_seq = PACKET_MIN_SEQ;
     }
   else
-    fprintf (stderr, "Unable to send packet, buffer full.\n");
+    fprintf (stderr, "P3 - Unable to send packet, buffer full.\n");
 }
 
 void
@@ -238,28 +232,29 @@ prot30_treat_input ()
           switch (header->type)
             {
             case TYPE_DATA:
-              debug (2, "Received a data packet:\n");
-	      if (PARAM_DEBUG_LEVEL >= 3)
-		prot30_dump_raw (((char *) header),
-				 data_size + AOL_DATA_OFFSET + 1);
+              debug (2, "P3 - Received a data packet:\n");
+              if (PARAM_DEBUG_LEVEL >= 3)
+                prot30_dump_raw (((char *) header),
+                                 data_size + AOL_DATA_OFFSET + 1);
               prot30_rcv_data (data, data_size);
+              prot30_send_packet (TYPE_ACK, NULL, 0);
               break;
             case TYPE_INIT:
-              debug (2, "Received an init packet\n");
+              debug (2, "P3 - Received an init packet\n");
               /* AFAIK should not happen */
               prot30_rcv_init ((aol_init_packet_t *) data, data_size);
               break;
             case TYPE_ACK:
-              debug (2, "Received an ack packet\n");
+              debug (2, "P3 - Received an ack packet\n");
               /* Nothing to do */
               break;
             case TYPE_PING:
-              debug (2, "Received a ping packet\n");
+              debug (2, "P3 - Received a ping packet\n");
               /* OK we send an ack */
               prot30_send_packet (TYPE_ACK, NULL, 0);
               break;
             case TYPE_RESYNC:
-              debug (2, "Received a resync packet\n");
+              debug (2, "P3 - Received a resync packet\n");
               /* The server did not receive some packets */
 
               /* $$$ TODO $$$ */
@@ -270,8 +265,8 @@ prot30_treat_input ()
               client_seq = header->ack;
               break;
             default:
-              debug (0, "Unknow packet type receive: type=0x%x\n",
-		     header->type);
+              debug (0, "P3 - Unknow packet type receive: type=0x%x\n",
+                     header->type);
             }
         }
       buffer_free (&access_in, data_size + AOL_DATA_OFFSET + 1);
@@ -345,7 +340,7 @@ prot30_get_packet (header, data, data_size)
 
       if (!prot30_check_header (h))
         {
-          debug (0, "Bad header received\n");
+          debug (0, "P3 - Bad header received\n");
           prot30_sync_buffer ();
           continue;
         }
@@ -365,7 +360,7 @@ prot30_get_packet (header, data, data_size)
         }
       else
         {
-          debug (0, "Bad packet received\n");
+          debug (0, "P3 - Bad packet received\n");
           prot30_sync_buffer ();
         }
     }
@@ -387,12 +382,12 @@ prot30_sync_buffer ()
       return;
     }
 
-  p = memchr (buffer_start (&access_in) + 1, AOL_MAGIC, access_in.used);
+  p = memchr (buffer_start (&access_in) + 1, AOL_MAGIC, access_in.used - 1);
   if (p)
     len = (int) p - (int) buffer_start (&access_in);
   else
     len = access_in.used;
-  debug (0, "%d bytes dropped from buffer!\n", len);
+  debug (0, "P3 - %d bytes dropped from buffer!\n", len);
   buffer_free (&access_in, len);
 }
 
@@ -501,7 +496,7 @@ prot30_set_state (_state)
 {
   if (_state != state)
     {
-      debug (0, "Change state: ");
+      debug (0, "P3 - Change state: ");
       prot30_print_state (state);
       debug (0, " -> ");
       state = _state;
@@ -546,7 +541,7 @@ prot30_dump_raw (packet, size)
   int i, j;
   unsigned char *p = packet;
 
-  debug (3, "Raw dump: \n");
+  debug (3, "P3 - Raw dump: \n");
   for (i = 0; i < size; i += 16)
     {
       debug (3, "  %04x: ", i);

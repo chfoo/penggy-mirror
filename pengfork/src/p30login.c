@@ -26,6 +26,7 @@
 #include <stdio.h>
 
 #include "options.h"
+#include "log.h"
 
 #include "prot30.h"
 #include "p30data.h"
@@ -79,6 +80,7 @@ prot30_login_confirm (char *data, size_t data_size)
     }
   else
     {
-      printf ("Received an login_confirm while ever logged\n");
+      log (LOG_WARNING,
+           "P3/LOGIN - Received an login_confirm while ever logged\n");
     }
 }

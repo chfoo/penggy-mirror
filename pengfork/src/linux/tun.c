@@ -61,14 +61,14 @@ tun_open_old ()
       sprintf (tunname, "/dev/tun%d", i);
       /* Open device */
       if ((fd = open (tunname, O_RDWR)) > 0)
-	{
-	  sprintf (PARAM_INTERFACE_NAME, "tun%d", i);
-	}
+        {
+          sprintf (PARAM_INTERFACE_NAME, "tun%d", i);
+        }
     }
-  return tun_ready();
+  return tun_ready ();
 }
 
-#ifdef HAVE_LINUX_IF_TUN_H	/* New driver support */
+#ifdef HAVE_LINUX_IF_TUN_H      /* New driver support */
 #include <linux/if_tun.h>
 
 /* pre 2.4.6 compatibility */
@@ -96,18 +96,18 @@ tun_open ()
   if (ioctl (fd, TUNSETIFF, (void *) &ifr) < 0)
     {
       if (errno == EBADFD)
-	{
-	  /* Try old ioctl */
-	  if (ioctl (fd, OTUNSETIFF, (void *) &ifr) < 0) 
-	    {
-	      tun_close ();
-	      return 0;
-	    }
-	}
+        {
+          /* Try old ioctl */
+          if (ioctl (fd, OTUNSETIFF, (void *) &ifr) < 0)
+            {
+              tun_close ();
+              return 0;
+            }
+        }
       else
         {
-	  tun_close ();
-	  return 0;
+          tun_close ();
+          return 0;
         }
     }
 
@@ -116,7 +116,7 @@ tun_open ()
    * Can't strcpy in a constant string, but we should not always strdup.
    * And we don't know when to free old value (can be string constant).
    */
-  PARAM_INTERFACE_NAME = strdup(ifr.ifr_name);
+  PARAM_INTERFACE_NAME = strdup (ifr.ifr_name);
   return 1;
 }
 
@@ -132,7 +132,7 @@ int
 tun_close ()
 {
   close (fd);
-  fd=-1;
+  fd = -1;
   return 1;
 }
 
@@ -156,17 +156,17 @@ tun_get (buffer, data, data_size)
 {
   struct iphdr *ip;
 
-  ip = (struct iphdr*) buffer_start(buffer);
+  ip = (struct iphdr *) buffer_start (buffer);
   *data = NULL;
   *data_size = 0;
-  if (buffer->used < sizeof(struct iphdr))
+  if (buffer->used < sizeof (struct iphdr))
     return 0;
-  if (buffer->used < ip->tot_len)
+  if (buffer->used < ntohs (ip->tot_len))
     return 0;
 
-  *data = (char*) ip;
-  *data_size = ip->tot_len;
-  buffer_free (buffer,ip->tot_len);
+  *data = (char *) ip;
+  *data_size = ntohs (ip->tot_len);
+  buffer_free (buffer, ntohs (ip->tot_len));
   return 1;
 }
 
@@ -178,9 +178,9 @@ tun_put (buffer, data, data_size)
 {
   char *p;
 
-  p = buffer_end(buffer);
-  buffer_alloc (buffer,data_size);
-  memcpy (p,data,data_size);
+  p = buffer_end (buffer);
+  buffer_alloc (buffer, data_size);
+  memcpy (p, data, data_size);
   return 1;
 }
 

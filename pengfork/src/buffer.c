@@ -119,18 +119,18 @@ buffer_recv (buffer, fd)
   do
     {
       nread = read (fd, p, len);
-      if (nread > 0) 
+      if (nread > 0)
         {
-	p += nread;
-	total += nread;
-	len -= nread;
+          p += nread;
+          total += nread;
+          len -= nread;
         }
-    } 
-  while( nread > 0 && len > 0);
+    }
+  while (nread > 0 && len > 0);
   buffer_alloc (buffer, total);
-  if (nread == -1 && errno!=EAGAIN ) 
+  if (nread == -1 && errno != EAGAIN)
     return 0;
-  
+
   if (len == 0 && buffer->used < buffer->size)
     {
       buffer_align (buffer);
@@ -138,22 +138,22 @@ buffer_recv (buffer, fd)
       p = buffer_end (buffer);
       do
         {
-	nread = read (fd, p, len);
-	if (nread > 0)
-	  {
-	    p+=nread;
-	    total2 += nread;
-	    len -= nread;
-	  }
+          nread = read (fd, p, len);
+          if (nread > 0)
+            {
+              p += nread;
+              total2 += nread;
+              len -= nread;
+            }
         }
-      while(nread > 0 && len > 0); 
+      while (nread > 0 && len > 0);
       buffer_alloc (buffer, total2);
-      if (nread == -1 && errno!=EAGAIN ) 
+      if (nread == -1 && errno != EAGAIN)
         return 0;
-      total+=total2;
+      total += total2;
     }
 
-  debug (3, "%d bytes received\n", total);
+  debug (3, "buffer - %d bytes received\n", total);
   return 1;
 }
 
@@ -164,29 +164,29 @@ buffer_send (buffer, fd)
 {
   int len;
   int nwrote;
-  int total=0;
+  int total = 0;
   char *p;
 
   len = buffer->used;
-  p= buffer_start(buffer);
+  p = buffer_start (buffer);
   do
     {
       nwrote = write (fd, p, len);
-      if(nwrote>0) 
+      if (nwrote > 0)
         {
-	p+=nwrote;
-	total+=nwrote;
-	len-=nwrote;
+          p += nwrote;
+          total += nwrote;
+          len -= nwrote;
         }
     }
-  while(nwrote>0 && len>0);
+  while (nwrote > 0 && len > 0);
 
-  if (nwrote == -1 && errno!=EAGAIN )
+  if (nwrote == -1 && errno != EAGAIN)
     return 0;
 
   buffer_free (buffer, total);
 
-  debug (3, "%d bytes sended\n", total);
+  debug (3, "buffer - %d bytes sended\n", total);
   return 1;
 }
 
@@ -204,5 +204,5 @@ int
 buffer_percent_free (buffer)
      buffer_t *buffer;
 {
-  return ((buffer->size - buffer->used) * 100)/buffer->size;
+  return ((buffer->size - buffer->used) * 100) / buffer->size;
 }

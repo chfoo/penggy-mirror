@@ -1,8 +1,33 @@
+2002-09-01  Jean-Charles Salzeber <jc@varspool.net>
+
+	* include/p30tcpip.h, src/buffer.c, src/p30data.c, src/p30init.c, 
+	src/p30login.c, src/p30tcpip.c, src/prot30.c: more on IP tunneling
+
+2002-09-01  Jean-Charles Salzeber <jc@varspool.net>
+
+	* configure.ac, include/bsdtcp.h, src/Makefile.am, src/cable.c: Fix 
+	compilation on non glibc systems
+
+	
 2002-09-01  Laurent Carlier <lordheavy@infonie.fr>
         * First steps for cable driver *NOT TEST & NOT WORK*
 	* src/cable.c, include/cable.h : New files.
 	* configure.ac : Add --enable-cable option.
 	* option.c : Add cable header.
+
+2002-08-30  Jean-Charles Salzeber <jc@varspool.net>
+
+	* include/modem.h, src/modem.c: made a synchronous write command
+	* doc/pengfork-sample.cfg: Added a skeleton for a sample configuration
+	file
+	* src/options.c: Change some default value
+	* src/Makefile.am, include/bsdtcp.h, include/vjcompress.h, 
+	src/vjcompress.c: Added vjcompress functions
+	* src/freebsd/tun.c, src/linux/tun.c, src/openbsd/tun.c: make tun 
+	interface non blocking
+	* configure.ac, include/bsdtcp.h, include/vjcompress.h, src/vjcompress.c:
+	Fix some compilation warnings
+	* doc/ip-down.sample, doc/ip-up.sample: Add sample for ip-up & ip-down
 
 2002-08-30  Nicolas Burrus  <nes@lrde.epita.fr>
 

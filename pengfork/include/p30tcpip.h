@@ -73,5 +73,6 @@ void prot30_get_ip_config (char *data, size_t data_size);
 void prot30_get_ip (char *data, size_t data_size);
 void prot30_get_ip_extra (char *data, size_t data_size);
 void prot30_send_ip ();
+void prot30_get_uncompress_ip (char *vjip, size_t vjiplen);
 
 #endif /* __P30TCPIP_H__ */

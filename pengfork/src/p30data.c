@@ -31,6 +31,8 @@
 #include "p30login.h"
 #include "p30tcpip.h"
 
+#include "log.h"
+
 void
 prot30_rcv_data (data, data_size)
      aol_data_t *data;
@@ -63,7 +65,8 @@ prot30_rcv_data (data, data_size)
       prot30_get_ip_extra (data->raw, data_size - sizeof (data->code));
       break;
     default:
-      printf ("Unknow data code received: code= %04x\n", data->code);
+      log (LOG_WARNING, "P3/DATA - Unknow data code received: code= %04x\n",
+           data->code);
     }
 }
 

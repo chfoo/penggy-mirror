@@ -23,6 +23,8 @@
 
 #include <stdio.h>
 
+#include "log.h"
+
 #include "prot30.h"
 #include "p30init.h"
 
@@ -58,6 +60,7 @@ prot30_init_confirm (data, data_size)
     }
   else
     {
-      printf ("Received an init_confirm while ever initialized\n");
+      log (LOG_WARNING,
+           "P3/INIT - Received an init_confirm while ever initialized\n");
     }
 }
