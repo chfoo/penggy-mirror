@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
  * 02111-1307, USA.
- *                
+ *
  */
 
 #ifndef __OPTIONS_H__
@@ -102,8 +102,12 @@ param_t;
 #define PARAM_CABLE_INTERFACE         param[46].value.string
 #define PARAM_CABLE_CONNECT_IP        param[47].value.string
 
+#define DEFAULT_CONFIG                "/etc/pengfork/pengfork.cfg"
+#define HOME_CONFIG                   "pengfork.cfg"
+
 extern param_t param[PARAM_MAX];
 
+int parse_config( void );
 int parse_config_file (char *filename);
 void try_param (param_t * param, char *filename, int lineno, char *name,
                 char *value);

@@ -186,6 +186,26 @@ param_t param[PARAM_MAX] = {
 };
 
 int
+parse_config ()
+{
+  int err;
+  char *home;
+  char homeconfig[250];
+
+  home=getenv ("HOME");
+  snprintf (homeconfig,249,"%s/.%s",home,HOME_CONFIG);
+
+  if (parse_config_file(DEFAULT_CONFIG))
+      return 1;
+  if (parse_config_file(homeconfig));
+    {
+      printf ("Warning, no personnal config found !\n");
+      printf ("Create your personnal config file in %s.\n\n",homeconfig);
+      return 0;
+    }
+}
+
+int
 parse_config_file (filename)
      char *filename;
 {
@@ -350,6 +370,22 @@ config_set_functions ()
       access_getfd = modem_getfd;
 #else
       fprintf (stderr, "Sorry modem support is not compiled in\n");
+      return 0;
+#endif
+    }
+  if (strstr (PARAM_ACCESS_METHOD, "cable"))
+    {
+
+// modem cable do not still exist !
+// don't define WITH_CABLE or it will fail to compile !
+
+#ifdef WITH_CABLE
+      access_connect = cable_connect;
+      access_disconnect = cable_close;
+      access_is_connected = cable_carrier; // perhaps change the name ????
+      access_getfd = cable_getfd; // idem as above
+#else
+      fprintf (stderr, "Sorry cable support is not compiled in\n");
       return 0;
 #endif
     }

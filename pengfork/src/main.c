@@ -35,7 +35,11 @@ main (argc, argv)
      char **argv;
 {
 
-  parse_config_file ("peng.cf");
+  if (parse_config ())
+    {
+      fprintf (stderr, "Error parsing configuration files, exiting !\n");
+      exit (1);
+    }
   if (!config_set_functions ())
     {
       fprintf (stderr, "Fatal error, exiting.\n");
