@@ -20,32 +20,38 @@
  *                
  */
 
-
-#ifndef __BUFFER_H__
-#define __BUFFER_H__
-
 #include <sys/types.h>
+#include <netinet/in.h>
 
-typedef struct
+#include "protocol.h"
+#include "fdo.h"
+
+void
+fdo_recv (data, data_size)
+     char *data;
+     size_t data_size;
 {
-  size_t size;
-  unsigned start;
-  unsigned used;
-  char *data;
+  token_t *token;
+  
+  token=(token_t *)data;
+  /* make sure we have a code into the packet */
+  if (data_size < sizeof (token_t))
+    return;
+
+  *token = ntohs (*token);
 }
-buffer_t;
-
-void create_buffer (buffer_t * buffer, size_t size);
-void destroy_buffer (buffer_t * buffer);
-int buffer_reserve (buffer_t * buffer, size_t size);
-int buffer_alloc (buffer_t * buffer, size_t size);
-int buffer_free (buffer_t * buffer, size_t size);
-char *buffer_start (buffer_t * buffer);
-char *buffer_end (buffer_t * buffer);
-int buffer_recv (buffer_t * buffer, int fd);
-int buffer_send (buffer_t * buffer, int fd);
-void buffer_align (buffer_t * buffer);
-int buffer_percent_free (buffer_t *buffer);
 
 
-#endif /* __BUFFER_H__ */
+void
+fdo_send (buffer, token, data, data_size)
+     buffer_t *buffer;
+     token_t token;
+     char *data;
+     size_t data_size;
+{
+  token_t *t;
+  
+  t=(token_t *)data;
+  *t = htons (token);
+  protocol->put_data (buffer, data, data_size + sizeof (*t));
+}

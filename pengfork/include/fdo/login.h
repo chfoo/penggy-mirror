@@ -17,35 +17,39 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
  * 02111-1307, USA.
- *                
+ *
  */
 
+#ifndef __FDO_LOGIN_H__
+#define __FDO_LOGIN_H__
 
-#ifndef __BUFFER_H__
-#define __BUFFER_H__
-
+#include <stdlib.h>
 #include <sys/types.h>
 
-typedef struct
+#include "fdo.h"
+#include "buffer.h"
+
+struct login_info
 {
-  size_t size;
-  unsigned start;
-  unsigned used;
-  char *data;
-}
-buffer_t;
+  u_int8_t unknow1[21];
+  u_int8_t login_size;
+  char *login;
+  u_int8_t unknow2[15];
+  u_int8_t pass_size;
+  char *pass;
+  u_int8_t unknow3[6];
+};
 
-void create_buffer (buffer_t * buffer, size_t size);
-void destroy_buffer (buffer_t * buffer);
-int buffer_reserve (buffer_t * buffer, size_t size);
-int buffer_alloc (buffer_t * buffer, size_t size);
-int buffer_free (buffer_t * buffer, size_t size);
-char *buffer_start (buffer_t * buffer);
-char *buffer_end (buffer_t * buffer);
-int buffer_recv (buffer_t * buffer, int fd);
-int buffer_send (buffer_t * buffer, int fd);
-void buffer_align (buffer_t * buffer);
-int buffer_percent_free (buffer_t *buffer);
+#define DEFAULT_LOGIN_INFO (struct login_info) { \
+ { 0x00, 0x16, 0x00, 0x01, 0x00, 0x01, 0x0a, 0x04, 0x00, 0x00, 0x00, 0x01, 0x01, \
+   0x0b, 0x04, 0x00, 0x00, 0x00, 0x02, 0x03, 0x01}, \
+ 0, NULL, \
+ { 0x01, 0x1d, 0x00, 0x01, 0x1d, 0x00, 0x01, 0x0a, 0x04, 0x00, 0x00, 0x00, 0x02, \
+   0x03, 0x01 }, \
+ 0, NULL, \
+ { 0x01, 0x1d, 0x00, 0x00, 0x02, 0x00 } }
 
+void logon (buffer_t *buffer);
+void login_confirm (token_t token, char *data, size_t data_size, buffer_t *out);
 
-#endif /* __BUFFER_H__ */
+#endif /* __FDO_LOGIN_H__ */

@@ -20,6 +20,7 @@
  *                
  */
 
+#include <sys/types.h>
 #include <stdio.h>
 #include <stdarg.h>
 
@@ -69,4 +70,45 @@ debug (int level, char *format, ...)
     vfprintf (stdout, format, ap);
 
   return 1;
+}
+
+/* Make a human readable dump of binary data
+   only useful for debug
+*/
+void
+dump_raw (packet, size)
+     char *packet;
+     size_t size;
+{
+  int i, j;
+  unsigned char *p = packet;
+
+  debug (3, "P3 - Raw dump: \n");
+  for (i = 0; i < size; i += 16)
+    {
+      debug (3, "  %04x: ", i);
+      for (j = 0; j < 8; j++)
+        if (i + j < size)
+          debug (3, "%c", (p[i + j] > 32 && p[i + j] < 127) ? p[i + j] : '.');
+        else
+          debug (3, " ");
+
+      debug (3, " ");
+
+      for (j = 8; j < 16; j++)
+        if (i + j < size)
+          debug (3, "%c", (p[i + j] > 32 && p[i + j] < 127) ? p[i + j] : '.');
+        else
+          debug (3, " ");
+
+      debug (3, "  |  ");
+
+      for (j = 0; i + j < size && j < 8; j++)
+        debug (3, "%02x", p[i + j]);
+      debug (3, " ");
+      for (j = 8; i + j < size && j < 16; j++)
+        debug (3, "%02x", p[i + j]);
+      debug (3, "\n");
+    }
+  debug (3, "\n");
 }

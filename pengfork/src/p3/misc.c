@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2002  Jean-Charles Salzeber <jc@varspool.net>
- * Copyright (C) 2001  Stephane Guth (birdy57) <birdy57@multimania.com>
  *
  * This file is part of pengfork.
  *
@@ -21,46 +20,53 @@
  *                
  */
 
-#include <stdio.h>
+#include <string.h>
 
+#include "buffer.h"
 #include "log.h"
 
-#include "prot30.h"
-#include "p30init.h"
+#include "p3/header.h"
 
+#include "p3/misc.h"
+
+/* Synchronize the start of the buffer to something that could be a packet
+ */
 void
-prot30_send_init_packet ()
+p3_sync_buffer (buffer)
+     buffer_t *buffer;
 {
-  aol_init_packet_t init_data = DEFAULT_INIT_PACKET;
+  void *p;
+  int len;
 
-  prot30_send_packet (TYPE_INIT, (aol_data_t *) & init_data,
-                      sizeof (init_data));
-  if (state != init)
-    prot30_set_state (init);
+  if (buffer->used < 2)
+    {
+      len = buffer->used;
+    }
+  else {
+    p = memchr (buffer_start (buffer) + 1, P3_MAGIC, buffer->used - 1);
+    if (p)
+      len = (int) p - (int) buffer_start (buffer);
+    else
+      len = buffer->used;
+  }
+  
+  debug (0, "P3 - %d bytes dropped from buffer!\n", len);
+  buffer_free (buffer, len);
 }
 
-void
-prot30_rcv_init (data, data_size)
-     aol_init_packet_t *data;
-     size_t data_size;
+
+int
+p3_next_seq (seq)
+     int seq;
 {
-  /* We should never receive an init packet
-     What to do if we receive one?
-   */
+  return p3_add_seq(seq,1);
 }
 
-void
-prot30_init_confirm (data, data_size)
-     char *data;
-     size_t data_size;
+int
+p3_add_seq(seq,add) 
+     int seq;
+     int add;
 {
-  if (state == init)
-    {
-      prot30_set_state (login);
-    }
-  else
-    {
-      log (LOG_WARNING,
-           "P3/INIT - Received an init_confirm while ever initialized\n");
-    }
+  return (seq - PACKET_MIN_SEQ + add) % (PACKET_MAX_SEQ - PACKET_MIN_SEQ + 1) + 
+    PACKET_MIN_SEQ;
 }

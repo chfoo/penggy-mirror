@@ -53,10 +53,49 @@ param_t param[PARAM_MAX] = {
 {'i', "interface", "interface_name", string, false, {string:NULL}
    }
   ,
-{'u', "user", "user", string, false, {string:NULL}
+{'u', "use-sn", "use_screen_name", integer, false, {integer:1}
    }
   ,
-{'p', "pass", "pass", string, false, {string:NULL}
+{0, NULL, "screen_name1", string, false, {string:NULL}
+   }
+  ,
+{0, NULL, "password1", string, false, {string:NULL}
+   }
+  ,
+{0, NULL, "screen_name2", string, false, {string:NULL}
+   }
+  ,
+{0, NULL, "password2", string, false, {string:NULL}
+   }
+  ,
+{0, NULL, "screen_name3", string, false, {string:NULL}
+   }
+  ,
+{0, NULL, "password3", string, false, {string:NULL}
+   }
+  ,
+{0, NULL, "screen_name4", string, false, {string:NULL}
+   }
+  ,
+{0, NULL, "password4", string, false, {string:NULL}
+   }
+  ,
+{0, NULL, "screen_name5", string, false, {string:NULL}
+   }
+  ,
+{0, NULL, "password5", string, false, {string:NULL}
+   }
+  ,
+{0, NULL, "screen_name6", string, false, {string:NULL}
+   }
+  ,
+{0, NULL, "password6", string, false, {string:NULL}
+   }
+  ,
+{0, NULL, "screen_name7", string, false, {string:NULL}
+   }
+  ,
+{0, NULL, "password7", string, false, {string:NULL}
    }
   ,
 {'r', "auto-reconnect", "auto_reconnect", boolean, false, {boolean:false}
@@ -570,55 +609,4 @@ tokenize_line (line, name, value)
   trim (*name);
   trim (*value);
   return 0;
-}
-
-int
-config_set_functions ()
-{
-  if (PARAM_DEFINED (0))
-    lowerize (PARAM_ACCESS_METHOD);
-  if (strstr (PARAM_ACCESS_METHOD, "modem"))
-    {
-#ifdef WITH_MODEM
-      access_connect = modem_connect;
-      access_disconnect = modem_close;
-      access_is_connected = modem_carrier;
-      access_getfd = modem_getfd;
-#else
-      fprintf (stderr, "Sorry modem support is not compiled in\n");
-      return 0;
-#endif
-    }
-  if (strstr (PARAM_ACCESS_METHOD, "cable"))
-    {
-
-// modem cable do not still exist !
-// don't define WITH_CABLE or it will fail to compile !
-
-#ifdef WITH_CABLE
-      access_connect = cable_connect;
-      access_disconnect = cable_close;
-      access_is_connected = cable_carrier; // perhaps change the name ????
-      access_getfd = cable_getfd; // idem as above
-#else
-      fprintf (stderr, "Sorry cable support is not compiled in\n");
-      return 0;
-#endif
-    }
-  if (strstr (PARAM_INTERFACE_TYPE, "tun"))
-    {
-#ifdef WITH_TUN
-      if_connect = tun_open;
-      if_disconnect = tun_close;
-      if_is_connected = tun_ready;
-      if_getfd = tun_getfd;
-      if_get = tun_get;
-      if_put = tun_put;
-#else
-      fprintf (stderr, "Sorry tun support is not compiled in\n");
-      return 0;
-#endif
-    }
-
-  return 1;
 }

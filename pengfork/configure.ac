@@ -106,6 +106,24 @@ AC_ARG_ENABLE(tun,
   AC_DEFINE([WITH_TUN])
 )
 
+# P3 protocol
+AC_ARG_ENABLE(p3,
+  [  --enable-p3	Enable P3 protocol (default) ],
+  if test $enableval != "no"; then
+     AC_DEFINE([WITH_P3],,[ Enable/disable P3 protocol ])
+  fi,
+  AC_DEFINE([WITH_P3])
+)
+     
+# L2TP protocol
+AC_ARG_ENABLE(l2tp,
+  [  --enable-l2tp	Enable L2TP protocol (default) ],
+  if test $enableval != "no"; then
+     AC_DEFINE([WITH_L2TP],,[ Enable/disable L2TP protocol ])
+  fi,
+  AC_DEFINE([WITH_L2TP])
+)
+	     
 # Ask for config.h.
 AM_CONFIG_HEADER(config.h)
 
@@ -114,6 +132,14 @@ AC_CONFIG_FILES([Makefile
 		  config/Makefile 
 		  lib/Makefile
 		  src/Makefile 
+		    src/p3/Makefile
+		    src/l2tp/Makefile
+		    src/fdo/Makefile
+		    src/modem/Makefile
+		    src/cable/Makefile
+		    src/dsl/Makefile
+		    src/tcpip/Makefile
+		    src/tun/Makefile
 		    src/linux/Makefile 
 		    src/openbsd/Makefile
 		    src/freebsd/Makefile

@@ -26,8 +26,11 @@
 /* allow easier usage */
 # include <syslog.h>
 
+#include <sys/types.h>
+
 int init_log(void);
 int log (int level, char *format, ...);
 int debug (int level, char *format, ...);
+void dump_raw (char *packet, size_t size);
 
 #endif /* __LOG_H__ */

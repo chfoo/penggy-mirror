@@ -20,13 +20,11 @@
  *                
  */
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
 
 #include "common.h"
 #include "log.h"
-#include "prot30.h"
 #include "options.h"
 #include "access.h"
 #include "if.h"
@@ -45,33 +43,34 @@ main (argc, argv)
 
   if (!parse_command_line (argc, argv))
     {
-      fprintf (stderr, "Error parsing command line, exiting !\n");
+      log (LOG_ERR, "Error parsing command line, exiting !\n");
       exit (1);
     }
 
   if (!parse_config ())
     {
-      fprintf (stderr, "Error parsing configuration files, exiting !\n");
+      log (LOG_ERR, "Error parsing configuration files, exiting !\n");
       exit (1);
     }
 
-  if (!config_set_functions ())
+  if (!resolve_functions ())
     {
-      fprintf (stderr, "Fatal error, exiting.\n");
+      log (LOG_ERR, "Fatal error, exiting.\n");
       exit (1);
     }
 
   if (if_connect () && access_connect ())
     {
-      if (!prot30_start ())
+      /*if (!prot30_start ())
 	{
 	  fprintf (stderr, "Fatal error, exiting.\n");
 	  exit (1);
 	}
+      */
     }
   else
     {
-      fprintf (stderr, "Fatal error, exiting.\n");
+      log (LOG_ERR, "Fatal error, exiting.\n");
       exit (1);
     }
 

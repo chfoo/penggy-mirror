@@ -20,32 +20,11 @@
  *                
  */
 
+#ifndef __P3_H__
+#define __P3_H__
 
-#ifndef __BUFFER_H__
-#define __BUFFER_H__
+#include "protocol.h"
+/* External interface to the P3 protocol */
+extern protocol_t prot_p3;
 
-#include <sys/types.h>
-
-typedef struct
-{
-  size_t size;
-  unsigned start;
-  unsigned used;
-  char *data;
-}
-buffer_t;
-
-void create_buffer (buffer_t * buffer, size_t size);
-void destroy_buffer (buffer_t * buffer);
-int buffer_reserve (buffer_t * buffer, size_t size);
-int buffer_alloc (buffer_t * buffer, size_t size);
-int buffer_free (buffer_t * buffer, size_t size);
-char *buffer_start (buffer_t * buffer);
-char *buffer_end (buffer_t * buffer);
-int buffer_recv (buffer_t * buffer, int fd);
-int buffer_send (buffer_t * buffer, int fd);
-void buffer_align (buffer_t * buffer);
-int buffer_percent_free (buffer_t *buffer);
-
-
-#endif /* __BUFFER_H__ */
+#endif /* __P3_H__ */

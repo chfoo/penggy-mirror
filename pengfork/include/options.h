@@ -47,60 +47,118 @@ typedef struct
 }
 param_t;
 
-#define PARAM_MAX 48
+#define PARAM_MAX __last_param
 #define PARAM_DEFINED(x)              param[x].defined
+#define PARAM_STRING(x)               param[x].value.string
+#define PARAM_BOOLEAN(x)              param[x].value.boolean
+#define PARAM_INTEGER(x)              param[x].value.integer
 
+enum {
+  __access_method,
+  __protocol,
+  __interface_type,
+  __interface_name,
+  __use_screen_name,
+  __screen_name1,
+  __password1,
+  __screen_name2,
+  __password2,
+  __screen_name3,
+  __password3,
+  __screen_name4,
+  __password4,
+  __screen_name5,
+  __password5,
+  __screen_name6,
+  __password6,
+  __screen_name7,
+  __password7,
+  __auto_reconnect,
+  __reconnect_delay,
+  __daemon,
+  __debug_level,
+  __set_dns,
+  __pid_file,
+  __ip_up,
+  __ip_down,
 
-#define PARAM_ACCESS_METHOD           param[0].value.string
-#define PARAM_PROTOCOL                param[1].value.string
-#define PARAM_INTERFACE_TYPE          param[2].value.string
-#define PARAM_INTERFACE_NAME          param[3].value.string
-#define PARAM_AOL_USER                param[4].value.string
-#define PARAM_AOL_PASS                param[5].value.string
-#define PARAM_AUTO_RECONNECT          param[6].value.boolean
-#define PARAM_RECONNECT_DELAY         param[7].value.integer
-#define PARAM_DAEMON                  param[8].value.boolean
-#define PARAM_DEBUG_LEVEL             param[9].value.integer
-#define PARAM_SET_DNS                 param[10].value.boolean
-#define PARAM_PID_FILE                param[11].value.string
-#define PARAM_IP_UP                   param[12].value.string
-#define PARAM_IP_DOWN                 param[13].value.string
+  __modem_device,
+  __modem_rtscts,
+  __modem_initstr1,
+  __modem_initstr2,
+  __modem_initstr3,
+  __modem_initstr4,
+  __modem_initstr5,
+  __modem_initstr6,
+  __modem_initstr7,
+  __modem_initstr8,
+  __modem_initstr9,
+  __modem_dialstr,
+  __modem_dial_prefix,
+  __modem_phone,
+  __modem_phone1,
+  __modem_phone2,
+  __modem_phone3,
+  __modem_phone4,
+  __modem_phone5,
+  __modem_line_speed,
+  __modem_login_prompt,
+  __modem_pass_prompt,
+  __modem_server_login,
+  __modem_server_pass,
+  __modem_server_connected,
+  __modem_server_bad_passwd,
+  __modem_dial_retry,
+  __modem_retry_delay,
+  __modem_abort_busy,
+  __modem_abort_dialtone,
 
-#define PARAM_MODEM_DEVICE            param[14].value.string
-#define PARAM_MODEM_RTSCTS            param[15].value.boolean
-#define PARAM_MODEM_INITSTR1          param[16].value.string
-#define PARAM_MODEM_INITSTR2          param[17].value.string
-#define PARAM_MODEM_INITSTR3          param[18].value.string
-#define PARAM_MODEM_INITSTR4          param[19].value.string
-#define PARAM_MODEM_INITSTR5          param[20].value.string
-#define PARAM_MODEM_INITSTR6          param[21].value.string
-#define PARAM_MODEM_INITSTR7          param[22].value.string
-#define PARAM_MODEM_INITSTR8          param[23].value.string
-#define PARAM_MODEM_INITSTR9          param[24].value.string
-#define PARAM_MODEM_DIALSTR           param[25].value.string
-#define PARAM_MODEM_DIAL_PREFIX       param[26].value.string
-#define PARAM_MODEM_PHONE             param[27].value.string
-#define PARAM_MODEM_PHONE1            param[28].value.string
-#define PARAM_MODEM_PHONE2            param[29].value.string
-#define PARAM_MODEM_PHONE3            param[30].value.string
-#define PARAM_MODEM_PHONE4            param[31].value.string
-#define PARAM_MODEM_PHONE5            param[32].value.string
-#define PARAM_MODEM_LINE_SPEED        param[33].value.integer
-#define PARAM_MODEM_LOGIN_PROMPT      param[34].value.string
-#define PARAM_MODEM_PASS_PROMPT       param[35].value.string
-#define PARAM_MODEM_SERVER_LOGIN      param[36].value.string
-#define PARAM_MODEM_SERVER_PASS       param[37].value.string
-#define PARAM_MODEM_SERVER_CONNECTED  param[38].value.string
-#define PARAM_MODEM_SERVER_BAD_PASSWD param[39].value.string
-#define PARAM_MODEM_DIAL_RETRY        param[40].value.integer
-#define PARAM_MODEM_RETRY_DELAY       param[41].value.integer
-#define PARAM_MODEM_ABORT_BUSY        param[42].value.boolean
-#define PARAM_MODEM_ABORT_DIALTONE    param[43].value.boolean
+  __cable_aol_host,
+  __cable_aol_port,
+  __cable_interface,
+  __cable_connect_ip,
 
-#define PARAM_CABLE_AOL_HOST          param[44].value.string
-#define PARAM_CABLE_AOL_PORT          param[45].value.integer
-#define PARAM_CABLE_INTERFACE         param[46].value.string
-#define PARAM_CABLE_CONNECT_IP        param[47].value.string
+  __last_param  /* not a parameter */
+};
+
+#define PARAM_ACCESS_METHOD           PARAM_STRING(__access_method)
+#define PARAM_PROTOCOL                PARAM_STRING(__protocol)
+#define PARAM_INTERFACE_TYPE          PARAM_STRING(__interface_type)
+#define PARAM_INTERFACE_NAME          PARAM_STRING(__interface_name)
+#define PARAM_USE_SCREEN_NAME         PARAM_INTEGER(__use_screen_name)
+#define PARAM_SCREEN_NAME(i)          PARAM_STRING(__screen_name1+ (i-1)*2)
+#define PARAM_PASSWORD(i)             PARAM_STRING(__password1 + (i-1)*2)
+#define PARAM_AUTO_RECONNECT          PARAM_BOOLEAN(__auto_reconnect)
+#define PARAM_RECONNECT_DELAY         PARAM_INTEGER(__reconnect_delay)
+#define PARAM_DAEMON                  PARAM_BOOLEAN(__daemon)
+#define PARAM_DEBUG_LEVEL             PARAM_INTEGER(__debug_level)
+#define PARAM_SET_DNS                 PARAM_BOOLEAN(__set_dns)
+#define PARAM_PID_FILE                PARAM_STRING(__pid_file)
+#define PARAM_IP_UP                   PARAM_STRING(__ip_up)
+#define PARAM_IP_DOWN                 PARAM_STRING(__ip_up)
+
+#define PARAM_MODEM_DEVICE            PARAM_STRING(__modem_device)
+#define PARAM_MODEM_RTSCTS            PARAM_BOOLEAN(__modem_rtscts)
+#define PARAM_MODEM_INITSTR(i)        PARAM_STRING(__modem_initstr1 + i - 1)
+#define PARAM_MODEM_DIALSTR           PARAM_STRING(__modem_dialstr)
+#define PARAM_MODEM_DIAL_PREFIX       PARAM_STRING(__modem_dial_prefix)
+#define PARAM_MODEM_PHONE(i)          PARAM_STRING(__modem_phone + i)
+#define PARAM_MODEM_LINE_SPEED        PARAM_INTEGER(__modem_line_speed)
+#define PARAM_MODEM_LOGIN_PROMPT      PARAM_STRING(__modem_login_prompt)
+#define PARAM_MODEM_PASS_PROMPT       PARAM_STRING(__modem_pass_prompt)
+#define PARAM_MODEM_SERVER_LOGIN      PARAM_STRING(__modem_server_login)
+#define PARAM_MODEM_SERVER_PASS       PARAM_STRING(__modem_server_pass)
+#define PARAM_MODEM_SERVER_CONNECTED  PARAM_STRING(__modem_server_connected)
+#define PARAM_MODEM_SERVER_BAD_PASSWD PARAM_STRING(__modem_server_bad_passwd)
+#define PARAM_MODEM_DIAL_RETRY        PARAM_INTEGER(__modem_dial_retry)
+#define PARAM_MODEM_RETRY_DELAY       PARAM_INTEGER(__modem_retry_delay)
+#define PARAM_MODEM_ABORT_BUSY        PARAM_BOOLEAN(__modem_abort_busy)
+#define PARAM_MODEM_ABORT_DIALTONE    PARAM_BOOLEAN(__modem_abort_dialtone)
+
+#define PARAM_CABLE_AOL_HOST          PARAM_STRING(__cable_aol_host)
+#define PARAM_CABLE_AOL_PORT          PARAM_INTEGER(__cable_aol_port)
+#define PARAM_CABLE_INTERFACE         PARAM_STRING(__cable_interface)
+#define PARAM_CABLE_CONNECT_IP        PARAM_STRING(__cable_connect_ip)
 
 #define DEFAULT_CONFIG                "/etc/pengfork/pengfork.cfg"
 #define HOME_CONFIG                   "pengfork.cfg"

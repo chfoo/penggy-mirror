@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2002  Jean-Charles Salzeber <jc@varspool.net>
- * Copyright (C) 2001  Stephane Guth (birdy57) <birdy57@multimania.com>
  *
  * This file is part of pengfork.
  *
@@ -18,24 +17,19 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
  * 02111-1307, USA.
- *                
+ *
  */
 
-#ifndef __P30TCPIP_H__
-#define __P30TCPIP_H__
+#ifndef __FDO_TCPIP_H__
+#define __FDO_TCPIP_H__
 
-#include <sys/types.h>
-#include <netinet/in.h>
-
-#include "prot30.h"
-#include "p30data.h"
-
-struct ip_config_request_t
+struct ip_config_request
 {
   u_int8_t unknow[9];
-};
+}
+__attribute__ ((packed));
 
-struct ip_config_reply_t
+struct ip_config_reply
 {
   u_int8_t unknow1[2];
   in_addr_t address;
@@ -46,18 +40,19 @@ struct ip_config_reply_t
 }
 __attribute__ ((packed));
 
-struct short_ip_t
+struct short_ip
 {
   u_int8_t ipnum;
   u_int8_t len;
-  char ip_data[MAX_PACKET_SIZE - 12];
-};
+  char ip_data;
+}
+__attribute__ ((packed));
 
-struct long_ip_t
+struct long_ip
 {
   u_int8_t ipnum;
   u_int16_t len;
-  char ip_data[MAX_PACKET_SIZE - 13];
+  char ip_data;
 }
 __attribute__ ((packed));
 
@@ -65,14 +60,9 @@ __attribute__ ((packed));
 #define LONG_IP_MASK 0x7fff
 
 
-#define DEFAULT_IP_CONFIG_REQUEST (struct ip_config_request_t)\
+#define DEFAULT_IP_CONFIG_REQUEST (struct ip_config_request)\
   { {0x07, 0x01, 0x01, 0x0c, 0x01, 0x01, 0x0d, 0x01, 0x01} }
 
-void prot30_send_ip_config ();
-void prot30_get_ip_config (char *data, size_t data_size);
-void prot30_get_ip (char *data, size_t data_size);
-void prot30_get_ip_extra (char *data, size_t data_size);
-void prot30_send_ip ();
-void prot30_get_uncompress_ip (char *vjip, size_t vjiplen);
+extern int mtu;
 
-#endif /* __P30TCPIP_H__ */
+#endif /* __FDO_TCPIP_H__ */

@@ -20,32 +20,24 @@
  *                
  */
 
-
-#ifndef __BUFFER_H__
-#define __BUFFER_H__
-
 #include <sys/types.h>
 
-typedef struct
+#include "fdo.h"
+#include "fdo/init.h"
+#include "fdo/login.h"
+
+void
+init_register()
 {
-  size_t size;
-  unsigned start;
-  unsigned used;
-  char *data;
+  fdo_register (TOKEN("SD"), init_token);
 }
-buffer_t;
 
-void create_buffer (buffer_t * buffer, size_t size);
-void destroy_buffer (buffer_t * buffer);
-int buffer_reserve (buffer_t * buffer, size_t size);
-int buffer_alloc (buffer_t * buffer, size_t size);
-int buffer_free (buffer_t * buffer, size_t size);
-char *buffer_start (buffer_t * buffer);
-char *buffer_end (buffer_t * buffer);
-int buffer_recv (buffer_t * buffer, int fd);
-int buffer_send (buffer_t * buffer, int fd);
-void buffer_align (buffer_t * buffer);
-int buffer_percent_free (buffer_t *buffer);
-
-
-#endif /* __BUFFER_H__ */
+void
+init_token(token, data, data_size, out)
+     token_handler_t token;
+     char *data;
+     size_t data_size;
+     buffer_t *out;
+{
+  logon(out);
+}

@@ -19,29 +19,8 @@
 # 02111-1307, USA.
 #
 
-SUBDIRS = p3 l2tp fdo modem cable dsl tcpip tun @ARCH_DIR@
-DIST_SUBDIRS = p3 l2tp fdo linux openbsd freebsd
-
-bin_PROGRAMS = pengfork
-
-pengfork_SOURCES = 	buffer.c		\
-			misc.c			\
-			options.c		\
-			main.c			\
-			utils.c			\
-			log.c			\
-			engine.c		\
-			resolver.c
-
 INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib
 
-pengfork_LDADD = 	$(top_builddir)/src/p3/libp3.a 			\
-			$(top_builddir)/src/l2tp/libl2tp.a		\
-			$(top_builddir)/src/fdo/libfdo.a		\
-			$(top_builddir)/src/modem/libmodem.a		\
-			$(top_builddir)/src/cable/libcable.a		\
-			$(top_builddir)/src/dsl/libdsl.a		\
-			$(top_builddir)/src/tcpip/libtcpip.a		\
-			$(top_builddir)/src/tun/libtun.a		\
-			$(top_builddir)/src/@ARCH_DIR@/libsystem.a 	\
-			$(top_builddir)/lib/lib.a
+noinst_LIBRARIES = libmodem.a
+libmodem_a_SOURCES = 	modem.c		\
+			devlock.c	

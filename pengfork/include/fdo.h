@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2002  Jean-Charles Salzeber <jc@varspool.net>
- * Copyright (C) 2001  Stephane Guth (birdy57) <birdy57@multimania.com>
  *
  * This file is part of pengfork.
  *
@@ -21,30 +20,21 @@
  *                
  */
 
-#ifndef __P30INIT_H__
-#define __P30INIT_H__
+#ifndef __FDO_H__
+#define __FDO_H__
 
 #include <sys/types.h>
 
-#include "prot30.h"
-#include "p30data.h"
+#include "buffer.h"
 
+#define TOKEN(s)  (s[0]<<8 | s[1])
 
-typedef struct
-{
-  u_int8_t unknow[49];
-}
-aol_init_packet_t;
+typedef u_int16_t token_t;
+typedef void (*token_handler_t) (token_t, char *, size_t, buffer_t *);
 
-#define DEFAULT_INIT_PACKET (aol_init_packet_t) { {0x03, 0x8b, 0x6d, 0x00, \
- 0x10, 0x00, 0x00, 0x00, 0x05, 0x0f, 0x00, 0x00, 0x25, 0x6e, 0xb2, 0x4d, \
- 0xc0, 0x00, 0x14, 0xc0, 0x08, 0x05, 0x00, 0x00, 0x00, 0x00, 0x04, 0x0a, \
- 0x00, 0x00, 0x01, 0x00, 0x04, 0x00, 0x03, 0xff, 0xff, 0x00, 0x00, 0x00, \
- 0x00, 0x01, 0x00, 0x00, 0xff, 0xfe, 0x00, 0x00, 0x17} }
+void fdo_recv (char *data, size_t data_size);
+void fdo_send (buffer_t *buffer, token_t token, char *data, size_t data_size);
+void fdo_register (token_t token, token_handler_t handler);
+void fdo_unregister (token_t token);
 
-void prot30_send_init_packet (void);
-void prot30_rcv_init (aol_init_packet_t * data, size_t data_size);
-void prot30_init_confirm (char *data, size_t data_size);
-
-
-#endif /* __P30INIT_H__ */
+#endif /* __FDO_H__ */

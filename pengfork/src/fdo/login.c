@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2002  Jean-Charles Salzeber <jc@varspool.net>
- * Copyright (C) 2001  Stephane Guth (birdy57) <birdy57@multimania.com>
  *
  * This file is part of pengfork.
  *
@@ -21,66 +20,74 @@
  *                
  */
 
-#include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
 
 #include "options.h"
-#include "log.h"
+#include "buffer.h"
 
-#include "prot30.h"
-#include "p30data.h"
-#include "p30login.h"
+#include "fdo.h"
+#include "fdo/login.h"
 
 void
-prot30_send_login_packet ()
+logon (buffer)
+     buffer_t *buffer;
 {
-  aol_data_t login_data;
-  struct login_info_t login_info = DEFAULT_LOGIN_INFO;
+  char *fdo;
+  char *data;
+  struct login_info login_info = DEFAULT_LOGIN_INFO;
   int len;
+  char *sn = PARAM_SCREEN_NAME(PARAM_USE_SCREEN_NAME);
+  char *pass = PARAM_PASSWORD(PARAM_USE_SCREEN_NAME);
   char login[10];
 
-  len = strlen (PARAM_AOL_USER);
+  len = strlen (sn);
   if (len >= 10)
     {
       login_info.login_size = len;
-      login_info.login = PARAM_AOL_USER;
+      login_info.login = sn;
     }
   else
     {
       login_info.login_size = 10;
-      strncpy (login, PARAM_AOL_USER, len);
+      strncpy (login, sn, len);
       memset (&login[len], ' ', 10 - len);
       login_info.login = login;
     }
 
-  login_info.pass_size = strlen (PARAM_AOL_PASS);
-  login_info.pass = PARAM_AOL_PASS;
-
-  memcpy (login_data.raw, &login_info, 21 + 1);
+  login_info.pass_size = strlen (pass);
+  login_info.pass = pass;
+  
+  fdo=malloc( sizeof(token_t) +
+	    21 + 1 + 
+	    login_info.login_size + 
+	    15 + 1 + 
+	    login_info.pass_size +
+	    6);
+  data = fdo + sizeof(token_t);
+  
+  memcpy (data, &login_info, 21 + 1);
   len = 21 + 1;
-  memcpy (&login_data.raw[len], login_info.login, login_info.login_size);
+  memcpy (&data[len], login_info.login, login_info.login_size);
   len += login_info.login_size;
-  memcpy (&login_data.raw[len], login_info.unknow2, 15 + 1);
+  memcpy (&data[len], login_info.unknow2, 15 + 1);
   len += 15 + 1;
-  memcpy (&login_data.raw[len], login_info.pass, login_info.pass_size);
+  memcpy (&data[len], login_info.pass, login_info.pass_size);
   len += login_info.pass_size;
-  memcpy (&login_data.raw[len], login_info.unknow3, 6);
+  memcpy (&data[len], login_info.unknow3, 6);
   len += 6;
 
-  prot30_send_data (CODE_LOGIN_INFO, &login_data, len);
+  fdo_send (buffer, TOKEN("Dd"), data, len);
+  free(fdo);
+
+  fdo_register( TOKEN("AT"), login_confirm);
 }
 
 void
-prot30_login_confirm (char *data, size_t data_size)
+login_confirm (token, data, data_size, out)
+     token_t token;
+     char *data;
+     size_t data_size;
+     buffer_t *out;
 {
-  if (state == login)
-    {
-      prot30_set_state (ipconfig);
-    }
-  else
-    {
-      log (LOG_WARNING,
-           "P3/LOGIN - Received an login_confirm while ever logged\n");
-    }
+  fdo_unregister( TOKEN("AT") );
 }

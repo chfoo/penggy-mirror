@@ -157,15 +157,15 @@ modem_connect ()
 int
 modem_init ()
 {
-  if (!modem_send_init_string (PARAM_MODEM_INITSTR1) ||
-      !modem_send_init_string (PARAM_MODEM_INITSTR2) ||
-      !modem_send_init_string (PARAM_MODEM_INITSTR3) ||
-      !modem_send_init_string (PARAM_MODEM_INITSTR4) ||
-      !modem_send_init_string (PARAM_MODEM_INITSTR5) ||
-      !modem_send_init_string (PARAM_MODEM_INITSTR6) ||
-      !modem_send_init_string (PARAM_MODEM_INITSTR7) ||
-      !modem_send_init_string (PARAM_MODEM_INITSTR8) ||
-      !modem_send_init_string (PARAM_MODEM_INITSTR9))
+  if (!modem_send_init_string (PARAM_MODEM_INITSTR(1)) ||
+      !modem_send_init_string (PARAM_MODEM_INITSTR(2)) ||
+      !modem_send_init_string (PARAM_MODEM_INITSTR(3)) ||
+      !modem_send_init_string (PARAM_MODEM_INITSTR(4)) ||
+      !modem_send_init_string (PARAM_MODEM_INITSTR(5)) ||
+      !modem_send_init_string (PARAM_MODEM_INITSTR(6)) ||
+      !modem_send_init_string (PARAM_MODEM_INITSTR(7)) ||
+      !modem_send_init_string (PARAM_MODEM_INITSTR(8)) ||
+      !modem_send_init_string (PARAM_MODEM_INITSTR(9)))
     return 0;
 
   return 1;
@@ -203,12 +203,12 @@ modem_dial ()
   int i;
 
   for (i = 0; i < PARAM_MODEM_DIAL_RETRY; i++)
-    if (modem_dial_to (PARAM_MODEM_PHONE) ||
-        modem_dial_to (PARAM_MODEM_PHONE1) ||
-        modem_dial_to (PARAM_MODEM_PHONE2) ||
-        modem_dial_to (PARAM_MODEM_PHONE3) ||
-        modem_dial_to (PARAM_MODEM_PHONE4) ||
-        modem_dial_to (PARAM_MODEM_PHONE5))
+    if (modem_dial_to (PARAM_MODEM_PHONE(0)) ||
+        modem_dial_to (PARAM_MODEM_PHONE(1)) ||
+        modem_dial_to (PARAM_MODEM_PHONE(2)) ||
+        modem_dial_to (PARAM_MODEM_PHONE(3)) ||
+        modem_dial_to (PARAM_MODEM_PHONE(4)) ||
+        modem_dial_to (PARAM_MODEM_PHONE(5)))
       break;
   if (i >= PARAM_MODEM_DIAL_RETRY)
     return 0;

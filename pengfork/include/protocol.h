@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2002  Jean-Charles Salzeber <jc@varspool.net>
- * Copyright (C) 2001  Stephane Guth (birdy57) <birdy57@multimania.com>
  *
  * This file is part of pengfork.
  *
@@ -21,34 +20,22 @@
  *                
  */
 
-#ifndef __P30DATA_H__
-#define __P30DATA_H__
+#ifndef __PROTOCOL_H__
+#define __PROTOCOL_H__
 
 #include <sys/types.h>
 
-#include "prot30.h"
-#include "p30data.h"
+#include "buffer.h"
 
 typedef struct
 {
-  u_int16_t code;
-  char raw[MAX_PACKET_SIZE - 10];
+  void (*init) (buffer_t *bufin, buffer_t *bufout);
+  void (*loop) (buffer_t *bufin, buffer_t *bufout, int timeout);
+  void (*put_data) (buffer_t *buffer, char *data, size_t data_size);
+  size_t max_data;
 }
-aol_data_t;
+protocol_t;
 
+extern protocol_t *protocol;
 
-#define CODE_AUTH_INFO    0x3032
-#define CODE_WELCOME_PAGE 0x4154
-#define CODE_LOGIN_INFO   0x4464
-#define CODE_INIT_CONFIRM 0x5344
-#define CODE_AIM          0x6174
-#define CODE_IP_CONFIG    0x7961
-#define CODE_IP_NORMAL    0x7963
-#define CODE_IP_EXTRA     0x7964
-
-
-void prot30_rcv_data (aol_data_t * data, size_t data_size);
-void prot30_send_data (int code, aol_data_t * data, size_t data_size);
-
-
-#endif /* __P30DATA_H__ */
+#endif /* __PROTOCOL_H__ */

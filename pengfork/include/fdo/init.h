@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2002  Jean-Charles Salzeber <jc@varspool.net>
- * Copyright (C) 2001  Stephane Guth (birdy57) <birdy57@multimania.com>
  *
  * This file is part of pengfork.
  *
@@ -21,34 +20,14 @@
  *                
  */
 
-#ifndef __P30LOGIN_H__
-#define __P30LOGIN_H__
+#ifndef __FDO_INIT_H__
+#define __FDO_INIT_H__
 
 #include <sys/types.h>
+#include "fdo.h"
 
-struct login_info_t
-{
-  u_int8_t unknow1[21];
-  u_int8_t login_size;
-  char *login;
-  u_int8_t unknow2[15];
-  u_int8_t pass_size;
-  char *pass;
-  u_int8_t unknow3[6];
-};
+void init_register(void);
+void init_token(token_handler_t token, char *data, size_t data_size, 
+	      buffer_t *out);
 
-#define DEFAULT_LOGIN_INFO (struct login_info_t) { \
- { 0x00, 0x16, 0x00, 0x01, 0x00, 0x01, 0x0a, 0x04, 0x00, 0x00, 0x00, 0x01, 0x01, \
-   0x0b, 0x04, 0x00, 0x00, 0x00, 0x02, 0x03, 0x01}, \
- 0, NULL, \
- { 0x01, 0x1d, 0x00, 0x01, 0x1d, 0x00, 0x01, 0x0a, 0x04, 0x00, 0x00, 0x00, 0x02, \
-   0x03, 0x01 }, \
- 0, NULL, \
- { 0x01, 0x1d, 0x00, 0x00, 0x02, 0x00 } }
-
-
-void prot30_send_login_packet ();
-void prot30_login_confirm (char *data, size_t data_size);
-
-
-#endif /* __P30LOGIN_H__ */
+#endif /* __FDO_INIT_H__ */

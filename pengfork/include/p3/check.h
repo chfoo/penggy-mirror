@@ -20,32 +20,17 @@
  *                
  */
 
-
-#ifndef __BUFFER_H__
-#define __BUFFER_H__
+#ifndef __P3_CHECK_H__
+#define __P3_CHECK_H__
 
 #include <sys/types.h>
 
-typedef struct
-{
-  size_t size;
-  unsigned start;
-  unsigned used;
-  char *data;
-}
-buffer_t;
+#include "p3/header.h"
 
-void create_buffer (buffer_t * buffer, size_t size);
-void destroy_buffer (buffer_t * buffer);
-int buffer_reserve (buffer_t * buffer, size_t size);
-int buffer_alloc (buffer_t * buffer, size_t size);
-int buffer_free (buffer_t * buffer, size_t size);
-char *buffer_start (buffer_t * buffer);
-char *buffer_end (buffer_t * buffer);
-int buffer_recv (buffer_t * buffer, int fd);
-int buffer_send (buffer_t * buffer, int fd);
-void buffer_align (buffer_t * buffer);
-int buffer_percent_free (buffer_t *buffer);
+int p3_check_header (struct p3hdr *header);
+int p3_check_packet (struct p3hdr *header, char *data, size_t data_size);
+int p3_check_ordering (struct p3hdr *header);
+u_int16_t p3_crc16 (char *buffer, int length);
 
 
-#endif /* __BUFFER_H__ */
+#endif /* __P3_CHECK_H__ */
