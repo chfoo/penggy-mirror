@@ -38,7 +38,7 @@ get_ip_client (in, out, timeout)
   char *ip;
   size_t ip_size;
   int offset;
-  char *fdo;
+  /* char *fdo; */
   char *data;
   char *ip_data;
   struct short_ip *small;
