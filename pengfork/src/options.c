@@ -726,37 +726,41 @@ try_param (param, filename, lineno, name, value)
      char *name;
      char *value;
 {
-  if (!param->defined && !strcmp (name, param->name))
+  if (param->name && !strcmp (name, param->name))
     {
-      switch (param->type)
+      if (param->defined) return 1;
+      else
         {
-        case boolean:
-          if (get_boolean (&param->value.boolean, value))
-            param->defined = true;
-          else
-            log (LOG_WARNING, "%s:%d bad boolean value\n", filename, lineno);
-          break;
-        case string:
-          if (get_string (&param->value.string, value))
+	switch (param->type)
 	  {
-	    param->defined = true;
-	    param->allocated = true;
+	  case boolean:
+	    if (get_boolean (&param->value.boolean, value))
+	      param->defined = true;
+	    else
+	      log (LOG_WARNING, "%s:%d bad boolean value\n", filename, lineno);
+	    break;
+	  case string:
+	    if (get_string (&param->value.string, value))
+	      {
+	        param->defined = true;
+	        param->allocated = true;
+	      }
+	    else
+	      {
+	        log (LOG_CRIT, "%s:%d not enough memory to get the parameter\n",
+		   filename, lineno);
+	        exit(1);
+	      }
+	    break;
+	  case integer:
+	    if (get_integer (&param->value.integer, value))
+	      param->defined = true;
+	    else
+	      log (LOG_WARNING, "%s:%d bad integer value\n", filename, lineno);
+	    break;
 	  }
-          else
-	  {
-	    log (LOG_CRIT, "%s:%d not enough memory to get the parameter\n",
-	         filename, lineno);
-	    exit(1);
-	  }
-          break;
-        case integer:
-          if (get_integer (&param->value.integer, value))
-            param->defined = true;
-          else
-            log (LOG_WARNING, "%s:%d bad integer value\n", filename, lineno);
-          break;
+	return 1;
         }
-      return 1;
     }
   else 
     return 0;
