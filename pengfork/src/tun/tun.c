@@ -26,7 +26,7 @@
 
 #include "tun/tun.h"
 
-static int tun_fd = -1;
+int tun_fd = -1;
 
 const iface_t tun_iface = (iface_t) {
   tun_open,

@@ -27,4 +27,3 @@ INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib
 noinst_LIBRARIES = libtun.a
 libtun_a_SOURCES = 	tun.c
 
-libtun_a_LIBADD =	$(top_builddir)/src/tun/@ARCH_DIR@/libsystem.a

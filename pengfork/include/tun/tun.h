@@ -20,8 +20,8 @@
  *                
  */
 
-#ifndef __TUN_H__
-#define __TUN_H__
+#ifndef __TUN_TUN_H__
+#define __TUN_TUN_H__
 
 #include <sys/types.h>
 #include "buffer.h"
@@ -33,4 +33,4 @@ int tun_get (buffer_t * buffer, char **data, size_t * data_size);
 int tun_put (buffer_t * buffer, char *data, size_t data_size);
 
 
-#endif /* __TUN_H__ */
+#endif /* __TUN_TUN_H__ */

@@ -42,5 +42,6 @@ pengfork_LDADD = 	$(top_builddir)/src/p3/libp3.a 			\
 			$(top_builddir)/src/dsl/libdsl.a		\
 			$(top_builddir)/src/tcpip/libtcpip.a		\
 			$(top_builddir)/src/tun/libtun.a		\
+			$(top_builddir)/src/tun/@ARCH_DIR@/libsystem.a	\
 			$(top_builddir)/src/iptunnel/libiptunnel.a	\
 			$(top_builddir)/lib/lib.a
