@@ -93,11 +93,12 @@ p3_loop (bufin, bufout, timeout)
       if (!header->client)
         {
           /* $$$ TODO $$$ */
-          /* Check we don't have send more than WINDOW packet without
-             receiving ack
-           */
-          srv.lastseq = header->seq;
+          /* 
+	 * Check we don't have send more than WINDOW packet without
+           * receiving ack
+	 */
           srv.lastack = header->ack;
+
           switch (header->type)
             {
             case TYPE_DATA:
@@ -105,6 +106,8 @@ p3_loop (bufin, bufout, timeout)
 
               dump_raw ("P3 - input", (char *) header, 
 		    data_size + P3_DATA_OFFSET + 1);
+
+	    srv.lastseq = header->seq;
 
               fdo_recv (bufout, data, data_size);
 

@@ -26,7 +26,6 @@
 #include "p3/header.h"
 #include "p3/p3.h"
 #include "p3/misc.h"
-
 #include "p3/check.h"
 
 int
@@ -98,16 +97,6 @@ p3_check_ordering (header)
       /* packet is data and the seq isn't what we expect */
       return 0;
     }
-#if 0
-  if (header->type != TYPE_DATA && header->seq != srv.lastseq)
-    {
-      debug (1, "P3 - Bad ordering for packet received\n");
-      debug (1, "\tseq received: %d\n", header->seq);
-      debug (1, "\tseq expected: %d\n", srv.lastseq);
-      /* packet is not data and the seq has changed */
-      return 0;
-    }
-#endif
 
   return 1;
 }
