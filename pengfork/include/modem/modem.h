@@ -47,5 +47,6 @@ int modem_response_value (char *response);
 int modem_wait_for (char *prompt, int timeout);
 int modem_readline (char *response, int timeout, size_t size);
 int modem_sync_write (int fd, char *string, size_t size);
+int modem_valid_speed(int speed);
 
 #endif /* __MODEM_MODEM_H__ */

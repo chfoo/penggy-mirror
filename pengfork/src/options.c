@@ -33,6 +33,7 @@
 
 #include "common.h"
 #include "options.h"
+#include "checkopt.h"
 #include "utils.h"
 #include "log.h"
 
@@ -59,15 +60,15 @@ param_t param[PARAM_MAX] = {
   /* GENERAL CONFIGURATION */
   STR(0, "access-method", "access_method", "modem", 
       "set the media used to access AOL.", "METHOD", 
-      __general, NULL),
+      __general, check_access_method),
 
   STR(0, "protocol", "protocol", "p3", 
       "set the protocol used for communication with AOL.", "PROT", 
-      __general, NULL),
+      __general, check_protocol),
 
   STR('t', "interface-type", "interface_type", "tun", 
       "set the interface type.", "TYPE", 
-      __netiface, NULL),
+      __netiface, check_iface_type),
 
   STR('i', "interface", "interface_name", NULL, 
       "set the interface name.", "NAME", 
@@ -75,7 +76,7 @@ param_t param[PARAM_MAX] = {
 
   INT('u', "use-sn", "use_screen_name", 1, 
       "use screen-name number NUM to connect.", "NUM", 
-      __auth, NULL),
+      __auth, check_use_sn),
 
   STR(0, "screen-name", "screen_name1", NULL, 
       "set the primary screen-name.", "SN", 
@@ -139,7 +140,7 @@ param_t param[PARAM_MAX] = {
 
   INT(0, "reconnect-delay", "reconnect_delay", 0, 
       "set the delay between reconnections.", "DELAY", 
-      __general, NULL),
+      __general, check_natural),
 
   BOOL('d', "daemon", "daemon", false,  
        "enable daemon mode, run in background.", NULL, 
@@ -147,7 +148,7 @@ param_t param[PARAM_MAX] = {
 
   INT('D', "debug-level", "debug_level", -1, 
       "set the verbosity level of the debug.", "LEVEL", 
-      __general, NULL),
+      __general, check_debug_level),
 
   BOOL(0, "dns", "set_dns", true, 
        "set the dns when connected.", NULL, 
@@ -246,7 +247,7 @@ param_t param[PARAM_MAX] = {
 
   INT('s', "line-speed", "line_speed", 115200, 
       "set the serial line speed.", "SPEED", 
-      __modem, NULL),
+      __modem, check_line_speed),
 
   STR(0, NULL, "login_prompt", "ogin:", 
       NULL, NULL, 
@@ -274,11 +275,11 @@ param_t param[PARAM_MAX] = {
 
   INT(0, NULL, "dial_retry", 3, 
       NULL, NULL, 
-      __modem, NULL),
+      __modem, check_natural),
 
   INT(0, NULL, "retry_delay", 0, 
       NULL, NULL, 
-      __modem, NULL),
+      __modem, check_natural),
 
   BOOL(0, NULL, "abort_busy", true, 
        NULL, NULL, 
@@ -298,7 +299,7 @@ param_t param[PARAM_MAX] = {
 
   INT(0, NULL, "aol_port", 5190, 
       NULL, NULL, 
-      __cable, NULL),
+      __cable, check_port),
 
   STR(0, NULL, "cable_iface", "eth0", 
       NULL, NULL, 
@@ -306,7 +307,7 @@ param_t param[PARAM_MAX] = {
 
   STR(0, NULL, "connect_ip", "0.0.0.0", 
       NULL, NULL,
-      __cable, NULL)
+      __cable, check_ip)
 #endif /* WITH_CABLE */
 };
 
@@ -447,6 +448,7 @@ version (void)
 #ifdef WITH_TUN
   printf("WITH_TUN ");
 #endif
+  printf("\n");
   exit (0);
 }
 
@@ -473,10 +475,11 @@ set_opt_param (int opt_id)
           param[i].value.integer = atoi (optarg);
           break;
         case string:
-          if (param[i].defined && (param[i].value.string != NULL))
+          if (param[i].allocated && (param[i].value.string != NULL))
             free (param[i].value.string);
           param[i].value.string = strdup (optarg);
         }
+      param[i].defined = true;
     }
   return 1;
 }
@@ -595,11 +598,68 @@ parse_command_line (argc, argv)
   return 1;
 }
 
+int
+check_config (void)
+{
+  int good = 1,i;
+  
+  debug(5, "Checking options:\n");
+  for (i = 0; i < PARAM_MAX; i++)
+    switch(param[i].type)
+      {
+      case boolean:
+        if(param[i].defined)
+	{
+	  if(PARAM_BOOLEAN(i) == true)
+	    debug(5, "  %s = true\n", param[i].name);
+	  else
+	    debug(5, "  %s = false\n", param[i].name);
+	}
+        else
+	debug(8, "  %s = (default)\n", param[i].name);
+
+        if(param[i].checkfn.check_boolean != NULL)
+	good &= param[i].checkfn.check_boolean (param[i].name, 
+					PARAM_BOOLEAN(i));
+        break;
+      case integer:
+        if(param[i].defined)
+	debug(5, "  %s = %d\n", param[i].name, PARAM_INTEGER(i));
+        else
+	debug(8, "  %s = (default)\n", param[i].name);
+
+        if(param[i].checkfn.check_integer != NULL)
+	good &= param[i].checkfn.check_integer (param[i].name, 
+					PARAM_INTEGER(i));
+        break;
+      case string:
+        if(param[i].defined)
+	{
+	  if(PARAM_STRING(i) != NULL)
+	    {
+	      if(i>__password7 || i<__screen_name1)
+	        debug(5, "  %s = %s\n", param[i].name, PARAM_STRING(i));
+	      else
+	        debug(5, "  %s = (hidden)\n", param[i].name);
+	    }
+	  else
+	    debug(5, "  %s = (undefined)\n", param[i].name);
+	}
+        else
+	debug(8, "  %s = (default)\n", param[i].name);
+        if(param[i].checkfn.check_string != NULL)
+	good &= param[i].checkfn.check_string (param[i].name, 
+				         PARAM_STRING(i));
+        break;
+        }
+  debug(5,"\n");
+  
+  return good;
+}
 
 /*
  * Config file
  */
-
 int
 parse_config ()
 {
@@ -610,9 +670,9 @@ parse_config ()
   snprintf (homeconfig, 249, "%s/.%s", home, HOME_CONFIG);
 
   if (!parse_config_file (DEFAULT_CONFIG))
-    debug (1,"No global config found.\n");
+    debug (5,"No global config found.\n");
   if (!parse_config_file (homeconfig))
-    debug (1,"No personnal config found.\n");
+    debug (5,"No personnal config found.\n");
 
   debug (1,"\n");
   return 1;
@@ -624,13 +684,13 @@ parse_config_file (filename)
 {
   FILE *f;
   char line[256];
-  int i, lineno = 0;
+  int i, found, lineno = 0;
   char *name, *value;
 
   f = fopen (filename, "r");
   if (f == NULL)
     {
-      debug (2,"%s: %s(%d)\n",filename, strerror(errno), errno);
+      debug (6,"%s: %s(%d)\n",filename, strerror(errno), errno);
       return 0;
     }
   while (!feof (f))
@@ -640,21 +700,23 @@ parse_config_file (filename)
         break;
       strip_comments (line);
       trim (line);
-      if (strlen (line) > 0 && tokenize_line (line, &name, &value))
-        log (LOG_WARNING, "%s:%d Bad line format\n", filename, lineno);
+      if (strlen (line) > 0 && !tokenize_line (line, &name, &value))
+        log (LOG_WARNING, "%s:%d bad line format\n", filename, lineno);
       else
         {
-          for (i = 0; i < PARAM_MAX; i++)
-            {
-              if (strlen (line) > 0)
-                try_param (&param[i], filename, lineno, name, value);
-            }
+	if (strlen (line) > 0) {
+	  for (i = 0, found = 0; i < PARAM_MAX && !found; i++)
+	    found=try_param (&param[i], filename, lineno, name, value);
+	  if(!found)
+	    log (LOG_WARNING, "%s:%d unrecognized option - %s\n", 
+	         filename, lineno, name);
+	}
         }
     }
   return 1;
 }
 
-void
+int
 try_param (param, filename, lineno, name, value)
      param_t *param;
      char *filename;
@@ -670,14 +732,17 @@ try_param (param, filename, lineno, name, value)
           if (get_boolean (&param->value.boolean, value))
             param->defined = true;
           else
-            log (LOG_WARNING, "%s:%d Bad boolean value\n", filename, lineno);
+            log (LOG_WARNING, "%s:%d bad boolean value\n", filename, lineno);
           break;
         case string:
           if (get_string (&param->value.string, value))
-            param->defined = true;
+	  {
+	    param->defined = true;
+	    param->allocated = true;
+	  }
           else
 	  {
-	    log (LOG_CRIT, "%s:%d Not enough memory to get the parameter\n",
+	    log (LOG_CRIT, "%s:%d not enough memory to get the parameter\n",
 	         filename, lineno);
 	    exit(1);
 	  }
@@ -686,10 +751,13 @@ try_param (param, filename, lineno, name, value)
           if (get_integer (&param->value.integer, value))
             param->defined = true;
           else
-            log (LOG_WARNING, "%s:%d Bad integer value\n", filename, lineno);
+            log (LOG_WARNING, "%s:%d bad integer value\n", filename, lineno);
           break;
         }
+      return 1;
     }
+  else 
+    return 0;
 }
 
 int
@@ -763,11 +831,11 @@ tokenize_line (line, name, value)
 
   delim = strchr (line, '=');
   if (delim == NULL)
-    return 1;
+    return 0;
   *delim = '\0';
   *name = line;
   *value = delim + 1;
   trim (*name);
   trim (*value);
-  return 0;
+  return 1;
 }

@@ -50,9 +50,9 @@ typedef struct
   int section;
   union
   {
-    int (*check_boolean) (bool_t);
-    int (*check_string) (char *);
-    int (*check_integer) (int);
+    int (*check_boolean) (char *, bool_t);
+    int (*check_string) (char *, char *);
+    int (*check_integer) (char *, int);
   }
   checkfn;
 }
@@ -60,6 +60,7 @@ param_t;
 
 #define PARAM_MAX __last_param
 #define PARAM_DEFINED(x)              param[x].defined
+#define PARAM_ALLOCATED(x)            param[x].allocated
 #define PARAM_STRING(x)               param[x].value.string
 #define PARAM_BOOLEAN(x)              param[x].value.boolean
 #define PARAM_INTEGER(x)              param[x].value.integer
@@ -188,9 +189,10 @@ enum
 extern param_t param[PARAM_MAX];
 
 int parse_command_line (int argc, char **argv);
+int check_config ();
 int parse_config (void);
 int parse_config_file (char *filename);
-void try_param (param_t * param, char *filename, int lineno, char *name,
+int try_param (param_t * param, char *filename, int lineno, char *name,
                 char *value);
 int get_boolean (bool_t * bool, char *value);
 int get_string (char **string, char *value);

@@ -741,3 +741,13 @@ modem_sync_write (fd, string, size)
 
   return 1;
 }
+
+int
+modem_valid_speed(speed)
+     int speed;
+{
+  int i;
+  for(i=0; i<sizeof(speeds); i++)
+    if(speed==speeds[i].baud) return 1;
+  return 0;
+}

@@ -89,6 +89,12 @@ main (argc, argv)
       log (LOG_ERR, "Error parsing configuration files, exiting !\n");
       exit (1);
     }
+  
+  if(!check_config ())
+    {
+      log (LOG_ERR, "Bad configuration, exiting !\n");
+      exit (1);
+    }
 
   handle_signals ();
 

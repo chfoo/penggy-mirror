@@ -26,6 +26,7 @@ bin_PROGRAMS = pengfork
 pengfork_SOURCES = 	buffer.c		\
 			misc.c			\
 			options.c		\
+			checkopt.c		\
 			main.c			\
 			utils.c			\
 			log.c			\
