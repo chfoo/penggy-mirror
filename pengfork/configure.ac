@@ -66,6 +66,8 @@ case $host in
 esac
 AC_SUBST([ARCH_DIR])
 
+AC_CHECK_HEADERS([netinet/in_systm.h])
+
 # linux tuntap driver
 AC_CHECK_HEADERS([linux/if_tun.h])
 

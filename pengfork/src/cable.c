@@ -40,6 +40,7 @@ cable_getfd ()
 {
   return cablefd;
 }
+
 int
   cable_connect ()
 {
@@ -69,9 +70,10 @@ int
 
   if (connect (cablefd, (struct sockaddr *) &intcable, sizeof (struct sockaddr_in)) == 0)
     return 1;
-
+*/
   return 0;
-*/}
+}
+
 int
   cable_close ()
 {
@@ -86,7 +88,10 @@ int
     }
   perror ("error closing socket !\n");
   return -1;
-*/}
+*/
+  return 0;
+}
+
 int
   cable_carrier ()
 {

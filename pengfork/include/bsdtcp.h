@@ -61,14 +61,15 @@ struct tcphdr
   u_int16_t th_dport;           /* destination port */
   tcp_seq th_seq;               /* sequence number */
   tcp_seq th_ack;               /* acknowledgement number */
-#  if __BYTE_ORDER == __LITTLE_ENDIAN
+#if __BYTE_ORDER == __LITTLE_ENDIAN
   u_int8_t th_x2:4;             /* (unused) */
   u_int8_t th_off:4;            /* data offset */
-#  endif
-#  if __BYTE_ORDER == __BIG_ENDIAN
+#elif __BYTE_ORDER == __BIG_ENDIAN
   u_int8_t th_off:4;            /* data offset */
   u_int8_t th_x2:4;             /* (unused) */
-#  endif
+#else
+# error "Please fix <bits/endian.h>"
+#endif
   u_int8_t th_flags;
 #  define TH_FIN	0x01
 #  define TH_SYN	0x02
@@ -180,4 +181,4 @@ struct tcp_info
   u_int32_t tcpi_reordering;
 };
 
-#endif /* __BSDTCP_H__ */
+#endif /* __BSD_TCP_H__ */
