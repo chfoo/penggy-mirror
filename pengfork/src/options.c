@@ -29,195 +29,285 @@
 #include <string.h>
 #include <getopt.h>
 #include <assert.h>
+#include <errno.h>
 
 #include "common.h"
 #include "options.h"
 #include "utils.h"
+#include "log.h"
+
+enum { __general, __auth, __modem, __cable, __tcpip, __netiface, __sect_end };
+const char *section_name[__sect_end] = {
+  "General properties",
+  "User authentification",
+  "Modem properties",
+  "Cable properties",
+  "TCP/IP properties",
+  "Network interface properties"
+};
+
+#define STR(s,l,n,v,d,p,e,c)  \
+   {s, l, n, string, false, false, {string: v}, d, p, e, {check_string: c} }
+#define BOOL(s,l,n,v,d,p,e,c)  \
+   {s, l, n, boolean, false, false, {boolean: v}, d, p, e, {check_boolean: c} }
+#define INT(s,l,n,v,d,p,e,c)  \
+   {s, l, n, integer, false, false, {integer: v}, d, p, e, {check_integer: c} }
+
+
 
 param_t param[PARAM_MAX] = {
   /* GENERAL CONFIGURATION */
-{0, "access-method", "access_method", string, false, {string:"modem"}
-   }
-  ,
-{0, "protocol", "protocol", string, false, {string:"p3"}
-   }
-  ,
-{'t', "interface-type", "interface_type", string, false, {string:"tun"}
-   }
-  ,
-{'i', "interface", "interface_name", string, false, {string:NULL}
-   }
-  ,
-{'u', "use-sn", "use_screen_name", integer, false, {integer:1}
-   }
-  ,
-{0, NULL, "screen_name1", string, false, {string:NULL}
-   }
-  ,
-{0, NULL, "password1", string, false, {string:NULL}
-   }
-  ,
-{0, NULL, "screen_name2", string, false, {string:NULL}
-   }
-  ,
-{0, NULL, "password2", string, false, {string:NULL}
-   }
-  ,
-{0, NULL, "screen_name3", string, false, {string:NULL}
-   }
-  ,
-{0, NULL, "password3", string, false, {string:NULL}
-   }
-  ,
-{0, NULL, "screen_name4", string, false, {string:NULL}
-   }
-  ,
-{0, NULL, "password4", string, false, {string:NULL}
-   }
-  ,
-{0, NULL, "screen_name5", string, false, {string:NULL}
-   }
-  ,
-{0, NULL, "password5", string, false, {string:NULL}
-   }
-  ,
-{0, NULL, "screen_name6", string, false, {string:NULL}
-   }
-  ,
-{0, NULL, "password6", string, false, {string:NULL}
-   }
-  ,
-{0, NULL, "screen_name7", string, false, {string:NULL}
-   }
-  ,
-{0, NULL, "password7", string, false, {string:NULL}
-   }
-  ,
-{'r', "auto-reconnect", "auto_reconnect", boolean, false, {boolean:false}
-   }
-  ,
-{0, "reconnect-delay", "reconnect_delay", integer, false, {integer:0}
-   }
-  ,
-{'d', "daemon", "daemon", boolean, false, {boolean:false}
-   }
-  ,
-{'D', "debug-level", "debug_level", integer, false, {integer:-1}
-   }
-  ,
-{0, "dns", "set_dns", boolean, false, {boolean:true}
-   }
-  ,
-{0, "pid-file", "pid_file", string, false, {string:"/var/run/pengfork.pid"}
-   }
-  ,
-{0, "ip-up", "ip-up_script", string, false, {string:"/etc/pengfork/ip-up"}
-   }
-  ,
-{0, "ip-down", "ip-down_script", string, false, {string:"/etc/pengfork/ip-down"}
-   }
-  ,                             /* MODEM SPECIFIC */
-{'m', "modem", "modem_device", string, false, {string:"/dev/modem"}
-   }
-  ,
-{0, "rtscts", "rtscts", boolean, false, {boolean:true}
-   }
-  ,
-{0, "init-str", "initstr1", string, false, {string:"ATZ"}
-   }
-  ,
-{0, NULL, "initstr2", string, false, {string:NULL}
-   }
-  ,
-{0, NULL, "initstr3", string, false, {string:NULL}
-   }
-  ,
-{0, NULL, "initstr4", string, false, {string:NULL}
-   }
-  ,
-{0, NULL, "initstr5", string, false, {string:NULL}
-   }
-  ,
-{0, NULL, "initstr6", string, false, {string:NULL}
-   }
-  ,
-{0, NULL, "initstr7", string, false, {string:NULL}
-   }
-  ,
-{0, NULL, "initstr8", string, false, {string:NULL}
-   }
-  ,
-{0, NULL, "initstr9", string, false, {string:NULL}
-   }
-  ,
-{0, "dial-str", "dialstr", string, false, {string:"ATDT"}
-   }
-  ,
-{0, NULL, "dial_prefix", string, false, {string:NULL}
-   }
-  ,
-{'n', "phone", "phone", string, false, {string:NULL}
-   }
-  ,
-{0, NULL, "phone1", string, false, {string:NULL}
-   }
-  ,
-{0, NULL, "phone2", string, false, {string:NULL}
-   }
-  ,
-{0, NULL, "phone3", string, false, {string:NULL}
-   }
-  ,
-{0, NULL, "phone4", string, false, {string:NULL}
-   }
-  ,
-{0, NULL, "phone5", string, false, {string:NULL}
-   }
-  ,
-{'s', "line-speed", "line_speed", integer, false, {integer:115200}
-   }
-  ,
-{0, NULL, "login_prompt", string, false, {string:"ogin:"}
-   }
-  ,
-{0, NULL, "server_pass_prompt", string, false, {string:"assword:"}
-   }
-  ,
-{'l', "server-login", "server_login", string, false, {string:"aol"}
-   }
-  ,
-{'w', "server-pass", "server_pass", string, false, {string:"aol"}
-   }
-  ,
-{0, NULL, "server_connected", string, false, {string:"onnected"}
-   }
-  ,
-{0, NULL, "server_bad_passwd", string, false, {string:"assword"}
-   }
-  ,
-{0, NULL, "dial_retry", integer, false, {integer:3}
-   }
-  ,
-{0, NULL, "retry_delay", integer, false, {integer:0}
-   }
-  ,
-{0, NULL, "abort_busy", boolean, false, {boolean:true}
-   }
-  ,
-{0, NULL, "abort_dialtone", boolean, false, {boolean:true}
-   }
-  ,                             /* CABLE SPECIFIC */
-{0, NULL, "aol_host", string, false, {string:"americaonline.aol.com"}
-   }
-  ,
-{0, NULL, "aol_port", integer, false, {integer:5190}
-   }
-  ,
-{0, NULL, "cable_iface", string, false, {string:"eth0"}
-   }
-  ,
-{0, NULL, "connect_ip", string, false, {string:"0.0.0.0"}
-   }
+  STR(0, "access-method", "access_method", "modem", 
+      "set the media used to access AOL.", "METHOD", 
+      __general, NULL),
+
+  STR(0, "protocol", "protocol", "p3", 
+      "set the protocol used for communication with AOL.", "PROT", 
+      __general, NULL),
+
+  STR('t', "interface-type", "interface_type", "tun", 
+      "set the interface type.", "TYPE", 
+      __netiface, NULL),
+
+  STR('i', "interface", "interface_name", NULL, 
+      "set the interface name.", "NAME", 
+      __netiface, NULL),
+
+  INT('u', "use-sn", "use_screen_name", 1, 
+      "use screen-name number NUM to connect.", "NUM", 
+      __auth, NULL),
+
+  STR(0, "screen-name", "screen_name1", NULL, 
+      "set the primary screen-name.", "SN", 
+      __auth, NULL),
+
+  STR(0, "password", "password1", NULL, 
+      "set the primary password", "PASS", 
+      __auth, NULL),
+
+  STR(0, NULL, "screen_name2", NULL, 
+      NULL, NULL, 
+      __auth, NULL),
+
+  STR(0, NULL, "password2", NULL, 
+      NULL, NULL,
+      __auth, NULL),
+
+  STR(0, NULL, "screen_name3", NULL, 
+      NULL, NULL, 
+      __auth, NULL),
+
+  STR(0, NULL, "password3", NULL, 
+      NULL, NULL,
+      __auth, NULL),
+
+  STR(0, NULL, "screen_name4", NULL,
+      NULL, NULL, 
+      __auth, NULL),
+
+  STR(0, NULL, "password4", NULL,
+      NULL, NULL,
+      __auth, NULL),
+
+  STR(0, NULL, "screen_name5", NULL, 
+      NULL, NULL, 
+      __auth, NULL),
+
+  STR(0, NULL, "password5", NULL, 
+      NULL, NULL, 
+      __auth, NULL),
+
+  STR(0, NULL, "screen_name6", NULL, 
+      NULL, NULL, 
+      __auth, NULL),
+
+  STR(0, NULL, "password6", NULL, 
+      NULL, NULL, 
+      __auth, NULL),
+
+  STR(0, NULL, "screen_name7", NULL, 
+      NULL, NULL, 
+      __auth, NULL),
+
+  STR(0, NULL, "password7", NULL, 
+      NULL, NULL, 
+      __auth, NULL),
+
+  BOOL('r', "auto-reconnect", "auto_reconnect", false, 
+       "enable autoreconnection.", NULL, 
+       __general, NULL),
+
+  INT(0, "reconnect-delay", "reconnect_delay", 0, 
+      "set the delay between reconnections.", "DELAY", 
+      __general, NULL),
+
+  BOOL('d', "daemon", "daemon", false,  
+       "enable daemon mode, run in background.", NULL, 
+       __general, NULL),
+
+  INT('D', "debug-level", "debug_level", -1, 
+      "set the verbosity level of the debug.", "LEVEL", 
+      __general, NULL),
+
+  BOOL(0, "dns", "set_dns", true, 
+       "set the dns when connected.", NULL, 
+       __netiface, NULL),
+
+  STR(0, "pid-file", "pid_file", "/var/run/pengfork.pid", 
+      "set the PID file to create", "PATH", 
+      __netiface, NULL),
+
+  STR(0, "ip-up", "ip-up_script", "/etc/pengfork/ip-up", 
+      "set the script automaticly called when IP is up.", "PATH", 
+      __netiface, NULL),
+
+  STR(0, "ip-down", "ip-down_script", "/etc/pengfork/ip-down", 
+      "set the script automaticly called when IP is down.", "PATH", 
+      __netiface, NULL),
+
+
+#ifdef WITH_MODEM
+  /* MODEM SPECIFIC */
+  STR('m', "modem", "modem_device", "/dev/modem", 
+      "set the serial device to use for the modem.", "PATH", 
+      __modem, NULL),
+
+  BOOL(0, "rtscts", "rtscts", true, 
+       "enable hardware flow control", NULL, 
+       __modem, NULL),
+
+  STR(0, "init-str", "initstr1", "ATZ", 
+      "set the primary initialization string send to the modem.", "STRING", 
+      __modem, NULL),
+
+  STR(0, NULL, "initstr2", NULL, 
+      NULL, NULL, 
+      __modem, NULL),
+
+  STR(0, NULL, "initstr3", NULL, 
+      NULL, NULL, 
+      __modem, NULL),
+
+  STR(0, NULL, "initstr4", NULL, 
+      NULL, NULL,
+      __modem, NULL),
+
+  STR(0, NULL, "initstr5", NULL, 
+      NULL, NULL, 
+      __modem, NULL),
+
+  STR(0, NULL, "initstr6", NULL, 
+      NULL, NULL,
+      __modem, NULL),
+
+  STR(0, NULL, "initstr7", NULL, 
+      NULL, NULL, 
+      __modem, NULL),
+
+  STR(0, NULL, "initstr8", NULL, 
+      NULL, NULL,
+      __modem, NULL),
+
+  STR(0, NULL, "initstr9", NULL, 
+      NULL, NULL, 
+      __modem, NULL),
+
+  STR(0, "dial-str", "dialstr", "ATDT", 
+      "set the string used to dial.", "STRING", 
+      __modem, NULL),
+
+  STR(0, NULL, "dial_prefix", NULL, 
+      NULL, NULL,
+      __modem, NULL),
+
+  STR('n', "phone", "phone", NULL, 
+      "set the primary phone number to use.", "NUMBER", 
+      __modem, NULL),
+
+  STR(0, NULL, "phone1", NULL, 
+      NULL, NULL, 
+      __modem, NULL),
+
+  STR(0, NULL, "phone2", NULL, 
+      NULL, NULL, 
+      __modem, NULL),
+
+  STR(0, NULL, "phone3", NULL,
+      NULL, NULL, 
+      __modem, NULL),
+
+  STR(0, NULL, "phone4", NULL, 
+      NULL, NULL,
+      __modem, NULL),
+
+  STR(0, NULL, "phone5", NULL, 
+      NULL, NULL, 
+      __modem, NULL),
+
+  INT('s', "line-speed", "line_speed", 115200, 
+      "set the serial line speed.", "SPEED", 
+      __modem, NULL),
+
+  STR(0, NULL, "login_prompt", "ogin:", 
+      NULL, NULL, 
+      __modem, NULL),
+
+  STR(0, NULL, "server_pass_prompt", "assword:", 
+      NULL, NULL, 
+      __modem, NULL),
+
+  STR('l', "server-login", "server_login", "aol", 
+      "set the server login.", "LOGIN",
+      __auth, NULL),
+
+  STR('w', "server-pass", "server_pass", "aol", 
+      "set the server pass.", "PASS", 
+      __auth, NULL),
+
+  STR(0, NULL, "server_connected", "onnected", 
+      NULL, NULL, 
+      __auth, NULL),
+
+  STR(0, NULL, "server_bad_passwd", "assword", 
+      NULL, NULL, 
+      __auth, NULL),
+
+  INT(0, NULL, "dial_retry", 3, 
+      NULL, NULL, 
+      __modem, NULL),
+
+  INT(0, NULL, "retry_delay", 0, 
+      NULL, NULL, 
+      __modem, NULL),
+
+  BOOL(0, NULL, "abort_busy", true, 
+       NULL, NULL, 
+       __modem, NULL),
+
+  BOOL(0, NULL, "abort_dialtone", true, 
+       NULL, NULL, 
+       __modem, NULL),
+#endif /* WITH_MODEM */
+
+
+#ifdef WITH_CABLE
+  /* CABLE SPECIFIC */
+  STR(0, NULL, "aol_host", "AmericaOnline.aol.com", 
+      NULL, NULL, 
+      __cable, NULL),
+
+  INT(0, NULL, "aol_port", 5190, 
+      NULL, NULL, 
+      __cable, NULL),
+
+  STR(0, NULL, "cable_iface", "eth0", 
+      NULL, NULL, 
+      __cable, NULL),
+
+  STR(0, NULL, "connect_ip", "0.0.0.0", 
+      NULL, NULL,
+      __cable, NULL)
+#endif /* WITH_CABLE */
 };
 
 
@@ -245,43 +335,118 @@ static struct option const long_options_head[] = {
 static void
 usage ()
 {
-  /* FIXME: need update */
+  int s,i,j,len,ok;
+  
+  /* FIXME: wow this function is very BIG */
   printf ("Usage : %s [OPTIONS]\n"
 	"Operation modes :\n"
-	"      -h, --help                 print this help, then exit.\n"
-	"      -V, --version	    print version, then exit.\n"
-	"\n"
-	"Network interface properties :\n"
-	"      -t, --interface-type=TYPE set interface type (tun).\n"
-	"      -i, --interface-name=NAME set interface name (tun0).\n"
-	"\n"
-	"Modem properties :"
-	"      -m, --modem-device=DEV    set modem device name (ttyS0).\n"
-	"      -n, --phone=PHONE         set phone number.\n"
-	"      -s, --speed=SPEED         set modem speed.\n"
-	"          --rtscts              enable modem hardware flow control.\n"
-	"          --init-str=STR        set modem init string.\n"
-	"          --dial-str=STR        set modem dialing string.\n"
-	"\n"
-	"User authentification :\n"
-	"      -u, --user=NAME           set username.\n"
-	"      -p, --password=password   set password.\n"
-	"      -l, --server-login        set server login.\n"
-	"      -w, --server-password     set server password.\n"
-	"\n"
-	"Misc :\n"
-	"      -r, --auto-reconnect      enable autoreconnection.\n"
-	"      -d, --daemon              daemon mode, run in background.\n"
-	"      -D, --debug-level=LEVEL   set debug verbose level.\n"
-	"          --pid-file=NAME       name of pid file (/var/run/pengaol.pid).\n"
-	"\n", program_name);
+	"  -h, --help                       print this help, then exit.\n"
+	"  -V, --version                    print version, then exit.\n",
+	program_name);
+  for(s=0; s<__sect_end; s++)
+    {
+      /* 
+       * determine if there is at least one element to print in
+       * this section
+       */
+      for(i=0, ok=0; i<PARAM_MAX && !ok; i++)
+        if( param[i].section == s && 
+	  (param[i].shortopt != 0 || param[i].longopt != NULL)) 
+	ok=1;
+
+      if(ok)
+        {
+	printf("\n%s:\n", section_name[s] );
+	for(i=0; i<PARAM_MAX; i++)
+	  {
+	    if( param[i].section == s && 
+	        (param[i].shortopt != 0 || param[i].longopt != NULL)) 
+	      {
+	        /* First indentation */
+	        printf("  ");
+	        len=2;
+	        /* Put the short option if any */
+	        if(param[i].shortopt != 0) 
+		{
+		  printf("-%c",param[i].shortopt);
+		  if(param[i].longopt != NULL) 
+		    printf(", ");
+		  else printf("  ");
+		}
+	        else printf("    ");
+	        len+=4;
+	        /* Put the long option if any */
+	        if(param[i].longopt != NULL)
+		{
+		  printf("--%s",param[i].longopt);
+		  len += 2 + strlen(param[i].longopt);
+		  if(param[i].type==integer || param[i].type==string)
+		    {
+		      /* Put the parameter name */
+		      printf("=");
+		      len++;
+		      if(param[i].param_name != NULL)
+		        {
+			printf ("%s",param[i].param_name);
+			len += strlen(param[i].param_name);
+		        }
+		      else
+		        {
+			if(param[i].type==integer)
+			  {
+			    printf("INTEGER");
+			    len += 7;
+			  }
+			else
+			  {
+			    printf("STRING");
+			    len += 6;
+			  }
+		        }
+		    }
+	  
+		  /* 
+		   * now complete with white space so the description start 
+		   * at col 35
+		   */
+		  for(j=0;len+j < 35;j++) 
+		    printf(" ");
+
+		  /* Put the description */
+		  if(param[i].descr != NULL)
+		    printf("%s\n",param[i].descr);
+		  else
+		    printf("(no description)\n");
+		}
+	      }
+	  }
+        }
+    }
+  printf("\n");
   exit (0);
 }
+
 
 static void
 version (void)
 {
   printf ("%s (" PACKAGE ") v" VERSION "\n", program_name);
+  printf ("Compilation options :\n");
+#ifdef WITH_MODEM
+  printf("WITH_MODEM ");
+#endif
+#ifdef WITH_CABLE
+  printf("WITH_CABLE ");
+#endif
+#ifdef WITH_DSL
+  printf("WITH_DSL ");
+#endif
+#ifdef WITH_TCPIP
+  printf("WITH_TCPIP ");
+#endif
+#ifdef WITH_TUN
+  printf("WITH_TUN ");
+#endif
   exit (0);
 }
 
@@ -445,13 +610,11 @@ parse_config ()
   snprintf (homeconfig, 249, "%s/.%s", home, HOME_CONFIG);
 
   if (!parse_config_file (DEFAULT_CONFIG))
-    return 0;
+    debug (1,"No global config found.\n");
   if (!parse_config_file (homeconfig))
-    {
-      printf ("Warning, no personnal config found !\n");
-      printf ("Create your personnal config file in %s.\n\n", homeconfig);
-      return 1;
-    }
+    debug (1,"No personnal config found.\n");
+
+  debug (1,"\n");
   return 1;
 }
 
@@ -467,7 +630,7 @@ parse_config_file (filename)
   f = fopen (filename, "r");
   if (f == NULL)
     {
-      perror (filename);
+      debug (2,"%s: %s(%d)\n",filename, strerror(errno), errno);
       return 0;
     }
   while (!feof (f))
@@ -478,7 +641,7 @@ parse_config_file (filename)
       strip_comments (line);
       trim (line);
       if (strlen (line) > 0 && tokenize_line (line, &name, &value))
-        fprintf (stderr, "%s:%d Bad line format\n", filename, lineno);
+        log (LOG_WARNING, "%s:%d Bad line format\n", filename, lineno);
       else
         {
           for (i = 0; i < PARAM_MAX; i++)
@@ -507,20 +670,23 @@ try_param (param, filename, lineno, name, value)
           if (get_boolean (&param->value.boolean, value))
             param->defined = true;
           else
-            fprintf (stderr, "%s:%d Bad boolean value\n", filename, lineno);
+            log (LOG_WARNING, "%s:%d Bad boolean value\n", filename, lineno);
           break;
         case string:
           if (get_string (&param->value.string, value))
             param->defined = true;
           else
-            fprintf (stderr, "%s:%d Not enough memory to get the parameter\n",
-                     filename, lineno);
+	  {
+	    log (LOG_CRIT, "%s:%d Not enough memory to get the parameter\n",
+	         filename, lineno);
+	    exit(1);
+	  }
           break;
         case integer:
           if (get_integer (&param->value.integer, value))
             param->defined = true;
           else
-            fprintf (stderr, "%s:%d Bad integer value\n", filename, lineno);
+            log (LOG_WARNING, "%s:%d Bad integer value\n", filename, lineno);
           break;
         }
     }

@@ -30,13 +30,14 @@ bool_t;
 
 typedef struct
 {
-  char shortopt;
-  char *longopt;
+  char shortopt;  /* h & V are reserved */
+  char *longopt;  /* help & version are reserver */
   char *name;
   enum
   { boolean, integer, string }
   type;
   bool_t defined;
+  bool_t allocated;
   union
   {
     bool_t boolean;
@@ -44,6 +45,16 @@ typedef struct
     int integer;
   }
   value;
+  char *descr;
+  char *param_name;
+  int section;
+  union
+  {
+    int (*check_boolean) (bool_t);
+    int (*check_string) (char *);
+    int (*check_integer) (int);
+  }
+  checkfn;
 }
 param_t;
 
@@ -53,6 +64,7 @@ param_t;
 #define PARAM_BOOLEAN(x)              param[x].value.boolean
 #define PARAM_INTEGER(x)              param[x].value.integer
 
+/* Be carreful, parameters order *MUST* correspond */ 
 enum
 {
   __access_method,
@@ -83,6 +95,7 @@ enum
   __ip_up,
   __ip_down,
 
+#ifdef WITH_MODEM
   __modem_device,
   __modem_rtscts,
   __modem_initstr1,
@@ -113,15 +126,19 @@ enum
   __modem_retry_delay,
   __modem_abort_busy,
   __modem_abort_dialtone,
+#endif /* WITH_MODEM */
 
+#ifdef WITH_CABLE
   __cable_aol_host,
   __cable_aol_port,
   __cable_interface,
   __cable_connect_ip,
+#endif /* WITH_CABLE */
 
   __last_param                  /* not a parameter */
 };
 
+/* Macros for options access facility */
 #define PARAM_ACCESS_METHOD           PARAM_STRING(__access_method)
 #define PARAM_PROTOCOL                PARAM_STRING(__protocol)
 #define PARAM_INTERFACE_TYPE          PARAM_STRING(__interface_type)
@@ -138,6 +155,7 @@ enum
 #define PARAM_IP_UP                   PARAM_STRING(__ip_up)
 #define PARAM_IP_DOWN                 PARAM_STRING(__ip_up)
 
+#ifdef WITH_MODEM
 #define PARAM_MODEM_DEVICE            PARAM_STRING(__modem_device)
 #define PARAM_MODEM_RTSCTS            PARAM_BOOLEAN(__modem_rtscts)
 #define PARAM_MODEM_INITSTR(i)        PARAM_STRING(__modem_initstr1 + i - 1)
@@ -155,11 +173,14 @@ enum
 #define PARAM_MODEM_RETRY_DELAY       PARAM_INTEGER(__modem_retry_delay)
 #define PARAM_MODEM_ABORT_BUSY        PARAM_BOOLEAN(__modem_abort_busy)
 #define PARAM_MODEM_ABORT_DIALTONE    PARAM_BOOLEAN(__modem_abort_dialtone)
+#endif /* WITH_MODEM */
 
+#ifdef WITH_CABLE
 #define PARAM_CABLE_AOL_HOST          PARAM_STRING(__cable_aol_host)
 #define PARAM_CABLE_AOL_PORT          PARAM_INTEGER(__cable_aol_port)
 #define PARAM_CABLE_INTERFACE         PARAM_STRING(__cable_interface)
 #define PARAM_CABLE_CONNECT_IP        PARAM_STRING(__cable_connect_ip)
+#endif /* WITH_CABLE */
 
 #define DEFAULT_CONFIG                "/etc/pengfork/pengfork.cfg"
 #define HOME_CONFIG                   "pengfork.cfg"
