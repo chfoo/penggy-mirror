@@ -259,15 +259,15 @@ msgstr ""
 #: src/modem/modem.c:298
 #, c-format
 msgid "Connection at %sb/s done.\n"
-msgstr "Connexion à %sb/s effectué\n"
+msgstr "Connexion à %sb/s effectuée\n"
 
 #: src/modem/modem.c:304
 msgid "No carrier detected\n"
-msgstr "Pas de porteuse détecté\n"
+msgstr "Pas de porteuse détectée\n"
 
 #: src/modem/modem.c:309
 msgid "No dial tone detected\n"
-msgstr "Aucune tonalité détécté\n"
+msgstr "Aucune tonalité détéctée\n"
 
 #: src/modem/modem.c:314
 msgid "Provider is busy\n"
@@ -279,7 +279,7 @@ msgstr "Trop de temps sans réponse\n"
 
 #: src/modem/modem.c:324
 msgid "Response voice\n"
-msgstr "Une voix à répondue\n"
+msgstr "Une voix a répondue\n"
 
 #: src/modem/modem.c:329
 msgid ""
@@ -509,7 +509,7 @@ msgstr "%s tourne déjà avec le pid %d.\n"
 #: src/misc.c:160
 #, c-format
 msgid "Can't create pid file %s: %s (%d).\n"
-msgstr "Ne peut crée le fichier pid %s: %s (%d)\n"
+msgstr "Ne peut créer le fichier pid %s: %s (%d)\n"
 
 #: src/misc.c:209 src/misc.c:250
 #, c-format
