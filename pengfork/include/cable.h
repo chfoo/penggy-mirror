@@ -20,11 +20,12 @@
  *
  */
 
-#ifdef WITH_CABLE
+#ifdef !defined(__CABLE_H__) && defined(WITH_CABLE)
+#define __CABLE_H__
 
-int cable_getfd ();
-int cable_connect ();
-int cable_close ();
-int cable_carrier ();
+int cable_getfd (void);
+int cable_connect (void);
+int cable_close (void);
+int cable_carrier (void);
 
-#endif
+#endif /* !defined(__CABLE_H__) && defined(WITH_CABLE) */
