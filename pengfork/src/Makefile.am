@@ -19,6 +19,8 @@
 # 02111-1307, USA.
 #
 
+SUBDIRS = @ARCH_DIR@
+EXTRA_DIST = linux openbsd freebsd
 
 bin_PROGRAMS = pengfork
 
@@ -33,7 +35,8 @@ pengfork_SOURCES = 	buffer.c		\
 			modem.c			\
 			p30init.c		\
 			p30tcpip.c		\
-			utils.c			\
-			@ARCH_DIR@/tun.c
+			utils.c
 
 INCLUDES = -I$(top_srcdir)/include
+
+pengfork_LDADD = $(top_srcdir)/src/@ARCH_DIR@/libsystem.a

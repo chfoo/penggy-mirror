@@ -44,6 +44,9 @@ if test $GCC = yes; then
   CFLAGS="$CFLAGS -g -Wall"
 fi
 
+# Look for auxiliary programs
+AC_PROG_RANLIB
+
 # Check arch specific source directory
 # Use @ARCH_DIR@ in Makefile.am files.
 case $host in
@@ -55,9 +58,6 @@ case $host in
     ;;
   *-*-openbsd*)
     ARCH_DIR="openbsd"
-    ;;
-  *-*-netbsd*)
-    ARCH_DIR="netbsd"
     ;;
   *)
     # Default is linux
@@ -90,5 +90,11 @@ AC_ARG_ENABLE(tun,
 # AM_CONFIG_HEADER(config.h)
 
 # Output Files
-AC_CONFIG_FILES([Makefile config/Makefile src/Makefile include/Makefile])
+AC_CONFIG_FILES([Makefile 
+		  config/Makefile 
+		  src/Makefile 
+		    src/linux/Makefile 
+		    src/openbsd/Makefile
+		    src/freebsd/Makefile
+		  include/Makefile])
 AC_OUTPUT
