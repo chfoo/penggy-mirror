@@ -25,6 +25,8 @@
 
 #include "p3/header.h"
 
+extern int nack_sent;
+
 void p3_ack( struct p3hdr *header);
 void p3_nack( struct p3hdr *header);
 void p3_send_nack( struct p3hdr *header );

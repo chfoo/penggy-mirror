@@ -245,35 +245,36 @@ static struct option const long_options_head[] = {
 static void
 usage ()
 {
-  printf ("Usage : %s [OPTIONS]\n
-Operation modes :
-      -h, --help		 print this help, then exit.
-      -V, --version		 print version, then exit.
-
-Network interface properties :
-      [-t] --interface-type=TYPE set interface type (tun).
-      [-i] --interface-name=NAME set interface name (tun0).
-
-Modem properties : 
-      [-m] --modem-device=DEV    set modem device name (ttyS0).
-      [-n] --phone=PHONE         set phone number.
-      [-s] --speed=SPEED         set modem speed.
-      --rtscts                   enable modem rtscts.
-      --init-str=STR             set modem init string.
-      --dial-str=STR             set modem dialing string.
-
-User authentification : 
-      [-u] --user=NAME		 set username.
-      [-p] --password=password   set password.
-      [-l] --server-login        set server login.
-      [-w] --server-password     set server password.
-
-Misc : 
-      [-r] --auto-reconnect      enable autoreconnection.
-      [-d] --daemon              daemon mode, run in background.
-      [-D] --debug-level=LEVEL   set debug verbose level.      
-      --pid-file=NAME            name of pid file (/var/run/pengaol.pid).
-\n", program_name);
+  /* FIXME: need update */
+  printf ("Usage : %s [OPTIONS]\n"
+	"Operation modes :\n"
+	"      -h, --help                 print this help, then exit.\n"
+	"      -V, --version	    print version, then exit.\n"
+	"\n"
+	"Network interface properties :\n"
+	"      -t, --interface-type=TYPE set interface type (tun).\n"
+	"      -i, --interface-name=NAME set interface name (tun0).\n"
+	"\n"
+	"Modem properties :"
+	"      -m, --modem-device=DEV    set modem device name (ttyS0).\n"
+	"      -n, --phone=PHONE         set phone number.\n"
+	"      -s, --speed=SPEED         set modem speed.\n"
+	"          --rtscts              enable modem hardware flow control.\n"
+	"          --init-str=STR        set modem init string.\n"
+	"          --dial-str=STR        set modem dialing string.\n"
+	"\n"
+	"User authentification :\n"
+	"      -u, --user=NAME           set username.\n"
+	"      -p, --password=password   set password.\n"
+	"      -l, --server-login        set server login.\n"
+	"      -w, --server-password     set server password.\n"
+	"\n"
+	"Misc :\n"
+	"      -r, --auto-reconnect      enable autoreconnection.\n"
+	"      -d, --daemon              daemon mode, run in background.\n"
+	"      -D, --debug-level=LEVEL   set debug verbose level.\n"
+	"          --pid-file=NAME       name of pid file (/var/run/pengaol.pid).\n"
+	"\n", program_name);
   exit (0);
 }
 

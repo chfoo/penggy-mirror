@@ -21,8 +21,9 @@
  */
 
 #include <sys/types.h>
-#include <stdlib.h>
 #include <netinet/in.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "buffer.h"
 #include "log.h"
@@ -74,8 +75,8 @@ fdo_recv (data, data_size)
   if (index != -1)
     module[index].handler (*token, data, data_size);
   else
-    log (LOG_NOTICE, "FDO - unregistered token received: '%c%c'\n",
-         (*token >> 8) & 0xff, *token & 0xff);
+    debug (2, "FDO - unregistered token received: '%c%c'\n",
+	 (*token >> 8) & 0xff, *token & 0xff);
 }
 
 
@@ -128,7 +129,7 @@ fdo_register (token, handler)
   module[index].token = token;
   module[index].handler = handler;
 
-  debug (1, "FDO - Token '%c%c' registered.\n", (token >> 8) & 0xff,
+  debug (2, "FDO - Token '%c%c' registered.\n", (token >> 8) & 0xff,
          token & 0xff);
 }
 
@@ -159,6 +160,6 @@ fdo_unregister (token)
     }
 
   nbmodules--;
-  debug (1, "FDO - Token '%c%c' unregistered.\n", (token >> 8) & 0xff,
+  debug (2, "FDO - Token '%c%c' unregistered.\n", (token >> 8) & 0xff,
          token & 0xff);
 }

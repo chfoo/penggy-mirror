@@ -31,6 +31,7 @@
 #include "fdo.h"
 #include "engine.h"
 #include "if.h"
+#include "protocol.h"
 
 #include "iptunnel/init.h"
 #include "iptunnel/vjcompress.h"
@@ -47,7 +48,7 @@ struct vjcompress vj_comp;
 
 const struct engine_functions ip_tunnel_fn = (struct engine_functions) {
   init_iface,
-  NULL,
+  ip_tunnel_ready,
   NULL,
   get_ip_client,
   NULL,
@@ -64,6 +65,15 @@ ip_tunnel_init ()
   fdo_send ( TOKEN ("ya"), (char *) &request, sizeof (request));
 
   fdo_register ( TOKEN ("ya"), ip_tunnel_config);
+}
+
+int
+ip_tunnel_ready (bufin)
+     buffer_t *bufin;
+{
+  if( (bufin->used == bufin->size) && protocol->ready())
+    get_ip_client(bufin);
+  return protocol->ready();
 }
 
 void
@@ -101,15 +111,15 @@ ip_tunnel_config (token, data, data_size)
     len = sizeof(hostname);
   strncpy (hostname, &config1->hostname, len);
   hostname[len] = '\0';
-  log (LOG_NOTICE, "IP TUNNEL - IP address: %d.%d.%d.%d\n",
+  log (LOG_INFO, "IP address: %d.%d.%d.%d\n",
        *address >> 24 & 0xff,
        *address >> 16 & 0xff,
        *address >> 8 & 0xff, *address & 0xff);
-  log (LOG_NOTICE, "IP TUNNEL - DNS address: %d.%d.%d.%d\n",
+  log (LOG_INFO, "DNS address: %d.%d.%d.%d\n",
        *dns_address >> 24 & 0xff,
        *dns_address >> 16 & 0xff,
        *dns_address >> 8 & 0xff, *dns_address & 0xff);
-  log (LOG_NOTICE, "IP TUNNEL - Hostname: %s\n", hostname);
+  log (LOG_INFO, "Hostname: %s\n", hostname);
 
   launch_ip_up (PARAM_INTERFACE_NAME,
                 *address, 0xffffffff,

@@ -22,6 +22,7 @@
 
 #include <sys/types.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "fdo.h"
 #include "log.h"
@@ -54,7 +55,7 @@ get_ip_aol (token, data, data_size)
 
   if(need_extra)
     {
-      log(LOG_ERR, "IP tunnel - No extra packet received, cancelling the packet");
+      debug(1, "IP tunnel - No extra packet received, cancelling the packet");
       need_extra = 0;
       free(extra_ip.data);
       fdo_unregister ( TOKEN ("yd") );
@@ -67,13 +68,13 @@ get_ip_aol (token, data, data_size)
       debug (1, "IP tunnel - Received a big packet\n");
       ip_data=data + sizeof(*big);
       big->len=ntohs(big->len) & IP_LEN_MASK;
-      if (data_size - sizeof(*big) != big->len)
+      if (data_size - sizeof(*big) < big->len)
         {
 	/* 
 	 * The packet is incomplete, we should receive yd tokens to
 	 * complete him
 	 */
-	log (LOG_INFO, "IP tunnel - big packet need extra packet(s)\n");
+	debug (1, "IP tunnel - big packet need extra packet(s)\n");
 	need_extra = 1;
 	extra_ip.len = big->len;
 	extra_ip.data = malloc( big->len );

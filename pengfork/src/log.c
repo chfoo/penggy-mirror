@@ -85,7 +85,8 @@ dump_raw (text, data, size)
 {
   int i, j;
   unsigned char *p = data;
-
+  
+  if(PARAM_DEBUG_LEVEL < 3) return;
   debug (3, "%s raw dump: \n",text);
   for (i = 0; i < size; i += 16)
     {

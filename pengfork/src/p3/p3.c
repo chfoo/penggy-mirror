@@ -24,6 +24,7 @@
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "log.h"
 #include "buffer.h"
@@ -185,5 +186,10 @@ p3_timeout(bufin, bufout, timeout)
 	 */
 	
         }
+    }
+  if(nack_sent)
+    {
+      /* Server do not have responded to NACK, retry */
+      p3_put_packet(TYPE_NACK,NULL,0);
     }
 }

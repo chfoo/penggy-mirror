@@ -25,6 +25,8 @@
 
 #include <sys/types.h>
 #include <netinet/in.h>
+#include "buffer.h"
+#include "fdo.h"
 
 struct ip_config_request
 {
@@ -62,6 +64,7 @@ __attribute__ ((packed));
 
 
 void ip_tunnel_init ();
+int ip_tunnel_ready (buffer_t *bufin);
 void ip_tunnel_config (token_t token, char *data, size_t data_size);
 void init_iface (buffer_t *in, buffer_t *out);
 

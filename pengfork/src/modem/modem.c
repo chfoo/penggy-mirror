@@ -157,13 +157,14 @@ modem_connect ()
   if (!modem_open
       (PARAM_MODEM_DEVICE, PARAM_MODEM_LINE_SPEED, PARAM_MODEM_RTSCTS))
     return 0;
+  log (LOG_NOTICE, "Using %s device...\n", PARAM_MODEM_DEVICE);
   debug (1, "Device %s opened\n", PARAM_MODEM_DEVICE);
 
   if (!modem_init () || !modem_dial ())
     return 0;
 
   if (!modem_log_into_aol ())
-    return 0;;
+    return 0;
 
   device_unlock (PARAM_MODEM_DEVICE);
   return 1;
@@ -181,7 +182,10 @@ modem_init ()
       !modem_send_init_string (PARAM_MODEM_INITSTR (7)) ||
       !modem_send_init_string (PARAM_MODEM_INITSTR (8)) ||
       !modem_send_init_string (PARAM_MODEM_INITSTR (9)))
-    return 0;
+    {
+      log (LOG_ERR,"Unable to initialize the modem\n");
+      return 0;
+    }
 
   return 1;
 }
@@ -217,6 +221,7 @@ modem_dial ()
 {
   int i;
 
+  log (LOG_NOTICE, "Dialing provider...\n");
   for (i = 0; i < PARAM_MODEM_DIAL_RETRY; i++)
     if (modem_dial_to (PARAM_MODEM_PHONE (0)) ||
         modem_dial_to (PARAM_MODEM_PHONE (1)) ||
@@ -226,7 +231,10 @@ modem_dial ()
         modem_dial_to (PARAM_MODEM_PHONE (5)))
       break;
   if (i >= PARAM_MODEM_DIAL_RETRY)
-    return 0;
+    {
+      log (LOG_ERR, "Too many failures, dialing process aborted.\n");
+      return 0;
+    }
   return 1;
 }
 
@@ -240,6 +248,7 @@ modem_dial_to (phone)
   if (!phone)
     return 0;
 
+  log(LOG_INFO, "Dialing %s\n",phone);
   if (!PARAM_MODEM_DIAL_PREFIX)
     snprintf (dialcmd, sizeof (dialcmd), "%s%s", PARAM_MODEM_DIALSTR, phone);
   else
@@ -261,38 +270,38 @@ modem_dial_to (phone)
       break;
 
     case RESPONSE_NO_CARRIER:  /* NO CARRIER */
-      log (LOG_ERR, "No carrier detected\n");
+      log (LOG_WARNING, "No carrier detected\n");
       return 0;
       break;
 
     case RESPONSE_NO_DIALTONE: /* NO DIALTONE */
-      log (LOG_ERR, "No dial tone detected\n");
+      log (LOG_WARNING, "No dial tone detected\n");
       return 0;
       break;
 
     case RESPONSE_BUSY:        /* BUSY */
-      log (LOG_ERR, "Provider is busy\n");
+      log (LOG_WARNING, "Provider is busy\n");
       return 0;
       break;
 
     case RESPONSE_DELAYED:     /* DELAYED */
-      log (LOG_ERR, "Response delayed\n");
+      log (LOG_WARNING, "Response delayed\n");
       return 0;
       break;
 
     case RESPONSE_VOICE:       /* VOICE */
-      log (LOG_ERR, "Response voice\n");
+      log (LOG_WARNING, "Response voice\n");
       return 0;
       break;
 
     case RESPONSE_FAX:         /* FCLASS */
-      log (LOG_ERR, "You have been connected to a fax\n"
+      log (LOG_WARNING, "You have been connected to a fax\n"
            "Please verify the phone number\n");
       return 0;
       break;
 
     case RESPONSE_NO_ANSWER:   /* NO ANSWER */
-      log (LOG_ERR, "There was no answer\n");
+      log (LOG_WARNING, "There was no answer\n");
       return 0;
       break;
 
@@ -300,7 +309,7 @@ modem_dial_to (phone)
       break;
 
     default:                   /* TIMEOUT */
-      log (LOG_ERR, "Modem timed out during dialing\n");
+      log (LOG_WARNING, "Modem timed out during dialing\n");
       return 0;
     }
   return 0;
@@ -309,6 +318,7 @@ modem_dial_to (phone)
 int
 modem_log_into_aol ()
 {
+  log(LOG_NOTICE, "Connecting to provider...\n");
   debug (1, "Waiting for login prompt\n");
   if (!modem_wait_for (PARAM_MODEM_LOGIN_PROMPT, 60 * 1000))
     return 0;
@@ -328,7 +338,7 @@ modem_log_into_aol ()
   tcdrain (fd);
   if (!modem_wait_for ("onnected", 60 * 1000))
     return 0;
-  debug (0, "Logged into server\n");
+  log (LOG_NOTICE, "Logged into server\n");
   return 1;
 }
 

@@ -40,8 +40,11 @@ extern const access_t *haccess;
 extern const access_t modem_access;
 #endif
 
-#ifdef WITH_CABLE
+#ifdef WITH_TCPIP
+extern const access_t tcpip_access;
+#  ifdef WITH_CABLE
 extern const access_t cable_access;
+#  endif
 #endif
 
 #endif /* __ACCESS_H__ */
