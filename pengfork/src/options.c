@@ -43,7 +43,7 @@ param_t param[PARAM_MAX] = {
 {0, "access-method", "access_method", string, false, {string:"modem"}
    }
   ,
-{0, "protocol", "protocol", string, false, {string:"aol30"}
+{0, "protocol", "protocol", string, false, {string:"P3"}
    }
   ,
 {'t', "interface-type", "interface_type", string, false, {string:"tun"}
@@ -73,13 +73,13 @@ param_t param[PARAM_MAX] = {
 {0, "dns", "set_dns", boolean, false, {boolean:true}
    }
   ,
-{0, "pid-file", "pid_file", string, false, {string:"/var/run/pengaol.pid"}
+{0, "pid-file", "pid_file", string, false, {string:"/var/run/pengfork.pid"}
    }
   ,
-{0, "ip-up", "ip-up_script", string, false, {string:"/etc/pengaol/ip-up"}
+{0, "ip-up", "ip-up_script", string, false, {string:"/etc/pengfork/ip-up"}
    }
   ,
-{0, "ip-down", "ip-down_script", string, false, {string:"/etc/pengaol/ip-down"}
+{0, "ip-down", "ip-down_script", string, false, {string:"/etc/pengfork/ip-down"}
    }
   ,   /* MODEM SPECIFIC */
 {'m', "modem", "modem_device", string, false, {string:"/dev/modem"}
