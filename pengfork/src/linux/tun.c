@@ -145,7 +145,7 @@ tun_get(buffer, data, data_size)
 {
   struct iphdr *ip;
 
-  ip=buffer_end(buffer);
+  ip=(struct iphdr*) buffer_end(buffer);
   *data=NULL;
   *data_size=0;
   if(buffer->used < sizeof(struct iphdr))
@@ -153,7 +153,7 @@ tun_get(buffer, data, data_size)
   if(buffer->used < ip->tot_len)
     return 0;
 
-  *data=ip;
+  *data=(char*) ip;
   *data_size=ip->tot_len;
   buffer_free(buffer,ip->tot_len);
   return 1;
