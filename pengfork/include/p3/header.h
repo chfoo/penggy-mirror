@@ -47,14 +47,12 @@ struct p3hdr
                                    not including the stop byte */
   u_int8_t seq;
   u_int8_t ack;
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-  u_int8_t type:7;              /* see beelow */
-  u_int8_t client:1;            /* this is always set for client */
-#elif __BYTE_ORDER == __BIG_ENDIAN
+#if WORDS_BIGENDIAN
   u_int8_t client:1;            /* this bit is always set for client */
   u_int8_t type:7;              /* see beelow */
 #else
-# error "Please fix <bits/endian.h>"
+  u_int8_t type:7;              /* see beelow */
+  u_int8_t client:1;            /* this is always set for client */
 #endif
 }
 __attribute__ ((packed));

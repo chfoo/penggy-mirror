@@ -32,6 +32,10 @@
 #ifndef __BSD_TCP_H__
 #define __BSD_TCP_H__
 
+#if HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 /*
  * User-settable options (used with setsockopt).
  */
@@ -61,14 +65,12 @@ struct tcphdr
   u_int16_t th_dport;           /* destination port */
   tcp_seq th_seq;               /* sequence number */
   tcp_seq th_ack;               /* acknowledgement number */
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-  u_int8_t th_x2:4;             /* (unused) */
-  u_int8_t th_off:4;            /* data offset */
-#elif __BYTE_ORDER == __BIG_ENDIAN
+#if WORDS_BIGENDIAN
   u_int8_t th_off:4;            /* data offset */
   u_int8_t th_x2:4;             /* (unused) */
-#else
-# error "Please fix <bits/endian.h>"
+#else 
+  u_int8_t th_x2:4;             /* (unused) */
+  u_int8_t th_off:4;            /* data offset */
 #endif
   u_int8_t th_flags;
 #  define TH_FIN	0x01

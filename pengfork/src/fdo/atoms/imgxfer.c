@@ -39,13 +39,13 @@
 
 
 const atomdef_t imgxfer_atom_tab[] = {
-  {"imgxfer_set_context"       , IMGXFER_SET_CONTEXT       , raw},
-  {"imgxfer_end_context"       , IMGXFER_END_CONTEXT       , raw},
-  {"imgxfer_set_rid"           , IMGXFER_SET_RID           , raw},
-  {"imgxfer_set_gid"           , IMGXFER_SET_GID           , raw},
-  {"imgxfer_attr_wait_active"  , IMGXFER_ATTR_WAIT_ACTIVE  , bool},
-  {"imgxfer_is_spoolfile"      , IMGXFER_IS_SPOOLFILE      , raw},
-  {"imgxfer_get_spoolfile_name", IMGXFER_GET_SPOOLFILE_NAME, raw},
-  {"imgxfer_preset_keep_spool" , IMGXFER_PRESET_KEEP_SPOOL , bool},
+  {"imgxfer-set-context"       , IMGXFER_SET_CONTEXT       , raw},
+  {"imgxfer-end-context"       , IMGXFER_END_CONTEXT       , raw},
+  {"imgxfer-set-rid"           , IMGXFER_SET_RID           , raw},
+  {"imgxfer-set-gid"           , IMGXFER_SET_GID           , raw},
+  {"imgxfer-attr-wait-active"  , IMGXFER_ATTR_WAIT_ACTIVE  , bool},
+  {"imgxfer-is-spoolfile"      , IMGXFER_IS_SPOOLFILE      , raw},
+  {"imgxfer-get-spoolfile-name", IMGXFER_GET_SPOOLFILE_NAME, raw},
+  {"imgxfer-preset-keep-spool" , IMGXFER_PRESET_KEEP_SPOOL , bool},
   {NULL, -1, na}
 };

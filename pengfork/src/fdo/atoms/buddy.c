@@ -39,7 +39,7 @@
 
 
 const atomdef_t buddy_atom_tab[] = {
-  {"buddy_action_command", BUDDY_ACTION_COMMAND, raw},
-  {"buddy_connect_string", BUDDY_CONNECT_STRING, str},
+  {"buddy-action-command", BUDDY_ACTION_COMMAND, raw},
+  {"buddy-connect-string", BUDDY_CONNECT_STRING, str},
   {NULL, -1, na}
 };

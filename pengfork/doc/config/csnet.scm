@@ -24,13 +24,13 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;                                                                  ;;
-;; Scheme script for logon into AOLnet servers                      ;;
+;; Scheme script for logon into CompuServe servers                  ;;
 ;;                                                                  ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; general end function
-(define (aol-connect) 
+(define (cs-connect) 
   (chat-try 120
 	  '("Connected"      (chat-success))
 	  '("Open"           (chat-success))
@@ -46,67 +46,43 @@
 
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Login into an ANS server type
-(define (ans-login)
+(define (cs-login)
   (chat-try 20
-	  '("login"      (begin
-		         (chat-send "aol\r") 
-		         (aol-connect)))
+	  '("Username"   (cs-send-login))
+	  '("login"      (cs-send-login))
 	  '("NO CARRIER" (chat-failure))
 	  '(else         (chat-failure))))
 
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Login into a BBN server type
-(define (bbn-login2)
-  (chat-send "aolnet\r")
+(define (cs-send-login)
+  (chat-send "csn\r")
   (chat-try 20
 	  '("Password"   (begin
-		         (chat-send "A0L2aNet\r") 
-		         (aol-connect)))
-	  '("NO CARRIER" (chat-failure))
-	  '(else         (chat-failure))))
+		         (chat-send "csnet\r")
+		         (cs-connect)))
+	  '("NO CARRIER"     (chat-failure))
+	  '(else             (chat-failure))))
 
-(define (bbn-login)
+(define (cs-login-nopw)
   (chat-try 20
-	  '("login"      (bbn-login2))
+	  '("Username"   (cs-send-login-nopw))
+	  '("login"      (cs-send-login))
 	  '("NO CARRIER" (chat-failure))
 	  '(else         (chat-failure))))
 
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Login into a Sprint server type
-(define (sprint-login2)
-  (chat-send "aol\r")
-  (chat-try 20
-	  '("Password"   (begin
-		         (chat-send "aol\r") 
-		         (aol-connect)))
-	  '("NO CARRIER" (chat-failure))
-	  '(else         (chat-failure))))
-
-(define (sprint-login)
-  (chat-try 20
-	  '("Username"   (sprint-login2))
-	  '("login"      (sprint-login2))
-	  '("NO CARRIER" (chat-failure))
-	  '(else         (chat-failure))))
-
-
+(define (cs-send-login-nopw)
+  (chat-send "csn\r")
+  (cs-connect))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Main entry point, it try to determine server type
 (define (chat-connect) 
   (chat-try 20 
-	  '("ANSNet"     (ans-login))
-	  '("UU.Net"     (ans-login))
-	  '("Saturn.BBN" (bbn-login))
-	  '("Sprint-IP"  (sprint-login))
-	  '("UQKT1"      (ans-login))
-	  '("UQKT2"      (sprint-login))
+	  '("ANSNet"     (cs-login))
+	  '("UU.Net"     (cs-login))
+	  '("Saturn.BBN" (cs-login))
+	  '("Sprint-IP"  (cs-login))
+	  '("UQKT1"      (cs-login-nopw))
+	  '("UQKT2"      (cs-login))
 	  '("Connected"  (chat-success))
 	  '("NO CARRIER" (chat-failure))
 	  '(else         (chat-failure))))

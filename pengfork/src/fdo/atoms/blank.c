@@ -39,8 +39,8 @@
 
 
 const atomdef_t blank_atom_tab[] = {
-  {"blank_test"    , BLANK_TEST    , raw},
-  {"blank_get_form", BLANK_GET_FORM, gid},
-  {"blank_get_ver" , BLANK_GET_VER , raw},
+  {"blank-test"    , BLANK_TEST    , raw},
+  {"blank-get-form", BLANK_GET_FORM, gid},
+  {"blank-get-ver" , BLANK_GET_VER , raw},
   {NULL, -1, na}
 };

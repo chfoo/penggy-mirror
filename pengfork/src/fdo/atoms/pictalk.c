@@ -39,19 +39,19 @@
 
 
 const atomdef_t pictalk_atom_tab[] = {
-  {"pictalk_manage"         , PICTALK_MANAGE         , raw},
-  {"pictalk_open_file"      , PICTALK_OPEN_FILE      , str},
-  {"pictalk_control"        , PICTALK_CONTROL        , raw},
-  {"pictalk_get_attr_style" , PICTALK_GET_ATTR_STYLE , raw},
-  {"pictalk_attr_style"     , PICTALK_ATTR_STYLE     , raw},
-  {"pictalk_timeline_action", PICTALK_TIMELINE_ACTION, raw},
-  {"pictalk_delete_timeline", PICTALK_DELETE_TIMELINE, raw},
-  {"pictalk_attr_intl"      , PICTALK_ATTR_INTL      , raw},
-  {"pictalk_attr_ctrl_id"   , PICTALK_ATTR_CTRL_ID   , raw},
-  {"pictalk_attr_art_id"    , PICTALK_ATTR_ART_ID    , raw},
-  {"pictalk_update_art"     , PICTALK_UPDATE_ART     , raw},
-  {"pictalk_reset_styles"   , PICTALK_RESET_STYLES   , raw},
-  {"pictalk_ad_manage"      , PICTALK_AD_MANAGE      , raw},
+  {"pictalk-manage"         , PICTALK_MANAGE         , raw},
+  {"pictalk-open-file"      , PICTALK_OPEN_FILE      , str},
+  {"pictalk-control"        , PICTALK_CONTROL        , raw},
+  {"pictalk-get-attr-style" , PICTALK_GET_ATTR_STYLE , raw},
+  {"pictalk-attr-style"     , PICTALK_ATTR_STYLE     , raw},
+  {"pictalk-timeline-action", PICTALK_TIMELINE_ACTION, raw},
+  {"pictalk-delete-timeline", PICTALK_DELETE_TIMELINE, raw},
+  {"pictalk-attr-intl"      , PICTALK_ATTR_INTL      , raw},
+  {"pictalk-attr-ctrl-id"   , PICTALK_ATTR_CTRL_ID   , raw},
+  {"pictalk-attr-art-id"    , PICTALK_ATTR_ART_ID    , raw},
+  {"pictalk-update-art"     , PICTALK_UPDATE_ART     , raw},
+  {"pictalk-reset-styles"   , PICTALK_RESET_STYLES   , raw},
+  {"pictalk-ad-manage"      , PICTALK_AD_MANAGE      , raw},
   {NULL, -1, na}
 };
 

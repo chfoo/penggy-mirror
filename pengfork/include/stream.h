@@ -19,35 +19,28 @@
  * 02111-1307, USA.
  *
  * $Id$
- *
+ *               
  */
 
-#if HAVE_CONFIG_H
+#ifndef __STREAM_H__
+#define __STREAM_H__
+
+#ifdef HAVE_CONFIG_H
 # include "config.h"
 #endif
 
-#if STDC_HEADERS
-# include <stdlib.h>
-# include <stddef.h>
-#else
-# if HAVE_STDLIB_H
-#  include <stdlib.h>
-# endif
+#ifdef HAVE_SYS_TYPES_H
+# include <sys/types.h>
 #endif
 
-#include "fdo/atoms.h"
+typedef struct {
+  size_t size;
+  size_t used;
+  char *data;
+} stream_t;
 
+void stream_init(stream_t *stream);
+void stream_destroy(stream_t *stream);
+void stream_put(stream_t *stream, size_t size, void *data);
 
-const atomdef_t gallery_atom_tab[] = {
-  {"gallery-create"           , GALLERY_CREATE           , raw},
-  {"gallery-close"            , GALLERY_CLOSE            , raw},
-  {"gallery-view"             , GALLERY_VIEW             , raw},
-  {"gallery-view-selected"    , GALLERY_VIEW_SELECTED    , dword},
-  {"gallery-next-page"        , GALLERY_NEXT_PAGE        , raw},
-  {"gallery-prev-page"        , GALLERY_PREV_PAGE        , raw},
-  {"gallery-open"             , GALLERY_OPEN             , raw},
-  {"gallery-send-img-to-mail" , GALLERY_SEND_IMG_TO_MAIL , raw},
-  {"gallery-change-dir"       , GALLERY_CHANGE_DIR       , str},
-  {"gallery-get-view-filename", GALLERY_GET_VIEW_FILENAME, bytelist},
-  {NULL, -1, na}
-};
+#endif

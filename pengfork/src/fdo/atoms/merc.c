@@ -39,11 +39,11 @@
 
 
 const atomdef_t merc_atom_tab[] = {
-  {"merc_manage"     , MERC_MANAGE     , raw},
-  {"merc_select_bank", MERC_SELECT_BANK, str},
-  {"merc_settings"   , MERC_SETTINGS   , raw},
-  {"merc_help"       , MERC_HELP       , raw},
-  {"merc_about"      , MERC_ABOUT      , raw},
-  {"merc_close"      , MERC_CLOSE      , raw},
+  {"merc-manage"     , MERC_MANAGE     , raw},
+  {"merc-select-bank", MERC_SELECT_BANK, str},
+  {"merc-settings"   , MERC_SETTINGS   , raw},
+  {"merc-help"       , MERC_HELP       , raw},
+  {"merc-about"      , MERC_ABOUT      , raw},
+  {"merc-close"      , MERC_CLOSE      , raw},
   {NULL, -1, na}
 };

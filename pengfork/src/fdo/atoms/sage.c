@@ -39,12 +39,12 @@
 
 
 const atomdef_t sage_atom_tab[] = {
-  {"sage_showme_start"    , SAGE_SHOWME_START    , str},
-  {"sage_showme_end"      , SAGE_SHOWME_END      , raw},
-  {"sage_set_style"       , SAGE_SET_STYLE       , dword},
-  {"sage_set_position_gid", SAGE_SET_POSITION_GID, gid},
-  {"sage_set_position_rid", SAGE_SET_POSITION_RID, dword},
-  {"sage_set_text"        , SAGE_SET_TEXT        , str},
-  {"sage_set_play"        , SAGE_SET_PLAY        , bool},
+  {"sage-showme-start"    , SAGE_SHOWME_START    , str},
+  {"sage-showme-end"      , SAGE_SHOWME_END      , raw},
+  {"sage-set-style"       , SAGE_SET_STYLE       , dword},
+  {"sage-set-position-gid", SAGE_SET_POSITION_GID, gid},
+  {"sage-set-position-rid", SAGE_SET_POSITION_RID, dword},
+  {"sage-set-text"        , SAGE_SET_TEXT        , str},
+  {"sage-set-play"        , SAGE_SET_PLAY        , bool},
   {NULL, -1, na}
 };

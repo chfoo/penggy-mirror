@@ -39,8 +39,8 @@
 
 
 const atomdef_t sec_ip_atom_tab[] = {
-  {"sec_ip_handshake_to_host"  , SEC_IP_HANDSHAKE_TO_HOST  , raw},
-  {"sec_ip_handshake_to_client", SEC_IP_HANDSHAKE_TO_CLIENT, raw},
-  {"sec_ip_error"              , SEC_IP_ERROR              , raw},
+  {"sec-ip-handshake-to-host"  , SEC_IP_HANDSHAKE_TO_HOST  , raw},
+  {"sec-ip-handshake-to-client", SEC_IP_HANDSHAKE_TO_CLIENT, raw},
+  {"sec-ip-error"              , SEC_IP_ERROR              , raw},
   {NULL, -1, na}
 };

@@ -18,36 +18,27 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
  * 02111-1307, USA.
  *
- * $Id$
- *
  */
+
+#ifndef __FDO_STREAM_H__
+#define __FDO_STREAM_H__
 
 #if HAVE_CONFIG_H
 # include "config.h"
 #endif
 
-#if STDC_HEADERS
-# include <stdlib.h>
-# include <stddef.h>
-#else
-# if HAVE_STDLIB_H
-#  include <stdlib.h>
-# endif
+typedef struct {
+  int protid;
+  int atomid;
+} eos_atom_t;
+
+typedef struct {
+  int id;
+  int last_pid;
+} fdo_stream_t;
+
+int is_eos_atom(int pid, int aid);
+fdo_stream_t *get_stream(int id);
+int close_stream(int id);
+
 #endif
-
-#include "fdo/atoms.h"
-
-
-const atomdef_t gallery_atom_tab[] = {
-  {"gallery-create"           , GALLERY_CREATE           , raw},
-  {"gallery-close"            , GALLERY_CLOSE            , raw},
-  {"gallery-view"             , GALLERY_VIEW             , raw},
-  {"gallery-view-selected"    , GALLERY_VIEW_SELECTED    , dword},
-  {"gallery-next-page"        , GALLERY_NEXT_PAGE        , raw},
-  {"gallery-prev-page"        , GALLERY_PREV_PAGE        , raw},
-  {"gallery-open"             , GALLERY_OPEN             , raw},
-  {"gallery-send-img-to-mail" , GALLERY_SEND_IMG_TO_MAIL , raw},
-  {"gallery-change-dir"       , GALLERY_CHANGE_DIR       , str},
-  {"gallery-get-view-filename", GALLERY_GET_VIEW_FILENAME, bytelist},
-  {NULL, -1, na}
-};

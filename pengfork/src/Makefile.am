@@ -46,6 +46,7 @@ penggy_SOURCES = 	buffer.c		\
 			engine.c		\
 			resolver.c		\
 			sighndl.c		\
+			stream.c		\
 			window.c
 
 INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib
@@ -91,6 +92,7 @@ SUBDIRS = 	fdo			\
 
 
 penggy_LDADD = 	$(top_builddir)/src/fdo/libfdo.a		\
+		$(top_builddir)/src/fdo/atoms/libatoms.a        \
 			$(top_builddir)/src/iptunnel/libiptunnel.a	\
 			$(top_builddir)/lib/lib.a			\
 			$(MODEM_LIBS)					\

@@ -39,12 +39,12 @@
 
 
 const atomdef_t slider_atom_tab[] = {
-  {"slider_manage"       , SLIDER_MANAGE       , raw},
-  {"slider_get_position" , SLIDER_GET_POSITION , raw},
-  {"slider_set_position" , SLIDER_SET_POSITION , dword},
-  {"slider_set_max_range", SLIDER_SET_MAX_RANGE, dword},
-  {"slider_get_max_range", SLIDER_GET_MAX_RANGE, raw},
-  {"slider_set_min_range", SLIDER_SET_MIN_RANGE, dword},
-  {"slider_get_min_range", SLIDER_GET_MIN_RANGE, raw},
+  {"slider-manage"       , SLIDER_MANAGE       , raw},
+  {"slider-get-position" , SLIDER_GET_POSITION , raw},
+  {"slider-set-position" , SLIDER_SET_POSITION , dword},
+  {"slider-set-max-range", SLIDER_SET_MAX_RANGE, dword},
+  {"slider-get-max-range", SLIDER_GET_MAX_RANGE, raw},
+  {"slider-set-min-range", SLIDER_SET_MIN_RANGE, dword},
+  {"slider-get-min-range", SLIDER_GET_MIN_RANGE, raw},
   {NULL, -1, na}
 };

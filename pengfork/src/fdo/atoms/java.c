@@ -39,9 +39,9 @@
 
 
 const atomdef_t java_atom_tab[] = {
-  {"java_manage"  , JAVA_MANAGE  , raw},
-  {"java_execute" , JAVA_EXECUTE , raw},
-  {"java_mimetype", JAVA_MIMETYPE, str},
-  {"java_args"    , JAVA_ARGS    , str},
+  {"java-manage"  , JAVA_MANAGE  , raw},
+  {"java-execute" , JAVA_EXECUTE , raw},
+  {"java-mimetype", JAVA_MIMETYPE, str},
+  {"java-args"    , JAVA_ARGS    , str},
   {NULL, -1, na}
 };

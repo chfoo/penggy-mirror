@@ -85,7 +85,7 @@ AC_HEADER_STDC
 AC_CHECK_HEADERS([arpa/inet.h fcntl.h langinfo.h libintl.h netdb.h netinet/in.h stdio_ext.h sys/ioctl.h sys/time.h syslog.h termios.h])
 
 # Customized checks
-AC_CHECK_HEADERS([assert.h byteswap.h ctype.h errno.h linux/if_tun.h net/if.h net/if_tun.h netinet/in_systm.h netinet/ip.h net/net_globals.h net/ppp_defs.h signal.h stdarg.h stdio.h sys/byteorder.h sys/uio.h])
+AC_CHECK_HEADERS([assert.h byteswap.h ctype.h errno.h linux/if_tun.h netinet/in.h netinet/in_systm.h netinet/ip.h net/if.h net/if_tun.h net/net_globals.h net/ppp_defs.h signal.h stdarg.h stdio.h sys/byteorder.h sys/uio.h])
 
 
 # Checks for typedefs, structures, and compiler characteristics.
@@ -174,9 +174,9 @@ AC_ARG_ENABLE(modem,
 if test "$modem" = yes; then
   AC_DEFINE([ENABLE_MODEM], 1,[ Enable/disable modem driver ])
   GUILE_FLAGS
-  AC_CHECK_HEADERS([guile/gh.h])
   CFLAGS="$CFLAGS $GUILE_CFLAGS"
   LDFLAGS="$LDFLAGS $GUILE_LDFLAGS"
+  AC_CHECK_HEADERS([guile/gh.h libguile.h])
   AC_MSG_CHECKING(whether scm_eval conforms to R5RS)
   AC_CACHE_VAL(guile_r5rs_eval, [
     AC_TRY_COMPILE([#include <guile/gh.h>], [SCM e, m; scm_eval(e, m);],
@@ -185,6 +185,7 @@ if test "$modem" = yes; then
   if test "$guile_r5rs_eval" = yes; then
     AC_DEFINE([HAVE_R5RS_EVAL], 1,[Enabled if scm_eval is R5RS compliant])
   fi
+  AC_CHECK_FUNCS([scm_c_define_gsubr gh_new_procedure scm_c_primitive_load gh_eval_file scm_c_lookup gh_lookup])
 fi
 AM_CONDITIONAL(BUILD_MODEM, test "$modem" = yes)
 
@@ -356,6 +357,7 @@ AC_CONFIG_FILES([Makefile
                  include/cable/Makefile
                  include/dsl/Makefile
                  include/fdo/Makefile
+		 include/fdo/atoms/Makefile
                  include/iptunnel/Makefile
                  include/l2tp/Makefile
                  include/modem/Makefile
@@ -369,6 +371,7 @@ AC_CONFIG_FILES([Makefile
                  src/cable/Makefile
                  src/dsl/Makefile
                  src/fdo/Makefile
+		 src/fdo/atoms/Makefile
                  src/iptunnel/Makefile
                  src/l2tp/Makefile
                  src/modem/Makefile

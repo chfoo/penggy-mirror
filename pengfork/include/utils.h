@@ -39,25 +39,21 @@
 #define MAX(a,b) ((a)>(b) ? (a):(b))
 
 /* Host to Little Endian */
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-#  define htoles(x)   (x)
-#  define htolel(x)   (x)
-#elif __BYTE_ORDER == __BIG_ENDIAN
+#if WORDS_BIGENDIAN
 #  define htoles(x)   bswap_16(x)
 #  define htolel(x)   bswap_32(x)
 #else
-#  error "Please fix <bits/endian.h>"
+#  define htoles(x)   (x)
+#  define htolel(x)   (x)
 #endif
 
 /* Little Endian to host*/
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-#  define letohs(x)   (x)
-#  define letohl(x)   (x)
-#elif __BYTE_ORDER == __BIG_ENDIAN
+#if WORDS_BIGENDIAN
 #  define letohs(x)   bswap_16(x)
 #  define letohl(x)   bswap_32(x)
 #else
-#  error "Please fix <bits/endian.h>"
+#  define letohs(x)   (x)
+#  define letohl(x)   (x)
 #endif
 
 void trim (char *line);

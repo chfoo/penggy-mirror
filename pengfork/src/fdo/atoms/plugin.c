@@ -39,10 +39,10 @@
 
 
 const atomdef_t plugin_atom_tab[] = {
-  {"plugin_manage"     , PLUGIN_MANAGE     , byte},
-  {"plugin_execute"    , PLUGIN_EXECUTE    , raw},
-  {"plugin_mimetype"   , PLUGIN_MIMETYPE   , str},
-  {"plugin_fileextents", PLUGIN_FILEEXTENTS, str},
-  {"plugin_args"       , PLUGIN_ARGS       , str},
+  {"plugin-manage"     , PLUGIN_MANAGE     , byte},
+  {"plugin-execute"    , PLUGIN_EXECUTE    , raw},
+  {"plugin-mimetype"   , PLUGIN_MIMETYPE   , str},
+  {"plugin-fileextents", PLUGIN_FILEEXTENTS, str},
+  {"plugin-args"       , PLUGIN_ARGS       , str},
   {NULL, -1, na}
 };

@@ -39,6 +39,6 @@
 
 
 const atomdef_t app_atom_tab[] = {
-  {"app_command", APP_COMMAND, dword},
+  {"app-command", APP_COMMAND, dword},
   {NULL, -1, na}
 };

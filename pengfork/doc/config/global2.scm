@@ -29,68 +29,59 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-(define  (TalkToNetwork)
-   (chat-send "aoluser@aol.com\r")
-   (chat-try 20
-	   '("Password"   (ConnectToAOL))
-	   '("NO CARRIER" (chat-failure)) 
-	   '(else         (chat-failure))))
-
-(define (TalkToLivingston)
+(define (talk-to-network)
   (chat-send "aoluser@aol.com\r")
   (chat-try 20
-	  '("Password"   (ConnectToAOLBlind))
+	  '("Password"   (begin
+		         (chat-send "aolpw\r")
+		         (chat-try 60
+			         '("Connected"      (chat-success))
+			         '("Open"           (chat-success))
+			         '("Unavailable"    (chat-failure))
+			         '("Connect Failed" (chat-failure))
+			         '("Not Available"  (chat-failure))
+			         '("Unreachable"    (chat-failure))
+			         '("No Connection"  (chat-failure))
+			         '("Bad Password"   (chat-failure))
+			         '("Failed"         (chat-failure))
+			         '("Login Invalid"  (chat-failure))
+			         '("Invalid User"   (chat-failure))
+			         '("Error in"       (chat-failure))
+			         '("Server Timeout" (chat-failure))
+			         '("NO CARRIER"     (chat-failure))
+			         '(else             (chat-failure)))))
 	  '("NO CARRIER" (chat-failure))
 	  '(else         (chat-failure))))
 
-(define (ConnectToAOL)
-  (chat-send "aolpw\r")
-  (AOLConnect))
+(define (talk-to-livingston)
+  (chat-send "aoluser@aol.com\r")
+  (chat-try 20
+	  '("Password"   (begin
+		         (chat-send "aolpw\r")
+		         (chat-try 10
+			         '("Unavailable"    (chat-failure))
+			         '("Connect Failed" (chat-failure))
+			         '("Not Available"  (chat-failure))
+			         '("Unreachable"    (chat-failure))
+			         '("No Connection"  (chat-failure))
+			         '("Bad Password"   (chat-failure))
+			         '("Failed"         (chat-failure))
+			         '("Login Invalid"  (chat-failure))
+			         '("Error in"       (chat-failure))
+			         '("Server Timeout" (chat-failure))
+			         '("NO CARRIER"     (chat-failure))
+			         '(else             (chat-success)))))
+	  '("NO CARRIER" (chat-failure))
+	  '(else         (chat-failure))))
 
-(define (AOLConnect)
-  (chat-try 60
-	  '("Connected"      (chat-success))
-	  '("Open"           (chat-success))
-	  '("Unavailable"    (chat-failure))
-	  '("Connect Failed" (chat-failure))
-	  '("Not Available"  (chat-failure))
-	  '("Unreachable"    (chat-failure))
-	  '("No Connection"  (chat-failure))
-	  '("Bad Password"   (chat-failure))
-	  '("Failed"         (chat-failure))
-	  '("Login Invalid"  (chat-failure))
-	  '("Invalid User"   (chat-failure))
-	  '("Error in"       (chat-failure))
-	  '("Server Timeout" (chat-failure))
-	  '("NO CARRIER"     (chat-failure))
-	  '(else             (chat-failure))))
-
-(define (ConnectToAOLBlind)
-  (chat-send "aolpw\r")
-  (AOLConnectBlind))
-
-(define (AOLConnectBlind)
-  (chat-try 10
-	  '("Unavailable"    (chat-failure))
-	  '("Connect Failed" (chat-failure))
-	  '("Not Available"  (chat-failure))
-	  '("Unreachable"    (chat-failure))
-	  '("No Connection"  (chat-failure))
-	  '("Bad Password"   (chat-failure))
-	  '("Failed"         (chat-failure))
-	  '("Login Invalid"  (chat-failure))
-	  '("Error in"       (chat-failure))
-	  '("Server Timeout" (chat-failure))
-	  '("NO CARRIER"     (chat-failure))
-	  '(else             (chat-success))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Main entry point
 (define (chat-connect)
   (chat-try 20
-	  '("Login"      (TalkToNetwork))
-	  '("Username"   (TalkToNetwork))
-	  '("Livingston" (TalkToLivingston))
+	  '("Login"      (talk-to-network))
+	  '("Username"   (talk-to-network))
+	  '("Livingston" (talk-to-livingston))
 	  '("NO CARRIER" (chat-failure))
 	  '(else         (chat-failure))))

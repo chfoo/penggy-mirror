@@ -38,7 +38,7 @@
 # include <unistd.h>
 #endif
 #ifdef ENABLE_MODEM
-#  include <guile/gh.h>
+#  include <libguile.h>
 #endif
 
 #include "common.h"
@@ -79,7 +79,8 @@ main (argc, argv)
      char **argv;
 #else
 void
-main2 (argc, argv)
+main2 (closure, argc, argv)
+     void *closure;
      int argc;
      char **argv;
 #endif
@@ -122,9 +123,14 @@ main2 (argc, argv)
 
   handle_signals ();
 
+  if (!iface->connect ())
+    {
+      log (LOG_ERR, gettext ("Fatal error, exiting.\n"));
+      clean_exit (1);
+    }
   do {
     status=sconnect;
-    if (iface->connect () && haccess->connect ())
+    if (haccess->connect ())
       {
         if (!engine_init ())
 	{
@@ -138,7 +144,6 @@ main2 (argc, argv)
         status = srun;
         engine_loop ();
         haccess->disconnect ();
-        iface->disconnect ();
       }
     else
       {
@@ -163,6 +168,8 @@ main2 (argc, argv)
   }
   while (PARAM_AUTO_RECONNECT && status!=sexit);
 
+  iface->disconnect ();
+
   if(PARAM_PID_FILE) 
     remove_pidfile ();
 
@@ -179,7 +186,7 @@ main (argc, argv)
      int argc;
      char **argv;
 {
-  gh_enter (argc, argv, main2);
+  scm_boot_guile (argc, argv, main2, NULL);
   return 0;                     /* never reached */
 }
 #endif

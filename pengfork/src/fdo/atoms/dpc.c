@@ -39,6 +39,6 @@
 
 
 const atomdef_t dpc_atom_tab[] = {
-  {"dpc_exchange_account_info",DPC_EXCHANGE_ACCOUNT_INFO, str},
+  {"dpc-exchange-account-info",DPC_EXCHANGE_ACCOUNT_INFO, str},
   {NULL, -1, na}
 };

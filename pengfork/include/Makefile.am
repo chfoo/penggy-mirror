@@ -39,6 +39,7 @@ noinst_HEADERS = 	access.h	\
 			options.h	\
 			getpass.h	\
 			resolver.h	\
+			stream.h	\
 			utils.h
 
 SUBDIRS = fdo iptunnel modem cable dsl tcpip tun p3 l2tp

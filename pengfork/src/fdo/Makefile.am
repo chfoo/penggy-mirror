@@ -26,5 +26,6 @@
 INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib
 
 noinst_LIBRARIES = libfdo.a
-libfdo_a_SOURCES = 	fdo.c init.c login.c
+libfdo_a_SOURCES = atoms.c bytecode.c fdo.c init.c login.c stream.c
 
+SUBDIRS = atoms

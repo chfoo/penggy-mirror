@@ -39,11 +39,11 @@
 
 
 const atomdef_t irc_atom_tab[] = {
-  {"irc_manage"   , IRC_MANAGE   , raw},
-  {"irc_enter"    , IRC_ENTER    , dword},
-  {"irc_join"     , IRC_JOIN     , dword},
-  {"irc_create"   , IRC_CREATE   , dword},
-  {"irc_user_info", IRC_USER_INFO, dword},
+  {"irc-manage"   , IRC_MANAGE   , raw},
+  {"irc-enter"    , IRC_ENTER    , dword},
+  {"irc-join"     , IRC_JOIN     , dword},
+  {"irc-create"   , IRC_CREATE   , dword},
+  {"irc-user-info", IRC_USER_INFO, dword},
   {NULL, -1, na}
 };
 

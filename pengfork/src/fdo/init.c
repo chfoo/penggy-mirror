@@ -33,6 +33,8 @@
 #include "fdo.h"
 #include "fdo/init.h"
 #include "fdo/login.h"
+#include "stream.h"
+#include "fdo/bytecode.h"
 
 void
 init_register ()

@@ -39,11 +39,11 @@
 
 
 const atomdef_t p3_atom_tab[] = {
-  {"p3_start"                   , P3_START                   , raw},
-  {"p3_stop"                    , P3_STOP                    , raw},
-  {"p3_write"                   , P3_WRITE                   , raw},
-  {"p3_interleaved_mode"        , P3_INTERLEAVED_MODE        , raw},
-  {"p3_debug_disable_outbound"  , P3_DEBUG_DISABLE_OUTBOUND  , dword},
-  {"p3_debug_get_outbound_state", P3_DEBUG_GET_OUTBOUND_STATE, raw},
+  {"p3-start"                   , P3_START                   , raw},
+  {"p3-stop"                    , P3_STOP                    , raw},
+  {"p3-write"                   , P3_WRITE                   , raw},
+  {"p3-interleaved-mode"        , P3_INTERLEAVED_MODE        , raw},
+  {"p3-debug-disable-outbound"  , P3_DEBUG_DISABLE_OUTBOUND  , dword},
+  {"p3-debug-get-outbound-state", P3_DEBUG_GET_OUTBOUND_STATE, raw},
   {NULL, -1, na}
 };

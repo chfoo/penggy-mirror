@@ -17,9 +17,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
  * 02111-1307, USA.
- *
+ *                
  * $Id$
- *
+ *               
  */
 
 #if HAVE_CONFIG_H
@@ -34,20 +34,48 @@
 #  include <stdlib.h>
 # endif
 #endif
+#if HAVE_STRING_H
+# if !STDC_HEADERS && HAVE_MEMORY_H
+#  include <memory.h>
+# endif
+# include <string.h>
+#endif
 
-#include "fdo/atoms.h"
+#include "stream.h"
 
+#define MEMORY_INCREMENT 512
 
-const atomdef_t gallery_atom_tab[] = {
-  {"gallery-create"           , GALLERY_CREATE           , raw},
-  {"gallery-close"            , GALLERY_CLOSE            , raw},
-  {"gallery-view"             , GALLERY_VIEW             , raw},
-  {"gallery-view-selected"    , GALLERY_VIEW_SELECTED    , dword},
-  {"gallery-next-page"        , GALLERY_NEXT_PAGE        , raw},
-  {"gallery-prev-page"        , GALLERY_PREV_PAGE        , raw},
-  {"gallery-open"             , GALLERY_OPEN             , raw},
-  {"gallery-send-img-to-mail" , GALLERY_SEND_IMG_TO_MAIL , raw},
-  {"gallery-change-dir"       , GALLERY_CHANGE_DIR       , str},
-  {"gallery-get-view-filename", GALLERY_GET_VIEW_FILENAME, bytelist},
-  {NULL, -1, na}
-};
+void
+stream_init(stream)
+     stream_t *stream;
+{
+  stream->size = MEMORY_INCREMENT;
+  stream->used = 0;
+  stream->data = malloc(MEMORY_INCREMENT);
+}
+
+void
+stream_destroy(stream)
+     stream_t *stream;
+{
+  free (stream->data);
+  stream->size = 0;
+  stream->used = 0;
+  stream->data = NULL;
+}
+
+void
+stream_put(stream, size, data)
+     stream_t *stream;
+     size_t size;
+     void *data;
+{
+  if(!size || !data) return;
+  if( stream->size < (stream->used + size) )
+    {
+      stream->size = ((stream->used + size) / MEMORY_INCREMENT + 1) * MEMORY_INCREMENT;
+      stream->data = realloc(stream->data, stream->size);
+    }
+  memcpy(stream->data + stream->used, data, size);
+  stream->used += size;
+}

@@ -39,7 +39,7 @@
 
 
 const atomdef_t htmlview_atom_tab[] = {
-  {"htmlview_manage"       , HTMLVIEW_MANAGE       , raw},
-  {"htmlview_notify_action", HTMLVIEW_NOTIFY_ACTION, dword},
+  {"htmlview-manage"       , HTMLVIEW_MANAGE       , raw},
+  {"htmlview-notify-action", HTMLVIEW_NOTIFY_ACTION, dword},
   {NULL, -1, na}
 };

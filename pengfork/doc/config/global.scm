@@ -28,13 +28,13 @@
 ;;                                                                  ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define (GlobalRequestAttn tries)
+(define (request-attn tries)
   (if (> tries 3) 
       (chat-failure)
 
       (chat-send "...\r")
       (chat-try 25 
-	      '("SITA NETWORK"  (GlobalSetupEnvironment 0))
+	      '("SITA NETWORK"  (setup-environment 0))
 	      '("ANSNET"        (chat-failure))
 	      '("SATURN.BBN"    (chat-failure))
 	      '("SPRINT-IP"     (chat-failure))
@@ -45,37 +45,37 @@
 	      '("LOCAL"         (chat-failure))
 	      '("ERROR"         (chat-failure))
 	      '("NO CARRIER"    (chat-failure))
-	      '(else            (GlobalRequestAttn (+ tries 1))))))
+	      '(else            (request-attn (+ tries 1))))))
 
-(define (GlobalSetupEnvironment)
+(define (setup-snvironment)
   (chat-send "SET 1:0,2:0,21:0\r")
   (sleep 1)
-  (GlobalTalkToNetwork))
+  (talk-to-network))
 
-(define (GlobalTalkToNetwork tries)
+(define (talk-to-network tries)
   (if (> (tries) 4) 
       (chat-failure)
 
       (sleep 1)
       (chat-send "NUI 22500001\r")
       (chat-try 10 
-	      '("XXXXXX"     (GlobalReqAuth))
+	      '("XXXXXX"     (req-auth (+ tries 1)))
 	      '("\r\n ?"     (chat-failure))
 	      '("ERROR"      (chat-failure))
 	      '("NO CARRIER" (chat-failure))
-	      '(else         (GlobalTalkToNetwork (+ tries 1))))))
+	      '(else         (talk-to-network (+ tries 1))))))
                               
-(define (GlobalReqAuth tries)
+(define (req-auth tries)
   (sleep 1)
   (chat-send "OPXY9F\r")
   (chat-try 10 
-    '("ACTIVE"     (GlobalConnect))
+    '("ACTIVE"     (aol-connect))
     '("\r\n ?"     (chat-failure))
     '("ERROR"      (chat-failure))
     '("NO CARRIER" (chat-failure))
-    '(else         (GlobalTalkToNetwork tries))))
+    '(else         (talk-to-network tries))))
 
-(define (GlobalConnect)
+(define (aol-connect)
   (sleep 1)
   (chat-send "LINE(256)9001131,windows 0001\r")
   (chat-try 23 
@@ -106,4 +106,4 @@
 ;; Main entry point
 (define (chat-connect)
   (sleep 5)
-  (GlobalRequestAttn 0))
+  (request-attn 0))

@@ -39,6 +39,6 @@
 
 
 const atomdef_t spell_atom_tab[] = {
-  {"spell_rules_dlg", SPELL_RULES_DLG, raw},
+  {"spell-rules-dlg", SPELL_RULES_DLG, raw},
   {NULL, -1, na}
 };

@@ -39,15 +39,15 @@
 
 
 const atomdef_t activex_atom_tab[] = {
-  {"activex_manage"           , ACTIVEX_MANAGE           , raw},
-  {"activex_id"               , ACTIVEX_ID               , str},
-  {"activex_classid"          , ACTIVEX_CLASSID          , str},
-  {"activex_codebase"         , ACTIVEX_CODEBASE         , str},
-  {"activex_data"             , ACTIVEX_DATA             , str},
-  {"activex_script_code"      , ACTIVEX_SCRIPT_CODE      , str},
-  {"activex_script_expression", ACTIVEX_SCRIPT_EXPRESSION, str},
-  {"activex_script_start"     , ACTIVEX_SCRIPT_START     , str},
-  {"activex_param"            , ACTIVEX_PARAM            , str},
-  {"activex_script_shutdown"  , ACTIVEX_SCRIPT_SHUTDOWN  , raw},
+  {"activex-manage"           , ACTIVEX_MANAGE           , raw},
+  {"activex-id"               , ACTIVEX_ID               , str},
+  {"activex-classid"          , ACTIVEX_CLASSID          , str},
+  {"activex-codebase"         , ACTIVEX_CODEBASE         , str},
+  {"activex-data"             , ACTIVEX_DATA             , str},
+  {"activex-script-code"      , ACTIVEX_SCRIPT_CODE      , str},
+  {"activex-script-expression", ACTIVEX_SCRIPT_EXPRESSION, str},
+  {"activex-script-start"     , ACTIVEX_SCRIPT_START     , str},
+  {"activex-param"            , ACTIVEX_PARAM            , str},
+  {"activex-script-shutdown"  , ACTIVEX_SCRIPT_SHUTDOWN  , raw},
   {NULL, -1, na}
 };

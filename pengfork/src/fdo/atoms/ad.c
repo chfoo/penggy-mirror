@@ -39,12 +39,12 @@
 
 
 const atomdef_t ad_atom_tab[] = {
-  {"ad_add"       , AD_ADD       , raw},
-  {"ad_store"     , AD_STORE     , raw},
-  {"ad_modify"    , AD_MODIFY    , raw},
-  {"ad_set_caller", AD_SET_CALLER, raw},
-  {"ad_to"        , AD_TO        , raw},
-  {"ad_cc"        , AD_CC        , raw},
+  {"ad-add"       , AD_ADD       , raw},
+  {"ad-store"     , AD_STORE     , raw},
+  {"ad-modify"    , AD_MODIFY    , raw},
+  {"ad-set-caller", AD_SET_CALLER, raw},
+  {"ad-to"        , AD_TO        , raw},
+  {"ad-cc"        , AD_CC        , raw},
   {NULL, -1, na}
 };
 

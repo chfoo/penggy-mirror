@@ -39,9 +39,9 @@
 
 
 const atomdef_t artexp_atom_tab[] = {
-  {"artexp_version"       , ARTEXP_VERSION       , raw},
-  {"artexp_get_num_assets", ARTEXP_GET_NUM_ASSETS, dword},
-  {"artexp_show_asset"    , ARTEXP_SHOW_ASSET    , raw},
-  {"artexp_set_context"   , ARTEXP_SET_CONTEXT   , dword},
+  {"artexp-version"       , ARTEXP_VERSION       , raw},
+  {"artexp-get-num-assets", ARTEXP_GET_NUM_ASSETS, dword},
+  {"artexp-show-asset"    , ARTEXP_SHOW_ASSET    , raw},
+  {"artexp-set-context"   , ARTEXP_SET_CONTEXT   , dword},
   {NULL, -1, na}
 };

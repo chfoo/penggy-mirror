@@ -39,9 +39,9 @@
 
 
 const atomdef_t mf_atom_tab[] = {
-  {"mf_add_filter"   , MF_ADD_FILTER   , raw},
-  {"mf_add_condition", MF_ADD_CONDITION, raw},
-  {"mf_modify_object", MF_MODIFY_OBJECT, raw},
-  {"mf_save_object"  , MF_SAVE_OBJECT  , raw},
+  {"mf-add-filter"   , MF_ADD_FILTER   , raw},
+  {"mf-add-condition", MF_ADD_CONDITION, raw},
+  {"mf-modify-object", MF_MODIFY_OBJECT, raw},
+  {"mf-save-object"  , MF_SAVE_OBJECT  , raw},
   {NULL, -1, na}
 };

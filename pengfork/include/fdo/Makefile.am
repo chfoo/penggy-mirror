@@ -24,4 +24,6 @@
 #
 
 
-noinst_HEADERS = init.h login.h
+noinst_HEADERS = atoms.h bytecode.h init.h login.h stream.h
+
+SUBDIRS = atoms

@@ -18,33 +18,33 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
  * 02111-1307, USA.
  *
- * $Id$
- *
  */
 
-#if HAVE_CONFIG_H
+#ifndef __FDO_BYTECODE_H__
+#define __FDO_BYTECODE_H__
+
+#ifdef HAVE_CONFIG_H
 # include "config.h"
 #endif
 
-#if STDC_HEADERS
-# include <stdlib.h>
-# include <stddef.h>
-#else
-# if HAVE_STDLIB_H
-#  include <stdlib.h>
-# endif
+#ifdef HAVE_SYS_TYPES_H
+# include <sys/types.h>
 #endif
 
-#include "fdo/atoms.h"
+#include "stream.h"
 
+#define ATOM_TYPE(a)     (a>>5) 
+#define ATOM_VALUE(a)    (a&0x1f) 
+#define NO_COMP          0
+#define LENGTH_COMP      1
+#define DATA_COMP        2
+#define ATOM_NOARG_COMP  3
+#define ATOM_COMP        4
+#define ZERO_COMP        5
+#define ONE_COMP         6
+#define EXTENDED         7
 
-const atomdef_t sap_atom_tab[] = {
-  {"sap-abort"           , SAP_ABORT           , raw},
-  {"sap-data"            , SAP_DATA            , raw},
-  {"sap-data-compression", SAP_DATA_COMPRESSION, word},
-  {"sap-data-size"       , SAP_DATA_SIZE       , dword},
-  {"sap-id"              , SAP_ID              , dword},
-  {"sap-end"             , SAP_END             , raw},
-  {"sap-url"             , SAP_URL             , raw},
-  {NULL, -1, na}
-};
+void extract_atoms(int id, size_t length, char *stream);
+void add_atom(stream_t *stream, int pid, int aid, ...);
+
+#endif

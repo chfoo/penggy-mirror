@@ -39,14 +39,12 @@
 struct short_ip
 {
   u_int8_t ipnum;
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-  u_int8_t len      :7;
-  u_int8_t long_bit :1;
-#elif __BYTE_ORDER == __BIG_ENDIAN
+#if WORDS_BIGENDIAN
   u_int8_t long_bit :1;
   u_int8_t len      :7;
 #else
-# error "Please fix <bits/endian.h>"
+  u_int8_t len      :7;
+  u_int8_t long_bit :1;
 #endif
 };
 

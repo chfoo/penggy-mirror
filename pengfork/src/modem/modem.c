@@ -26,6 +26,14 @@
 # include "config.h"
 #endif
 
+#if STDC_HEADERS
+# include <stdlib.h>
+# include <stddef.h>
+#else
+# if HAVE_STDLIB_H
+#  include <stdlib.h>
+# endif
+#endif
 #if HAVE_SYS_IOCTL_H
 # include <sys/ioctl.h>
 #endif
@@ -62,6 +70,9 @@
 #endif
 #if HAVE_UNISTD_H
 # include <unistd.h>
+#endif
+#if HAVE_ERRNO_H
+# include <errno.h>
 #endif
 
 #include "gettext.h"
@@ -317,10 +328,7 @@ modem_dial_to (phone)
       if(p)
         {
 	speed=p+1;
-	p=strchr(response,'/');
-	if(p)
-	  *p='\0';
-	log (LOG_NOTICE, gettext("Connection at %sb/s done.\n"), speed);
+	log (LOG_NOTICE, gettext("Connection at %db/s done.\n"), atoi(speed));
         }
       return 1;
       break;
@@ -419,7 +427,12 @@ modem_open (filename, _baud, rtscts)
   if (fd != -1)
     setup_modem (rtscts);
   else
-    return 0;
+    {
+      device_unlock (filename);
+      log (LOG_ERR, gettext ("Can't open device %s: %s (%d)\n"), 
+	 filename, strerror(errno), errno);
+      return 0;
+    }
   return 1;
 }
 
