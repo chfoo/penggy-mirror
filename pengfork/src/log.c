@@ -29,8 +29,9 @@
 int 
 init_log (void)
 {
-  openlog ("pengfork", 0, LOG_DAEMON);
-  return 0;
+  if (PARAM_DAEMON)
+    openlog ("pengfork", 0, LOG_DAEMON);
+  return 1;
 }
 
 int 
@@ -55,7 +56,7 @@ log (int level, char *format, ...)
 
   else
     syslog (level, format, ap);
-  return 0;
+  return 1;
 }
 
 int 
@@ -67,5 +68,5 @@ debug (int level, char *format, ...)
   if (level <= PARAM_DEBUG_LEVEL)
     vfprintf (stdout, format, ap);
 
-  return 0;
+  return 1;
 }

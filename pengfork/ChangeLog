@@ -1,5 +1,6 @@
 2002-09-03  Nicolas Burrus  <nes@lrde.epita.fr>
 
+	* src/log.c: Fix return value and init_log.
 	* src/prot30.c: Add return value checking, debug msg.
 	* src/Makefile.am: Fix make distcheck.
 	* src/misc.c: Fix shell script execution.
