@@ -263,6 +263,7 @@ modem_dial_to (phone)
 {
   char response[256];
   char dialcmd[256];
+  char *speed, *p;
 
   if (!phone)
     return 0;
@@ -285,6 +286,15 @@ modem_dial_to (phone)
       break;
 
     case RESPONSE_CONNECT:     /* CONNECT */
+      p=strchr(response,' ');
+      if(p)
+        {
+	speed=p+1;
+	p=strchr(response,'/');
+	if(p)
+	  *p='\0';
+	log (LOG_NOTICE, gettext("Connection at %sb/s done.\n"), speed);
+        }
       return 1;
       break;
 
@@ -449,6 +459,7 @@ modem_close ()
       tcflush (fd, TCIOFLUSH);
       tcsetattr (fd, TCSANOW, &old_t);
       close (fd);
+      device_unlock (PARAM_MODEM_DEVICE);
       fd = -1;
       closing = 0;
     }

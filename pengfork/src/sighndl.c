@@ -47,7 +47,7 @@ sig_exit (signum)
       log (LOG_NOTICE, string, "SIGINT");
       break;
     case SIGHUP:
-      log (LOG_NOTICE, string, "SIGINT");
+      log (LOG_NOTICE, string, "SIGHUP");
       break;
     }
   engine_stop ();

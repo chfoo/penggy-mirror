@@ -31,10 +31,13 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <signal.h>
+#include <errno.h>
 
 #include "modem/devlock.h"
 #include "log.h"
 #include "gettext.h"
+
+int fd=-1;
 
 /* note: this function uses the O_EXCL flag to open(), and thus assumes
    that /var/lock is not an NFS-mounted drive (according to the open() man
@@ -49,7 +52,7 @@ device_lock (devicename)
 {
   char *p;
   pid_t pid;
-  int fd, r;
+  int r;
   char pid_string[15];
   char filename[256];
 
@@ -59,7 +62,7 @@ device_lock (devicename)
   else
     p = devicename;
 
-  snprintf (filename, 255, "/var/lock/LCK..%s", p);
+  snprintf (filename, sizeof(filename), "/var/lock/LCK..%s", p);
 
   fd = open (filename, O_RDWR | O_EXCL | O_CREAT, 0644);
 
@@ -114,9 +117,16 @@ device_unlock (devicename)
   else
     p = devicename;
 
-  snprintf (filename, 255, "/var/lock/LCK..%s", p);
+  snprintf (filename, sizeof(filename), "/var/lock/LCK..%s", p);
+  if( fd != -1)
+    close(fd);
+  fd=-1;
 
   if (unlink (filename))
-    return 0;
+    {
+      log (LOG_WARNING, gettext ("Couldn't remove lock file %s: %s (%d)..\n"), 
+	 filename, strerror(errno), errno);
+      return 0;
+    }
   return 1;
 }

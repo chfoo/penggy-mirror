@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: pengfork 0.1\n"
-"POT-Creation-Date: 2002-12-01 23:31+0100\n"
+"POT-Creation-Date: 2002-12-02 16:48+0100\n"
 "PO-Revision-Date: 2002-12-01 00:39+0100\n"
 "Last-Translator: Jean-Charles Salzeber <jc@varspool.net>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -85,7 +85,7 @@ msgstr ""
 #: src/fdo/login.c:47
 #, c-format
 msgid "Loging into provider as '%s'\n"
-msgstr "Authentification auprés du fournisseur en tant que '%s'\n"
+msgstr "Authentification auprès du fournisseur en tant que '%s'\n"
 
 #: src/tun/linux/tun.c:75
 #, c-format
@@ -154,10 +154,14 @@ msgstr "Désolé, le support de tun n'est pas compilé\n"
 msgid "Sorry P3 support is not compiled in\n"
 msgstr "Désolé, le support de P3 n'est pas compilé\n"
 
-#: src/modem/devlock.c:86
+#: src/modem/devlock.c:89
 #, c-format
 msgid "Removing stale lock file %s.\n"
 msgstr "Suppression de l'ancien fichier de verrouillage %s.\n"
+
+#: src/modem/devlock.c:127
+msgid "Couldn't remove lock file %s: %s (%d)..\n"
+msgstr "Ne peut supprimer le fichier de verrouillage %s: %s (%d)\n"
 
 #: src/modem/script.c:40
 msgid "Script: Chat success\n"
@@ -228,12 +232,12 @@ msgstr "Accés au fournisseur...\n"
 msgid "Too many failures, dialing process aborted.\n"
 msgstr "Trop d'échecs, la connexion est abandonée.\n"
 
-#: src/modem/modem.c:270
+#: src/modem/modem.c:271
 #, c-format
 msgid "Dialing %s\n"
 msgstr "Composition du %s\n"
 
-#: src/modem/modem.c:282
+#: src/modem/modem.c:283
 msgid ""
 "Bad string\n"
 "Please verify the phone number, dial string and prefix\n"
@@ -242,27 +246,32 @@ msgstr ""
 "Veuillez vérifier le numéro de téléphone, la chaîne de composition et le "
 "préfixe\n"
 
-#: src/modem/modem.c:292
+#: src/modem/modem.c:296
+#, c-format
+msgid "Connection at %sb/s done.\n"
+msgstr "Connexion à %sb/s effectué\n"
+
+#: src/modem/modem.c:302
 msgid "No carrier detected\n"
 msgstr "Pas de porteuse détecté\n"
 
-#: src/modem/modem.c:297
+#: src/modem/modem.c:307
 msgid "No dial tone detected\n"
 msgstr "Aucune tonalité détécté\n"
 
-#: src/modem/modem.c:302
+#: src/modem/modem.c:312
 msgid "Provider is busy\n"
 msgstr "Le fournisseur sonne occupé\n"
 
-#: src/modem/modem.c:307
+#: src/modem/modem.c:317
 msgid "Response delayed\n"
 msgstr "Trop de temps sans réponse\n"
 
-#: src/modem/modem.c:312
+#: src/modem/modem.c:322
 msgid "Response voice\n"
 msgstr "Une voix à répondue\n"
 
-#: src/modem/modem.c:317
+#: src/modem/modem.c:327
 msgid ""
 "You have been connected to a fax\n"
 "Please verify the phone number\n"
@@ -270,15 +279,15 @@ msgstr ""
 "Vous avez été connecté à un fax\n"
 "Veuillez vérifier le numéro de téléphone\n"
 
-#: src/modem/modem.c:323
+#: src/modem/modem.c:333
 msgid "There was no answer\n"
 msgstr "Il n'y a pas eu de réponse\n"
 
-#: src/modem/modem.c:331
+#: src/modem/modem.c:341
 msgid "Modem timed out during dialing\n"
 msgstr "Délai dépassé pendant la numérotation\n"
 
-#: src/modem/modem.c:348
+#: src/modem/modem.c:358
 #, c-format
 msgid "Device %s is locked\n"
 msgstr "Le périphérique %s est vérouillé\n"
@@ -387,6 +396,10 @@ msgstr "Nom d'hôte: %s\n"
 msgid "Domain: %s\n"
 msgstr "Domaine: %s\n"
 
+#: src/iptunnel/init.c:157
+msgid "IP tunnel is working.\n"
+msgstr "Le tunnel IP fonctionne.\n"
+
 #: src/engine.c:108
 msgid "engine - No data to wait\n"
 msgstr "engine - Pas de donnée à attendre\n"
@@ -395,7 +408,7 @@ msgstr "engine - Pas de donnée à attendre\n"
 msgid "engine - An input buffer is full\n"
 msgstr "engine - Un buffer d'entrée est plein\n"
 
-#: src/getpass.c:69 src/options.c:598
+#: src/getpass.c:69 src/options.c:597
 #, c-format
 msgid "%s:%d bad line format\n"
 msgstr "%s:%d mauvais format de ligne\n"
@@ -470,115 +483,115 @@ msgstr "Ne peut éxécuter le script %s: %s (%d)\n"
 msgid "Can't fork: %s (%d)\n"
 msgstr "Ne peut 'forker': %s (%d)\n"
 
-#: src/options.c:72
+#: src/options.c:71
 msgid "General properties"
 msgstr "Propriétés générales"
 
-#: src/options.c:73
+#: src/options.c:72
 msgid "User authentification"
 msgstr "Authentification de l'utilisateur"
 
-#: src/options.c:74
+#: src/options.c:73
 msgid "Modem properties"
 msgstr "Propriétés relative au modem"
 
-#: src/options.c:75
+#: src/options.c:74
 msgid "Cable properties"
 msgstr "Propriétés relative au cable"
 
-#: src/options.c:76
+#: src/options.c:75
 msgid "TCP/IP properties"
 msgstr "Propriétés pour TCP/IP"
 
-#: src/options.c:77
+#: src/options.c:76
 msgid "Network interface properties"
 msgstr "Propriétés de l'interface réseau"
 
-#: src/options.c:90
+#: src/options.c:89
 msgid "read configuration file PATH."
 msgstr "lit le fichier de configuration PATH"
 
-#: src/options.c:93
+#: src/options.c:92
 msgid "set the media used to access AOL."
 msgstr "définit le média à utiliser pour accéder à AOL."
 
-#: src/options.c:96
+#: src/options.c:95
 msgid "set the protocol used for communication with AOL."
 msgstr "définit le protocole à utiliser pour la communication avec AOL."
 
-#: src/options.c:99
+#: src/options.c:98
 msgid "set the interface type."
 msgstr "définit le tyoe d'interface"
 
-#: src/options.c:102
+#: src/options.c:101
 msgid "set the interface name."
 msgstr "définit le nom de l'interface."
 
-#: src/options.c:108
+#: src/options.c:107
 msgid "set the screen-name to use."
 msgstr "définit le pseudo à utiliser."
 
-#: src/options.c:111
+#: src/options.c:110
 msgid "enable autoreconnection."
 msgstr "active l'auto-reconnexion."
 
-#: src/options.c:114
+#: src/options.c:113
 msgid "set the delay between reconnections."
 msgstr "définit le délai entre les reconnexions."
 
-#: src/options.c:117
+#: src/options.c:116
 msgid "enable daemon mode, run in background."
 msgstr "active le mode daemon, s'éxécute en fond."
 
-#: src/options.c:120
+#: src/options.c:119
 msgid "set the verbosity level of the debug."
 msgstr "définit le niveau de baratin en debug."
 
-#: src/options.c:123
+#: src/options.c:122
 msgid "set the dns when connected."
 msgstr "assigne le DNS à la connexion."
 
-#: src/options.c:126
+#: src/options.c:125
 msgid "set the PID file to create"
 msgstr "définit le fichier PID à créer"
 
-#: src/options.c:129
+#: src/options.c:128
 msgid "set the script automaticly called when IP is up."
 msgstr "définit le script automatiquement appelé quand l'IP fonctionne"
 
-#: src/options.c:132
+#: src/options.c:131
 msgid "set the script automaticly called when IP is down."
 msgstr "définit le script automatiquement appelé quand l'IP s'arrête"
 
-#: src/options.c:138
+#: src/options.c:137
 msgid "set the serial device to use for the modem."
 msgstr "définit le périphérique série à utiliser pour le modem."
 
-#: src/options.c:141
+#: src/options.c:140
 msgid "enable hardware flow control"
 msgstr "active le controle de flux matériel"
 
-#: src/options.c:144
+#: src/options.c:143
 msgid "set the primary initialization string sent to the modem."
 msgstr "définit la première chaîne d'initialisation à envoyer au modem"
 
-#: src/options.c:171
+#: src/options.c:170
 msgid "set the string used to dial."
 msgstr "définit la chaîne à utiliser pour numéroter."
 
-#: src/options.c:177
+#: src/options.c:176
 msgid "set the primary phone number to use."
 msgstr "définit le premier numéro de téléphone à utiliser."
 
-#: src/options.c:193
+#: src/options.c:192
 msgid "set the serial line speed."
 msgstr "définit la vitesse du port série."
 
-#: src/options.c:196
+#: src/options.c:195
 msgid "set the chat script used for logging into AOL."
 msgstr "définit le script de dialogue utilisé pour s'authentifier sur AOL."
 
-#: src/options.c:232
+#: src/options.c:231
 #, c-format
 msgid ""
 "Usage : %s [OPTIONS]\n"
@@ -591,31 +604,31 @@ msgstr ""
 "  -h, --help                       affiche cette aide.\n"
 "  -V, --version                    affiche la version.\n"
 
-#: src/options.c:327
+#: src/options.c:326
 msgid "Compilation options :\n"
 msgstr "Options de compilation :\n"
 
-#: src/options.c:479
+#: src/options.c:478
 #, c-format
 msgid "Try `%s --help' for more information.\n"
 msgstr "Essayez '%s --help' pour plus d'information.\n"
 
-#: src/options.c:606
+#: src/options.c:605
 #, c-format
 msgid "%s:%d unrecognized option - %s\n"
 msgstr "%s:%d option non reconnue - %s\n"
 
-#: src/options.c:636
+#: src/options.c:635
 #, c-format
 msgid "%s:%d bad boolean value\n"
 msgstr "%s:%d mauvaise valeur booléenne\n"
 
-#: src/options.c:648
+#: src/options.c:647
 #, c-format
 msgid "%s:%d not enough memory to get the parameter\n"
 msgstr "%s:%d pas assez de mémoire pour traiter les paramètres\n"
 
-#: src/options.c:657
+#: src/options.c:656
 #, c-format
 msgid "%s:%d bad integer value\n"
 msgstr "%s:%d mauvaise valeur entière\n"

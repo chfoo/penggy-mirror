@@ -145,7 +145,8 @@ ip_tunnel_config (token, data, data_size)
       nparsed += sizeof (struct ip_config_header) + cfg_hdr->length;
     }
 
-  set_dns (domain, dns);
+  if(PARAM_SET_DNS) 
+    set_dns (domain, dns);
   launch_ip_up (PARAM_INTERFACE_NAME, address, dns, domain, mtu);
 
   vj_compress_init (&vj_comp, -1);
@@ -153,6 +154,7 @@ ip_tunnel_config (token, data, data_size)
   engine_register (*(iface->fd), 0, ip_tunnel_fn);
 
   fdo_register (TOKEN ("yc"), get_ip_aol);
+  log(LOG_NOTICE, gettext("IP tunnel is working.\n"), domain);
 }
 
 struct in_addr
@@ -184,7 +186,8 @@ destroy_iface (in, out)
      buffer_t *out;
 {
   launch_ip_down (PARAM_INTERFACE_NAME);
-  unset_dns ();
+  if(PARAM_SET_DNS) 
+    unset_dns ();
   destroy_buffer (in);
   destroy_buffer (out);
   return 1;
