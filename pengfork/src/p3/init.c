@@ -21,6 +21,7 @@
  */
 
 #include "buffer.h"
+#include "utils.h"
 
 #include "p3/init.h"
 #include "p3/header.h"
@@ -32,7 +33,7 @@ p3_send_init_packet ()
   p3_init30_t init_data;
 
   /* 
-   *  FIXME: fields are in big endian, systems in little endian should take care
+   *  fields are in big endian, systems in little endian should take care
    *  of this
    */
   init_data = (p3_init30_t)
@@ -47,15 +48,19 @@ p3_send_init_packet ()
     5,                        /* release_month alway 5 */
     15,                       /* release_day alway 15 */
     0,                        /* customer_class always 0 */
-    0x4db26e25,               /* timestamp */
-    0x00c0,                   /* dos version :) */
-    0xc014,                   /* flags */
+    htolel(0x4db26e25),       /* timestamp */
+    htoles(0x00c0),           /* dos version :) */
+    htoles(0xc014),           /* flags */
     8,                        /* video (8=??) */
     5,                        /* processor (5=??) */
     0,                        /* media ??? */
-    0x00000a04,               /* windows version :) */
+    htolel(0x00000a04),       /* windows version :) */
     1,                        /* windows mode 1=enhanced :) */
-    1024, 768, 65535,         /* Resolution 1024x768, 16/24 bits */
+
+    htoles(1024), 
+    htoles(768), 
+    htoles(65535),            /* Resolution 1024x768, 16/24 bits */
+
     0,                        /* filler always 0 */
     0,                        /* region */
     LANGUAGE_FRENCH,          /* the language */

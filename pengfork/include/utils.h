@@ -23,7 +23,32 @@
 #ifndef __UTILS_H__
 #define __UTILS_H__
 
+#include <sys/types.h>
+#include <byteswap.h>
+
 #define MAX(a,b) ((a)>(b) ? (a):(b))
+
+/* Host to Little Endian */
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+#  define htoles(x)   (x)
+#  define htolel(x)   (x)
+#elif __BYTE_ORDER == __BIG_ENDIAN
+#  define htoles(x)   bswap_16(x)
+#  define htolel(x)   bswap_32(x)
+#else
+#  error "Please fix <bits/endian.h>"
+#endif
+
+/* Little Endian to host*/
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+#  define letohs(x)   (x)
+#  define letohl(x)   (x)
+#elif __BYTE_ORDER == __BIG_ENDIAN
+#  define letohs(x)   bswap_16(x)
+#  define letohl(x)   bswap_32(x)
+#else
+#  error "Please fix <bits/endian.h>"
+#endif
 
 void trim (char *line);
 void lowerize (char *string);

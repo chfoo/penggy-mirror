@@ -185,8 +185,9 @@ typedef struct
 }
 __attribute__ ((packed)) p3_init40_t;
 
-#define LANGUAGE_FRENCH {0x0100, 0x0000, 0xfeff, 0x0000}
+#define LANGUAGE_FRENCH { htoles(0x0100), 0x0000, htoles(0xfeff), 0x0000}
 
 void p3_send_init_packet ();
+
 
 #endif /* __P30INIT_H__ */
