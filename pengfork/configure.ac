@@ -66,8 +66,6 @@ case $host in
 esac
 AC_SUBST([ARCH_DIR])
 
-AC_CHECK_HEADERS([netinet/in_system.h])
-
 # linux tuntap driver
 AC_CHECK_HEADERS([linux/if_tun.h])
 
@@ -81,11 +79,20 @@ AC_ARG_ENABLE(werror,
 
 # Modem driver
 AC_ARG_ENABLE(modem,
-  [  --enable-modem	Enable modem driver (default) ], 
+  [  --enable-modem	Enable modem driver (default) ],
   if test $enableval != "no"; then
      AC_DEFINE([WITH_MODEM],,[ Enable/disable modem driver ])
   fi,
   AC_DEFINE([WITH_MODEM])
+)
+
+# Cable driver
+AC_ARG_ENABLE(cable,
+  [  --enable-cable	Enable cable driver (default) ],
+    if test $enableval != "no"; then
+       AC_DEFINE([WITH_CABLE],,[ Enable/disable cable driver ])
+  fi,
+  AC_DEFINE([WITH_CABLE])
 )
 
 # Universal tuntap driver
