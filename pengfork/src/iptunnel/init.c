@@ -49,15 +49,9 @@ void
 ip_tunnel_init (buffer)
      buffer_t *buffer;
 {
-  char *fdo;
-  struct ip_config_request *request;
+  struct ip_config_request request = DEFAULT_IP_CONFIG_REQUEST;
 
-  fdo = malloc (sizeof (token_t) + sizeof (struct ip_config_request));
-  request = (struct ip_config_request *) (fdo + sizeof (token_t));
-  *request = DEFAULT_IP_CONFIG_REQUEST;
-
-  fdo_send (buffer, TOKEN ("ya"), (char *) fdo, sizeof (*request));
-  free (fdo);
+  fdo_send (buffer, TOKEN ("ya"), (char *) &request, sizeof (request));
 
   fdo_register ( TOKEN ("ya"), ip_tunnel_config);
 }
@@ -103,6 +97,7 @@ ip_tunnel_config (token, data, data_size, out)
 
   engine_register (*(iface->fd), 0, init_iface, NULL, get_ip_client, NULL);
 
+  acout = out;
   fdo_register ( TOKEN ("yc"), get_ip_aol);
   fdo_register ( TOKEN ("yd"), get_ip_aol);
 }
@@ -112,5 +107,8 @@ init_iface (in, out)
      buffer_t *in;
      buffer_t *out;
 {
+  ifout = out;
+  create_buffer(in,2*mtu);
+  create_buffer(out,2*mtu);
 }
 

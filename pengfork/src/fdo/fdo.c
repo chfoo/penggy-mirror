@@ -88,10 +88,16 @@ fdo_send (buffer, token, data, data_size)
      size_t data_size;
 {
   token_t *t;
+  char *newdata;
+  char *fdo;
 
-  t = (token_t *) data;
+  fdo = malloc( data_size +sizeof(token) );
+  newdata = fdo + sizeof(token);
+  t = (token_t *) fdo;
   *t = htons (token);
-  protocol->put_data (buffer, data, data_size + sizeof (*t));
+  memcpy(newdata, data, data_size);
+  protocol->put_data (buffer, fdo, data_size + sizeof (token));
+  free(fdo);
 }
 
 void

@@ -34,7 +34,6 @@ void
 logon (buffer)
      buffer_t *buffer;
 {
-  char *fdo;
   char *data;
   struct login_info login_info = DEFAULT_LOGIN_INFO;
   int len;
@@ -59,10 +58,8 @@ logon (buffer)
   login_info.pass_size = strlen (pass);
   login_info.pass = pass;
 
-  fdo = malloc (sizeof (token_t) +
-                21 + 1 +
-                login_info.login_size + 15 + 1 + login_info.pass_size + 6);
-  data = fdo + sizeof (token_t);
+  data = malloc ( 21 + 1 + login_info.login_size + 15 + 1 + 
+	       login_info.pass_size + 6);
 
   memcpy (data, login_info.unknow1, 21 + 1);
   len = 21 + 1;
@@ -75,9 +72,9 @@ logon (buffer)
   memcpy (&data[len], login_info.unknow3, 6);
   len += 6;
 
-  fdo_send (buffer, TOKEN ("Dd"), fdo, len);
+  fdo_send (buffer, TOKEN ("Dd"), data, len);
   log(LOG_NOTICE,"FDO - Login token sended\n");
-  free (fdo);
+  free (data);
 
   fdo_register (TOKEN ("At"), login_confirm);
 }
