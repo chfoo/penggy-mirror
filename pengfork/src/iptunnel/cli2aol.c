@@ -52,8 +52,7 @@ get_ip_client (in, out, timeout)
 	big = (struct long_ip *) data;
 	debug (1, "IP TUNNEL - Sending a big packet\n");
           big->ipnum = ipnum;
-	big->long_bit = 1;
-          big->len = htons(ip_size);
+          big->len = htons(ip_size) | ~IP_LEN_MASK;
 	ip_data = data + sizeof(*big);
           memcpy (ip_data, ip, ip_size);
           fdo_send(acout, TOKEN ("yc"), data, ip_size + sizeof(*big));

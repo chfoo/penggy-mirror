@@ -44,17 +44,11 @@ struct short_ip
 struct long_ip
 {
   u_int8_t ipnum;
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-  u_int16_t len      :15;
-  u_int16_t long_bit :1;
-#elif __BYTE_ORDER == __BIG_ENDIAN
-  u_int16_t long_bit :1;
-  u_int16_t len      :15;
-#else
-# error "Please fix <bits/endian.h>"
-#endif
+  u_int16_t len;
 }
 __attribute__ ((packed));
+
+#define IP_LEN_MASK 0x7fff;
 
 
 extern struct vjcompress vj_comp;
