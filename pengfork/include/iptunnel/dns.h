@@ -23,9 +23,19 @@
 #ifndef __IPTUNNEL_DNS_H__
 #define __IPTUNNEL_DNS_H__
 
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
+#if HAVE_SYS_SOCKET_H
+# include <sys/socket.h>
+#endif
+#if HAVE_NETINET_IN_H
+# include <netinet/in.h>
+#endif
+#if HAVE_ARPA_INET_H
+# include <arpa/inet.h>
+#endif
 
 
 int set_dns (char *domain, struct in_addr dns);

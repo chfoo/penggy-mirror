@@ -20,12 +20,30 @@
  *                
  */
 
-#include "config.h"
+#if HAVE_CONFIG_H
+# include "config.h"
+#endif
 
-#include <sys/types.h>
-#include <netinet/in.h>
-#include <stdlib.h>
-#include <string.h>
+#if STDC_HEADERS
+# include <stdlib.h>
+# include <stddef.h>
+#else
+# if HAVE_STDLIB_H
+#  include <stdlib.h>
+# endif
+#endif
+#if HAVE_STRING_H
+# if !STDC_HEADERS && HAVE_MEMORY_H
+#  include <memory.h>
+# endif
+# include <string.h>
+#endif
+#if HAVE_SYS_TYPES_H
+# include <sys/types.h>
+#endif
+#if HAVE_NETINET_IN_H
+# include <netinet/in.h>
+#endif
 
 #include "gettext.h"
 #include "log.h"

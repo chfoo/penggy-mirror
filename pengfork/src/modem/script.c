@@ -20,11 +20,27 @@
  *                
  */
 
-#include "config.h"
+#if HAVE_CONFIG_H
+# include "config.h"
+#endif
 
-#include <stdlib.h>
-#include <guile/gh.h>
-#include <string.h>
+#if STDC_HEADERS
+# include <stdlib.h>
+# include <stddef.h>
+#else
+# if HAVE_STDLIB_H
+#  include <stdlib.h>
+# endif
+#endif
+#if HAVE_STRING_H
+# if !STDC_HEADERS && HAVE_MEMORY_H
+#  include <memory.h>
+# endif
+# include <string.h>
+#endif
+#if HAVE_GUILE_GH_H
+# include <guile/gh.h>
+#endif
 
 #include "gettext.h"
 #include "options.h"
@@ -98,9 +114,9 @@ compare_elem (buffer, elem, result)
       log (LOG_NOTICE, gettext ("Script: String '%s' matched\n"), text);
       /* evaluate next elem */
 #if HAVE_R5RS_EVAL
-      *result = scm_eval (gh_car (gh_cdr (elem)), scm_current_module());
+      *result = scm_eval (gh_cadr (elem), scm_current_module());
 #else
-      *result = scm_eval (gh_car (gh_cdr (elem)));
+      *result = scm_eval (gh_cadr (elem));
 #endif
       match = 1;
     }

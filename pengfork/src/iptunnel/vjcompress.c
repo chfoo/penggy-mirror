@@ -36,35 +36,54 @@
   Modified by Jean-Charles Salzeber <jc@varspool.net>
   to fit penggy needs
  */
-#include <string.h>
-#include <sys/types.h>
-#include <sys/param.h>
+#if HAVE_CONFIG_H
+# include "config.h"
+#endif
+
+#if HAVE_STRING_H
+# if !STDC_HEADERS && HAVE_MEMORY_H
+#  include <memory.h>
+# endif
+# include <string.h>
+#endif
+#if HAVE_SYS_TYPES_H
+# include <sys/types.h>
+#endif
+#if HAVE_SYS_PARAM_H
+# include <sys/param.h>
+#endif
 
 #ifdef SVR4
-#ifndef __GNUC__
-#include <sys/byteorder.h>      /* for ntohl, etc. */
-#else
+# ifndef __GNUC__
+#  include <sys/byteorder.h>      /* for ntohl, etc. */
+# else
 /* make sure we don't get the gnu "fixed" one! */
-#include "/usr/include/sys/byteorder.h"
-#endif
+#  include "/usr/include/sys/byteorder.h"
+# endif
 #endif
 
 #ifdef __osf__
-#include <net/net_globals.h>
+# include <net/net_globals.h>
 #endif
-#include <netinet/in.h>
+#if HAVE_NETINET_IN_H
+# include <netinet/in.h>
+#endif
 
 #ifdef AIX4
-#define _NETINET_IN_SYSTM_H_
+# define _NETINET_IN_SYSTM_H_
 typedef u_long n_long;
 #else
-#include <netinet/in_systm.h>
+# include <netinet/in_systm.h>
 #endif
 
-#include <netinet/ip.h>
+#if HAVE_NETINET_IN_H
+# include <netinet/ip.h>
+#endif
 #include "iptunnel/bsdtcp.h"
 
-#include <net/ppp_defs.h>
+#if HAVE_NET_PPP_DEFS_H
+# include <net/ppp_defs.h>
+#endif
 #include "iptunnel/vjcompress.h"
 
 #ifndef VJ_NO_STATS

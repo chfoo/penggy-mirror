@@ -20,17 +20,47 @@
  *                
  */
 
-#include "config.h"
+#if HAVE_CONFIG_H
+# include "config.h"
+#endif
 
-#include <sys/ioctl.h>
-#include <sys/time.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <stdio.h>
-#include <string.h>
-#include <fcntl.h>
-#include <termios.h>
-#include <unistd.h>
+#if HAVE_SYS_IOCTL_H
+# include <sys/ioctl.h>
+#endif
+#if TIME_WITH_SYS_TIME
+# include <sys/time.h>
+# include <time.h>
+#else
+# if HAVE_SYS_TIME_H
+#  include <sys/time.h>
+# else
+#  include <time.h>
+# endif
+#endif
+#if HAVE_SYS_IOCTL_H
+# include <sys/types.h>
+#endif
+#if HAVE_SYS_STAT_H
+# include <sys/stat.h>
+#endif
+#if HAVE_STDIO_H
+# include <stdio.h>
+#endif
+#if HAVE_STRING_H
+# if !STDC_HEADERS && HAVE_MEMORY_H
+#  include <memory.h>
+# endif
+# include <string.h>
+#endif
+#if HAVE_FCNTL_H
+# include <fcntl.h>
+#endif
+#if HAVE_TERMIOS_H
+# include <termios.h>
+#endif
+#if HAVE_UNISTD_H
+# include <unistd.h>
+#endif
 
 #include "gettext.h"
 #include "common.h"

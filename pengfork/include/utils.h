@@ -23,8 +23,16 @@
 #ifndef __UTILS_H__
 #define __UTILS_H__
 
-#include <sys/types.h>
-#include <byteswap.h>
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
+#ifdef HAVE_SYS_TYPES_H
+# include <sys/types.h>
+#endif
+#ifdef HAVE_BYTESWAP_H
+# include <byteswap.h>
+#endif
 
 #define MAX(a,b) ((a)>(b) ? (a):(b))
 

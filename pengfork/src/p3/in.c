@@ -20,11 +20,24 @@
  *                
  */
 
-#include "config.h"
+#if HAVE_CONFIG_H
+# include "config.h"
+#endif
 
-#include <sys/types.h>
-#include <netinet/in.h>
-#include <stdlib.h>
+#if STDC_HEADERS
+# include <stdlib.h>
+# include <stddef.h>
+#else
+# if HAVE_STDLIB_H
+#  include <stdlib.h>
+# endif
+#endif
+#if HAVE_SYS_TYPES_H
+# include <sys/types.h>
+#endif
+#if HAVE_NETINET_IN_H
+# include <netinet/in.h>
+#endif
 
 #include "gettext.h"
 #include "buffer.h"
@@ -36,7 +49,6 @@
 #include "p3/check.h"
 #include "p3/out.h"
 #include "p3/ack.h"
-
 #include "p3/in.h"
 
 

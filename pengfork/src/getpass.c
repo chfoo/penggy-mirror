@@ -20,12 +20,25 @@
  *                
  */
 
-#include "config.h"
+#if HAVE_CONFIG_H
+# include "config.h"
+#endif
 
-#include <stdio.h>
-#include <errno.h>
-#include <string.h>
-#include <ctype.h>
+#if HAVE_STDIO_H
+# include <stdio.h>
+#endif
+#if HAVE_ERRNO_H
+# include <errno.h>
+#endif
+#if HAVE_STRING_H
+# if !STDC_HEADERS && HAVE_MEMORY_H
+#  include <memory.h>
+# endif
+# include <string.h>
+#endif
+#if HAVE_CTYPE_H
+# include <ctype.h>
+#endif
 
 #include "gettext.h"
 #include "options.h"

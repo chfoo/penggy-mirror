@@ -22,13 +22,26 @@
  *	- Initial distribution.
  */
 
+
 #ifndef __IPTUNNEL_VJCOMPRESS_H__
 #define __IPTUNNEL_VJCOMPRESS_H__
 
-#include <net/ppp_defs.h>
-#include <netinet/in.h>
-#include <netinet/in_systm.h>
-#include <netinet/ip.h>
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
+#if HAVE_NET_PPP_DEFS_H
+# include <net/ppp_defs.h>
+#endif
+#if HAVE_NETINET_IN_H
+# include <netinet/in.h>
+#endif
+#if HAVE_NETINET_IN_SYSTM_H
+# include <netinet/in_systm.h>
+#endif
+#if HAVE_NETINET_IP_H
+# include <netinet/ip.h>
+#endif
 
 #define MAX_STATES 16           /* must be > 2 and < 256 */
 #define MAX_HDR	   128

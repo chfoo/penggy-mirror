@@ -20,14 +20,24 @@
  *                
  */
 
-#include "config.h"
+#if HAVE_CONFIG_H
+# include "config.h"
+#endif
 
-#include <sys/types.h>
-#include <stdio.h>
-#include <stdarg.h>
-#include <locale.h>
+#if HAVE_SYS_TYPES_H
+# include <sys/types.h>
+#endif
+#if HAVE_STDIO_H
+# include <stdio.h>
+#endif
+#if HAVE_STDARG_H
+# include <stdarg.h>
+#endif
+#if HAVE_LOCALE_H
+# include <locale.h>
+#endif
+
 #include "gettext.h"
-
 #include "log.h"
 #include "options.h"
 

@@ -20,17 +20,20 @@
 #
 # Nicolas Burrus <nes@lrde.epita.fr>, 2002
 #
+# $Id$	
+#
 
 # Autoconf 2.53 needed so that buggy PATH_SEPARATOR is fixed.
 AC_PREREQ(2.53)
 
-AC_INIT(penggy, 0.1)
+AC_INIT(penggy, 0.1.0)
+AC_CONFIG_HEADER([config.h])
 
 # Auxiliary files
 AC_CONFIG_AUX_DIR(config)
-AC_CONFIG_FILES(config/Makefile)
 
-AM_INIT_AUTOMAKE([foreign 1.6 dist-bzip2])
+AM_INIT_AUTOMAKE([gnu 1.6 dist-bzip2])
+AM_MAINTAINER_MODE
 
 # Check host type
 AC_CANONICAL_HOST
@@ -39,20 +42,17 @@ AC_CANONICAL_HOST
 # CFLAGS must be defined to avoid AC_PROG_CC adding default FLAGS
 CFLAGS=$CFLAGS
 AC_LANG_C
+
+# Checks for programs.
 AC_PROG_CC
 AC_PROG_INSTALL
-AC_PROG_AWK
 AC_PROG_RANLIB
 AC_PROG_YACC
-AC_PROG_LN_S
 
 # CFLAGS
 if test "$GCC" = yes; then
   CFLAGS="$CFLAGS -Wall"
 fi
-
-# Look for auxiliary programs
-AC_PROG_RANLIB
 
 # Check arch specific source directory
 # Use @ARCH_DIR@ in Makefile.am files.
@@ -74,43 +74,48 @@ esac
 AC_SUBST([ARCH_DIR])
 
 #Checks for libraries.
-#Replace `main' with a function in -le:
-AC_CHECK_LIB(e, main)
-#Replace `main' with a function in -links:
-AC_CHECK_LIB(inks, main)
+# FIXME: Replace `main' with a function in `-lc':
+AC_CHECK_LIB([c], [main])
 
 
-#Checks for header files.
+# Checks for header files.
+AC_FUNC_ALLOCA
 AC_HEADER_STDC
-AC_HEADER_STDBOOL
-AC_CHECK_HEADERS([argz.h arpa/inet.h fcntl.h langinfo.h libintl.h limits.h locale.h malloc.h netdb.h netinet/in.h stddef.h stdio_ext.h stdlib.h string.h strings.h sys/ioctl.h sys/param.h sys/socket.h sys/time.h syslog.h termios.h unistd.h linux/if_tun.h])
+AC_CHECK_HEADERS([arpa/inet.h fcntl.h langinfo.h libintl.h netdb.h netinet/in.h stdio_ext.h sys/ioctl.h sys/time.h syslog.h termios.h])
 
-#Checks for typedefs, structures, and compiler characteristics.
+# Customized checks
+AC_CHECK_HEADERS([assert.h byteswap.h ctype.h errno.h linux/if_tun.h net/if.h net/if_tun.h netinet/in_systm.h netinet/ip.h net/net_globals.h net/ppp_defs.h signal.h stdarg.h stdio.h sys/byteorder.h sys/uio.h])
+
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_HEADER_STDBOOL
 AC_C_CONST
+AC_C_INLINE
 AC_TYPE_PID_T
 AC_TYPE_SIZE_T
 AC_HEADER_TIME
-
-#Checks for library functions.
-AC_C_INLINE
 AC_C_VOLATILE
-AC_FUNC_ALLOCA
-AC_FUNC_MMAP
-AC_FUNC_REALLOC
+
+# Checks for library functions.
+AM_GNU_GETTEXT
+AM_GNU_GETTEXT_VERSION(0.11.5)
 AC_FUNC_FORK
 AC_PROG_GCC_TRADITIONAL
 AC_FUNC_MALLOC
+AC_FUNC_MMAP
+AC_FUNC_REALLOC
+AC_FUNC_SELECT_ARGTYPES
 AC_TYPE_SIGNAL
 AC_FUNC_STAT
 AC_FUNC_VPRINTF
-AC_FUNC_SELECT_ARGTYPES
-AC_CHECK_FUNCS([__argz_count __argz_next __argz_stringify bzero dup2 getcwd gethostbyname getopt_long inet_ntoa memchr memmove mempcpy memset munmap nl_langinfo putenv select setlocale socket stpcpy strcasecmp strchr strcspn strdup strerror strrchr strstr strtol strtoul])
+AC_CHECK_FUNCS([bzero dup2 gethostbyname inet_ntoa memchr memmove  memset nl_langinfo select socket strchr strcspn strerror strrchr strstr strtol])
+
+# Customized checks
+AC_CHECK_FUNCS([getopt_long])
+
+
 
 AM_CONDITIONAL(NEED_GETOPT, test "$ac_cv_func_getopt_long" != yes)
-
-AM_GNU_GETTEXT([no-libtool])
-AM_GNU_GETTEXT_VERSION(0.11.5)
-AM_ICONV
 
 AC_ARG_WITH(confdir,
   AC_HELP_STRING([--with-confdir=PATH], [set configuration path (/etc/penggy)]),
@@ -186,6 +191,7 @@ AC_ARG_ENABLE(modem,
 if test "$modem" = yes; then
   AC_DEFINE([WITH_MODEM],,[ Enable/disable modem driver ])
   GUILE_FLAGS
+  AC_CHECK_HEADERS([guile/gh.h])
   CFLAGS="$CFLAGS $GUILE_CFLAGS"
   LDFLAGS="$LDFLAGS $GUILE_LDFLAGS"
   AC_MSG_CHECKING(whether scm_eval conforms to R5RS)
@@ -352,39 +358,37 @@ if test "$tun" != yes; then
 ])
 fi
 
-   
-# Ask for config.h.
-AM_CONFIG_HEADER(config.h)
 
 # Output Files
-AC_CONFIG_FILES([	Makefile
-		  intl/Makefile
-		  po/Makefile.in 
-		  m4/Makefile 
-		  doc/Makefile
-		    doc/config/Makefile
-		  lib/Makefile
-		  src/Makefile 
-		    src/iptunnel/Makefile
-		    src/fdo/Makefile
-		    src/modem/Makefile
-		    src/tcpip/Makefile
-		    src/cable/Makefile
-		    src/dsl/Makefile
-		    src/tun/Makefile
-		      src/tun/linux/Makefile 
-		      src/tun/openbsd/Makefile
-		      src/tun/freebsd/Makefile
-		    src/p3/Makefile
-		    src/l2tp/Makefile
-		  include/Makefile
-		    include/fdo/Makefile
-		    include/iptunnel/Makefile
-		    include/modem/Makefile
-		    include/tcpip/Makefile
-		    include/cable/Makefile
-		    include/dsl/Makefile
-		    include/tun/Makefile
-		    include/p3/Makefile
-		    include/l2tp/Makefile])
+AC_CONFIG_FILES([Makefile
+                 config/Makefile
+                 doc/Makefile
+                 doc/config/Makefile
+                 include/Makefile
+                 include/cable/Makefile
+                 include/dsl/Makefile
+                 include/fdo/Makefile
+                 include/iptunnel/Makefile
+                 include/l2tp/Makefile
+                 include/modem/Makefile
+                 include/p3/Makefile
+                 include/tcpip/Makefile
+                 include/tun/Makefile
+                 intl/Makefile
+                 lib/Makefile
+                 m4/Makefile
+                 src/Makefile
+                 src/cable/Makefile
+                 src/dsl/Makefile
+                 src/fdo/Makefile
+                 src/iptunnel/Makefile
+                 src/l2tp/Makefile
+                 src/modem/Makefile
+                 src/p3/Makefile
+                 src/tcpip/Makefile
+                 src/tun/Makefile
+                 src/tun/freebsd/Makefile
+                 src/tun/linux/Makefile
+                 src/tun/openbsd/Makefile
+                 po/Makefile.in])
 AC_OUTPUT

@@ -20,7 +20,9 @@
  *                
  */
 
-#include "config.h"
+#if HAVE_CONFIG_H
+# include "config.h"
+#endif
 
 /* Check configure options */
 #if !defined(WITH_P3) && !defined(WITH_L2TP)
@@ -42,8 +44,17 @@
 #  error "Try ./configure --help for more information."
 #endif
 
-#include <stdlib.h>
-#include <unistd.h>
+#if STDC_HEADERS
+# include <stdlib.h>
+# include <stddef.h>
+#else
+# if HAVE_STDLIB_H
+#  include <stdlib.h>
+# endif
+#endif
+#if HAVE_UNISTD_H
+# include <unistd.h>
+#endif
 #ifdef WITH_MODEM
 #  include <guile/gh.h>
 #endif

@@ -20,21 +20,62 @@
  *                
  */
 
-#include "config.h"
+#if HAVE_CONFIG_H
+# include "config.h"
+#endif
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <errno.h>
-#include <sys/time.h>
-#include <sys/types.h>
-#include <sys/ioctl.h>
-#include <net/if.h>
-#include <netinet/ip.h>
+#if STDC_HEADERS
+# include <stdlib.h>
+# include <stddef.h>
+#else
+# if HAVE_STDLIB_H
+#  include <stdlib.h>
+# endif
+#endif
+#if HAVE_STRING_H
+# if !STDC_HEADERS && HAVE_MEMORY_H
+#  include <memory.h>
+# endif
+# include <string.h>
+#endif
+#if TIME_WITH_SYS_TIME
+# include <sys/time.h>
+# include <time.h>
+#else
+# if HAVE_SYS_TIME_H
+#  include <sys/time.h>
+# else
+#  include <time.h>
+# endif
+#endif
+#if HAVE_STDIO_H
+# include <stdio.h>
+#endif
+#if HAVE_FCNTL_H
+# include <fcntl.h>
+#endif
+#if HAVE_UNISTD_H
+# include <unistd.h>
+#endif
+#if HAVE_ERRNO_H
+# include <errno.h>
+#endif
+#if HAVE_SYS_TYPES_H
+# include <sys/types.h>
+#endif
+#if HAVE_SYS_IOCTL_H
+# include <sys/ioctl.h>
+#endif
+#if HAVE_NET_IF_H
+# include <net/if.h>
+#endif
+#if HAVE_NETINET_IP_H
+# include <netinet/ip.h>
+#endif
 
-#include <linux/if_tun.h>
+#if HAVE_LINUX_IF_TUN_H
+# include <linux/if_tun.h>
+#endif
 
 #include "gettext.h"
 #include "tun/tun.h"
@@ -89,7 +130,9 @@ tun_open_old ()
 }
 
 #ifdef HAVE_LINUX_IF_TUN_H      /* New driver support */
-#include <linux/if_tun.h>
+#if HAVE_LINUX_IF_TUN_H
+# include <linux/if_tun.h>
+#endif
 
 /* pre 2.4.6 compatibility */
 #define OTUNSETNOCSUM  (('T'<< 8) | 200)

@@ -20,18 +20,45 @@
  *                
  */
 
-#include "config.h"
+#if HAVE_CONFIG_H
+# include "config.h"
+#endif
 
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <getopt.h>
-#include <assert.h>
-#include <errno.h>
+#if STDC_HEADERS
+# include <stdlib.h>
+# include <stddef.h>
+#else
+# if HAVE_STDLIB_H
+#  include <stdlib.h>
+# endif
+#endif
+#if HAVE_STDIO_H
+# include <stdio.h>
+#endif
+#if HAVE_STRING_H
+# if !STDC_HEADERS && HAVE_MEMORY_H
+#  include <memory.h>
+# endif
+# include <string.h>
+#endif
+#if HAVE_ASSERT_H
+# include <assert.h>
+#endif
+#if HAVE_ERRNO_H
+# include <errno.h>
+#endif
+#if HAVE_UNISTD_H
+# include <unistd.h>
+#endif
+#ifdef WITH_MODEM
+# if HAVE_GUILE_GH_H
+#  include <guile/gh.h>
+# endif
+#endif
 
 #include "common.h"
 #include "gettext.h"
+#include "getopt.h"
 #include "options.h"
 #include "checkopt.h"
 #include "utils.h"
@@ -322,7 +349,7 @@ usage ()
 static void
 version (void)
 {
-  printf("\n%s Version %s\n\n" , PACKAGE, VERSION);
+  printf("\n%s (%s) %s\n\n" , program_name, PACKAGE, VERSION);
   printf("Copyright (C) 2002 Jean-Charles Salzeber.\n");
   printf(gettext ("%s comes with ABSOLUTELY NO WARRANTY.\n"
 	        "This is free software, and you are welcome to redistribute it under the terms\n"
@@ -331,7 +358,7 @@ version (void)
 	        
   printf (gettext ("Compilation options :\n"));
 #ifdef WITH_MODEM
-  printf ("WITH_MODEM "); 
+  printf ("WITH_MODEM ");
 #endif
 #ifdef WITH_CABLE
   printf ("WITH_CABLE ");

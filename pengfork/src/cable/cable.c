@@ -21,26 +21,13 @@
  * Carlier Laurent <lordheavy@infonie.fr>, 2002
  *
  */
-#include "config.h"
+#if HAVE_CONFIG_H
+# include "config.h"
+#endif
 
 #ifdef WITH_CABLE
 
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <errno.h>
-
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <net/if.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <fcntl.h>
-
-#include "options.h"
 #include "access.h"
-#include "log.h"
 #include "cable/cable.h"
 #include "tcpip/tcpip.h"
 

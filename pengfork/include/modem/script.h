@@ -23,7 +23,13 @@
 #ifndef __MODEM_SCRIPT_H__
 #define __MODEM_SCRIPT_H__
 
-#include <guile/gh.h>
+#if HAVE_CONFIG_H
+# include "config.h"
+#endif
+
+#if HAVE_GUILE_GH_H
+# include <guile/gh.h>
+#endif
 
 SCM chat_success (void);
 SCM chat_failure (void);

@@ -23,7 +23,14 @@
 #ifndef __IPTUNNEL_AOL2CLI_H__
 #define __IPTUNNEL_AOL2CLI_H__
 
-#include <sys/types.h>
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
+#ifdef HAVE_SYS_TYPES_H
+# include <sys/types.h>
+#endif
+
 #include "fdo.h"
 #include "buffer.h"
 

@@ -23,7 +23,14 @@
 #ifndef __P3_IN_H__
 #define __P3_IN_H__
 
-#include <sys/types.h>
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
+#ifdef HAVE_SYS_TYPES_H
+# include <sys/types.h>
+#endif
+
 #include "buffer.h"
 #include "p3/header.h"
 

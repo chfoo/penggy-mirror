@@ -23,9 +23,13 @@
 #ifndef __PROTOCOL_H__
 #define __PROTOCOL_H__
 
-#include <sys/types.h>
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
 
-#include "config.h"
+#ifdef HAVE_SYS_TYPES_H
+# include <sys/types.h>
+#endif
 
 #include "buffer.h"
 #include "access.h"

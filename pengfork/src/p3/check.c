@@ -19,8 +19,17 @@
  * 02111-1307, USA.
  *                
  */
-#include <sys/types.h>
-#include <netinet/in.h>
+
+#if HAVE_CONFIG_H
+# include "config.h"
+#endif 
+
+#if HAVE_SYS_TYPES_H
+# include <sys/types.h>
+#endif
+#if HAVE_NETINET_IN_H
+# include <netinet/in.h>
+#endif
 
 #include "log.h"
 

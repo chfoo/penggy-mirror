@@ -23,10 +23,16 @@
 #ifndef __LOG_H__
 # define __LOG_H__
 
-/* allow easier usage */
-# include <syslog.h>
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
 
-#include <sys/types.h>
+#ifdef HAVE_SYS_TYPES_H
+# include <sys/types.h>
+#endif
+#ifdef HAVE_SYSLOG_H
+# include <syslog.h>
+#endif
 
 int init_log (void);
 int log_daemon(void);

@@ -23,8 +23,13 @@
 #ifndef __FDO_LOGIN_H__
 #define __FDO_LOGIN_H__
 
-#include <stdlib.h>
-#include <sys/types.h>
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
+#ifdef HAVE_SYS_TYPES_H
+# include <sys/types.h>
+#endif
 
 #include "fdo.h"
 #include "buffer.h"

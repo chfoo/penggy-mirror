@@ -20,7 +20,16 @@
  *                
  */
 
-#include <string.h>
+#if HAVE_CONFIG_H
+# include "config.h"
+#endif
+
+#if HAVE_STRING_H
+# if !STDC_HEADERS && HAVE_MEMORY_H
+#  include <memory.h>
+# endif
+# include <string.h>
+#endif
 
 #include "buffer.h"
 #include "log.h"

@@ -23,7 +23,14 @@
 #ifndef __IPTUNNEL_TUNNEL_H__
 #define __IPTUNNEL_TUNNEL_H__
 
-#include <sys/types.h>
+#if HAVE_CONFIG_H
+# include "config.h"
+#endif
+
+#if HAVE_SYS_TYPES_H
+# include <sys/types.h>
+#endif
+
 #include "buffer.h"
 #include "iptunnel/vjcompress.h"
 

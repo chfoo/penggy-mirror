@@ -19,8 +19,20 @@
  * 02111-1307, USA.
  *                
  */
- 
-#include <stdlib.h>
+
+#if HAVE_CONFIG_H
+# include "config.h"
+#endif 
+
+#if STDC_HEADERS
+# include <stdlib.h>
+# include <stddef.h>
+#else
+# if HAVE_STDLIB_H
+#  include <stdlib.h>
+# endif
+#endif
+
 #include "window.h"
 #include "log.h"
 

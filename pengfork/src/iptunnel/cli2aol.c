@@ -19,15 +19,34 @@
  * 02111-1307, USA.
  *                
  */
-#include <sys/types.h>
-#include <stdlib.h>
-#include <string.h>
+
+#if HAVE_CONFIG_H
+# include "config.h"
+#endif
+
+#if HAVE_SYS_TYPES_H
+# include <sys/types.h>
+#endif
+#if STDC_HEADERS
+# include <stdlib.h>
+# include <stddef.h>
+#else
+# if HAVE_STDLIB_H
+#  include <stdlib.h>
+# endif
+#endif
+#if HAVE_STRING_H
+# if !STDC_HEADERS && HAVE_MEMORY_H
+#  include <memory.h>
+# endif
+# include <string.h>
+#endif
+
 #include "buffer.h"
 #include "fdo.h"
 #include "log.h"
 #include "if.h"
 #include "protocol.h"
-
 #include "iptunnel/tunnel.h"
 #include "iptunnel/cli2aol.h"
 
