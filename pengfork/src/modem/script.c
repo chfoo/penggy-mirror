@@ -52,7 +52,8 @@ SCM
 chat_send (string)
      SCM string;
 {
-  char *text, *print, *p;
+  char *text, *print;
+  unsigned char *p;
   int len;
 
   text = gh_scm2newstr (string, &len);
