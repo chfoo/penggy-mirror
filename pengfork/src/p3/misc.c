@@ -29,30 +29,34 @@
 
 #include "p3/misc.h"
 
-/* Synchronize the start of the buffer to something that could be a packet
+/* 
+ * Synchronize the start of the buffer to something that could be a packet
  */
 void
 p3_sync_buffer (buffer)
      buffer_t *buffer;
 {
-  void *p;
+  char *p;
   int len;
+  int total = 0;
 
-  if (buffer->used < 2)
+  while(buffer->used > 0)
     {
-      len = buffer->used;
-    }
-  else
-    {
-      p = memchr (buffer_start (buffer) + 1, P3_MAGIC, buffer->used - 1);
+      /* Try to find a STOP byte first */
+      p = memchr (buffer_start (buffer), P3_STOP, buffer->used);
       if (p)
-        len = (int) p - (int) buffer_start (buffer);
+        len = (int) p - (int) buffer_start (buffer) + 1;
       else
         len = buffer->used;
+  
+      buffer_free (buffer, len);
+      total += len;
+      p = buffer_start (buffer);
+      /* if the start of the buffer is now a MAGIC byte this seems good */
+      if(buffer->used > 0 && p[0]==P3_MAGIC) break;
     }
 
-  debug (0, "P3 - %d bytes dropped from buffer!\n", len);
-  buffer_free (buffer, len);
+  debug (3, "P3 - %d bytes dropped from buffer.\n", total);
 }
 
 

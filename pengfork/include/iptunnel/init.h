@@ -33,9 +33,8 @@ struct ip_config_request
 __attribute__ ((packed));
 
 
-struct ip_config_reply
+struct ip_config_reply1
 {
-  u_int8_t flags;
   u_int8_t unknow1;
   in_addr_t address;
   u_int8_t unknow2[8];
@@ -46,13 +45,24 @@ struct ip_config_reply
 }
 __attribute__ ((packed));
 
+struct ip_config_reply2
+{
+  u_int8_t unknow1[4];
+  in_addr_t address;
+  u_int8_t unknow2[8];
+  in_addr_t dns_address;
+  u_int8_t unknow3[5];
+  u_int8_t hostname_len;
+  char hostname;
+}
+__attribute__ ((packed));
+
 #define DEFAULT_IP_CONFIG_REQUEST (struct ip_config_request)\
   { {0x07, 0x01, 0x01, 0x0c, 0x01, 0x01, 0x0d, 0x01, 0x01} }
 
 
-void ip_tunnel_init (buffer_t *buffer);
-void ip_tunnel_config (token_t token, char *data, size_t data_size, 
-		   buffer_t *out);
+void ip_tunnel_init ();
+void ip_tunnel_config (token_t token, char *data, size_t data_size);
 void init_iface (buffer_t *in, buffer_t *out);
 
 

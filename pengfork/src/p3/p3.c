@@ -31,30 +31,43 @@
 #include "protocol.h"
 #include "engine.h"
 #include "fdo.h"
+#include "window.h"
 
 #include "p3/header.h"
 #include "p3/p3.h"
 #include "p3/misc.h"
 #include "p3/check.h"
 #include "p3/init.h"
-
-struct p3hdr *data_win[WINDOW_SIZE];
-int nack_win[WINDOW_SIZE];
+#include "p3/ack.h"
+#include "p3/out.h"
+#include "p3/in.h"
 
 struct p3state cli, srv;
 
 const protocol_t p3_protocol = (protocol_t) {
   p3_register_to_engine,
-  p3_put_data,
+  p3_send,
   (P3_MAX_SIZE - P3_DATA_OFFSET - 1)
 };
+
+const struct engine_functions p3_fn = (struct engine_functions) {
+  p3_init,
+  NULL,
+  p3_want_write,
+  p3_recv,
+  NULL,
+  NULL,
+  NULL
+};
+
+window_t wsend, wunack, wnack;
 
 void
 p3_register_to_engine (myaccess)
      const access_t *myaccess;
 {
   if (myaccess->is_connected ())
-    engine_register (*(myaccess->fd), 1, p3_init, NULL, p3_loop, NULL);
+    engine_register (*(myaccess->fd), p3_fn);
   else
     log (LOG_ERR,
          "P3 - Unable to register functions, access is not connected\n");
@@ -67,221 +80,60 @@ p3_init (bufin, bufout)
 {
   cli.lastseq = PACKET_MAX_SEQ;
   cli.lastack = PACKET_MAX_SEQ;
+  cli.want_ssr = 0;
   srv.lastack = 0;              /* We have never received a packet */
   srv.lastseq = PACKET_MAX_SEQ;
+  srv.want_ssr = 0;
 
-  create_buffer (bufin, BUFFER_SIZE);
-  create_buffer (bufout, BUFFER_SIZE);
-  p3_send_init_packet (bufout);
+  create_buffer (bufin, P3_MAX_SIZE + 1);
+  create_buffer (bufout, P3_MAX_SIZE + 1);
+  win_alloc (&wsend, WINDOW_SIZE);
+  win_alloc (&wunack, WINDOW_SIZE);
+  win_alloc (&wnack, WINDOW_SIZE);
+  p3_send_init_packet ();
+}
+
+int
+p3_want_write(out)
+     buffer_t * out;
+{
+  int i;
+  char *packet,*p;
+  size_t packet_size;
+  
+  for(i=0;i<wsend.used;i++)
+    {
+      win_get(&wsend, i, &packet, &packet_size);
+      if( buffer_reserve(out,packet_size) )
+        {
+	p=buffer_end(out);
+	buffer_alloc(out,packet_size);
+	memcpy(p, packet, packet_size);
+        }
+      else break;
+    }
+  win_delete(&wsend,i);
+  return 1;
 }
 
 void
-p3_loop (bufin, bufout, timeout)
+p3_recv (bufin)
      buffer_t *bufin;
-     buffer_t *bufout;
-     int timeout;
 {
   struct p3hdr *header;
   char *data;
   size_t data_size;
 
-  if(srv.lastack != cli.lastseq && timeout>1)
-    p3_put_packet (bufout, TYPE_ACK, NULL, 0);
-
-  while (p3_get_packet (bufin, bufout, &header, &data, &data_size))
+  /* 
+   * Do not try to treat the buffer until we have enough space into the
+   * send window to put some ack and data packets
+   */
+  if(wsend.used <= WINDOW_HIGH)
     {
-      if (!header->client)
+      while (p3_extract_packet (bufin, &header, &data, &data_size))
         {
-          /* $$$ TODO $$$ */
-          /* 
-	 * Check we don't have send more than WINDOW packet without
-           * receiving ack
-	 */
-          srv.lastack = header->ack;
-
-          switch (header->type)
-            {
-            case TYPE_DATA:
-              debug (2, "P3 - Received a DATA packet:\n");
-
-              dump_raw ("P3 - input", (char *) header, 
-		    data_size + P3_DATA_OFFSET + 1);
-
-	    srv.lastseq = header->seq;
-
-              fdo_recv (bufout, data, data_size);
-
-              /* FIXME: should not always be sent */
-              p3_put_packet (bufout, TYPE_ACK, NULL, 0);
-              break;
-
-            case TYPE_SS:
-              debug (2, "P3 - Received a SS packet\n");
-              break;
-
-            case TYPE_SSR:
-              debug (2, "P3 - Received a SSR packet\n");
-              break;
-
-            case TYPE_INIT:
-              debug (2, "P3 - Received an INIT packet\n");
-              /* AFAIK should not happen */
-              p3_recv_init_packet ((char *) data, data_size);
-              break;
-
-            case TYPE_ACK:
-              debug (2, "P3 - Received an ACK packet\n");
-              /* Nothing to do */
-              break;
-
-            case TYPE_PING:
-              debug (2, "P3 - Received a PING packet\n");
-              /* OK we send an ack */
-              p3_put_packet (bufout, TYPE_ACK, NULL, 0);
-              break;
-
-            case TYPE_NACK:
-              debug (2, "P3 - Received a NACK packet\n");
-              /* The server did not receive some packets */
-
-              /* $$$ TODO $$$ */
-              /* We should empty the send buffer and
-                 have a buffer to keep unacknowledged packets
-                 and resend them
-               */
-              cli.lastseq = header->ack;
-              break;
-
-            default:
-              debug (0, "P3 - Unknow packet type received: type=0x%02x\n",
-                     header->type);
-            }
-        }
-      buffer_free (bufin, data_size + P3_DATA_OFFSET + 1);
-    }
-}
-
-void
-p3_put_data (buffer, data, data_size)
-     buffer_t *buffer;
-     char *data;
-     size_t data_size;
-{
-  p3_put_packet (buffer, TYPE_DATA, data, data_size);
-}
-
-int
-p3_get_packet (buffer, out, header, data, data_size)
-     buffer_t *buffer;
-     buffer_t *out;
-     struct p3hdr **header;
-     char **data;
-     size_t *data_size;
-{
-  char *p;
-  struct p3hdr *h;
-  char *d;
-  size_t ds;
-  size_t s;
-  int loop = 1;
-
-  *header = NULL;
-  *data = NULL;
-  *data_size = 0;
-  while (loop)
-    {
-      if (buffer->used < P3_DATA_OFFSET)
-        return 0;
-
-      p = buffer_start (buffer);
-      if (*p != P3_MAGIC)
-        /* There is some unknow data in the buffer they could have sense
-           but it is probably transmission error
-         */
-        p3_sync_buffer (buffer);
-
-      if (buffer->used < P3_DATA_OFFSET)
-        return 0;
-
-      /* So here we have a full header */
-      h = (struct p3hdr *) p;
-      d = (p + P3_DATA_OFFSET);
-      s = ntohs (h->size);
-      ds = s - P3_SIZE_OFFSET;
-
-      if (!p3_check_header (h))
-        {
-          log (LOG_WARNING, "P3 - Bad header received\n");
-          p3_sync_buffer (buffer);
-          continue;
-        }
-
-      if (buffer->used < s + 1)
-        return 0;
-
-      if (p3_check_packet (h, d, ds) && p3_check_ordering (h))
-        {
-	/* Good we have an entire and well done packet */
-	*header = h;
-	h->size = s;
-	h->checksum = ntohs (h->checksum);
-	*data = d;
-	*data_size = ds;
-	loop = 0;
-        }
-      else
-        {
-	p3_sync_buffer (buffer);
-	/* Ask the server to retransmit the bad packet if any */
-	if(p3_check_ordering (h) && h->seq > p3_next_seq(cli.lastack))
-	  p3_put_packet (out, TYPE_NACK, NULL, 0);
+	p3_treat_packet(header,data,data_size);
+	buffer_free (bufin, data_size + P3_DATA_OFFSET + 1);
         }
     }
-
-  return 1;
-}
-
-void
-p3_put_packet (buffer, type, data, data_size)
-     buffer_t *buffer;
-     int type;
-     char *data;
-     size_t data_size;
-{
-  char *buf;
-  struct p3hdr *header;
-  char *pdata;
-
-  if (!data)
-    data_size = 0;
-
-  if (buffer_reserve (buffer, data_size + P3_DATA_OFFSET + 1))
-    {
-      buf = buffer_end (buffer);
-      header = (struct p3hdr *) buf;
-      pdata = &buf[P3_DATA_OFFSET];
-
-      header->magic = P3_MAGIC;
-      header->size = htons (data_size + P3_SIZE_OFFSET);
-      if (type == TYPE_DATA)
-        cli.lastseq = p3_next_seq (cli.lastseq);
-      header->seq = cli.lastseq;
-      header->ack = srv.lastseq;
-      header->client = 1;
-      header->type = type;
-      memcpy (pdata, data, data_size);
-
-      header->checksum =
-        htons (p3_crc16 ((char *) &header->size, data_size + 5));
-      pdata[data_size] = P3_STOP;
-
-      buffer_alloc (buffer, data_size + P3_DATA_OFFSET + 1);
-
-      if (type == TYPE_DATA || type == TYPE_INIT)
-        dump_raw ("P3 - output", (char *) header, 
-	        data_size + P3_DATA_OFFSET + 1);
-
-    }
-  else
-    log (LOG_WARNING, "P3 - Unable to send packet, buffer full.\n");
 }

@@ -187,7 +187,6 @@ __attribute__ ((packed)) p3_init40_t;
 
 #define LANGUAGE_FRENCH {0x0100, 0x0000, 0xfeff, 0x0000}
 
-void p3_send_init_packet (buffer_t * buffer);
-void p3_recv_init_packet (char *data, size_t data_size);
+void p3_send_init_packet ();
 
 #endif /* __P30INIT_H__ */

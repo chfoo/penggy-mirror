@@ -25,4 +25,7 @@ noinst_LIBRARIES = libp3.a
 libp3_a_SOURCES = 	p3.c		\
 			check.c		\
 			misc.c		\
-			init.c
+			init.c		\
+			ack.c		\
+			out.c		\
+			in.c

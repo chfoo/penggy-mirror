@@ -30,11 +30,11 @@
 #define TOKEN(s)  (s[0]<<8 | s[1])
 
 typedef u_int16_t token_t;
-typedef void (*token_handler_t) (token_t, char *, size_t, buffer_t *);
+typedef void (*token_handler_t) (token_t, char *, size_t);
 
 void fdo_init ();
-void fdo_recv (buffer_t * out, char *data, size_t data_size);
-void fdo_send (buffer_t * out, token_t token, char *data, size_t data_size);
+void fdo_recv ( char *data, size_t data_size);
+void fdo_send (token_t token, char *data, size_t data_size);
 void fdo_register (token_t token, token_handler_t handler);
 void fdo_unregister (token_t token);
 

@@ -45,61 +45,82 @@ int mtu = 1450;
 struct vjcompress vj_comp;
 #define MAX_VJHEADER 16         /* Maximum size of compressed header */
 
+const struct engine_functions ip_tunnel_fn = (struct engine_functions) {
+  init_iface,
+  NULL,
+  NULL,
+  get_ip_client,
+  NULL,
+  NULL,
+  NULL
+};
+
+
 void
-ip_tunnel_init (buffer)
-     buffer_t *buffer;
+ip_tunnel_init ()
 {
   struct ip_config_request request = DEFAULT_IP_CONFIG_REQUEST;
 
-  fdo_send (buffer, TOKEN ("ya"), (char *) &request, sizeof (request));
+  fdo_send ( TOKEN ("ya"), (char *) &request, sizeof (request));
 
   fdo_register ( TOKEN ("ya"), ip_tunnel_config);
 }
 
 void
-ip_tunnel_config (token, data, data_size, out)
+ip_tunnel_config (token, data, data_size)
      token_t token;
      char *data;
      size_t data_size;
-     buffer_t *out;
 {
-  struct ip_config_reply *config;
+  struct ip_config_reply1 *config1;
+  struct ip_config_reply2 *config2;
+  u_int8_t *flags;
+  in_addr_t *address;
+  in_addr_t *dns_address;
   char hostname[255];
-  char *end;
   int len;
 
-  config = (struct ip_config_reply *) data;
-  config->address = ntohl (config->address);
-  config->dns_address = ntohl (config->dns_address);
-  log (LOG_NOTICE, "IP TUNNEL - IP address: %d.%d.%d.%d\n",
-       config->address >> 24 & 0xff,
-       config->address >> 16 & 0xff,
-       config->address >> 8 & 0xff, config->address & 0xff);
-  log (LOG_NOTICE, "IP TUNNEL - DNS address: %d.%d.%d.%d\n",
-       config->dns_address >> 24 & 0xff,
-       config->dns_address >> 16 & 0xff,
-       config->dns_address >> 8 & 0xff, config->dns_address & 0xff);
+  flags = (u_int8_t *) data;
+  config1 = (struct ip_config_reply1 *) (data + sizeof(*flags));
+  config2 = (struct ip_config_reply2 *) (data + sizeof(*flags));
+  if(*flags == 7)
+    {
+      address = &config2->address;
+      dns_address = &config2->dns_address;
+    }
+  else
+    {
+      address = &config1->address;
+      dns_address = &config1->dns_address;
+    }
+  *address = ntohl (*address);
+  *dns_address = ntohl (*dns_address);
 
-  end = memchr (&config->hostname, 0x0c, data_size - sizeof (*config));
-  len = (int) end - (int) &config->hostname;
+  len = config1->hostname_len;
   if (len > sizeof(hostname))
     len = sizeof(hostname);
-  strncpy (hostname, &config->hostname, len);
+  strncpy (hostname, &config1->hostname, len);
   hostname[len] = '\0';
+  log (LOG_NOTICE, "IP TUNNEL - IP address: %d.%d.%d.%d\n",
+       *address >> 24 & 0xff,
+       *address >> 16 & 0xff,
+       *address >> 8 & 0xff, *address & 0xff);
+  log (LOG_NOTICE, "IP TUNNEL - DNS address: %d.%d.%d.%d\n",
+       *dns_address >> 24 & 0xff,
+       *dns_address >> 16 & 0xff,
+       *dns_address >> 8 & 0xff, *dns_address & 0xff);
   log (LOG_NOTICE, "IP TUNNEL - Hostname: %s\n", hostname);
 
   launch_ip_up (PARAM_INTERFACE_NAME,
-                config->address, 0xffffffff,
-                config->address & 0xffffff00,
-                config->address | 0x000000ff, config->address);
+                *address, 0xffffffff,
+                *address & 0xffff0000,
+                *address | 0x0000ffff, *address);
 
   vj_compress_init (&vj_comp, -1);
 
-  engine_register (*(iface->fd), 0, init_iface, NULL, get_ip_client, NULL);
+  engine_register (*(iface->fd), ip_tunnel_fn);
 
-  acout = out;
   fdo_register ( TOKEN ("yc"), get_ip_aol);
-  fdo_register ( TOKEN ("yd"), get_ip_aol);
 }
 
 void

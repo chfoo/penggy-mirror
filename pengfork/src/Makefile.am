@@ -31,7 +31,8 @@ pengfork_SOURCES = 	buffer.c		\
 			log.c			\
 			engine.c		\
 			resolver.c		\
-			sighndl.c
+			sighndl.c		\
+			window.c
 
 INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib
 

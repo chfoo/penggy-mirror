@@ -33,7 +33,7 @@
 typedef struct
 {
   void (*register_to_engine) (const access_t *);
-  void (*put_data) (buffer_t *, char *, size_t);
+  void (*send) (char *, size_t);
   size_t max_data;
 }
 protocol_t;

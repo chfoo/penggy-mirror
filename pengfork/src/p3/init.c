@@ -23,11 +23,11 @@
 #include "buffer.h"
 
 #include "p3/init.h"
-#include "p3/p3.h"
+#include "p3/header.h"
+#include "p3/out.h"
 
 void
-p3_send_init_packet (buffer)
-     buffer_t *buffer;
+p3_send_init_packet ()
 {
   p3_init30_t init_data;
 
@@ -38,39 +38,28 @@ p3_send_init_packet (buffer)
   init_data = (p3_init30_t)
   {
     0x03,                       /* plateform = PC */
-      139,                      /* version is an AOL 3.0 */
-      109,                      /* subversion */
-      0,                        /* unused */
-      16,                       /* machinmem always 16 */
-      0,                        /* appmem always 0 */
-      0,                        /* pctype always 0 */
-      5,                        /* release_month alway 5 */
-      15,                       /* release_day alway 15 */
-      0,                        /* customer_class always 0 */
-      0x4db26e25,               /* timestamp */
-      0x00c0,                   /* dos version :) */
-      0xc014,                   /* flags */
-      8,                        /* video (8=??) */
-      5,                        /* processor (5=??) */
-      0,                        /* media ??? */
-      0x00000a04,               /* windows version :) */
-      1,                        /* windows mode 1=enhanced :) */
-      1024, 768, 65535,         /* Resolution 1024x768, 16/24 bits */
-      0,                        /* filler always 0 */
-      0,                        /* region */
-      LANGUAGE_FRENCH,          /* the language */
-      0x17                      /* connection speed */
+    139,                      /* version is an AOL 3.0 */
+    109,                      /* subversion */
+    0,                        /* unused */
+    16,                       /* machinmem always 16 */
+    0,                        /* appmem always 0 */
+    0,                        /* pctype always 0 */
+    5,                        /* release_month alway 5 */
+    15,                       /* release_day alway 15 */
+    0,                        /* customer_class always 0 */
+    0x4db26e25,               /* timestamp */
+    0x00c0,                   /* dos version :) */
+    0xc014,                   /* flags */
+    8,                        /* video (8=??) */
+    5,                        /* processor (5=??) */
+    0,                        /* media ??? */
+    0x00000a04,               /* windows version :) */
+    1,                        /* windows mode 1=enhanced :) */
+    1024, 768, 65535,         /* Resolution 1024x768, 16/24 bits */
+    0,                        /* filler always 0 */
+    0,                        /* region */
+    LANGUAGE_FRENCH,          /* the language */
+    0x17                      /* connection speed */
   };
-  p3_put_packet (buffer, TYPE_INIT, (char *) &init_data, sizeof (init_data));
-}
-
-void
-p3_recv_init_packet (data, data_size)
-     char *data;
-     size_t data_size;
-{
-  /* 
-   *  We should never receive an init packet
-   *  What to do if we receive one?
-   */
+  p3_put_packet (TYPE_INIT, (char *) &init_data, sizeof (init_data));
 }

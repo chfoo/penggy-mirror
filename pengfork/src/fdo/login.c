@@ -31,8 +31,7 @@
 #include "iptunnel/init.h"
 
 void
-logon (buffer)
-     buffer_t *buffer;
+logon ()
 {
   char *data;
   struct login_info login_info = DEFAULT_LOGIN_INFO;
@@ -72,22 +71,22 @@ logon (buffer)
   memcpy (&data[len], login_info.unknow3, 6);
   len += 6;
 
-  fdo_send (buffer, TOKEN ("Dd"), data, len);
+  fdo_send ( TOKEN ("Dd"), data, len);
   log(LOG_NOTICE,"FDO - Login token sended\n");
   free (data);
 
+  fdo_unregister (TOKEN ("SD"));
   fdo_register (TOKEN ("At"), login_confirm);
 }
 
 void
-login_confirm (token, data, data_size, out)
+login_confirm (token, data, data_size)
      token_t token;
      char *data;
      size_t data_size;
-     buffer_t *out;
 {
   log(LOG_NOTICE,"FDO - Login confirm received\n");
   fdo_unregister (TOKEN ("At"));
 
-  ip_tunnel_init(out);
+  ip_tunnel_init();
 }

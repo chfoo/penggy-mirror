@@ -25,6 +25,8 @@
 
 #include "buffer.h"
 
-void get_ip_client (buffer_t *in, buffer_t *out, int timeout);
+#define MAX_OUTPUT 1000
+
+void get_ip_client (buffer_t *in);
 
 #endif /* __IPTUNNEL_CLI2AOL_H__ */

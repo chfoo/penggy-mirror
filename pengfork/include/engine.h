@@ -31,23 +31,27 @@
 /* the timeout in seconds */
 #define ENGINE_TIMEOUT  5
 
-typedef void (*init_fn_t) (buffer_t *, buffer_t *);
-typedef int (*want_read_fn_t) (buffer_t *, buffer_t *);
-typedef void (*readfn_fn_t) (buffer_t *, buffer_t *, int);
-typedef int (*end_fn_t) (buffer_t *, buffer_t *);
+struct engine_functions
+{
+  void (*init) (buffer_t * bufin, buffer_t * bufout);
+  int (*want_read) (buffer_t * bufin);
+  int (*want_write) (buffer_t * bufout);
+  void (*readfn) (buffer_t * bufin);
+  void (*writefn) (buffer_t * bufout);
+  void (*timeoutfn) (buffer_t * bufin, buffer_t * bufout, int timeout);
+  int (*end) (buffer_t * bufin, buffer_t * bufout);
+};
 
 int engine_init (void);
 void engine_loop (void);
 void engine_stop (void);
-void engine_register (int fd, int timeout_notify, init_fn_t init,
-                      want_read_fn_t want_read, readfn_fn_t readfn,
-                      end_fn_t end);
+void engine_register (int fd, struct engine_functions fn);
 void engine_unregister (int fd);
 void engine_set_readers (fd_set * fdset, int *maxfd);
 void engine_set_writers (fd_set * fdset, int *maxfd);
 void engine_read (fd_set * fdset);
 void engine_write (fd_set * fdset);
-void engine_timeout (int timeouts);
+void engine_timeout ();
 
 
 #endif /* __ENGINE_H__ */

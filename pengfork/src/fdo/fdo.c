@@ -48,8 +48,7 @@ fdo_init ()
 }
 
 void
-fdo_recv (out, data, data_size)
-     buffer_t *out;
+fdo_recv (data, data_size)
      char *data;
      size_t data_size;
 {
@@ -73,7 +72,7 @@ fdo_recv (out, data, data_size)
         }
     }
   if (index != -1)
-    module[index].handler (*token, data, data_size, out);
+    module[index].handler (*token, data, data_size);
   else
     log (LOG_NOTICE, "FDO - unregistered token received: '%c%c'\n",
          (*token >> 8) & 0xff, *token & 0xff);
@@ -81,8 +80,7 @@ fdo_recv (out, data, data_size)
 
 
 void
-fdo_send (buffer, token, data, data_size)
-     buffer_t *buffer;
+fdo_send ( token, data, data_size)
      token_t token;
      char *data;
      size_t data_size;
@@ -96,7 +94,7 @@ fdo_send (buffer, token, data, data_size)
   t = (token_t *) fdo;
   *t = htons (token);
   memcpy(newdata, data, data_size);
-  protocol->put_data (buffer, fdo, data_size + sizeof (token));
+  protocol->send (fdo, data_size + sizeof (token));
   free(fdo);
 }
 

@@ -17,31 +17,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
  * 02111-1307, USA.
- *
+ *                
  */
 
-#ifndef __IPTUNNEL_ENCAPS_H__
-#define __IPTUNNEL_ENCAPS_H__
+#ifndef __P3_OUT_H__
+#define __P3_OUT_H__
 
+#include <sys/types.h>
 
-struct short_ip
-{
-  u_int8_t ipnum;
-  u_int8_t len;
-  char ip_data;
-}
-__attribute__ ((packed));
+void p3_send (char *data, size_t data_size);
+void p3_put_packet (int type, char *data, size_t data_size);
 
-struct long_ip
-{
-  u_int8_t ipnum;
-  u_int16_t len;
-  char ip_data;
-}
-__attribute__ ((packed));
-
-#define LONG_IP_BIT 0x80
-#define LONG_IP_MASK 0x7fff
-
-
-#endif /* __IPTUNNEL_ENCAPS_H__ */
+#endif /* __P3_OUT_H__ */

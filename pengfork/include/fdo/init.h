@@ -27,6 +27,6 @@
 #include "fdo.h"
 
 void init_register (void);
-void init_token (token_t token, char *data, size_t data_size, buffer_t * out);
+void init_token (token_t token, char *data, size_t data_size);
 
 #endif /* __FDO_INIT_H__ */

@@ -31,44 +31,56 @@
 #include "iptunnel/cli2aol.h"
 
 void
-get_ip_client (in, out, timeout)
+get_ip_client (in)
      buffer_t *in;
-     buffer_t *out;
-     int timeout;
 {
   char *ip;
   size_t ip_size;
+  size_t data_size;
   char *data;
   char *ip_data;
   struct short_ip *small;
   struct long_ip *big;
+  int i;
 
   debug (1, "IP TUNNEL - Sending IP...\n");
   while (iface->get (in, &ip, &ip_size))
     {
       if (ip_size > 0x7f)
         {
-	data = malloc( ip_size + sizeof(*big) );
-	big = (struct long_ip *) data;
 	debug (1, "IP TUNNEL - Sending a big packet\n");
+	data_size = (ip_size>MAX_OUTPUT)?MAX_OUTPUT:ip_size;
+	data = malloc( data_size + sizeof(*big) );
+	big = (struct long_ip *) data;
           big->ipnum = ipnum;
-          big->len = htons(ip_size) | ~IP_LEN_MASK;
+          big->len = htons(ip_size | ~IP_LEN_MASK);
 	ip_data = data + sizeof(*big);
-          memcpy (ip_data, ip, ip_size);
-          fdo_send(acout, TOKEN ("yc"), data, ip_size + sizeof(*big));
+          memcpy (ip_data, ip, data_size);
+          fdo_send( TOKEN ("yc"), data, data_size + sizeof(*big));
 	free(data);
+	/* Send extra packets if needed */
+	for(i=1;ip_size-i*MAX_OUTPUT<MAX_OUTPUT;i++)
+	  {
+	    debug (1, "IP TUNNEL - Sending an extra packet\n");
+	    data_size = (ip_size-i*MAX_OUTPUT>MAX_OUTPUT)?
+	      MAX_OUTPUT:ip_size-i*MAX_OUTPUT;
+	    data = malloc( data_size );
+	    memcpy (data, ip+i*MAX_OUTPUT, data_size);
+	    fdo_send( TOKEN ("yd"), data, data_size);
+	    free(data);
+	  }
         }
       else
         {
+          debug (1, "IP TUNNEL - Sending a small packet\n");
 	data = malloc( ip_size + sizeof(*small) );
 	small = (struct short_ip *) data;
-          debug (1, "IP TUNNEL - Sending a small packet\n");
           small->ipnum = ipnum;
 	small->long_bit = 0;
           small->len = ip_size;
 	ip_data = data + sizeof(*small);
           memcpy (ip_data, ip, ip_size);
-          fdo_send (acout, TOKEN ("yc"), data, ip_size + sizeof(*small));
+          fdo_send ( TOKEN ("yc"), data, ip_size + sizeof(*small));
 	free(data);
         }
     }

@@ -48,7 +48,7 @@ struct long_ip
 }
 __attribute__ ((packed));
 
-#define IP_LEN_MASK 0x7fff;
+#define IP_LEN_MASK 0x7fff
 
 
 extern struct vjcompress vj_comp;

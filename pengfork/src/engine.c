@@ -42,11 +42,7 @@ struct
   int fd;
   buffer_t in;
   buffer_t out;
-  int timeout_notify;
-  void (*init) (buffer_t * bufin, buffer_t * bufout);
-  int (*want_read) (buffer_t * bufin, buffer_t * bufout);
-  void (*readfn) (buffer_t * bufin, buffer_t * bufout, int timeout);
-  int (*end) (buffer_t * bufin, buffer_t * bufout);
+  struct engine_functions fn;
 }
 client[MAX_CLIENTS];
 
@@ -61,11 +57,13 @@ engine_init ()
   for (i = 0; i < MAX_CLIENTS; i++)
     {
       client[i].fd = -1;
-      client[i].timeout_notify = 0;
-      client[i].init = NULL;
-      client[i].want_read = NULL;
-      client[i].readfn = NULL;
-      client[i].end = NULL;
+      client[i].fn.init = NULL;
+      client[i].fn.want_read = NULL;
+      client[i].fn.want_write = NULL;
+      client[i].fn.readfn = NULL;
+      client[i].fn.writefn = NULL;
+      client[i].fn.timeoutfn = NULL;
+      client[i].fn.end = NULL;
     }
   nbclients = 0;
   exiting = 0;
@@ -82,9 +80,8 @@ engine_loop ()
   fd_set wfdset;
   struct timeval tv;
   int fds;
-  int timeouts = 0;
 
-  while (!exiting)
+  while (!exiting && nbclients>0)
     {
       FD_ZERO (&rfdset);
       FD_ZERO (&wfdset);
@@ -112,17 +109,16 @@ engine_loop ()
 
       if (fds > 0)
         {
-          timeouts = 0;
           engine_read (&rfdset);
           engine_write (&wfdset);
+          engine_timeout ();
         }
       else
         {
           /* 
            * There was no data to read/write
            */
-          timeouts++;
-          engine_timeout (timeouts);
+          engine_timeout ();
           debug (1, "engine - Timed out\n");
         }
     }
@@ -135,13 +131,9 @@ engine_stop ()
 }
 
 void
-engine_register (fd, timeout_notify, init, want_read, readfn, end)
+engine_register (fd, fn)
      int fd;
-     int timeout_notify;
-     init_fn_t init;
-     want_read_fn_t want_read;
-     readfn_fn_t readfn;
-     end_fn_t end;
+     struct engine_functions fn;
 {
   int index = nbclients;
   int i;
@@ -170,16 +162,13 @@ engine_register (fd, timeout_notify, init, want_read, readfn, end)
 
   /* Fill structure */
   client[index].fd = fd;
-  client[index].timeout_notify = timeout_notify;
-  client[index].init = init;
-  client[index].readfn = readfn;
-  client[index].end = end;
+  client[index].fn = fn;
   init_buffer (&client[index].in);
   init_buffer (&client[index].out);
 
   /* And call the init function for this client */
-  if (client[index].init != NULL)
-    client[index].init (&client[index].in, &client[index].out);
+  if (client[index].fn.init != NULL)
+    client[index].fn.init (&client[index].in, &client[index].out);
 }
 
 void
@@ -226,8 +215,8 @@ engine_set_readers (fdset, maxfd)
            * NOTE: when want_read is not defined, suppose
            *   it always want to read
            */
-          if (client[i].want_read == NULL ||
-              client[i].want_read (&client[i].in, &client[i].out))
+          if (client[i].fn.want_read == NULL ||
+              client[i].fn.want_read (&client[i].in))
             {
               FD_SET (client[i].fd, fdset);
               *maxfd = MAX (*maxfd, client[i].fd);
@@ -248,10 +237,14 @@ engine_set_writers (fdset, maxfd)
 
   for (i = 0; i < nbclients; i++)
     {
-      if (client[i].out.used > 0)
+      if (client[i].fn.want_write == NULL ||
+	client[i].fn.want_write (&client[i].out))
         {
-          FD_SET (client[i].fd, fdset);
-          *maxfd = MAX (*maxfd, client[i].fd);
+	if (client[i].out.used > 0)
+	  {
+	    FD_SET (client[i].fd, fdset);
+	    *maxfd = MAX (*maxfd, client[i].fd);
+	  }
         }
     }
 }
@@ -269,8 +262,8 @@ engine_read (fdset)
           /* Fill buffer with available data */
           buffer_recv (&client[i].in, client[i].fd);
           /* And ask the client to treat the buffer */
-          if (client[i].readfn != NULL)
-            client[i].readfn (&client[i].in, &client[i].out, 0);
+          if (client[i].fn.readfn != NULL)
+            client[i].fn.readfn (&client[i].in);
         }
     }
 }
@@ -287,19 +280,24 @@ engine_write (fdset)
         {
           /* Output buffer to the media */
           buffer_send (&client[i].out, client[i].fd);
+          /* And ask the client to fill the buffer */
+          if (client[i].fn.writefn != NULL)
+            client[i].fn.writefn (&client[i].out);
         }
     }
 }
 
 void
-engine_timeout (timeouts)
-     int timeouts;
+engine_timeout ()
 {
+  /*
+   * UNIMPLEMENTED do not use timeouts
+   */
   int i;
 
   for (i = 0; i < nbclients; i++)
     {
-      if (client[i].timeout_notify && client[i].readfn != NULL)
-        client[i].readfn (&client[i].in, &client[i].out, timeouts);
+      if (client[i].fn.timeoutfn != NULL)
+        client[i].fn.timeoutfn (&client[i].in, &client[i].out, 1);
     }
 }

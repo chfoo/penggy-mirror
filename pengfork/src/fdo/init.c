@@ -33,11 +33,10 @@ init_register ()
 }
 
 void
-init_token (token, data, data_size, out)
+init_token (token, data, data_size)
      token_t token;
      char *data;
      size_t data_size;
-     buffer_t *out;
 {
-  logon (out);
+  logon ();
 }

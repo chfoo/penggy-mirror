@@ -32,17 +32,33 @@
 #include "iptunnel/tunnel.h"
 #include "iptunnel/vjcompress.h"
 
+struct
+{
+  size_t len;
+  size_t filled;
+  char *data;
+}
+extra_ip;
+
+int need_extra = 0;
 
 void
-get_ip_aol (token, data, data_size, out)
+get_ip_aol (token, data, data_size)
      token_t token;
      char *data;
      size_t data_size;
-     buffer_t *out;
 {
   struct short_ip *small = (struct short_ip *) data;
   struct long_ip *big = (struct long_ip *) data;
   char *ip_data;
+
+  if(need_extra)
+    {
+      log(LOG_ERR, "IP tunnel - No extra packet received, cancelling the packet");
+      need_extra = 0;
+      free(extra_ip.data);
+      fdo_unregister ( TOKEN ("yd") );
+    }
 
   ipnum = small->ipnum;
   if (small->long_bit)
@@ -53,7 +69,17 @@ get_ip_aol (token, data, data_size, out)
       big->len=ntohs(big->len) & IP_LEN_MASK;
       if (data_size - sizeof(*big) != big->len)
         {
+	/* 
+	 * The packet is incomplete, we should receive yd tokens to
+	 * complete him
+	 */
 	log (LOG_INFO, "IP tunnel - big packet need extra packet(s)\n");
+	need_extra = 1;
+	extra_ip.len = big->len;
+	extra_ip.data = malloc( big->len );
+	memcpy(extra_ip.data, ip_data, data_size - sizeof(*big));
+	extra_ip.filled = data_size - sizeof(*big);
+	fdo_register ( TOKEN ("yd"), get_ip_extra);
         }
       else
         get_uncompressed_ip (ip_data, big->len);
@@ -70,6 +96,28 @@ get_ip_aol (token, data, data_size, out)
     }
 }
 
+void
+get_ip_extra (token, data, data_size)
+     token_t token;
+     char *data;
+     size_t data_size;
+{
+  if(data_size + extra_ip.filled > extra_ip.len)
+    {
+      log(LOG_ERR, "IP tunnel - Packet overflow detected\n");
+      /* drop overflow data*/
+      data_size = extra_ip.len - extra_ip.filled;
+    }
+  memcpy(extra_ip.data + extra_ip.filled, data, data_size);
+  extra_ip.filled += data_size;
+  if( extra_ip.filled == extra_ip.len)
+    {
+      get_uncompressed_ip (extra_ip.data, extra_ip.len);
+      free(extra_ip.data);
+      need_extra = 0;
+      fdo_unregister ( TOKEN ("yd") );
+    }
+}
 
 void
 get_uncompressed_ip (vjip, vjiplen)
@@ -97,7 +145,9 @@ get_uncompressed_ip (vjip, vjiplen)
         {
           /* copy header */
           memcpy (tmp, iphdr, iphdrlen);
-          /* copy data */
+	iphdr[0] &= ~TYPE_UNCOMPRESSED_TCP;
+	iphdr[0] |= TYPE_IP;
+	/* copy data */
           memcpy (&tmp[iphdrlen], &vjip[vjhdrlen], vjiplen - vjhdrlen);
           iface->put (ifout, tmp, iplen);
           free (tmp);
@@ -112,12 +162,10 @@ get_uncompressed_ip (vjip, vjiplen)
     {
       debug (2, "IP tunnel - packet type: TYPE_UNCOMPRESSED_TCP\n");
       /* an uncompressed TCP do *NOT* modify the size of the packet */
-      if (vj_uncompress_uncomp (vjip, vjiplen, &vj_comp))
-        {
-          iface->put (ifout, vjip, vjiplen);
-        }
-      else
-        log (LOG_WARNING, "IP tunnel - Unable to uncompress the packet");
+      vj_uncompress_uncomp (vjip, vjiplen, &vj_comp);
+      vjip[0] &= ~TYPE_UNCOMPRESSED_TCP;
+      vjip[0] |= TYPE_IP;
+      iface->put (ifout, vjip, vjiplen);
     }
   else if ((vjip[0] & TYPE_IP) == TYPE_IP)
     {

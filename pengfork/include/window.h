@@ -20,36 +20,29 @@
  *
  */
 
-#ifndef __FDO_LOGIN_H__
-#define __FDO_LOGIN_H__
+#ifndef __WINDOW_H__
+#define __WINDOW_H__
 
-#include <stdlib.h>
 #include <sys/types.h>
 
-#include "fdo.h"
-#include "buffer.h"
+typedef struct {
+  int size;
+  int used;
+  char **packet;
+  size_t *packet_size;
+} 
+window_t;
 
-struct login_info
-{
-  u_int8_t unknow1[21];
-  u_int8_t login_size;
-  char *login;
-  u_int8_t unknow2[15];
-  u_int8_t pass_size;
-  char *pass;
-  u_int8_t unknow3[6];
-};
+void win_init(window_t *win);
+void win_alloc(window_t *win, int size);
+void win_free(window_t *win);
+int win_full(window_t *win);
+int win_empty(window_t *win);
+void win_add(window_t *win, char *packet, size_t packet_size);
+void win_delete(window_t *win, int nb);
+void win_get(window_t *win, int num, char **packet, size_t *packet_size);
+void win_first(window_t *win, char **packet, size_t *packet_size);
+void win_last(window_t *win, char **packet, size_t *packet_size);
+void win_flush(window_t *win);
 
-#define DEFAULT_LOGIN_INFO (struct login_info) { \
- { 0x00, 0x16, 0x00, 0x01, 0x00, 0x01, 0x0a, 0x04, 0x00, 0x00, 0x00, 0x01, 0x01, \
-   0x0b, 0x04, 0x00, 0x00, 0x00, 0x02, 0x03, 0x01}, \
- 0, NULL, \
- { 0x01, 0x1d, 0x00, 0x01, 0x1d, 0x00, 0x01, 0x0a, 0x04, 0x00, 0x00, 0x00, 0x02, \
-   0x03, 0x01 }, \
- 0, NULL, \
- { 0x01, 0x1d, 0x00, 0x00, 0x02, 0x00 } }
-
-void logon ();
-void login_confirm (token_t token, char *data, size_t data_size);
-
-#endif /* __FDO_LOGIN_H__ */
+#endif /* __WINDOW_H__ */

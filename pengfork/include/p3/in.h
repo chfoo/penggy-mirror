@@ -17,39 +17,18 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
  * 02111-1307, USA.
- *
+ *                
  */
 
-#ifndef __FDO_LOGIN_H__
-#define __FDO_LOGIN_H__
+#ifndef __P3_IN_H__
+#define __P3_IN_H__
 
-#include <stdlib.h>
 #include <sys/types.h>
-
-#include "fdo.h"
 #include "buffer.h"
+#include "p3/header.h"
 
-struct login_info
-{
-  u_int8_t unknow1[21];
-  u_int8_t login_size;
-  char *login;
-  u_int8_t unknow2[15];
-  u_int8_t pass_size;
-  char *pass;
-  u_int8_t unknow3[6];
-};
+void p3_treat_packet( struct p3hdr *header, char *data, size_t data_size);
+int p3_extract_packet (buffer_t *buffer, struct p3hdr **header, char **data, 
+		   size_t *data_size);
 
-#define DEFAULT_LOGIN_INFO (struct login_info) { \
- { 0x00, 0x16, 0x00, 0x01, 0x00, 0x01, 0x0a, 0x04, 0x00, 0x00, 0x00, 0x01, 0x01, \
-   0x0b, 0x04, 0x00, 0x00, 0x00, 0x02, 0x03, 0x01}, \
- 0, NULL, \
- { 0x01, 0x1d, 0x00, 0x01, 0x1d, 0x00, 0x01, 0x0a, 0x04, 0x00, 0x00, 0x00, 0x02, \
-   0x03, 0x01 }, \
- 0, NULL, \
- { 0x01, 0x1d, 0x00, 0x00, 0x02, 0x00 } }
-
-void logon ();
-void login_confirm (token_t token, char *data, size_t data_size);
-
-#endif /* __FDO_LOGIN_H__ */
+#endif /* __P3_IN_H__ */
