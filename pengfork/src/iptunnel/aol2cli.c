@@ -45,21 +45,27 @@ get_ip_aol (token, data, data_size, out)
   char *ip_data;
 
   ipnum = small->ipnum;
-  if (small->len & LONG_IP_BIT)
-    /* This packet is a long ip (>128 bytes) */
+  if (small->long_bit)
+    /* This packet is a long ip (>=128 bytes) */
     {
       debug (1, "IP tunnel - Received a big packet\n");
-      ip_data=data +sizeof(*big);
-      if (data_size - 3 != big->len)
-        log (LOG_WARNING, "IP tunnel - bad size for a big packet\n");
+      ip_data=data + sizeof(*big);
+      if (data_size - sizeof(*big) != ntohs(big->len))
+        {
+	log (LOG_INFO, "IP tunnel - big packet need extra packet(s)\n");
+	debug(1, "\tbig->len = %02x \n", big->len);
+	debug(1, "\tntohs(big->len) = %02x \n", ntohs(big->len));
+	debug(1, "\tdata_size - sizeof(*big) = %02x \n", data_size - sizeof(*big));
+        }
       else
-        get_uncompressed_ip (ip_data, big->len & LONG_IP_MASK);
+        get_uncompressed_ip (ip_data, ntohs(big->len));
     }
   else
+    /* This packet is a small ip (<128 bytes) */
     {
       debug (1, "IP tunnel - Received a small packet\n");
-      ip_data=data +sizeof(*small);
-      if (data_size - 2 != small->len)
+      ip_data=data + sizeof(*small);
+      if (data_size - sizeof(*small) != small->len)
         log (LOG_WARNING, "IP tunnel - bad size for a small packet\n");
       else
         get_uncompressed_ip (ip_data, small->len);

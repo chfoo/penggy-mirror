@@ -35,7 +35,8 @@ __attribute__ ((packed));
 
 struct ip_config_reply
 {
-  u_int8_t unknow1[2];
+  u_int8_t flags;
+  u_int8_t unknow1;
   in_addr_t address;
   u_int8_t unknow2[8];
   in_addr_t dns_address;

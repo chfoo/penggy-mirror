@@ -30,18 +30,32 @@
 struct short_ip
 {
   u_int8_t ipnum;
-  u_int8_t len;
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+  u_int8_t len      :7;
+  u_int8_t long_bit :1;
+#elif __BYTE_ORDER == __BIG_ENDIAN
+  u_int8_t long_bit :1;
+  u_int8_t len      :7;
+#else
+# error "Please fix <bits/endian.h>"
+#endif
 };
 
 struct long_ip
 {
   u_int8_t ipnum;
-  u_int16_t len;
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+  u_int16_t len      :15;
+  u_int16_t long_bit :1;
+#elif __BYTE_ORDER == __BIG_ENDIAN
+  u_int16_t long_bit :1;
+  u_int16_t len      :15;
+#else
+# error "Please fix <bits/endian.h>"
+#endif
 }
 __attribute__ ((packed));
 
-#define LONG_IP_BIT 0x80
-#define LONG_IP_MASK 0x7fff
 
 extern struct vjcompress vj_comp;
 extern buffer_t *acout, *ifout;

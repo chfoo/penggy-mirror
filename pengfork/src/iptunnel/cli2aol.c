@@ -20,6 +20,7 @@
  *                
  */
 #include <sys/types.h>
+#include <stdlib.h>
 #include <string.h>
 #include "buffer.h"
 #include "fdo.h"
@@ -37,36 +38,39 @@ get_ip_client (in, out, timeout)
 {
   char *ip;
   size_t ip_size;
-  int offset;
-  /* char *fdo; */
   char *data;
   char *ip_data;
   struct short_ip *small;
   struct long_ip *big;
 
   debug (1, "IP TUNNEL - Sending IP...\n");
-  small = (struct short_ip *) (data + sizeof (token_t));
-  big = (struct long_ip *) (data + sizeof (token_t));
   while (iface->get (in, &ip, &ip_size))
     {
       if (ip_size > 0x7f)
         {
-          debug (1, "IP TUNNEL - Sending a big packet\n");
-          offset = 0;
+	data = malloc( ip_size + sizeof(*big) );
+	big = (struct long_ip *) data;
+	debug (1, "IP TUNNEL - Sending a big packet\n");
           big->ipnum = ipnum;
-          big->len = ip_size | ~LONG_IP_MASK;
+	big->long_bit = 1;
+          big->len = htons(ip_size);
 	ip_data = data + sizeof(*big);
           memcpy (ip_data, ip, ip_size);
-          fdo_send(acout, TOKEN ("yc"), data, ip_size + 3);
+          fdo_send(acout, TOKEN ("yc"), data, ip_size + sizeof(*big));
+	free(data);
         }
       else
         {
+	data = malloc( ip_size + sizeof(*small) );
+	small = (struct short_ip *) data;
           debug (1, "IP TUNNEL - Sending a small packet\n");
           small->ipnum = ipnum;
+	small->long_bit = 0;
           small->len = ip_size;
 	ip_data = data + sizeof(*small);
           memcpy (ip_data, ip, ip_size);
-          fdo_send (acout, TOKEN ("yc"), data, ip_size + 2);
+          fdo_send (acout, TOKEN ("yc"), data, ip_size + sizeof(*small));
+	free(data);
         }
     }
 }
