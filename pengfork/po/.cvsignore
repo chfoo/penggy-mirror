@@ -1,0 +1,7 @@
+Makefile
+Makefile.in
+POTFILES
+*.gmo
+pengfork.pot
+remove-potcdate.sed
+

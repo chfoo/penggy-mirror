@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: pengfork 0.1\n"
-"POT-Creation-Date: 2002-12-01 00:34+0100\n"
+"POT-Creation-Date: 2002-12-01 02:27+0100\n"
 "PO-Revision-Date: 2002-12-01 00:39+0100\n"
 "Last-Translator: Jean-Charles Salzeber <jc@varspool.net>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -71,27 +71,33 @@ msgstr "%s: l'option `-W %s' est ambigüe\n"
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: l'option `-W %s' n'a pas d'argument\n"
 
-#: src/p3/in.c:92
+#: src/p3/in.c:94
 #, c-format
 msgid "P3 - Unknow packet type received: type=0x%02x\n"
 msgstr "P3 - Paquet de type inconnu reçu: type=0x%02x\n"
 
-#: src/p3/p3.c:75
+#: src/p3/p3.c:77
 msgid "Unable to register P3 protocol functions, access is not connected\n"
-msgstr "Impossible d'assigner les fontions du protocole P3, le media n'est pas connecté\n"
+msgstr ""
+"Impossible d'assigner les fontions du protocole P3, le media n'est pas "
+"connecté\n"
 
-#: src/fdo/login.c:45
+#: src/fdo/login.c:47
 msgid "Loging into provider\n"
 msgstr "Authentification auprés du fournisseur\n"
 
 #: src/tun/linux/tun.c:75
 #, c-format
 msgid "Unable to open tun device /dev/%s (using 2.2 kernel method): %s(%d).\n"
-msgstr "Impossible d'ouvrir le périphérique tun /dev/%s (avec la méthode d'un noyau 2.2): %s(%d).\n"
+msgstr ""
+"Impossible d'ouvrir le périphérique tun /dev/%s (avec la méthode d'un noyau "
+"2.2): %s(%d).\n"
 
 #: src/tun/linux/tun.c:82
 msgid "Unable to open a valid tun device (using 2.2 kernel method).\n"
-msgstr "Impossible d'ouvrir un périphérique tun valide (avec la méthode d'un noyau 2.2).\n"
+msgstr ""
+"Impossible d'ouvrir un périphérique tun valide (avec la méthode d'un noyau "
+"2.2).\n"
 
 #: src/tun/linux/tun.c:108
 #, c-format
@@ -107,14 +113,16 @@ msgstr "Utilisation de la méthode d'un noyau 2.2\n"
 msgid ""
 "Unable to open a valid tun device (using pre 2.4.6 kernel method): %s(%d).\n"
 msgstr ""
-"Impossible d'ouvrir un périphérique tun valide (avec la méthode d'un noyau pré-2.4.6): %s(%d).\n"
+"Impossible d'ouvrir un périphérique tun valide (avec la méthode d'un noyau "
+"pré-2.4.6): %s(%d).\n"
 
 #: src/tun/linux/tun.c:135
 #, c-format
 msgid ""
 "Unable to open a valid tun device (using post 2.4.6 kernel method): %s(%d).\n"
 msgstr ""
-"Impossible d'ouvrir un périphérique tun valide (avec la méthode d'un noyau post-2.4.6): %s(%d).\n"
+"Impossible d'ouvrir un périphérique tun valide (avec la méthode d'un noyau "
+"post-2.4.6): %s(%d).\n"
 
 #: src/tun/freebsd/tun.c:85 src/tun/openbsd/tun.c:78
 #, c-format
@@ -145,39 +153,39 @@ msgstr "Désolé, le support de tun n'est pas compilé\n"
 msgid "Sorry P3 support is not compiled in\n"
 msgstr "Désolé, le support de P3 n'est pas compilé\n"
 
-#: src/modem/devlock.c:84
+#: src/modem/devlock.c:86
 #, c-format
 msgid "Removing stale lock file %s.\n"
 msgstr "Suppression de l'ancien fichier de verrouillage %s.\n"
 
-#: src/modem/script.c:37
+#: src/modem/script.c:40
 msgid "Script: Chat success\n"
 msgstr "Script: Succés du dialogue\n"
 
-#: src/modem/script.c:44
+#: src/modem/script.c:47
 msgid "Script: Chat failure\n"
 msgstr "Script: Echec du dialogue\n"
 
-#: src/modem/script.c:56
+#: src/modem/script.c:67
 #, c-format
 msgid "Script: Send '%s'\n"
 msgstr "Script: Envoi de '%s'\n"
 
-#: src/modem/script.c:88
+#: src/modem/script.c:100
 #, c-format
 msgid "Script: String '%s' matched\n"
 msgstr "Script: Chaîne '%s' reconnue\n"
 
-#: src/modem/script.c:138
+#: src/modem/script.c:150
 msgid "Script: No string matched\n"
 msgstr "Script: Aucune chaîne reconnue\n"
 
-#: src/modem/script.c:214
+#: src/modem/script.c:226
 #, c-format
 msgid "%s: returned value isn't a boolean.\n"
 msgstr "%s: la valeur retournée n'est pas un booléen.\n"
 
-#: src/modem/script.c:216
+#: src/modem/script.c:228
 msgid "Couldn't continue, exiting.\n"
 msgstr "Ne peut continuer, sortie.\n"
 
@@ -230,8 +238,8 @@ msgid ""
 "Please verify the phone number, dial string and prefix\n"
 msgstr ""
 "Mauvaise chaîne\n"
-"Veuillez vérifier le numéro de téléphone, la chaîne de composition et le préfixe\n"
-
+"Veuillez vérifier le numéro de téléphone, la chaîne de composition et le "
+"préfixe\n"
 
 #: src/modem/modem.c:292
 msgid "No carrier detected\n"
@@ -309,84 +317,84 @@ msgstr "Erreur en mettant la socket non blocante: %s(%d)\n"
 msgid "Error while closing socket: %s(%d)\n"
 msgstr "Erreur pendant la fermeture de la socket: %s(%d)\n"
 
-#: src/iptunnel/aol2cli.c:103
+#: src/iptunnel/aol2cli.c:105
 msgid "IP tunnel - bad size for a small packet\n"
 msgstr "Tunnel IP - Mauvaise taille pour un petit paquet\n"
 
-#: src/iptunnel/aol2cli.c:117
+#: src/iptunnel/aol2cli.c:119
 msgid "IP tunnel - Packet overflow detected\n"
 msgstr "Tunnel IP - Dépassement de paquet détécté\n"
 
-#: src/iptunnel/aol2cli.c:154
+#: src/iptunnel/aol2cli.c:156
 msgid "IP tunnel - Unable to uncompress the packet\n"
 msgstr "Tunnel IP - Impossible de décompressé le paquet\n"
 
-#: src/iptunnel/aol2cli.c:171
+#: src/iptunnel/aol2cli.c:173
 msgid "IP tunnel - Unable to allocate memory\n"
 msgstr "Tunnel IP - Impossible d'allouer la mémoire\n"
 
-#: src/iptunnel/aol2cli.c:191
+#: src/iptunnel/aol2cli.c:193
 msgid "IP tunnel - received an unknown IP packet\n"
 msgstr "Tunnel IP - Paquet IP inconnu reçu\n"
 
-#: src/iptunnel/dns.c:49
+#: src/iptunnel/dns.c:51
 msgid "/etc/resolv.peng exists\n"
 msgstr "/etc/resolv.peng existe\n"
 
-#: src/iptunnel/dns.c:54
+#: src/iptunnel/dns.c:56
 #, c-format
 msgid "Could not rename /etc/resolv.conf: %s (%d)\n"
 msgstr "Ne peut renommer /etc/resolv.conf: %s (%d)\n"
 
-#: src/iptunnel/dns.c:75
+#: src/iptunnel/dns.c:77
 #, c-format
 msgid "Could not create /etc/resolv.conf: %s (%d)\n"
 msgstr "Ne peut créer /etc/resolv.conf: %s (%d)\n"
 
-#: src/iptunnel/dns.c:93
+#: src/iptunnel/dns.c:95
 #, c-format
 msgid "Could not delete /etc/resov.conf: %s (%d)\n"
 msgstr "Ne peut supprimer /etc/resov.conf: %s (%d)\n"
 
-#: src/iptunnel/dns.c:100
+#: src/iptunnel/dns.c:102
 #, c-format
 msgid "Could not rename /etc/resolv.peng: %s (%d)\n"
 msgstr "Ne peut renommer /etc/resolv.peng: %s (%d)\n"
 
-#: src/iptunnel/init.c:110
+#: src/iptunnel/init.c:112
 #, c-format
 msgid "IP address: %s\n"
 msgstr "Adresse IP: %s\n"
 
-#: src/iptunnel/init.c:114
+#: src/iptunnel/init.c:116
 #, c-format
 msgid "DNS server: %s\n"
 msgstr "Serveur DNS: %s\n"
 
-#: src/iptunnel/init.c:118
+#: src/iptunnel/init.c:120
 #, c-format
 msgid "MTU: %d\n"
 msgstr "MTU: %d\n"
 
-#: src/iptunnel/init.c:130
+#: src/iptunnel/init.c:132
 #, c-format
 msgid "Hostname: %s\n"
 msgstr "Nom d'hôte: %s\n"
 
-#: src/iptunnel/init.c:132
+#: src/iptunnel/init.c:134
 #, c-format
 msgid "Domain: %s\n"
 msgstr "Domaine: %s\n"
 
-#: src/engine.c:106
+#: src/engine.c:108
 msgid "engine - No data to wait\n"
 msgstr "engine - Pas de donnée à attendre\n"
 
-#: src/engine.c:241
+#: src/engine.c:243
 msgid "engine - An input buffer is full\n"
 msgstr "engine - Un buffer d'entrée est plein\n"
 
-#: src/getpass.c:67 src/options.c:598
+#: src/getpass.c:69 src/options.c:598
 #, c-format
 msgid "%s:%d bad line format\n"
 msgstr "%s:%d mauvais format de ligne\n"
@@ -446,17 +454,17 @@ msgstr "Erreur fatale, sortie.\n"
 msgid "Unable to init engine, exiting.\n"
 msgstr "Impossible d'initializer le moteur, sortie.\n"
 
-#: src/misc.c:71 src/misc.c:112
+#: src/misc.c:73 src/misc.c:114
 #, c-format
 msgid "Can't set environment variables: %s (%d)\n"
 msgstr "Ne peut assigner les variables d'environnement: %s (%d)\n"
 
-#: src/misc.c:76 src/misc.c:116
+#: src/misc.c:78 src/misc.c:118
 #, c-format
 msgid "Can't exec script %s: %s (%d)\n"
 msgstr "Ne peut éxécuter le script %s: %s (%d)\n"
 
-#: src/misc.c:86 src/misc.c:125
+#: src/misc.c:88 src/misc.c:127
 #, c-format
 msgid "Can't fork: %s (%d)\n"
 msgstr "Ne peut 'forker': %s (%d)\n"
@@ -623,14 +631,15 @@ msgstr " ou "
 #: src/checkopt.c:122
 #, c-format
 msgid "Screen name not defined, please edit your configuration file (%s).\n"
-msgstr "Pseudo non défini, veuillez éditer votre fichier de configuration (%s).\n"
+msgstr ""
+"Pseudo non défini, veuillez éditer votre fichier de configuration (%s).\n"
 
 #: src/checkopt.c:133
 #, c-format
 msgid "Screen name '%s' not found in %s.\n"
 msgstr "Pseudo '%s' non trouvé dans %s.\n"
 
-#: src/sighndl.c:37
+#: src/sighndl.c:39
 #, c-format
 msgid "%s received, exiting.\n"
 msgstr "%s reçu, sortie.\n"
