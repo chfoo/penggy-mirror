@@ -4,4 +4,5 @@
 	* src/p30data.c: Likewise.
 	* src/main.c: Add exit on config_set failure.
 	* configure.ac, Makefile.am, config/Makefile.am, include/Makefile.am, 
-	src/Makefile.am: New files.
+	src/Makefile.am, src/linux/Makefile.am, src/openbsd/Makefile.am, 
+	src/freebsd/Makefile.am: New files.
