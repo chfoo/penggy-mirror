@@ -1,6 +1,7 @@
 2002-08-26  Nicolas Burrus  <nes@lrde.epita.fr>
 
-	* src/p30data.c: Remove warning.
+	* src/linux/tun.c: Remove warning.
+	* src/p30data.c: Likewise.
 	* src/main.c: Add exit on config_set failure.
 	* configure.ac, Makefile.am, config/Makefile.am, include/Makefile.am, 
 	src/Makefile.am: New files.
