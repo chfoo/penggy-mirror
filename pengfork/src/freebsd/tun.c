@@ -37,7 +37,7 @@
 #include <netinet/ip.h>
 
 #include "tun.h"
-#include "config.h"
+#include "options.h"
 
 static int fd = -1;
 
