@@ -7,10 +7,24 @@ It may not compile or freeze your computer.
 
 You need autoconf and automake.
 
-HOW TO USE CVS VERSION
-======================
+HOW TO BUILD CVS
+================
 
 You need automake >= 1.6 and autoconf > 2.53.
 
 penfork/$ autoreconf -fiv
 penfork/$ ./configure && make
+
+COMMON TROUBLES
+===============
+
+$ automake --version
+==> Must answer >= 1.6
+
+$ autoconf --version
+==> Must answer >= 2.53
+
+With some distributions, you need to set WANT_AUTOMAKE_1_6=1 before 
+launching autoreconf : 
+
+$ WANT_AUTOMAKE_1_6=1 autoreconf -vfi
