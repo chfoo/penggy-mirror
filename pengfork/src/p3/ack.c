@@ -24,6 +24,7 @@
 #include "window.h"
 #include "log.h"
 
+#include "p3/misc.h"
 #include "p3/header.h"
 #include "p3/p3.h"
 #include "p3/out.h"

@@ -1,3 +1,7 @@
+2002-09-11  Nicolas Burrus  <nes@lrde.epita.fr>
+
+	* src/p3/ack.c: Add include.
+
 2002-09-10  Nicolas Burrus  <nes@lrde.epita.fr>
 
 	* src/p3/in.c: Fix size.
