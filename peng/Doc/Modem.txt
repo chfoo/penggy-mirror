@@ -1,1 +1,0 @@
-lrwxrwxrwx    1 root     root           10 aoû 18 12:08 /dev/modem -> /dev/ttyS0
