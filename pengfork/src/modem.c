@@ -559,36 +559,17 @@ modem_send_command (command, timeout, response, size)
      char *response;
      size_t size;
 {
-  char *p;
-  int nread;
-
   printf ("Sending: %s\n", command);
+
   write (fd, command, strlen (command));
   write (fd, "\r", 1);
-
-  p = response;
-  nread = 0;
-  *p = '\0';
-  do
-    {
-      if (!modem_data_ready (timeout))
-        return 0;
-      read (fd, p, 1);
-    }
-  while (*p == '\r' || *p == '\n');
-  nread++;
-  while (nread < size && (*p != '\r' && *p != '\n'))
-    {
-      if (!modem_data_ready (timeout))
-        return 0;
-      p++;
-      read (fd, p, 1);
-      nread++;
-    }
-
-  *p = '\0';
-
-  printf ("Received: %s\n", response);
+  if (!modem_readline(response, timeout, size))
+    return 0;
+  if (strcmp (response, command))
+    return 1;
+  /* FIXME: echo is enabled, it should't happen */
+  if (!modem_readline(response, timeout, size))
+    return 0;
   return 1;
 }
 
@@ -616,6 +597,7 @@ modem_wait_for (prompt, timeout)
   char buffer[1024];
   char *p;
   int nread;
+  int count;
 
   p = buffer;
   nread = 0;
@@ -623,13 +605,56 @@ modem_wait_for (prompt, timeout)
     {
       if (!modem_data_ready (timeout))
         return 0;
-      nread += read (fd, p, 1024 - nread);
+      if ((count = read (fd, p, 1024 - nread)) < 0)
+	return 0;
+      nread += count;
       p = buffer + nread;
       *p = '\0';
       if (strstr (buffer, prompt))
         return 1;
     }
   return 0;
+}
+
+/*
+ * Eat \r and \n until unseful chars appear, and return line
+ */
+int
+modem_readline (response, timeout, size)
+     char *response;
+     int timeout;
+     size_t size;
+{
+  int nread;
+  char *p;
+
+  nread = 0;
+  p = response;
+  *p = '\0';
+  do
+    {
+      if (!modem_data_ready (timeout))
+        return 0;
+      if (read (fd, p, 1) <= 0)
+	return 0;
+    }
+  while (*p == '\r' || *p == '\n');
+
+  nread++;
+
+  while (nread < size && (*p != '\r' && *p != '\n'))
+    {
+      if (!modem_data_ready (timeout))
+	return 0;
+      p++;
+      if (read (fd, p, 1) <= 0)
+	return 0;
+      nread++;
+    }
+  *p = '\0';
+
+  printf ("Received line : %s\n", response);
+  return 1;
 }
 
 #endif /* WITH_MODEM */

@@ -43,6 +43,6 @@ int modem_send_command (char *command, int timeout, char *response,
                         size_t size);
 int modem_response_value (char *response);
 int modem_wait_for (char *prompt, int timeout);
-
+int modem_readline (char *response, int timeout, size_t size);
 
 #endif /* !defined(__MODEM_H__) && defined(WITH_MODEM) */
