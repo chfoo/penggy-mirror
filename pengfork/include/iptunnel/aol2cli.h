@@ -38,9 +38,9 @@
 
 extern int need_extra;
 
-void get_ip_aol (token_t token, char *data, size_t data_size);
-void get_ip_extra (token_t token, char *data, size_t data_size);
-void get_uncompressed_ip (char *vjip, size_t vjiplen);
+int get_ip_aol (token_t token, char *data, size_t data_size);
+int get_ip_extra (token_t token, char *data, size_t data_size);
+int get_uncompressed_ip (char *vjip, size_t vjiplen);
 
 
 #endif /* __IPTUNNEL_AOL2CLI_H__ */

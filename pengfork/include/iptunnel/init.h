@@ -66,9 +66,9 @@ struct ip_config_header
   { {0x07, 0x01, 0x01, 0x0c, 0x01, 0x01, 0x0d, 0x01, 0x01} }
 
 
-void ip_tunnel_init ();
+int ip_tunnel_init ();
 int ip_tunnel_ready (buffer_t *bufin);
-void ip_tunnel_config (token_t token, char *data, size_t data_size);
+int ip_tunnel_config (token_t token, char *data, size_t data_size);
 struct in_addr netmask(int bits);
 void init_iface (buffer_t *in, buffer_t *out);
 int destroy_iface (buffer_t *in, buffer_t *out);

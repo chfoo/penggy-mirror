@@ -36,27 +36,8 @@
 #include "fdo.h"
 #include "buffer.h"
 
-struct login_info
-{
-  u_int8_t unknow1[21];
-  u_int8_t login_size;
-  char *login;
-  u_int8_t unknow2[15];
-  u_int8_t pass_size;
-  char *pass;
-  u_int8_t unknow3[6];
-};
-
-#define DEFAULT_LOGIN_INFO (struct login_info) { \
- { 0x00, 0x16, 0x00, 0x01, 0x00, 0x01, 0x0a, 0x04, 0x00, 0x00, 0x00, 0x01, 0x01, \
-   0x0b, 0x04, 0x00, 0x00, 0x00, 0x02, 0x03, 0x01}, \
- 0, NULL, \
- { 0x01, 0x1d, 0x00, 0x01, 0x1d, 0x00, 0x01, 0x0a, 0x04, 0x00, 0x00, 0x00, 0x02, \
-   0x03, 0x01 }, \
- 0, NULL, \
- { 0x01, 0x1d, 0x00, 0x00, 0x02, 0x00 } }
-
 void logon ();
-void login_confirm (token_t token, char *data, size_t data_size);
+int login_confirm (token_t token, char *data, size_t data_size);
+int atom_handler (token_t token, char *data, size_t data_size);
 
 #endif /* __FDO_LOGIN_H__ */

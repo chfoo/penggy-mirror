@@ -47,6 +47,8 @@ struct engine_functions
   void (*init) (buffer_t * bufin, buffer_t * bufout);
   int (*want_read) (buffer_t * bufin);
   int (*want_write) (buffer_t * bufout);
+  int (*fillfn) (buffer_t * buf, int fd);
+  int (*drainfn) (buffer_t * buf, int fd);
   void (*readfn) (buffer_t * bufin);
   void (*writefn) (buffer_t * bufout);
   void (*timeoutfn) (buffer_t * bufin, buffer_t * bufout, int timeout);

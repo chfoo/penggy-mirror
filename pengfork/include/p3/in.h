@@ -36,7 +36,7 @@
 #include "buffer.h"
 #include "p3/header.h"
 
-void p3_treat_packet( struct p3hdr *header, char *data, size_t data_size);
+int p3_treat_packet( struct p3hdr *header, char *data, size_t data_size);
 int p3_extract_packet (buffer_t *buffer, struct p3hdr **header, char **data, 
 		   size_t *data_size);
 

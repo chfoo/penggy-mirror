@@ -41,6 +41,7 @@ extern char tun_ifname[8];
 int tun_open ();
 int tun_close ();
 int tun_ready ();
+int tun_have_packet (buffer_t * buffer);
 int tun_get (buffer_t * buffer, char **data, size_t * data_size);
 int tun_put (buffer_t * buffer, char *data, size_t data_size);
 

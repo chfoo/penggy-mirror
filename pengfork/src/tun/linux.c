@@ -211,6 +211,21 @@ tun_ready ()
 }
 
 int
+tun_have_packet(buffer)
+     buffer_t *buffer;
+{
+  struct iphdr *ip;
+
+  ip = (struct iphdr *) buffer_start (buffer);
+  if (buffer->used < sizeof (struct iphdr))
+    return 0;
+  if (buffer->used < ntohs (ip->tot_len))
+      return 0;
+
+  return 1;
+}
+
+int
 tun_get (buffer, data, data_size)
      buffer_t *buffer;
      char **data;
@@ -219,11 +234,7 @@ tun_get (buffer, data, data_size)
   struct iphdr *ip;
 
   ip = (struct iphdr *) buffer_start (buffer);
-  *data = NULL;
-  *data_size = 0;
-  if (buffer->used < sizeof (struct iphdr))
-    return 0;
-  if (buffer->used < ntohs (ip->tot_len))
+  if(!tun_have_packet(buffer))
     return 0;
 
   *data = (char *) ip;
@@ -240,10 +251,17 @@ tun_put (buffer, data, data_size)
 {
   char *p;
 
-  p = buffer_end (buffer);
-  buffer_alloc (buffer, data_size);
-  memcpy (p, data, data_size);
-  return 1;
+  if (buffer_reserve (buffer, data_size))
+    {
+      p = buffer_end (buffer);
+      buffer_alloc (buffer, data_size);
+      memcpy (p, data, data_size);
+      return 1;
+    }
+  else {
+    log(LOG_WARNING, _("IP buffer is full, packet queued"));
+    return 0;
+  }
 }
 
 #endif /* TARGET_LINUX */

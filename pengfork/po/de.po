@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: penggy 0.1\n"
-"POT-Creation-Date: 2003-02-04 15:14+0100\n"
-"PO-Revision-Date: 2003-01-31 16:38+0100\n"
+"POT-Creation-Date: 2003-02-08 00:02+0100\n"
+"PO-Revision-Date: 2003-02-08 00:25+0100\n"
 "Last-Translator: Sebastian Schmidt <yath@yath.eu.org>\n"
 "Language-Team: German <yath@yath.eu.org>\n"
 "MIME-Version: 1.0\n"
@@ -69,20 +69,20 @@ msgstr "%s: Parameter `-W %s' ist mehrdeutig\n"
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: Parameter `-W %s' erlaubt kein Argument\n"
 
-#: src/p3/in.c:107
+#: src/p3/in.c:109
 #, c-format
 msgid "P3 - Unknow packet type received: type=0x%02x\n"
 msgstr "P3 - Unbekannter Pakettyp empfangen: Typ=0x%02x\n"
 
-#: src/p3/p3.c:98
+#: src/p3/p3.c:100
 msgid "Unable to register P3 protocol functions, access is not connected\n"
 msgstr "Konnte P3-Protokollfunktionen nicht registrieren - nicht verbunden\n"
 
-#: src/p3/p3.c:225
+#: src/p3/p3.c:226
 msgid "Server seems dead, disconnecting...\n"
 msgstr "Server erscheint tot, Verbindung wird getrennt...\n"
 
-#: src/fdo/login.c:69
+#: src/fdo/login.c:68
 #, c-format
 msgid "Loging into provider as '%s'\n"
 msgstr "Einloggen beim Provider als '%s'\n"
@@ -123,6 +123,10 @@ msgstr ""
 "Konnte kein gültiges tun-Device öffnen (Methode von Kernel >2.4.6): %s (%"
 "d).\n"
 
+#: src/tun/linux.c:262
+msgid "IP buffer is full, packet queued"
+msgstr "IP Puffer ist voll, Packet der Warteschlange hinzugefügt"
+
 #: src/tun/freebsd.c:122 src/tun/openbsd.c:118
 #, c-format
 msgid "Unable to open tun device /dev/%s: %s(%d).\n"
@@ -156,17 +160,22 @@ msgstr "P3-Unterstützung wurde nicht einkompiliert\n"
 msgid "Sorry FLAP support is not compiled in\n"
 msgstr "FLAP-Unterstützung wurde nicht einkompiliert\n"
 
-#: src/modem/devlock.c:118
+#: src/modem/devlock.c:114
+#, c-format
+msgid "Device %s already locked by myself, ignoring lock.\n"
+msgstr "Das Gerät %s ist bereits durch mich gesperrt, ignoriere Sperrung.\n"
+
+#: src/modem/devlock.c:119
 #, c-format
 msgid "Removing stale lock file %s.\n"
 msgstr "Lösche alte Lockdatei %s.\n"
 
-#: src/modem/devlock.c:121 src/misc.c:207
+#: src/modem/devlock.c:122 src/misc.c:207
 #, c-format
 msgid "Can't remove %s: %s (%d).\n"
 msgstr "Kann %s nicht entfernen: %s (%d).\n"
 
-#: src/modem/devlock.c:157
+#: src/modem/devlock.c:158
 #, c-format
 msgid "Couldn't remove lock file %s: %s (%d)..\n"
 msgstr "Konnte Lockdatei %s nicht entfernen: %s (%d).\n"
@@ -313,6 +322,7 @@ msgstr "%s:%d: falsches Zeilenformat: 2. Feld ist kein Bool'scher Wert\n"
 #, c-format
 msgid "%s:%d %s is an unknown dialup server type, assuming default (%s).\n"
 msgstr ""
+"%s:%d %s ist ein unbekannter Einwahlservertyp, verwende Standard (%s).\n"
 
 #: src/modem/phonetab.c:181
 #, c-format
@@ -359,19 +369,19 @@ msgstr "Fehler beim Schließen des Sockets: %s (%d)\n"
 msgid "IP tunnel - bad size for a small packet\n"
 msgstr "IP-Tunnel - falsche Größe für ein kleines Paket\n"
 
-#: src/iptunnel/aol2cli.c:136
+#: src/iptunnel/aol2cli.c:140
 msgid "IP tunnel - Packet overflow detected\n"
 msgstr "IP-Tunnel - Paketüberlauf festgestellt\n"
 
-#: src/iptunnel/aol2cli.c:173
+#: src/iptunnel/aol2cli.c:181
 msgid "IP tunnel - Unable to uncompress the packet\n"
 msgstr "IP-Tunnel - Konnte Paket nicht dekomprimieren\n"
 
-#: src/iptunnel/aol2cli.c:188
+#: src/iptunnel/aol2cli.c:196
 msgid "IP tunnel - Unable to allocate memory\n"
 msgstr "IP-Tunnel - Konnte keinen Speicher reservieren\n"
 
-#: src/iptunnel/aol2cli.c:208
+#: src/iptunnel/aol2cli.c:216
 msgid "IP tunnel - received an unknown IP packet\n"
 msgstr "IP-Tunnel - Unbekanntes IP-Paket empfangen\n"
 
@@ -399,44 +409,44 @@ msgstr "Konnte /etc/resolv.conf nicht löschen: %s (%d)\n"
 msgid "Could not rename /etc/resolv.peng: %s (%d)\n"
 msgstr "Konnte /etc/resolv.peng nicht umbenennen: %s (%d)\n"
 
-#: src/iptunnel/init.c:136
+#: src/iptunnel/init.c:137
 #, c-format
 msgid "IP address: %s\n"
 msgstr "IP-Adresse: %s\n"
 
-#: src/iptunnel/init.c:140
+#: src/iptunnel/init.c:141
 #, c-format
 msgid "DNS server: %s\n"
 msgstr "DNS-Server: %s\n"
 
-#: src/iptunnel/init.c:144
+#: src/iptunnel/init.c:145
 #, c-format
 msgid "MTU: %d\n"
 msgstr "MTU: %d\n"
 
-#: src/iptunnel/init.c:156
+#: src/iptunnel/init.c:157
 #, c-format
 msgid "Hostname: %s\n"
 msgstr "Hostname: %s\n"
 
-#: src/iptunnel/init.c:158
+#: src/iptunnel/init.c:159
 #, c-format
 msgid "Domain: %s\n"
 msgstr "Domäne: %s\n"
 
-#: src/iptunnel/init.c:183
+#: src/iptunnel/init.c:184
 msgid "IP tunnel is working.\n"
 msgstr "IP-Tunnel erfolgreich hergestellt.\n"
 
-#: src/engine.c:142
+#: src/engine.c:144
 msgid "engine - No data to wait\n"
 msgstr "engine - Auf keine Daten zu warten\n"
 
-#: src/engine.c:156
+#: src/engine.c:158
 msgid "Server drop the connection.\n"
 msgstr "Server beendete die Verbindung.\n"
 
-#: src/engine.c:287
+#: src/engine.c:289
 msgid "engine - An input buffer is full\n"
 msgstr "engine - Ein Eingabepuffer ist voll\n"
 
@@ -457,7 +467,7 @@ msgstr "Fehler beim Verarbeiten der Konfigurationsdateien, Ende\n"
 msgid "Bad configuration, exiting !\n"
 msgstr "Fehlerhafte Konfiguration, Ende\n"
 
-#: src/main.c:126 src/main.c:150
+#: src/main.c:126 src/main.c:149
 msgid "Fatal error, exiting.\n"
 msgstr "Schwerer Ausnahmefehler, Ende\n"
 
@@ -649,9 +659,8 @@ msgid "uses STRING to obtain an extern line."
 msgstr "benutzt STRING als Amtsholung."
 
 #: src/options.c:208
-#, fuzzy
 msgid "sets the file where dialup numbers will be searched."
-msgstr "Setzt die primäre Telefonnummer."
+msgstr "Setzt die Datei in der die Einwahlnummern gesucht werden."
 
 #: src/options.c:211
 msgid "sets the serial line speed."
@@ -752,6 +761,7 @@ msgstr "%s muss >= 0 sein.\n"
 #, c-format
 msgid "File or directory '%s' specified in %s parameter does not exist.\n"
 msgstr ""
+"Datei oder Verzeichnis '%s', angegeben im %s Parameter, existiert nicht.\n"
 
 #: src/checkopt.c:218
 #, c-format
@@ -759,9 +769,11 @@ msgid ""
 "File specified in %s parameter has to be created in directory '%s' but it "
 "doesn't exist.\n"
 msgstr ""
+"Die im %s Parameter angegebene Datei muss im Verzeichnis %s erstellt werden, "
+"aber dieses existiert nicht.\n"
 
 #: src/checkopt.c:234
-#, fuzzy, c-format
+#, c-format
 msgid "%s has an invalid line speed specification.\n"
 msgstr "%s hat eine ungültige Geschwindigkeitsangabe.\n"
 

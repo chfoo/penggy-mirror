@@ -1,4 +1,4 @@
-penggy 0.2.0 INSTALL instructions
+penggy 0.2.1 INSTALL instructions
 =================================
 
  1. Introduction
@@ -86,14 +86,14 @@ penggy 0.2.0 INSTALL instructions
   Installation is quite simple. Get the package, which is provided as 
   a .tar.gz archive, and put it somewhere on your system. Now you need to 
   uncompress and untar the files contained within the archive. That can be 
-  done very simply (we'll assume your archive is version 0.2.0)
+  done very simply (we'll assume your archive is version 0.2.1)
 
-  $ tar xvzf penggy-0.2.0.tar.gz
+  $ tar xvzf penggy-0.2.1.tar.gz
 
-  The files should have been decompressed to a directory called penggy-0.2.0
+  The files should have been decompressed to a directory called penggy-0.2.1
   You now need to go to that directory and compile the program :
 
-  $ cd penggy-0.2.0
+  $ cd penggy-0.2.1
   $ ./configure
   $ make
   $ make install
@@ -104,7 +104,7 @@ penggy 0.2.0 INSTALL instructions
     This is the normal configure behaviour. I realize it may be annoying for
     some users but this may be changed with configure parameters.
     Example:
-      $ ./configure --sysconfdir=/etc --localstatedir=/var
+      $ ./configure --sysconfdir=/etc
     (this is the parameters to give to have the previous default behaviour)
 
   If you need any particular option, such as cross-compiling, you can get 
@@ -186,5 +186,5 @@ penggy 0.2.0 INSTALL instructions
   The program itself was coded by Jean-Charles Salzeber <jc@varspool.net>. 
   Greetings to him and to his genius :)
   
-  Last update : Jan 31th, 2003.
+  Last update : Feb 08th, 2003.
   Reviewed by Jean-Charles

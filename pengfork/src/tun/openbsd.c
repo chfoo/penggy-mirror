@@ -142,6 +142,19 @@ tun_ready ()
 }
 
 int
+tun_have_packet (buffer)
+{
+  struct ip *ip;
+
+  ip = (struct ip *) (buffer_start (buffer) + sizeof (u_int32_t));
+  if (buffer->used < sizeof (struct ip) + sizeof (u_int32_t))
+    return 0;
+  if (buffer->used < ntohs(ip->ip_len) + sizeof (u_int32_t))
+    return 0;
+  return 1;
+}
+
+int
 tun_get (buffer, data, data_size)
      buffer_t *buffer;
      char **data;
@@ -155,9 +168,7 @@ tun_get (buffer, data, data_size)
 
   *data = NULL;
   *data_size = 0;
-  if (buffer->used < sizeof (struct ip) + sizeof (u_int32_t))
-    return 0;
-  if (buffer->used < ntohs(ip->ip_len) + sizeof (u_int32_t))
+  if (!tun_have_packet(buffer))
     return 0;
 
   *data = (char *) ip;

@@ -70,8 +70,7 @@
 
 buffer_t *acout, *ifout;
 
-int ipnum = 0;
-int ip_recv = 0;
+int ipnum = 1;
 int mtu;
 
 struct vjcompress vj_comp;
@@ -81,6 +80,8 @@ const struct engine_functions ip_tunnel_fn = (struct engine_functions) {
   init_iface,
   ip_tunnel_ready,
   NULL,
+  NULL,
+  NULL,
   get_ip_client,
   NULL,
   NULL,
@@ -88,7 +89,7 @@ const struct engine_functions ip_tunnel_fn = (struct engine_functions) {
 };
 
 
-void
+int
 ip_tunnel_init ()
 {
   struct ip_config_request request = DEFAULT_IP_CONFIG_REQUEST;
@@ -96,18 +97,18 @@ ip_tunnel_init ()
   fdo_send (TOKEN ("ya"), (char *) &request, sizeof (request));
 
   fdo_register (TOKEN ("ya"), ip_tunnel_config);
+
+  return 1;
 }
 
 int
 ip_tunnel_ready (bufin)
      buffer_t *bufin;
 {
-  if ((bufin->used == bufin->size) && protocol->ready ())
-    get_ip_client (bufin);
-  return (bufin->size - bufin->used) > mtu;
+  return protocol->ready() && (bufin->size - bufin->used) > mtu;
 }
 
-void
+int
 ip_tunnel_config (token, data, data_size)
      token_t token;
      char *data;
@@ -181,6 +182,8 @@ ip_tunnel_config (token, data, data_size)
   fdo_register (TOKEN ("yc"), get_ip_aol);
   need_extra=0;
   log(LOG_NOTICE, _("IP tunnel is working.\n"), domain);
+
+  return 1;
 }
 
 struct in_addr
@@ -191,9 +194,7 @@ netmask (bits)
   
   ret = ~((1 << (32 - bits)) - 1);
 
-  return (struct in_addr)
-  {
-  htonl (ret)};
+  return (struct in_addr) {htonl (ret)};
 }
 
 void

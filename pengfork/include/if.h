@@ -42,6 +42,7 @@ typedef struct
   int (*is_connected) (void);
   int *fd;
 
+  int (*have_packet) (buffer_t * buffer);
   int (*put) (buffer_t * buffer, char *data, size_t data_size);
   int (*get) (buffer_t * buffer, char **data, size_t * data_size);
 }

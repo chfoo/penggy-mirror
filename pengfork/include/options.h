@@ -164,7 +164,7 @@ enum
 #define DEFAULT_PID_FILE          ("/var/run/" PACKAGE ".pid")
 #if TARGET_LINUX
 # define DEFAULT_LOCK_PATH        ("/var/lock")
-#elsif TARGET_SOLARIS
+#elif TARGET_SOLARIS
 # define DEFAULT_LOCK_PATH        ("/var/spool/locks")
 #else
 # define DEFAULT_LOCK_PATH        ("/var/spool/lock")

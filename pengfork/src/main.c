@@ -141,16 +141,16 @@ main2 (closure, argc, argv)
         fdo_init ();
         status = srun;
         engine_loop ();
-        haccess->disconnect ();
       }
     else
       {
         if(!PARAM_AUTO_RECONNECT)
 	{
-	log (LOG_ERR, _("Fatal error, exiting.\n"));
-	clean_exit (1);
+	  log (LOG_ERR, _("Fatal error, exiting.\n"));
+	  clean_exit (1);
 	}
       }
+    haccess->disconnect ();
 
     if(PARAM_AUTO_RECONNECT && status!=sexit) 
       {

@@ -55,7 +55,7 @@ p3_sync_buffer (buffer)
       /* Try to find a STOP byte first */
       p = memchr (buffer_start (buffer), P3_STOP, buffer->used);
       if (p)
-        len = (int) p - (int) buffer_start (buffer);
+        len = (int) (p - buffer_start (buffer));
       else
         len = buffer->used;
 

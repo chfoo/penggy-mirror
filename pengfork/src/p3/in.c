@@ -53,12 +53,14 @@
 #include "p3/in.h"
 
 
-void
+int
 p3_treat_packet (header, data, data_size)
      struct p3hdr *header;
      char *data;
      size_t data_size;
 {
+  int res;
+
   switch (header->type)
     {
     case TYPE_DATA:
@@ -67,8 +69,9 @@ p3_treat_packet (header, data, data_size)
       dump_raw ("P3 - input", (char *) header,
                 data_size + P3_DATA_OFFSET + 1);
 
-      fdo_recv (data, data_size);
+      res=fdo_recv (data, data_size);
       p3_ack (header);
+      return res;
       break;
 
     case TYPE_SS:
@@ -100,13 +103,13 @@ p3_treat_packet (header, data, data_size)
       debug (2, "P3 - Received a NACK packet\n");
       /* The server did not receive some packets */
       p3_nack (header);
-
       break;
 
     default:
       log (LOG_WARNING, _("P3 - Unknow packet type received: type=0x%02x\n"),
            header->type);
     }
+  return 1;
 }
 
 int

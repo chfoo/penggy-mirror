@@ -421,7 +421,7 @@ modem_open (filename, _baud, rtscts)
      block until a carrier detect.  Since we have to open the modem to
      generate a carrier detect, we have a problem.  So we open the modem
      nonblocking. */
-  fd = open (filename, O_RDWR | O_NOCTTY);
+  fd = open (filename, O_RDWR | O_NOCTTY | O_NONBLOCK);
 
   if (fd != -1) {
     fcntl(fd, F_SETFL, O_NONBLOCK);

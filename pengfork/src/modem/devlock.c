@@ -110,8 +110,9 @@ device_lock (devicename)
       r = read (fd, pid_string, sizeof(pid_string) - 1);
       pid_string[r] = '\0';
       pid = atoi (pid_string);
-
-      if (pid != 0 && kill (pid, 0) == -1)
+      if (pid == getpid()) 
+        log (LOG_WARNING, _("Device %s already locked by myself, ignoring lock.\n"), filename);
+      else if (pid != 0 && kill (pid, 0) == -1)
         {
           /* we can create a lockfile now */
           close (fd);

@@ -163,10 +163,11 @@ extract_atoms(id, length, stream)
   int atom_add;
   int prot_add;
   unsigned char *p = stream;
+  unsigned int nread = 0;
   char data;
   fdo_stream_t *f;
 
-  while( ((int)p - (int)stream) < length )
+  while( nread < length )
     {
       f = get_stream(id);
       prot_add = 0;
@@ -188,6 +189,7 @@ extract_atoms(id, length, stream)
 	atom.arg_length = *p++;
 	atom.arg = p;
 	p+=atom.arg_length;
+	nread += 3 + atom.arg_length;
 	break;
         case LENGTH_COMP:
 	atom.protid = ATOM_VALUE(*p++);
@@ -195,6 +197,7 @@ extract_atoms(id, length, stream)
 	atom.arg_length = ATOM_TYPE(*p++);
 	atom.arg = p;
 	p += atom.arg_length;
+	nread += 2 + atom.arg_length;
 	break;
         case DATA_COMP:
 	atom.protid = ATOM_VALUE(*p++);
@@ -202,12 +205,14 @@ extract_atoms(id, length, stream)
 	atom.arg_length = 1;
 	data = ATOM_TYPE(*p++);
 	atom.arg = &data;
+	nread += 2;
 	break;
         case ATOM_NOARG_COMP:
 	atom.protid = f->last_pid;
 	atom.atomid = ATOM_VALUE(*p++);
 	atom.arg_length = 0;
 	atom.arg = NULL;
+	nread++;
 	break;
         case ATOM_COMP:
 	atom.protid = f->last_pid;
@@ -215,6 +220,7 @@ extract_atoms(id, length, stream)
 	atom.arg_length = *p++;
 	atom.arg = p;
 	p += atom.arg_length;
+	nread += 2 + atom.arg_length;
 	break;
         case ZERO_COMP:
 	atom.protid = f->last_pid;
@@ -222,6 +228,7 @@ extract_atoms(id, length, stream)
 	atom.arg_length = 1;
 	data = 0;
 	atom.arg = &data;
+	nread++;
 	break;
         case ONE_COMP:
 	atom.protid = f->last_pid;
@@ -229,6 +236,7 @@ extract_atoms(id, length, stream)
 	atom.arg_length = 1;
 	data = 1;
 	atom.arg = &data;
+	nread++;
 	break;
         }	
 

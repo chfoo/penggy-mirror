@@ -54,7 +54,6 @@
 #include "fdo/bytecode.h"
 
 #include <stdio.h>
-void atom_handler (token_t token, char *data, size_t data_size);
 
 void
 logon ()
@@ -100,10 +99,9 @@ logon ()
   fdo_register (TOKEN ("At"), login_confirm);
   fdo_register (TOKEN ("AT"), atom_handler);
   fdo_register (TOKEN ("at"), atom_handler);
-
 }
 
-void
+int
 login_confirm (token, data, data_size)
      token_t token;
      char *data;
@@ -115,9 +113,10 @@ login_confirm (token, data, data_size)
   fdo_register (TOKEN ("At"), atom_handler);
 
   ip_tunnel_init ();
+  return 1;
 }
 
-void
+int
 atom_handler (token, data, data_size)
      token_t token;
      char *data;
@@ -143,4 +142,6 @@ atom_handler (token, data, data_size)
       id=ntohl(id);
       extract_atoms(id, data_size-4, data+4);
     }
+  
+  return 1;
 }

@@ -70,7 +70,7 @@ fdo_init ()
   init_register ();
 }
 
-void
+int
 fdo_recv (data, data_size)
      char *data;
      size_t data_size;
@@ -81,7 +81,7 @@ fdo_recv (data, data_size)
   token = (token_t *) data;
   /* make sure we have a code into the packet */
   if (data_size < sizeof (token_t))
-    return;
+    return 1;
 
   *token = ntohs (*token);
   data += sizeof (token_t);
@@ -95,10 +95,12 @@ fdo_recv (data, data_size)
         }
     }
   if (index != -1)
-    module[index].handler (*token, data, data_size);
-  else
+    return module[index].handler (*token, data, data_size);
+  else {
     debug (4, "FDO - unregistered token received: '%c%c'\n",
            (*token >> 8) & 0xff, *token & 0xff);
+    return 0;
+  }
 }
 
 

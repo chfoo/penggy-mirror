@@ -144,54 +144,22 @@ buffer_recv (buffer, fd)
 {
   int len;
   int nread;
-  int total = 0;
-  int total2 = 0;
   char *p;
 
   if (buffer->used >= buffer->size)
     return 0;
-
-  len = (buffer->size - buffer->start) - buffer->used;
+  
+  buffer_align (buffer);
+  len = buffer->size - buffer->used;
   p = buffer_end (buffer);
-  do
-    {
-      nread = read (fd, p, len);
-      if (nread > 0)
-        {
-          p += nread;
-          total += nread;
-          len -= nread;
-        }
-    }
-  while (nread > 0 && len > 0);
-  buffer_alloc (buffer, total);
+  nread = read (fd, p, len);
   if (nread == -1 && errno != EAGAIN)
     return -1;
 
-  if (len == 0 && buffer->used < buffer->size)
-    {
-      buffer_align (buffer);
-      len = buffer->size - buffer->used;
-      p = buffer_end (buffer);
-      do
-        {
-          nread = read (fd, p, len);
-          if (nread > 0)
-            {
-              p += nread;
-              total2 += nread;
-              len -= nread;
-            }
-        }
-      while (nread > 0 && len > 0);
-      buffer_alloc (buffer, total2);
-      if (nread == -1 && errno != EAGAIN)
-        return -1;
-      total += total2;
-    }
+  buffer_alloc (buffer, nread);
 
-  debug (3, "buffer - %d bytes received\n", total);
-  return total;
+  debug (3, "buffer - %d bytes received\n", nread);
+  return nread;
 }
 
 int
@@ -201,30 +169,20 @@ buffer_send (buffer, fd)
 {
   int len;
   int nwrote;
-  int total = 0;
   char *p;
 
   len = buffer->used;
   p = buffer_start (buffer);
-  do
-    {
-      nwrote = write (fd, p, len);
-      if (nwrote > 0)
-        {
-          p += nwrote;
-          total += nwrote;
-          len -= nwrote;
-        }
-    }
-  while (nwrote > 0 && len > 0);
+  nwrote = write (fd, p, len);
 
   if (nwrote == -1 && errno != EAGAIN)
     return -1;
 
-  buffer_free (buffer, total);
+  buffer_free (buffer, nwrote);
+  buffer_align (buffer);
 
-  debug (3, "buffer - %d bytes sended\n", total);
-  return total;
+  debug (3, "buffer - %d bytes sended\n", nwrote);
+  return nwrote;
 }
 
 

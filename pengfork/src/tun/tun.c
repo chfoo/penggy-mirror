@@ -39,6 +39,7 @@ const iface_t tun_iface = (iface_t) {
   tun_close,
   tun_ready,
   &tun_fd,
+  tun_have_packet,
   tun_put,
   tun_get
 };

@@ -42,11 +42,12 @@ init_register ()
   fdo_register (TOKEN ("SD"), init_token);
 }
 
-void
+int
 init_token (token, data, data_size)
      token_t token;
      char *data;
      size_t data_size;
 {
   logon ();
+  return 1;
 }

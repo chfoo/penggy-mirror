@@ -260,7 +260,7 @@ chat_connect (filename)
 #endif
   result = gh_call0 (connect);
 
-  if (!SCM_BOOLP (result))
+  if (!scm_boolean_p (result))
     {
       log (LOG_ERR, _("%s: returned value isn't a boolean.\n"),
            filename);

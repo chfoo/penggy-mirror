@@ -100,6 +100,8 @@ engine_init ()
       client[i].fn.init = NULL;
       client[i].fn.want_read = NULL;
       client[i].fn.want_write = NULL;
+      client[i].fn.fillfn = NULL;
+      client[i].fn.drainfn = NULL;
       client[i].fn.readfn = NULL;
       client[i].fn.writefn = NULL;
       client[i].fn.timeoutfn = NULL;
@@ -325,7 +327,10 @@ engine_read (fdset)
           client[i].lastread = time (NULL);
           client[i].last_timeout = 0;
           /* Fill buffer with available data */
-          buffer_recv (&client[i].in, client[i].fd);
+	if(client[i].fn.fillfn != NULL)
+	  client[i].fn.fillfn (&client[i].in, client[i].fd);
+	else
+	  buffer_recv (&client[i].in, client[i].fd);
         }
       /* And ask the client to treat the buffer */
       if (client[i].in.used > 0 && client[i].fn.readfn != NULL)
@@ -344,8 +349,11 @@ engine_write (fdset)
       if (FD_ISSET (client[i].fd, fdset))
         {
           /* Output buffer to the media */
-          buffer_send (&client[i].out, client[i].fd);
-          /* And ask the client to fill the buffer */
+	if(client[i].fn.drainfn != NULL)
+	  client[i].fn.drainfn (&client[i].out, client[i].fd);
+	else
+	  buffer_send (&client[i].out, client[i].fd);
+          /* And ask the client to refill the buffer */
           if (client[i].fn.writefn != NULL)
             client[i].fn.writefn (&client[i].out);
         }

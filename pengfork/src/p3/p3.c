@@ -79,6 +79,8 @@ const struct engine_functions p3_fn = (struct engine_functions) {
   p3_init,
   NULL,
   p3_want_write,
+  NULL,
+  NULL,
   p3_recv,
   NULL,
   p3_timeout,
@@ -101,7 +103,7 @@ p3_register_to_engine (myaccess)
 int
 p3_ready ()
 {
-  return !win_full (&wsend);
+  return !win_full (&wunack);
 }
 
 void
@@ -177,8 +179,8 @@ p3_recv (bufin)
     {
       while (p3_extract_packet (bufin, &header, &data, &data_size))
         {
-          p3_treat_packet (header, data, data_size);
-          buffer_free (bufin, data_size + P3_DATA_OFFSET + 1);
+          if(p3_treat_packet (header, data, data_size))
+	  buffer_free (bufin, data_size + P3_DATA_OFFSET + 1);
         }
     }
 }
@@ -216,11 +218,10 @@ p3_timeout (bufin, bufout, timeout)
     }
   else
     {
-      if ((timeout > 35 && (cli.lastseq != srv.lastack || nack_sent)) || 
-	(timeout > 90 && ping_sent))
+      if (timeout > 90 && (cli.lastseq != srv.lastack || nack_sent || ping_sent))
         {
-          /* Always some data to wait after 40 s...
-           * The server seems out or lost
+          /* Still some data to wait after 90 s...
+           * The server seems out of order or lost
            */
 	log (LOG_WARNING, _("Server seems dead, disconnecting...\n"));
 	engine_stop();
@@ -229,7 +230,7 @@ p3_timeout (bufin, bufout, timeout)
         {
 	/*
 	 * No data to wait for more than 1 minute,
-	 * send a ping to be sure, we're always connected
+	 * send a ping to be sure, we're still connected
 	 */
 	ping_sent = 1;
 	p3_put_packet (TYPE_PING, NULL, 0);

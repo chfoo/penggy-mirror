@@ -132,6 +132,21 @@ tun_ready ()
 }
 
 int
+tun_have_packet (buffer)
+     buffer_t *buffer;
+{
+  u_int16_t *ip_len;
+
+  ip_len = (u_int16_t *) (buffer_start (buffer) + 2);
+  if (buffer->used < 4)
+    return 0;
+  if (buffer->used < ntohs (*ip_len))
+    return 0;
+  
+  return 1;
+}
+
+int
 tun_get (buffer, data, data_size)
      buffer_t *buffer;
      char **data;
@@ -142,9 +157,7 @@ tun_get (buffer, data, data_size)
   ip_len = (u_int16_t *) (buffer_start (buffer) + 2);
   *data = NULL;
   *data_size = 0;
-  if (buffer->used < 4)
-    return 0;
-  if (buffer->used < ntohs (*ip_len))
+  if (!tun_have_packet(buffer))
     return 0;
 
   *data = buffer_start (buffer);

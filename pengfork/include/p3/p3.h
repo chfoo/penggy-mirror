@@ -46,9 +46,9 @@ struct p3state
 };
 
 /* Packet we can send/receive without ack */
-#define WINDOW_SIZE (PACKET_MAX_SEQ - PACKET_MIN_SEQ)
+#define WINDOW_SIZE (16)
 /* when the window is considered near closed */
-#define WINDOW_HIGH (WINDOW_SIZE - 30)
+#define WINDOW_HIGH (12)
 
 #define P3_TIMEOUT 5
 
