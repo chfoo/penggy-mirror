@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2002  Nicolas Burrus <nes@lrde.epita.fr>
+# Copyright (c) 2002  Jean-Charles Salzeber <jc@varspool.net>
 #
 # This file is part of pengfork program.
 #
@@ -18,8 +18,14 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 # 02111-1307, USA.
 #
+# Nicolas Burrus <nes@lrde.epita.fr>, 2002
+#
 
 INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib
 
+if BUILD_L2TP
 noinst_LIBRARIES = libl2tp.a
 libl2tp_a_SOURCES =	dummy.c 
+else !BUILD_L2TP
+EXTRA_DIST = dummy.c
+endif !BUILD_L2TP

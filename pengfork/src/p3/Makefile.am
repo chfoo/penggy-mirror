@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2002  Nicolas Burrus <nes@lrde.epita.fr>
+# Copyright (c) 2002  Jean-Charles Salzeber <jc@varspool.net>
 #
 # This file is part of pengfork program.
 #
@@ -18,14 +18,14 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 # 02111-1307, USA.
 #
+# Nicolas Burrus <nes@lrde.epita.fr>, 2002
+# 
 
 INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib
 
+if BUILD_P3
 noinst_LIBRARIES = libp3.a
-libp3_a_SOURCES = 	p3.c		\
-			check.c		\
-			misc.c		\
-			init.c		\
-			ack.c		\
-			out.c		\
-			in.c
+libp3_a_SOURCES = 	p3.c check.c misc.c init.c ack.c out.c in.c
+else !BUILD_P3
+EXTRA_DIST = p3.c check.c misc.c init.c ack.c out.c in.c
+endif !BUILD_P3

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2002  Nicolas Burrus <nes@lrde.epita.fr>
+# Copyright (c) 2002  Jean-Charles Salzeber <jc@varspool.net>
 #
 # This file is part of pengfork program.
 #
@@ -18,10 +18,16 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 # 02111-1307, USA.
 #
+# Nicolas Burrus <nes@lrde.epita.fr>, 2002
+#
 
 INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib
 
+if BUILD_MODEM
 noinst_LIBRARIES = libmodem.a
 libmodem_a_SOURCES = 	modem.c		\
-			devlock.c	\
+			devlock.c		\
 			script.c
+else !BUILD_MODEM
+EXTRA_DIST = modem.c devlock.c script.c
+endif !BUILD_MODEM

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002  Carlier Laurent <lordheavy@infonie.fr>
+ * Copyright (C) 2002  Jean-Charles Salzeber <jc@varspool.net>
  *
  * This file is part of pengfork.
  *
@@ -17,6 +17,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
  * 02111-1307, USA.
+ *
+ * Carlier Laurent <lordheavy@infonie.fr>, 2002
  *
  */
 #if defined(WITH_CABLE) && !defined(__CABLE_CABLE_H__)

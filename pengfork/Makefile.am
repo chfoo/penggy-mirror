@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2002  Nicolas Burrus <nes@lrde.epita.fr>
+# Copyright (c) 2002  Jean-Charles Salzeber <jc@varspool.net>
 #
 # This file is part of pengfork program.
 #
@@ -18,7 +18,8 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 # 02111-1307, USA.
 #
-
+# Nicolas Burrus <nes@lrde.epita.fr>, 2002
+#
 
 SUBDIRS = m4 config include lib src doc po intl
 
@@ -27,4 +28,4 @@ archcheck:
 
 ACLOCAL_AMFLAGS = -I m4
 
-EXTRA_DIST = config/config.rpath
+EXTRA_DIST = config/config.rpath DISCLAIMER

@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: pengfork 0.1\n"
-"POT-Creation-Date: 2002-12-01 15:46+0100\n"
+"POT-Creation-Date: 2002-12-01 23:31+0100\n"
 "PO-Revision-Date: 2002-12-01 00:39+0100\n"
 "Last-Translator: Jean-Charles Salzeber <jc@varspool.net>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -283,37 +283,37 @@ msgstr "Délai dépassé pendant la numérotation\n"
 msgid "Device %s is locked\n"
 msgstr "Le périphérique %s est vérouillé\n"
 
-#: src/tcpip/tcpip.c:69
+#: src/tcpip/tcpip.c:71
 #, c-format
 msgid "Resolving %s...\n"
 msgstr "Résolution de %s...\n"
 
-#: src/tcpip/tcpip.c:72
+#: src/tcpip/tcpip.c:74
 #, c-format
 msgid "Unable to resolve %s: %s (%d)\n"
 msgstr "Impossible de résoudre %s: %s (%d)\n"
 
-#: src/tcpip/tcpip.c:86
+#: src/tcpip/tcpip.c:88
 #, c-format
 msgid "Error while opening socket: %s (%d)\n"
 msgstr "Erreur à l'ouverture du socket: %s (%d)\n"
 
-#: src/tcpip/tcpip.c:91
+#: src/tcpip/tcpip.c:93
 #, c-format
 msgid "Connecting to %s:%d ...\n"
 msgstr "Connection à %s:%d ...\n"
 
-#: src/tcpip/tcpip.c:97
+#: src/tcpip/tcpip.c:99
 #, c-format
 msgid "Error while connecting to AOL: %s (%d)\n"
 msgstr "Erreur pendant la connexion à AOL: %s (%d)\n"
 
-#: src/tcpip/tcpip.c:104
+#: src/tcpip/tcpip.c:106
 #, c-format
 msgid "Error while putting the socket non-blocking: %s(%d)\n"
 msgstr "Erreur en mettant la socket non blocante: %s(%d)\n"
 
-#: src/tcpip/tcpip.c:119
+#: src/tcpip/tcpip.c:121
 #, c-format
 msgid "Error while closing socket: %s(%d)\n"
 msgstr "Erreur pendant la fermeture de la socket: %s(%d)\n"

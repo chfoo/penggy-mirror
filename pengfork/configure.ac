@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2002  Nicolas Burrus <nes@lrde.epita.fr>
+# Copyright (c) 2002  Jean-Charles Salzeber <jc@varspool.net>
 #
 # This file is part of pengfork program.
 #
@@ -17,6 +17,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 # 02111-1307, USA.
+#
+# Nicolas Burrus <nes@lrde.epita.fr>, 2002
 #
 
 # Autoconf 2.53 needed so that buggy PATH_SEPARATOR is fixed.
@@ -185,8 +187,6 @@ if test "$modem" = yes; then
   GUILE_FLAGS
   CFLAGS="$CFLAGS $GUILE_CFLAGS"
   LDFLAGS="$LDFLAGS $GUILE_LDFLAGS"
-  AC_CONFIG_FILES([	src/modem/Makefile
-		include/modem/Makefile])
 fi
 AM_CONDITIONAL(BUILD_MODEM, test "$modem" = yes)
 
@@ -203,8 +203,6 @@ AC_ARG_ENABLE(cable,
 
 if test "$cable" = yes; then
   AC_DEFINE([WITH_CABLE],,[ Enable/disable cable driver ])
-  AC_CONFIG_FILES([	src/cable/Makefile
-		include/cable/Makefile])
 fi
 AM_CONDITIONAL(BUILD_CABLE, test "$cable" = yes)
  
@@ -222,7 +220,6 @@ AC_ARG_ENABLE(dsl,
 
 if test "$dsl" = yes; then
   AC_DEFINE([WITH_DSL],,[ Enable/disable DSL driver ])
-  AC_CONFIG_FILES([	src/dsl/Makefile])
 fi
 AM_CONDITIONAL(BUILD_DSL, test "$dsl" = yes)
 
@@ -240,8 +237,6 @@ AC_ARG_ENABLE(tcpip,
 
 if test "$tcpip" = yes; then
   AC_DEFINE([WITH_TCPIP],,[ Enable/disable TCP/IP driver ])
-  AC_CONFIG_FILES([	src/tcpip/Makefile
-		include/tcpip/Makefile])
 fi
 AM_CONDITIONAL(BUILD_TCPIP, test "$tcpip" = yes)
 
@@ -259,11 +254,6 @@ AC_ARG_ENABLE(tun,
 
 if test "$tun" = yes; then
   AC_DEFINE([WITH_TUN],,[ Enable/disable tun driver ])
-  AC_CONFIG_FILES([	src/tun/Makefile
-		src/tun/linux/Makefile 
-		src/tun/openbsd/Makefile
-		src/tun/freebsd/Makefile
-		include/tun/Makefile])
 fi
 AM_CONDITIONAL(BUILD_TUN, test "$tun" = yes)
 
@@ -280,8 +270,6 @@ AC_ARG_ENABLE(p3,
 
 if test "$p3" = yes; then
   AC_DEFINE([WITH_P3],,[ Enable/disable P3 protocol ])
-  AC_CONFIG_FILES([	src/p3/Makefile
-		include/p3/Makefile])
 fi
 AM_CONDITIONAL(BUILD_P3, test "$p3" = yes)
 
@@ -299,8 +287,6 @@ AC_ARG_ENABLE(l2tp,
 
 if test "$l2tp" = yes; then
   AC_DEFINE([WITH_L2TP],,[ Enable/disable L2TP protocol ])
-  AC_CONFIG_FILES([	src/l2tp/Makefile
-		include/l2tp/Makefile])
 fi
 AM_CONDITIONAL(BUILD_L2TP, test "$l2tp" = yes)
 
@@ -372,7 +358,24 @@ AC_CONFIG_FILES([	Makefile
 		  src/Makefile 
 		    src/iptunnel/Makefile
 		    src/fdo/Makefile
+		    src/modem/Makefile
+		    src/tcpip/Makefile
+		    src/cable/Makefile
+		    src/dsl/Makefile
+		    src/tun/Makefile
+		      src/tun/linux/Makefile 
+		      src/tun/openbsd/Makefile
+		      src/tun/freebsd/Makefile
+		    src/p3/Makefile
+		    src/l2tp/Makefile
 		  include/Makefile
 		    include/fdo/Makefile
-		    include/iptunnel/Makefile])
+		    include/iptunnel/Makefile
+		    include/modem/Makefile
+		    include/tcpip/Makefile
+		    include/cable/Makefile
+		    include/dsl/Makefile
+		    include/tun/Makefile
+		    include/p3/Makefile
+		    include/l2tp/Makefile])
 AC_OUTPUT

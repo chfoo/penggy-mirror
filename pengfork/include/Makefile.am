@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2002  Nicolas Burrus <nes@lrde.epita.fr>
+# Copyright (c) 2002  Jean-Charles Salzeber <jc@varspool.net>
 #
 # This file is part of pengfork program.
 #
@@ -18,59 +18,25 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 # 02111-1307, USA.
 #
+# Nicolas Burrus <nes@lrde.epita.fr>, 2002
+#
 
 
-EXTRA_DIST = 	access.h	\
+EXTRA_DIST = 	access.h		\
 		checkopt.h	\
-		engine.h	\
+		engine.h		\
 		if.h		\
 		misc.h		\
 		protocol.h	\
-		sighndl.h	\
-		window.h	\
-		buffer.h	\
-		common.h	\
+		sighndl.h		\
+		window.h		\
+		buffer.h		\
+		common.h		\
 		fdo.h		\
 		log.h		\
-		options.h	\
-		getpass.h	\
+		options.h		\
+		getpass.h		\
 		resolver.h	\
 		utils.h
 
-if BUILD_MODEM
-  MODEM_SUBDIRS = modem
-endif BUILD_MODEM
-
-if BUILD_CABLE
-  CABLE_SUBDIRS = cable
-endif BUILD_CABLE
-
-if BUILD_DSL
-  DSL_SUBDIRS = 
-endif BUILD_DSL
-
-if BUILD_TCPIP
-  TCPIP_SUBDIRS = tcpip
-endif BUILD_TCPIP
-
-if BUILD_TUN
-  TUN_SUBDIRS = tun
-endif BUILD_TUN
-
-if BUILD_P3
-  P3_SUBDIRS = p3
-endif BUILD_P3
-
-if BUILD_L2TP
-  L2TP_SUBDIRS = l2tp
-endif BUILD_L2TP
-
-SUBDIRS = 	fdo			\
-		iptunnel		\
-		$(MODEM_SUBDIRS)	\
-		$(CABLE_SUBDIRS)	\
-		$(DSL_SUBDIRS)		\
-		$(TCPIP_SUBDIRS)	\
-		$(TUN_SUBDIRS)		\
-		$(P3_SUBDIRS)		\
-		$(L2TP_SUBDIRS)
+SUBDIRS = fdo iptunnel modem cable dsl tcpip tun p3 l2tp
