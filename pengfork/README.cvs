@@ -1,13 +1,11 @@
 IMPORTANT NOTE
 ==============
 
-It's the CVS version of pengaol.
+It's the CVS version of pengfork.
 
 It may not compile or freeze your computer.
 
 You need autoconf and automake.
-
-Lordheavy
 
 HOW TO USE CVS VERSION
 ======================
