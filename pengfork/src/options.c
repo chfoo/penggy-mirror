@@ -322,10 +322,16 @@ usage ()
 static void
 version (void)
 {
-  printf ("%s (" PACKAGE ") v" VERSION "\n", program_name);
+  printf("\n%s Version %s\n\n" , PACKAGE, VERSION);
+  printf("Copyright (C) 2002 Jean-Charles Salzeber.\n");
+  printf(gettext ("%s comes with ABSOLUTELY NO WARRANTY.\n"
+	        "This is free software, and you are welcome to redistribute it under the terms\n"
+	        "of the GNU General Public License, version 2 or any later version.\n\n")
+         , PACKAGE);
+	        
   printf (gettext ("Compilation options :\n"));
 #ifdef WITH_MODEM
-  printf ("WITH_MODEM ");
+  printf ("WITH_MODEM "); 
 #endif
 #ifdef WITH_CABLE
   printf ("WITH_CABLE ");

@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: pengfork 0.1\n"
-"POT-Creation-Date: 2002-12-03 17:13+0100\n"
+"POT-Creation-Date: 2002-12-04 14:35+0100\n"
 "PO-Revision-Date: 2002-12-01 00:39+0100\n"
 "Last-Translator: Jean-Charles Salzeber <jc@varspool.net>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -158,17 +158,17 @@ msgstr "Désolé, le support de tun n'est pas compilé\n"
 msgid "Sorry P3 support is not compiled in\n"
 msgstr "Désolé, le support de P3 n'est pas compilé\n"
 
-#: src/modem/devlock.c:89
+#: src/modem/devlock.c:88
 #, c-format
 msgid "Removing stale lock file %s.\n"
 msgstr "Suppression de l'ancien fichier de verrouillage %s.\n"
 
-#: src/modem/devlock.c:92 src/misc.c:171
+#: src/modem/devlock.c:91 src/misc.c:171
 #, c-format
 msgid "Can't remove %s: %s (%d).\n"
 msgstr "Ne peut supprimer %s: %s (%d)\n"
 
-#: src/modem/devlock.c:128
+#: src/modem/devlock.c:127
 #, c-format
 msgid "Couldn't remove lock file %s: %s (%d)..\n"
 msgstr "Ne peut supprimer le fichier de verrouillage %s: %s (%d)\n"
@@ -238,16 +238,16 @@ msgstr "Impossible d'initializer le modem\n"
 msgid "Dialing provider...\n"
 msgstr "Accés au fournisseur...\n"
 
-#: src/modem/modem.c:255
+#: src/modem/modem.c:256
 msgid "Too many failures, dialing process aborted.\n"
 msgstr "Trop d'échecs, la connexion est abandonée.\n"
 
-#: src/modem/modem.c:272
+#: src/modem/modem.c:273
 #, c-format
 msgid "Dialing %s\n"
 msgstr "Composition du %s\n"
 
-#: src/modem/modem.c:284
+#: src/modem/modem.c:285
 msgid ""
 "Bad string\n"
 "Please verify the phone number, dial string and prefix\n"
@@ -256,32 +256,32 @@ msgstr ""
 "Veuillez vérifier le numéro de téléphone, la chaîne de composition et le "
 "préfixe\n"
 
-#: src/modem/modem.c:297
+#: src/modem/modem.c:298
 #, c-format
 msgid "Connection at %sb/s done.\n"
 msgstr "Connexion à %sb/s effectué\n"
 
-#: src/modem/modem.c:303
+#: src/modem/modem.c:304
 msgid "No carrier detected\n"
 msgstr "Pas de porteuse détecté\n"
 
-#: src/modem/modem.c:308
+#: src/modem/modem.c:309
 msgid "No dial tone detected\n"
 msgstr "Aucune tonalité détécté\n"
 
-#: src/modem/modem.c:313
+#: src/modem/modem.c:314
 msgid "Provider is busy\n"
 msgstr "Le fournisseur sonne occupé\n"
 
-#: src/modem/modem.c:318
+#: src/modem/modem.c:319
 msgid "Response delayed\n"
 msgstr "Trop de temps sans réponse\n"
 
-#: src/modem/modem.c:323
+#: src/modem/modem.c:324
 msgid "Response voice\n"
 msgstr "Une voix à répondue\n"
 
-#: src/modem/modem.c:328
+#: src/modem/modem.c:329
 msgid ""
 "You have been connected to a fax\n"
 "Please verify the phone number\n"
@@ -289,15 +289,15 @@ msgstr ""
 "Vous avez été connecté à un fax\n"
 "Veuillez vérifier le numéro de téléphone\n"
 
-#: src/modem/modem.c:334
+#: src/modem/modem.c:335
 msgid "There was no answer\n"
 msgstr "Il n'y a pas eu de réponse\n"
 
-#: src/modem/modem.c:342
+#: src/modem/modem.c:343
 msgid "Modem timed out during dialing\n"
 msgstr "Délai dépassé pendant la numérotation\n"
 
-#: src/modem/modem.c:359
+#: src/modem/modem.c:360
 #, c-format
 msgid "Device %s is locked\n"
 msgstr "Le périphérique %s est vérouillé\n"
@@ -414,41 +414,45 @@ msgstr "Le tunnel IP fonctionne.\n"
 msgid "engine - No data to wait\n"
 msgstr "engine - Pas de donnée à attendre\n"
 
-#: src/engine.c:249
+#: src/engine.c:122
+msgid "Server drop the connection.\n"
+msgstr "Le serveur a fermé la connexion.\n"
+
+#: src/engine.c:253
 msgid "engine - An input buffer is full\n"
 msgstr "engine - Un buffer d'entrée est plein\n"
 
-#: src/getpass.c:69 src/options.c:597
+#: src/getpass.c:69 src/options.c:603
 #, c-format
 msgid "%s:%d bad line format\n"
 msgstr "%s:%d mauvais format de ligne\n"
 
-#: src/main.c:103
+#: src/main.c:101
 msgid "Error parsing command line, exiting !\n"
 msgstr "Erreur à l'analyse de la ligne de commande, sortie !\n"
 
-#: src/main.c:110
+#: src/main.c:108
 msgid "Error parsing configuration files, exiting !\n"
 msgstr "Erreur à l'analyse des fichiers de configuration, sortie !\n"
 
-#: src/main.c:116
+#: src/main.c:114
 msgid "Bad configuration, exiting !\n"
 msgstr "Mauvaise configuration, sortie !\n"
 
-#: src/main.c:143
+#: src/main.c:139
 msgid "Unable to init engine, exiting.\n"
 msgstr "Impossible d'initializer le moteur, sortie.\n"
 
-#: src/main.c:160
+#: src/main.c:154
 msgid "Fatal error, exiting.\n"
 msgstr "Erreur fatale, sortie.\n"
 
-#: src/main.c:167
+#: src/main.c:163
 #, c-format
 msgid "Reconnection in %d seconds...\n"
 msgstr "Reconnexion dans %d secondes...\n"
 
-#: src/main.c:172
+#: src/main.c:168
 msgid "Immediate reconnection...\n"
 msgstr "Reconnexion immédiate...\n"
 
@@ -643,31 +647,44 @@ msgstr ""
 "  -h, --help                       affiche cette aide.\n"
 "  -V, --version                    affiche la version.\n"
 
-#: src/options.c:326
+#: src/options.c:327
+#, c-format
+msgid ""
+"%s comes with ABSOLUTELY NO WARRANTY.\n"
+"This is free software, and you are welcome to redistribute it under the "
+"terms\n"
+"of the GNU General Public License, version 2 or any later version.\n"
+"\n"
+msgstr ""
+"%s est donné sans AUCUNE GARANTIE.\n"
+"C'est un logiciel libre, et vous pouvez redistribuer des copies selon les termes\n"
+"de la GNU General Public License, version 2 ou ultérieure.\n\n"
+
+#: src/options.c:332
 msgid "Compilation options :\n"
 msgstr "Options de compilation :\n"
 
-#: src/options.c:478
+#: src/options.c:484
 #, c-format
 msgid "Try `%s --help' for more information.\n"
 msgstr "Essayez '%s --help' pour plus d'information.\n"
 
-#: src/options.c:605
+#: src/options.c:611
 #, c-format
 msgid "%s:%d unrecognized option - %s\n"
 msgstr "%s:%d option non reconnue - %s\n"
 
-#: src/options.c:635
+#: src/options.c:641
 #, c-format
 msgid "%s:%d bad boolean value\n"
 msgstr "%s:%d mauvaise valeur booléenne\n"
 
-#: src/options.c:647
+#: src/options.c:653
 #, c-format
 msgid "%s:%d not enough memory to get the parameter\n"
 msgstr "%s:%d pas assez de mémoire pour traiter les paramètres\n"
 
-#: src/options.c:656
+#: src/options.c:662
 #, c-format
 msgid "%s:%d bad integer value\n"
 msgstr "%s:%d mauvaise valeur entière\n"

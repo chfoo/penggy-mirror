@@ -21,7 +21,7 @@
  */
 
 #include "config.h"
-
+ 
 #include <sys/time.h>
 #include <sys/types.h>
 #include <netinet/in.h>
@@ -118,7 +118,10 @@ engine_loop ()
       
       /* FIXME: find a better way of doing this */
       if(!haccess->is_connected())
-        engine_stop();
+        {
+	log (LOG_WARNING, gettext ("Server drop the connection.\n"));
+	engine_stop();
+        }
       
       if (fds > 0)
         {

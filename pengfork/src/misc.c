@@ -41,7 +41,7 @@
 #include "options.h"
 #include "sighndl.h"
 
-
+ 
 void
 daemon_mode (void)
 {
@@ -244,7 +244,7 @@ launch_ip_down (if_name)
       debug (1, "Launching %s\n", PARAM_IP_DOWN);
 
       pid = fork ();
-      if (pid > 0)
+      if (pid == 0)
         {
           if (putenv (name))
             log (LOG_WARNING, gettext ("Can't set environment variables: %s (%d)\n"),
@@ -255,8 +255,9 @@ launch_ip_down (if_name)
                  PARAM_IP_DOWN, strerror (errno), errno);
           exit (-1);
         }
-      else if (pid == 0)
+      else if (pid > 0)
         {
+	return 1;
         }
       else
         {

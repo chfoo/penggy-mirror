@@ -154,21 +154,24 @@ main2 (argc, argv)
 	log (LOG_ERR, gettext ("Fatal error, exiting.\n"));
 	clean_exit (1);
 	}
-        else
-	{
-	  if(PARAM_RECONNECT_DELAY)
-	    {
-	      log (LOG_NOTICE, gettext ("Reconnection in %d seconds...\n"),
-		 PARAM_RECONNECT_DELAY);
-	      sleep(PARAM_RECONNECT_DELAY);
-	    }
-	  else
-	    log (LOG_NOTICE, gettext ("Immediate reconnection...\n"));
-	}
+      }
 
+    if(PARAM_AUTO_RECONNECT && status!=sexit) 
+      {
+        if(PARAM_RECONNECT_DELAY)
+	{
+	  log (LOG_NOTICE, gettext ("Reconnection in %d seconds...\n"),
+	       PARAM_RECONNECT_DELAY);
+	  sleep(PARAM_RECONNECT_DELAY);
+	}
+        else
+	log (LOG_NOTICE, gettext ("Immediate reconnection...\n"));
       }
   }
   while (PARAM_AUTO_RECONNECT && status!=sexit);
+
+  if(PARAM_PID_FILE) 
+    remove_pidfile ();
 
 #ifndef WITH_MODEM
   return 0;
