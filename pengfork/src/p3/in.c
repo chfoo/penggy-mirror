@@ -138,7 +138,7 @@ p3_extract_packet (buffer, header, data, data_size)
           continue;
         }
 
-      if (buffer->used < s + 1)
+      if (buffer->used < P3_SIZE_OFFSET + s + 1)
         /* We have the header but not all data */
         return 0;
 

@@ -29,7 +29,7 @@
 #include "buffer.h"
 
 /* the timeout in seconds */
-#define ENGINE_TIMEOUT  5
+#define ENGINE_TIMEOUT  30
 
 struct engine_functions
 {

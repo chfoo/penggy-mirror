@@ -107,7 +107,7 @@ AC_ARG_ENABLE(debug,
 AC_ARG_ENABLE(werror,
   [  --enable-werror	Set warnings as errors. ],
   if test "$enableval" != "no"; then
-     CFLAGS = "$CFLAGS -Werror"
+     CFLAGS="$CFLAGS -Werror"
   fi
 )
 
