@@ -1,7 +1,11 @@
+2002-08-28  Nicolas Burrus  <nes@epita.fr>
+
+	* src/modem.c, include/modem.h: Fix echo problem. Add modem_readline.
+
 2002-08-28  Laurent Carlier <lordheavy@infonie.fr>
-	*src/options.c, include/option.h : checking for general config
+	* src/options.c, include/option.h : check for general config
 	file and personnal file ( parse_config() ).
-	*src/main.c : use parse_config() instead of parse_config_file(),
+	* src/main.c : use parse_config() instead of parse_config_file(),
 	see above.
 
 2002-08-27  Nicolas Burrus  <nes@lrde.epita.fr>
