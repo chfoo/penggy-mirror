@@ -30,7 +30,7 @@ pengfork_SOURCES = 	buffer.c		\
 			p30data.c		\
 			p30login.c		\
 			prot30.c		\
-			config.c		\
+			options.c		\
 			main.c			\
 			modem.c			\
 			p30init.c		\
