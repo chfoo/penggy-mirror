@@ -19,11 +19,13 @@
  * 02111-1307, USA.
  *
  */
-#if defined(WITH_CABLE) && !defined(__CABLE_CABLE_H__)
-#define __CABLE_CABLE_H__
+#if defined(WITH_TCPIP) && !defined(__TCPIP_TCPIP_H__)
+#define __TCPIP_TCPIP_H__
 
-int cable_connect (void);
-int cable_close (void);
-int cable_connected (void);
+extern int tcpipfd;
 
-#endif /* defined(WITH_CABLE) && !defined(__CABLE_CABLE_H__) */
+int tcpip_connect (void);
+int tcpip_close (void);
+int tcpip_connected (void);
+
+#endif /* defined(WITH_TCPIP) && !defined(__TCPIP_TCPIP_H__) */

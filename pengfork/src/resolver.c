@@ -59,6 +59,16 @@ resolve_access ()
 #endif
     }
 
+  else if (strstr (PARAM_ACCESS_METHOD, "tcpip"))
+    {
+#ifdef WITH_TCPIP
+      haccess = &tcpip_access;
+#else
+      log (LOG_ERR, "Sorry TCP/IP support is not compiled in\n");
+      return 0;
+#endif
+    }
+
   else if (strstr (PARAM_ACCESS_METHOD, "cable"))
     {
 #ifdef WITH_CABLE

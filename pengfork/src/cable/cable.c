@@ -28,24 +28,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <net/if.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#include <fcntl.h>
 
 #include "options.h"
 #include "access.h"
+#include "log.h"
 #include "cable/cable.h"
-
-static int cablefd = -1;
+#include "tcpip/tcpip.h"
 
 const access_t cable_access = (access_t) {
   cable_connect,
   cable_close,
   cable_connected,
-  &cablefd
+  &tcpipfd
 };
 
 
@@ -53,57 +55,19 @@ const access_t cable_access = (access_t) {
 int
 cable_connect ()
 {
-  int port = PARAM_CABLE_AOL_PORT;
-  char *hostname = PARAM_CABLE_AOL_HOST;
-
-  struct sockaddr_in intcable;
-  struct hostent *hp;
-
-  if ((hp = gethostbyname (hostname)) == 0)
-    {
-      perror ("error gethostbyname() !\n");
-      return 1;
-    }
-  memset ((char *) &intcable, 0, sizeof (struct sockaddr_in));
-  intcable.sin_family = AF_INET;
-  intcable.sin_port = htons (port);
-  intcable.sin_addr.s_addr = *((unsigned long *) hp->h_addr);
-  /*  strcpy(PARAM_CABLE_CONNECT_IP,inet_ntoa(adresse)); */
-
-  if ((cablefd = socket (PF_INET, SOCK_STREAM, 0)) < 0)
-    {
-      perror ("error while opening socket !\n");
-      return 1;
-    }
-
-
-  if (connect (cablefd, (struct sockaddr *) &intcable,
-               sizeof (struct sockaddr_in)) == 0)
-    return 1;
-
-  return 0;
+  return tcpip_connect();
 }
 
 int
 cable_close ()
 {
-  if (cablefd != -1)
-    {
-      if ((close (cablefd)) == -1)
-        {
-          perror ("error closing socket !\n");
-          return 1;
-        }
-      return 0;
-    }
-  perror ("error closing socket !\n");
-  return 1;
+  return tcpip_close();
 }
 
 int
 cable_connected ()
 {
-  return 0;
+  return tcpip_connected();
 }
 
 #endif

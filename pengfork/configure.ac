@@ -122,10 +122,11 @@ AC_ARG_ENABLE(modem,
 
 # Cable driver
 AC_ARG_ENABLE(cable,
-  [  --enable-cable	Enable cable driver (EXPERIMENTAL) ],
+  [  --disable-cable	Disable cable driver ],
     if test $enableval != "no"; then
        AC_DEFINE([WITH_CABLE],,[ Enable/disable cable driver ])
-  fi
+  fi,
+  AC_DEFINE([WITH_CABLE])  
 )
 
 # DSL driver
@@ -138,10 +139,11 @@ AC_ARG_ENABLE(dsl,
 
 # TCP/IP driver
 AC_ARG_ENABLE(tcpip,
-  [  --enable-tcpip	Enable TCP/IP driver (EXPERIMENTAL) ],
+  [  --enable-tcpip	Disable TCP/IP driver (TCP/IP is mandatory for Cable & DSL drivers) ],
     if test $enableval != "no"; then
        AC_DEFINE([WITH_TCPIP],,[ Enable/disable TCP/IP driver ])
-  fi
+  fi,
+  AC_DEFINE([WITH_TCPIP])  
 )
 
 # Universal tuntap driver
