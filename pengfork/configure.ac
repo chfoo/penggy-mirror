@@ -140,7 +140,7 @@ AC_ARG_ENABLE(dsl,
 AC_ARG_ENABLE(tcpip,
   [  --enable-tcpip	Enable TCP/IP driver (EXPERIMENTAL) ],
     if test $enableval != "no"; then
-       AC_DEFINE([WITH_DSL],,[ Enable/disable TCP/IP driver ])
+       AC_DEFINE([WITH_TCPIP],,[ Enable/disable TCP/IP driver ])
   fi
 )
 

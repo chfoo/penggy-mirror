@@ -22,5 +22,5 @@
 INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib
 
 noinst_LIBRARIES = libtcpip.a
-libtcpip_a_SOURCES =
+libtcpip_a_SOURCES = dummy.c
 

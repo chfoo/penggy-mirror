@@ -20,8 +20,9 @@
  *                
  */
 
-#include <netinet/in.h>
 #include <sys/types.h>
+#include <netinet/in.h>
+#include <stdlib.h>
 
 #include "buffer.h"
 #include "log.h"

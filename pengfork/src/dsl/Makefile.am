@@ -22,4 +22,4 @@
 INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib
 
 noinst_LIBRARIES = libdsl.a
-libdsl_a_SOURCES = 
+libdsl_a_SOURCES = 	dummy.c

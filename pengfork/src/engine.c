@@ -26,6 +26,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdio.h>
+#include <time.h>
 
 #include "log.h"
 #include "access.h"
@@ -42,6 +43,7 @@ struct
   int fd;
   buffer_t in;
   buffer_t out;
+  time_t lastread;
   struct engine_functions fn;
 }
 client[MAX_CLIENTS];
@@ -259,6 +261,7 @@ engine_read (fdset)
     {
       if (FD_ISSET (client[i].fd, fdset))
         {
+	client[i].lastread = time(NULL);
           /* Fill buffer with available data */
           buffer_recv (&client[i].in, client[i].fd);
           /* And ask the client to treat the buffer */

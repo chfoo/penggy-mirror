@@ -22,4 +22,4 @@
 INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib
 
 noinst_LIBRARIES = libl2tp.a
-libl2tp_a_SOURCES = 
+libl2tp_a_SOURCES =	dummy.c 

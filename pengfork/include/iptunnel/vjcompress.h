@@ -26,6 +26,8 @@
 #define __IPTUNNEL_VJCOMPRESS_H__
 
 #include <net/ppp_defs.h>
+#include <netinet/in.h>
+#include <netinet/in_systm.h>
 #include <netinet/ip.h>
 
 #define MAX_STATES 16           /* must be > 2 and < 256 */
