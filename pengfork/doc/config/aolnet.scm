@@ -71,7 +71,7 @@
 
 (define (BBNLogin)
   (chat-try 20
-	  '("login"      (BBNTalkToNetwork))
+	  '("login"      (BBNLogin2))
 	  '("NO CARRIER" (chat-failure))
 	  '(else         (chat-failure))))
 

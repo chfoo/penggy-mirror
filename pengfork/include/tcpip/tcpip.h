@@ -24,8 +24,14 @@
  *               
  */
 
-#if defined(WITH_TCPIP) && !defined(__TCPIP_TCPIP_H__)
+#ifndef __TCPIP_TCPIP_H__
 #define __TCPIP_TCPIP_H__
+
+#if HAVE_CONFIG_H
+# include "config.h"
+#endif
+
+#ifdef WITH_TCPIP
 
 extern int tcpipfd;
 
@@ -33,4 +39,6 @@ int tcpip_connect (void);
 int tcpip_close (void);
 int tcpip_connected (void);
 
-#endif /* defined(WITH_TCPIP) && !defined(__TCPIP_TCPIP_H__) */
+#endif /* WITH_TCPIP */
+
+#endif /* __TCPIP_TCPIP_H__ */
