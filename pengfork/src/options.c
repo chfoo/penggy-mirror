@@ -188,7 +188,6 @@ param_t param[PARAM_MAX] = {
 int
 parse_config ()
 {
-  int err;
   char *home;
   char homeconfig[250];
 
