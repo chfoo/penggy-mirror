@@ -20,7 +20,7 @@
  *
  */
 
-#ifdef !defined(__CABLE_H__) && defined(WITH_CABLE)
+#if !defined(__CABLE_H__) && defined(WITH_CABLE)
 #define __CABLE_H__
 
 int cable_getfd (void);
