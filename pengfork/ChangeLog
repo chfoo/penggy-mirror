@@ -1,3 +1,9 @@
+2002-08-28  Jean-Charles Salzeber <jc@varspool.net>
+
+	* src/modem.c, include/modem.h: merge with nicolas's changes
+	* src/prot30.c, src/buffer.c, include/buffer.h: cleanups
+	* src/p30tcpip.c: more code for sending ip
+
 2002-08-28  Nicolas Burrus  <nes@epita.fr>
 
 	* src/modem.c, include/modem.h: Fix echo problem. Add modem_readline.

@@ -43,6 +43,7 @@ char *buffer_end (buffer_t * buffer);
 int buffer_recv (buffer_t * buffer, int fd);
 int buffer_send (buffer_t * buffer, int fd);
 void buffer_align (buffer_t * buffer);
+int buffer_percent_free (buffer_t *buffer);
 
 
 #endif /* __BUFFER_H__ */

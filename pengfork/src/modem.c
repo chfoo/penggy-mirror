@@ -358,17 +358,7 @@ setup_modem (rtscts)
 
   tcdrain (fd);
 
-  /* set up the terminal characteristics.
-     see "man tcsetattr" for more information about these options. */
-  t.c_iflag &= ~(BRKINT | ISTRIP | IUCLC | IXON | IXANY | IXOFF | IMAXBEL);
-  t.c_iflag |= (IGNBRK | IGNPAR);
-  t.c_oflag &= ~(OLCUC);
-  t.c_cflag &= ~(CSIZE | CSTOPB | PARENB | PARODD);
-  t.c_cflag |= (CS8 | CREAD | HUPCL | CLOCAL);
-  if (rtscts)
-    t.c_cflag |= CRTSCTS;
-  t.c_lflag &= ~(ISIG | XCASE | ECHO);
-  tcsetattr (fd, TCSANOW, &t);
+  modem_setattr(rtscts);
 
   /* make sure we leave the modem in CLOCAL when we exit, so normal user
      tasks can open the modem without using nonblocking. */
@@ -382,24 +372,47 @@ setup_modem (rtscts)
           write (fd, "\r", 1);
           usleep (10 * 1000);
         }
+      tcdrain (fd);
+      tcflush (fd, TCIOFLUSH);
     }
 
   /* Set the baud rate to 0 for half a second to drop DTR... */
   cfsetispeed (&t, B0);
   cfsetospeed (&t, B0);
+  usleep (500 * 1000);
+
   modem_speed (baud);
   usleep (10 * 1000);
   cfmakeraw (&t);
   tcsetattr (fd, TCSANOW, &t);
-  if (modem_carrier ())
-    usleep (500 * 1000);
 
-  modem_speed (baud);
-  usleep (10 * 1000);
+  if (modem_carrier ())
+    {
+      modem_hangup();
+      usleep (500 * 1000);
+    }
 
   tcdrain (fd);
 }
 
+void
+modem_setattr(rtscts)
+     int rtscts;
+{
+  /* set up the terminal characteristics.
+     see "man tcsetattr" for more information about these options. */
+  t.c_iflag &= ~(BRKINT | ISTRIP | IUCLC | IXON | IXANY | IXOFF | IMAXBEL);
+  t.c_iflag |= (IGNBRK | IGNPAR);
+  t.c_oflag &= ~(OLCUC);
+  t.c_cflag &= ~(CSIZE | CSTOPB | PARENB | PARODD);
+  t.c_cflag |= (CS8 | CREAD | HUPCL | CLOCAL);
+  if (rtscts)
+    t.c_cflag |= CRTSCTS;
+  t.c_lflag &= ~(ISIG | XCASE | ECHO);
+
+  tcsetattr (fd, TCSANOW, &t);
+
+}
 int
 modem_close ()
 {
@@ -563,13 +576,18 @@ modem_send_command (command, timeout, response, size)
 
   write (fd, command, strlen (command));
   write (fd, "\r", 1);
+
+  /* Get the response from the modem with/without echo enabled */
   if (!modem_readline(response, timeout, size))
     return 0;
-  if (strcmp (response, command))
-    return 1;
-  /* FIXME: echo is enabled, it should't happen */
-  if (!modem_readline(response, timeout, size))
-    return 0;
+  if (!strcmp (response, command))
+    {
+      /* FIXME: echo is enabled, it should't happen */
+      if (!modem_readline(response, timeout, size))
+        return 0;
+    }
+
+  printf ("Received line : %s\n", response);
   return 1;
 }
 
@@ -601,14 +619,14 @@ modem_wait_for (prompt, timeout)
 
   p = buffer;
   nread = 0;
-  while (nread < 1024)
+  while (nread < sizeof(buffer))
     {
       if (!modem_data_ready (timeout))
         return 0;
-      if ((count = read (fd, p, 1024 - nread)) < 0)
+      if ((count = read (fd, p, sizeof(buffer) - nread)) < 0)
 	return 0;
       nread += count;
-      p = buffer + nread;
+      p += nread;
       *p = '\0';
       if (strstr (buffer, prompt))
         return 1;
@@ -653,7 +671,6 @@ modem_readline (response, timeout, size)
     }
   *p = '\0';
 
-  printf ("Received line : %s\n", response);
   return 1;
 }
 

@@ -32,6 +32,7 @@ int modem_dial_to (char *phone);
 int modem_log_into_aol (void);
 int modem_open (char *filename, int baud, int rtscts);
 void setup_modem (int rtscts);
+void modem_setattr(int rtscts);
 int modem_close (void);
 void modem_hangup (void);
 int modem_get_real_speed ();

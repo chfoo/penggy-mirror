@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
 
 #include "buffer.h"
 
@@ -105,28 +106,52 @@ buffer_recv (buffer, fd)
 {
   int len;
   int nread;
-  int total;
+  int total = 0;
+  int total2 = 0;
+  char *p;
 
   if (buffer->used >= buffer->size)
     return 0;
 
   len = (buffer->size - buffer->start) - buffer->used;
-  nread = read (fd, buffer_end (buffer), len);
-  total = nread;
-  if (total == -1)
+  p = buffer_end (buffer);
+  do
+    {
+      nread = read (fd, p, len);
+      if (nread > 0) 
+        {
+	p += nread;
+	total += nread;
+	len -= nread;
+        }
+    } 
+  while( nread > 0 && len > 0);
+  buffer_alloc (buffer, total);
+  if (nread == -1 && errno!=EAGAIN ) 
     return 0;
-  buffer_alloc (buffer, nread);
-
-  if (nread == len && buffer->used < buffer->size)
+  
+  if (len == 0 && buffer->used < buffer->size)
     {
       buffer_align (buffer);
       len = buffer->size - buffer->used;
-      nread = read (fd, buffer_end (buffer), len);
-      if (nread == -1)
+      p = buffer_end (buffer);
+      do
+        {
+	nread = read (fd, p, len);
+	if (nread > 0)
+	  {
+	    p+=nread;
+	    total2 += nread;
+	    len -= nread;
+	  }
+        }
+      while(nread > 0 && len > 0); 
+      buffer_alloc (buffer, total2);
+      if (nread == -1 && errno!=EAGAIN ) 
         return 0;
-      total += nread;
-      buffer_alloc (buffer, nread);
+      total+=total2;
     }
+
   printf ("%d bytes received\n", total);
   return 1;
 }
@@ -138,14 +163,29 @@ buffer_send (buffer, fd)
 {
   int len;
   int nwrote;
+  int total=0;
+  char *p;
 
-  len = (buffer->used);
-  nwrote = write (fd, buffer->data + buffer->start, buffer->used);
-  if (nwrote == -1)
+  len = buffer->used;
+  p= buffer_start(buffer);
+  do
+    {
+      nwrote = write (fd, p, len);
+      if(nwrote>0) 
+        {
+	p+=nwrote;
+	total+=nwrote;
+	len-=nwrote;
+        }
+    }
+  while(nwrote>0 && len>0);
+
+  if (nwrote == -1 && errno!=EAGAIN )
     return 0;
-  buffer_free (buffer, nwrote);
 
-  printf ("%d bytes sended\n", nwrote);
+  buffer_free (buffer, total);
+
+  printf ("%d bytes sended\n", total);
   return 1;
 }
 
@@ -157,4 +197,11 @@ buffer_align (buffer)
   if (buffer->used > 0)
     memmove (buffer->data, buffer->data + buffer->start, buffer->used);
   buffer->start = 0;
+}
+
+int
+buffer_percent_free (buffer)
+     buffer_t *buffer;
+{
+  return ((buffer->size - buffer->used) * 100)/buffer->size;
 }

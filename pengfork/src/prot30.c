@@ -49,7 +49,8 @@ int server_lastack;
 int server_lastseq;
 
 buffer_t access_in, access_out, if_in, if_out;
-#define BUFFER_SIZE 1024*10     /* each buffer is 10Kb sized */
+
+#define BUFFER_SIZE MAX_PACKET_SIZE*2 /* each buffer can handle 2 full packets */
 
 int
 prot30_start ()
@@ -102,23 +103,24 @@ prot30_loop ()
         case init:
         case login:
         case ipconfig:
+        case disconnect:
           /* Here we can't receive IP data from user since
              IP stack isn't initialized
            */
           maxfd = access_fd + 1;
-          /* $$$ TODO $$$ */
-          /* Verify that the buffer isn't full */
           FD_SET (access_fd, &rfdset);
           if (access_out.used > 0)
             FD_SET (access_fd, &wfdset);
           break;
 
         case normal:
-        case disconnect:
           maxfd = MAX (access_fd, if_fd) + 1;
           FD_SET (access_fd, &rfdset);
-	  if (if_fd >= 0) /* FIXME: remove when ready */
-	    FD_SET (if_fd, &rfdset);
+          if (if_fd >= 0 && /* FIXME: remove when ready */
+	    buffer_percent_free(&access_out) > 20 ) 
+	         /* Make sure we have enough space for some ACK */
+	  FD_SET (if_fd, &rfdset);
+
           if (access_out.used > 0)
             FD_SET (access_fd, &wfdset);
           if (if_out.used > 0)
@@ -132,28 +134,37 @@ prot30_loop ()
       tv.tv_usec = 0;
       timedout = 0;
       fds = select (maxfd, &rfdset, &wfdset, &efdset, &tv);
-      if (fds > 0)
+      if( access_is_connected() )
         {
-          if (access_fd != -1 && FD_ISSET (access_fd, &rfdset))
-            {
-              buffer_recv (&access_in, access_fd);
-              prot30_treat_input ();
-            }
-
-          if (if_fd != -1 && FD_ISSET (if_fd, &rfdset))
-            buffer_recv (&if_in, if_fd);
-
-          if (access_fd != -1 && FD_ISSET (access_fd, &wfdset))
-            buffer_send (&access_out, access_fd);
-
-          if (if_fd != -1 && FD_ISSET (if_fd, &wfdset))
-            buffer_send (&if_out, if_fd);
+	if (fds > 0)
+	  {
+	    if (FD_ISSET (access_fd, &rfdset))
+	      {
+	        buffer_recv (&access_in, access_fd);
+	        prot30_treat_input ();
+	      }
+	    if (FD_ISSET (access_fd, &wfdset))
+	      buffer_send (&access_out, access_fd);
+	    
+	    if (if_fd != -1 && FD_ISSET (if_fd, &rfdset))
+	      {
+	        buffer_recv (&if_in, if_fd);
+	        prot30_send_ip ();
+	      }	   	    
+	    if (if_fd != -1 && FD_ISSET (if_fd, &wfdset))
+	      buffer_send (&if_out, if_fd);	
+	  }
+	else
+	  {
+	    timedout = 1;
+	    printf ("Timed out\n");
+	  }
         }
       else
         {
-          timedout = 1;
-          printf ("Timed out\n");
-        }
+	printf("Your connection has been closed!\n");
+	prot30_set_state(exiting);
+        }      
     }
 }
 
@@ -304,29 +315,32 @@ prot30_get_packet (header, data, data_size)
   *data_size = 0;
   if (access_in.used < AOL_DATA_OFFSET)
     return 0;
-
+  
   p = memchr (buffer_start (&access_in), AOL_MAGIC, access_in.used);
   if (p != buffer_start (&access_in))
     {
       /* There is some unknow data in the buffer they could have sense
          but it is probably transmission error
-       */
-      len = (int) p - (int) buffer_start (&access_in);
+      */
+      if(p)
+        len = (int) p - (int) buffer_start (&access_in);
+      else 
+        len = access_in.used;
       printf ("%d bytes dropped from buffer!\n", len);
       buffer_free (&access_in, len);
     }
   if (access_in.used < AOL_DATA_OFFSET)
     return 0;
-
+    
   /* So here we have a full header */
   h = p;
   d = p + AOL_DATA_OFFSET;
   s = ntohs (h->size);
   ds = s - AOL_SIZE_OFFSET;
-
+  
   if (access_in.used < s + 1)
     return 0;
-
+  
   /* Good we have an entire packet */
   /* $$$ TODO $$$ */
   /* We should verify the CRC and that the packet is well 0x0d terminated */
@@ -335,7 +349,7 @@ prot30_get_packet (header, data, data_size)
   h->checksum = ntohs (h->checksum);
   *data = d;
   *data_size = ds;
-
+  
   return 1;
 }
 
