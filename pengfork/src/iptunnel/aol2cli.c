@@ -44,7 +44,8 @@ struct
 }
 extra_ip =
 {
-0, 0, NULL};
+  0, 0, NULL
+};
 
 int need_extra = 0;
 

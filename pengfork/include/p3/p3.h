@@ -44,10 +44,12 @@ struct p3state
 
 extern struct p3state cli, srv;
 extern window_t wsend, wunack, wnack;
+extern int ping_sent;
 
 void p3_register_to_engine (const access_t * myaccess);
 int p3_ready ();
 void p3_init (buffer_t * bufin, buffer_t * bufout);
+int p3_end (buffer_t * bufin, buffer_t * bufout);
 int p3_want_write(buffer_t * out);
 void p3_recv (buffer_t * bufin);
 void p3_timeout(buffer_t *bufin, buffer_t *bufout, int timeout);

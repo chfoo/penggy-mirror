@@ -43,6 +43,7 @@ p3_ack (header)
   int i;
 
   nack_sent = 0;
+  ping_sent = 0;
   if (header->type == TYPE_DATA)
     {
       srv.lastseq = header->seq;

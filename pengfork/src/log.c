@@ -31,6 +31,8 @@
 #include "log.h"
 #include "options.h"
 
+int daemonized = 0;
+
 int
 init_log (void)
 {
@@ -45,13 +47,20 @@ init_log (void)
 }
 
 int
+log_daemon(void)
+{
+  daemonized=1;
+  return 1;
+}
+
+int
 log (int level, char *format, ...)
 {
   char line[1024];
   va_list ap;
   va_start (ap, format);
 
-  if (!PARAM_DAEMON)
+  if (!daemonized)
     switch (level)
       {
       case LOG_EMERG:

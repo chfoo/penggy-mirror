@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <signal.h>
 
+#include "common.h"
 #include "gettext.h"
 #include "sighndl.h"
 #include "log.h"
@@ -50,5 +51,6 @@ sig_exit (signum)
       log (LOG_NOTICE, string, "SIGHUP");
       break;
     }
+  status = sexit;
   engine_stop ();
 }

@@ -29,6 +29,7 @@
 #include <sys/types.h>
 
 int init_log (void);
+int log_daemon(void);
 int log (int level, char *format, ...);
 int debug (int level, char *format, ...);
 void dump_raw (char *text, char *data, size_t size);

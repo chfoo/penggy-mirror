@@ -26,10 +26,12 @@
 #include <sys/stat.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <fcntl.h>
 #include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <signal.h>
 #include <string.h>
 #include <errno.h>
 
@@ -37,6 +39,141 @@
 #include "log.h"
 #include "misc.h"
 #include "options.h"
+#include "sighndl.h"
+
+
+void
+daemon_mode (void)
+{
+  int pid;
+  int f;
+
+  pid = fork ();
+  if (pid == 0)
+    {
+      log_daemon();
+      log (LOG_NOTICE, gettext("%s daemon started\n"), PACKAGE_STRING);
+      f = open ("/dev/null", O_RDWR);
+      if (f < 0)
+        log (LOG_WARNING, gettext ("Unable to open /dev/null: %s (%d)\n"),
+             strerror (errno), errno);
+      else
+        {
+          if (dup2 (f, 0) < 0)
+            log (LOG_WARNING, gettext ("Error calling dup2 stdin: %s (%d)\n"),
+                 strerror (errno), errno);
+          if (dup2 (f, 1) < 0)
+            log (LOG_WARNING,
+                 gettext ("Error calling dup2 stdout: %s (%d)\n"),
+                 strerror (errno), errno);
+          if (dup2 (f, 2) < 0)
+            log (LOG_WARNING,
+                 gettext ("Error calling dup2 stderr: %s (%d)\n"),
+                 strerror (errno), errno);
+          if (close (f) < 0)
+            log (LOG_WARNING,
+                 gettext ("Error calling close /dev/null: %s (%d)\n"),
+                 strerror (errno), errno);
+        }
+      if (setsid () < 0)
+        log (LOG_WARNING, gettext ("Error calling setsid: %s (%d)\n"),
+             strerror (errno), errno);
+    }
+  else if (pid > 0)
+    {
+      exit (0);
+    }
+  else
+    {
+      log (LOG_ERR, gettext ("Unable to fork: %s (%d)\n"), strerror (errno),
+           errno);
+      exit (1);
+    }
+}
+
+void
+handle_signals (void)
+{
+  signal (SIGINT, sig_exit);
+  signal (SIGTERM, sig_exit);
+  if (!PARAM_DAEMON)
+    signal (SIGHUP, sig_exit);
+}
+
+int
+running_from_pidfile (void)
+{
+  int fd;
+  pid_t pid;
+  int r;
+  char pid_string[15];
+  
+  fd = open (PARAM_PID_FILE, O_RDONLY, 0644);
+  
+  if (fd != -1)
+    {
+      r = read (fd, pid_string, sizeof(pid_string) - 1);
+      pid_string[r] = '\0';
+      pid = atoi (pid_string);
+      close (fd);
+
+      if (pid != 0 && kill (pid, 0) == -1)
+        {
+          /* we can create a pidfile now */
+          log (LOG_WARNING, gettext ("Removing stale pid file %s.\n"), PARAM_PID_FILE);
+	remove_pidfile ();
+	return 0;
+        }
+      else
+        {
+	if(pid)
+	  {
+	    log (LOG_ERR, gettext("%s is already running with pid %d.\n"), 
+	         PACKAGE, pid);
+	    return 1;               /* we're already running */
+	  }
+	else 
+	  return 0;
+        }
+    }
+
+  close (fd);
+  return 0;
+}
+
+int
+write_pidfile (void)
+{  
+  int fd;
+  char pid_string[15];
+
+  fd = open (PARAM_PID_FILE, O_RDWR | O_CREAT, 0644);
+  if( fd != -1)
+    {
+      snprintf (pid_string, sizeof(pid_string), "%d\n", getpid ());
+      write (fd, pid_string, strlen (pid_string));
+      close (fd);
+      return 1;
+    }
+  else
+    {
+      log (LOG_WARNING, gettext ("Can't create pid file %s: %s (%d).\n"), 
+	 PARAM_PID_FILE, strerror(errno), errno);
+      return 0;
+    }
+}
+
+int
+remove_pidfile (void)
+{
+  if (unlink (PARAM_PID_FILE))
+    {
+      log (LOG_ERR, gettext("Can't remove %s: %s (%d).\n"), 
+	 PARAM_PID_FILE, strerror(errno), errno);
+      return 0;         /* cannot remove pidfile */
+    }
+  return 1;
+}
 
 int
 launch_ip_up (if_name, if_addr, dns, domain, mtu)
@@ -54,12 +191,11 @@ launch_ip_up (if_name, if_addr, dns, domain, mtu)
   int pid;
   struct stat st;
 
-  snprintf (env_name, sizeof (env_name) - 1, "IFNAME=%s", if_name);
-  snprintf (env_addr, sizeof (env_addr) - 1, "ADDRESS=%s",
-            inet_ntoa (if_addr));
-  snprintf (env_dns, sizeof (env_dns) - 1, "DNS=%s", inet_ntoa (dns));
-  snprintf (env_domain, sizeof (env_domain) - 1, "DOMAIN=%s", domain);
-  snprintf (env_mtu, sizeof (env_mtu) - 1, "MTU=%d", mtu);
+  snprintf (env_name,   sizeof (env_name),   "IFNAME=%s", if_name);
+  snprintf (env_addr,   sizeof (env_addr),   "ADDRESS=%s",inet_ntoa (if_addr));
+  snprintf (env_dns,    sizeof (env_dns),    "DNS=%s",    inet_ntoa (dns));
+  snprintf (env_domain, sizeof (env_domain), "DOMAIN=%s", domain);
+  snprintf (env_mtu,    sizeof (env_mtu),    "MTU=%d",    mtu);
 
   if (PARAM_IP_UP && !stat (PARAM_IP_UP, &st))
     {
@@ -101,7 +237,7 @@ launch_ip_down (if_name)
   int pid;
   struct stat st;
 
-  snprintf (name, sizeof (name) - 1, "IFNAME=%s", if_name);
+  snprintf (name, sizeof (name), "IFNAME=%s", if_name);
 
   if (PARAM_IP_DOWN && !stat (PARAM_IP_DOWN, &st))
     {

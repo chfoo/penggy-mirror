@@ -115,7 +115,11 @@ engine_loop ()
           tv.tv_usec = 0;
           fds = select (maxfd + 1, &rfdset, &wfdset, NULL, &tv);
         }
-
+      
+      /* FIXME: find a better way of doing this */
+      if(!haccess->is_connected())
+        engine_stop();
+      
       if (fds > 0)
         {
           engine_read (&rfdset);
@@ -178,6 +182,7 @@ engine_register (fd, timeout, fn)
   client[index].timeout = timeout;
   client[index].last_timeout = 0;
   client[index].fn = fn;
+  client[index].lastread = time (NULL);
   init_buffer (&client[index].in);
   init_buffer (&client[index].out);
 
@@ -205,6 +210,8 @@ engine_unregister (fd)
   if (index == -1)
     return;
 
+  destroy_buffer(&client[index].in);
+  destroy_buffer(&client[index].out);
   if (index < nbclients - 1)
     {
       /* Shift all next clients */
@@ -273,7 +280,7 @@ engine_read (fdset)
      fd_set *fdset;
 {
   int i;
-
+  
   for (i = 0; i < nbclients; i++)
     {
       if (FD_ISSET (client[i].fd, fdset))

@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: pengfork 0.1\n"
-"POT-Creation-Date: 2002-12-02 16:48+0100\n"
+"POT-Creation-Date: 2002-12-03 17:13+0100\n"
 "PO-Revision-Date: 2002-12-01 00:39+0100\n"
 "Last-Translator: Jean-Charles Salzeber <jc@varspool.net>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -76,11 +76,15 @@ msgstr "%s: l'option `-W %s' n'a pas d'argument\n"
 msgid "P3 - Unknow packet type received: type=0x%02x\n"
 msgstr "P3 - Paquet de type inconnu reçu: type=0x%02x\n"
 
-#: src/p3/p3.c:77
+#: src/p3/p3.c:79
 msgid "Unable to register P3 protocol functions, access is not connected\n"
 msgstr ""
 "Impossible d'assigner les fontions du protocole P3, le media n'est pas "
 "connecté\n"
+
+#: src/p3/p3.c:206
+msgid "Server seems dead, disconnecting...\n"
+msgstr "Le serveur semble être mort, déconnexion...\n"
 
 #: src/fdo/login.c:47
 #, c-format
@@ -159,7 +163,13 @@ msgstr "Désolé, le support de P3 n'est pas compilé\n"
 msgid "Removing stale lock file %s.\n"
 msgstr "Suppression de l'ancien fichier de verrouillage %s.\n"
 
-#: src/modem/devlock.c:127
+#: src/modem/devlock.c:92 src/misc.c:171
+#, c-format
+msgid "Can't remove %s: %s (%d).\n"
+msgstr "Ne peut supprimer %s: %s (%d)\n"
+
+#: src/modem/devlock.c:128
+#, c-format
 msgid "Couldn't remove lock file %s: %s (%d)..\n"
 msgstr "Ne peut supprimer le fichier de verrouillage %s: %s (%d)\n"
 
@@ -194,50 +204,50 @@ msgstr "%s: la valeur retournée n'est pas un booléen.\n"
 msgid "Couldn't continue, exiting.\n"
 msgstr "Ne peut continuer, sortie.\n"
 
-#: src/modem/modem.c:162
+#: src/modem/modem.c:163
 #, c-format
 msgid "Using %s device...\n"
 msgstr "Utilisation du périphérique %s...\n"
 
-#: src/modem/modem.c:171
+#: src/modem/modem.c:172
 #, c-format
 msgid "Executing chat script (%s)...\n"
 msgstr "Exécution du script de dialogue (%s)...\n"
 
-#: src/modem/modem.c:176
+#: src/modem/modem.c:177
 msgid "Chat success, connected...\n"
 msgstr "Succés du dialogue, connecté...\n"
 
-#: src/modem/modem.c:180
+#: src/modem/modem.c:181
 msgid "Chat failure, you're not connected...\n"
 msgstr "Echecs du dialogue, vous n'êtes pas connecté...\n"
 
-#: src/modem/modem.c:184
+#: src/modem/modem.c:185
 msgid "Chat return a non boolean value.\n"
 msgstr "Le dialogue n'a pas retourné une valeur booléenne.\n"
 
-#: src/modem/modem.c:185
+#: src/modem/modem.c:186
 msgid "Please verify your chat script.\n"
 msgstr "Veuillez verifier votre script de dialogue.\n"
 
-#: src/modem/modem.c:205
+#: src/modem/modem.c:206
 msgid "Unable to initialize the modem\n"
 msgstr "Impossible d'initializer le modem\n"
 
-#: src/modem/modem.c:243
+#: src/modem/modem.c:244
 msgid "Dialing provider...\n"
 msgstr "Accés au fournisseur...\n"
 
-#: src/modem/modem.c:254
+#: src/modem/modem.c:255
 msgid "Too many failures, dialing process aborted.\n"
 msgstr "Trop d'échecs, la connexion est abandonée.\n"
 
-#: src/modem/modem.c:271
+#: src/modem/modem.c:272
 #, c-format
 msgid "Dialing %s\n"
 msgstr "Composition du %s\n"
 
-#: src/modem/modem.c:283
+#: src/modem/modem.c:284
 msgid ""
 "Bad string\n"
 "Please verify the phone number, dial string and prefix\n"
@@ -246,32 +256,32 @@ msgstr ""
 "Veuillez vérifier le numéro de téléphone, la chaîne de composition et le "
 "préfixe\n"
 
-#: src/modem/modem.c:296
+#: src/modem/modem.c:297
 #, c-format
 msgid "Connection at %sb/s done.\n"
 msgstr "Connexion à %sb/s effectué\n"
 
-#: src/modem/modem.c:302
+#: src/modem/modem.c:303
 msgid "No carrier detected\n"
 msgstr "Pas de porteuse détecté\n"
 
-#: src/modem/modem.c:307
+#: src/modem/modem.c:308
 msgid "No dial tone detected\n"
 msgstr "Aucune tonalité détécté\n"
 
-#: src/modem/modem.c:312
+#: src/modem/modem.c:313
 msgid "Provider is busy\n"
 msgstr "Le fournisseur sonne occupé\n"
 
-#: src/modem/modem.c:317
+#: src/modem/modem.c:318
 msgid "Response delayed\n"
 msgstr "Trop de temps sans réponse\n"
 
-#: src/modem/modem.c:322
+#: src/modem/modem.c:323
 msgid "Response voice\n"
 msgstr "Une voix à répondue\n"
 
-#: src/modem/modem.c:327
+#: src/modem/modem.c:328
 msgid ""
 "You have been connected to a fax\n"
 "Please verify the phone number\n"
@@ -279,15 +289,15 @@ msgstr ""
 "Vous avez été connecté à un fax\n"
 "Veuillez vérifier le numéro de téléphone\n"
 
-#: src/modem/modem.c:333
+#: src/modem/modem.c:334
 msgid "There was no answer\n"
 msgstr "Il n'y a pas eu de réponse\n"
 
-#: src/modem/modem.c:341
+#: src/modem/modem.c:342
 msgid "Modem timed out during dialing\n"
 msgstr "Délai dépassé pendant la numérotation\n"
 
-#: src/modem/modem.c:358
+#: src/modem/modem.c:359
 #, c-format
 msgid "Device %s is locked\n"
 msgstr "Le périphérique %s est vérouillé\n"
@@ -327,23 +337,23 @@ msgstr "Erreur en mettant la socket non blocante: %s(%d)\n"
 msgid "Error while closing socket: %s(%d)\n"
 msgstr "Erreur pendant la fermeture de la socket: %s(%d)\n"
 
-#: src/iptunnel/aol2cli.c:105
+#: src/iptunnel/aol2cli.c:106
 msgid "IP tunnel - bad size for a small packet\n"
 msgstr "Tunnel IP - Mauvaise taille pour un petit paquet\n"
 
-#: src/iptunnel/aol2cli.c:119
+#: src/iptunnel/aol2cli.c:120
 msgid "IP tunnel - Packet overflow detected\n"
 msgstr "Tunnel IP - Dépassement de paquet détécté\n"
 
-#: src/iptunnel/aol2cli.c:156
+#: src/iptunnel/aol2cli.c:157
 msgid "IP tunnel - Unable to uncompress the packet\n"
 msgstr "Tunnel IP - Impossible de décompressé le paquet\n"
 
-#: src/iptunnel/aol2cli.c:173
+#: src/iptunnel/aol2cli.c:174
 msgid "IP tunnel - Unable to allocate memory\n"
 msgstr "Tunnel IP - Impossible d'allouer la mémoire\n"
 
-#: src/iptunnel/aol2cli.c:193
+#: src/iptunnel/aol2cli.c:194
 msgid "IP tunnel - received an unknown IP packet\n"
 msgstr "Tunnel IP - Paquet IP inconnu reçu\n"
 
@@ -396,7 +406,7 @@ msgstr "Nom d'hôte: %s\n"
 msgid "Domain: %s\n"
 msgstr "Domaine: %s\n"
 
-#: src/iptunnel/init.c:157
+#: src/iptunnel/init.c:158
 msgid "IP tunnel is working.\n"
 msgstr "Le tunnel IP fonctionne.\n"
 
@@ -404,7 +414,7 @@ msgstr "Le tunnel IP fonctionne.\n"
 msgid "engine - No data to wait\n"
 msgstr "engine - Pas de donnée à attendre\n"
 
-#: src/engine.c:243
+#: src/engine.c:249
 msgid "engine - An input buffer is full\n"
 msgstr "engine - Un buffer d'entrée est plein\n"
 
@@ -413,72 +423,101 @@ msgstr "engine - Un buffer d'entrée est plein\n"
 msgid "%s:%d bad line format\n"
 msgstr "%s:%d mauvais format de ligne\n"
 
-#: src/main.c:93
+#: src/main.c:103
+msgid "Error parsing command line, exiting !\n"
+msgstr "Erreur à l'analyse de la ligne de commande, sortie !\n"
+
+#: src/main.c:110
+msgid "Error parsing configuration files, exiting !\n"
+msgstr "Erreur à l'analyse des fichiers de configuration, sortie !\n"
+
+#: src/main.c:116
+msgid "Bad configuration, exiting !\n"
+msgstr "Mauvaise configuration, sortie !\n"
+
+#: src/main.c:143
+msgid "Unable to init engine, exiting.\n"
+msgstr "Impossible d'initializer le moteur, sortie.\n"
+
+#: src/main.c:160
+msgid "Fatal error, exiting.\n"
+msgstr "Erreur fatale, sortie.\n"
+
+#: src/main.c:167
+#, c-format
+msgid "Reconnection in %d seconds...\n"
+msgstr "Reconnexion dans %d secondes...\n"
+
+#: src/main.c:172
+msgid "Immediate reconnection...\n"
+msgstr "Reconnexion immédiate...\n"
+
+#: src/misc.c:55
+#, c-format
+msgid "%s daemon started\n"
+msgstr "Le démon %s est démarré\n"
+
+#: src/misc.c:58
 #, c-format
 msgid "Unable to open /dev/null: %s (%d)\n"
 msgstr "Impossible d'ouvrir /dev/null: %s (%d)\n"
 
-#: src/main.c:98
+#: src/misc.c:63
 #, c-format
 msgid "Error calling dup2 stdin: %s (%d)\n"
 msgstr "Erreur à l'appel de dup2 stdin: %s (%d)\n"
 
-#: src/main.c:102
+#: src/misc.c:67
 #, c-format
 msgid "Error calling dup2 stdout: %s (%d)\n"
 msgstr "Erreur à l'appel de dup2 stdout: %s (%d)\n"
 
-#: src/main.c:106
+#: src/misc.c:71
 #, c-format
 msgid "Error calling dup2 stderr: %s (%d)\n"
 msgstr "Erreur à l'appel de dup2 stderr: %s (%d)\n"
 
-#: src/main.c:110
+#: src/misc.c:75
 #, c-format
 msgid "Error calling close /dev/null: %s (%d)\n"
 msgstr "Erreur à l'appel de close /dev/null: %s (%d)\n"
 
-#: src/main.c:114
+#: src/misc.c:79
 #, c-format
 msgid "Error calling setsid: %s (%d)\n"
 msgstr "Erreur à l'appel de setsid: %s (%d)\n"
 
-#: src/main.c:123
+#: src/misc.c:88
 #, c-format
 msgid "Unable to fork: %s (%d)\n"
 msgstr "Impossible de 'forker': %s (%d)\n"
 
-#: src/main.c:148
-msgid "Error parsing command line, exiting !\n"
-msgstr "Erreur à l'analyse de la ligne de commande, sortie !\n"
+#: src/misc.c:123
+#, c-format
+msgid "Removing stale pid file %s.\n"
+msgstr "Suppression de l'ancien fichier pid %s.\n"
 
-#: src/main.c:155
-msgid "Error parsing configuration files, exiting !\n"
-msgstr "Erreur à l'analyse des fichiers de configuration, sortie !\n"
+#: src/misc.c:131
+#, c-format
+msgid "%s is already running with pid %d.\n"
+msgstr "%s tourne déjà avec le pid %d.\n"
 
-#: src/main.c:161
-msgid "Bad configuration, exiting !\n"
-msgstr "Mauvaise configuration, sortie !\n"
+#: src/misc.c:160
+#, c-format
+msgid "Can't create pid file %s: %s (%d).\n"
+msgstr "Ne peut crée le fichier pid %s: %s (%d)\n"
 
-#: src/main.c:172 src/main.c:193
-msgid "Fatal error, exiting.\n"
-msgstr "Erreur fatale, sortie.\n"
-
-#: src/main.c:181
-msgid "Unable to init engine, exiting.\n"
-msgstr "Impossible d'initializer le moteur, sortie.\n"
-
-#: src/misc.c:73 src/misc.c:114
+#: src/misc.c:209 src/misc.c:250
 #, c-format
 msgid "Can't set environment variables: %s (%d)\n"
 msgstr "Ne peut assigner les variables d'environnement: %s (%d)\n"
 
-#: src/misc.c:78 src/misc.c:118
+#: src/misc.c:214 src/misc.c:254
 #, c-format
 msgid "Can't exec script %s: %s (%d)\n"
 msgstr "Ne peut éxécuter le script %s: %s (%d)\n"
 
-#: src/misc.c:88 src/misc.c:127
+#: src/misc.c:224 src/misc.c:263
 #, c-format
 msgid "Can't fork: %s (%d)\n"
 msgstr "Ne peut 'forker': %s (%d)\n"
@@ -653,7 +692,7 @@ msgstr ""
 msgid "Screen name '%s' not found in %s.\n"
 msgstr "Pseudo '%s' non trouvé dans %s.\n"
 
-#: src/sighndl.c:39
+#: src/sighndl.c:40
 #, c-format
 msgid "%s received, exiting.\n"
 msgstr "%s reçu, sortie.\n"

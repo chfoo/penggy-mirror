@@ -85,7 +85,7 @@ init_parameters (void)
 
   param_t params[PARAM_MAX] =  {
     /* GENERAL CONFIGURATION */
-    STR ('f', "config-file", NULL, CONFDIR "/pengfork.cfg",
+    STR ('f', "config-file", NULL, CONFDIR "/" PACKAGE ".cfg",
          gettext ("read configuration file PATH."), "PATH",
          __general, NULL),
     STR (0, "access-method", "access_method", "modem",
@@ -121,7 +121,7 @@ init_parameters (void)
     BOOL (0, "dns", "set_dns", true,
 	gettext ("set the dns when connected."), NULL, 
 	__netiface, NULL),
-    STR (0, "pid-file", "pid_file", "/var/run/pengfork.pid",
+    STR (0, "pid-file", "pid_file", "/var/run/" PACKAGE ".pid",
          gettext ("set the PID file to create"), "PATH", 
          __general, NULL),
     STR (0, "ip-up", "ip-up_script", CONFDIR "/ip-up",

@@ -69,7 +69,7 @@ device_lock (devicename)
   if (fd != -1)
     {
       /* We made a lock file... */
-      sprintf (pid_string, "%10d\n", getpid ());
+      snprintf (pid_string, sizeof(pid_string), "%10d\n", getpid ());
       write (fd, pid_string, strlen (pid_string));
     }
   else
@@ -78,7 +78,7 @@ device_lock (devicename)
       sleep (1);                /* preventing race condition... */
 
       fd = open (filename, O_RDONLY);
-      r = read (fd, pid_string, 15);
+      r = read (fd, pid_string, sizeof(pid_string) - 1);
       pid_string[r] = '\0';
       pid = atoi (pid_string);
 
@@ -89,11 +89,12 @@ device_lock (devicename)
           log (LOG_WARNING, gettext ("Removing stale lock file %s.\n"), filename);
           if (unlink (filename))
             {
-              perror (filename);
+              log (LOG_ERR, gettext("Can't remove %s: %s (%d).\n"), 
+			        filename, strerror(errno), errno);
               return 0;         /* cannot remove lockfile */
             }
           fd = open (filename, O_RDWR | O_EXCL | O_CREAT, 0644);
-          sprintf (pid_string, "%10d\n", getpid ());
+          snprintf (pid_string, sizeof(pid_string), "%10d\n", getpid ());
           write (fd, pid_string, strlen (pid_string));
         }
       else

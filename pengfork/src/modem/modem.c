@@ -33,6 +33,7 @@
 #include <unistd.h>
 
 #include "gettext.h"
+#include "common.h"
 #include "log.h"
 #include "modem/modem.h"
 #include "modem/devlock.h"
@@ -251,7 +252,8 @@ modem_dial ()
       break;
   if (i >= PARAM_MODEM_DIAL_RETRY)
     {
-      log (LOG_ERR, gettext ("Too many failures, dialing process aborted.\n"));
+      if(status!=sexit)
+        log (LOG_ERR, gettext ("Too many failures, dialing process aborted.\n"));
       return 0;
     }
   return 1;
@@ -265,7 +267,7 @@ modem_dial_to (phone)
   char dialcmd[256];
   char *speed, *p;
 
-  if (!phone)
+  if (!phone || status == sexit)
     return 0;
 
   log (LOG_INFO, gettext ("Dialing %s\n"), phone);

@@ -47,6 +47,8 @@
 
 struct p3state cli, srv;
 
+int ping_sent;
+
 const protocol_t p3_protocol = (protocol_t) {
   p3_register_to_engine,
   p3_send,
@@ -61,7 +63,7 @@ const struct engine_functions p3_fn = (struct engine_functions) {
   p3_recv,
   NULL,
   p3_timeout,
-  NULL
+  p3_end
 };
 
 window_t wsend, wunack, wnack;
@@ -94,13 +96,26 @@ p3_init (bufin, bufout)
   srv.lastack = 0;              /* We have never received a packet */
   srv.lastseq = PACKET_MAX_SEQ;
   srv.want_ssr = 0;
+  nack_sent = 0;
+  ping_sent = 0;
 
   create_buffer (bufin, P3_MAX_SIZE + 1);
   create_buffer (bufout, P3_MAX_SIZE + 1);
   win_alloc (&wsend, WINDOW_SIZE);
   win_alloc (&wunack, WINDOW_SIZE);
-  win_alloc (&wnack, WINDOW_SIZE);
+  /*win_alloc (&wnack, WINDOW_SIZE);*/
   p3_send_init_packet ();
+}
+
+int
+p3_end (bufin, bufout)
+     buffer_t *bufin;
+     buffer_t *bufout;
+{
+  win_free (&wsend);
+  win_free (&wunack);
+  /*win_free (&wnack);*/
+  return 1;
 }
 
 int
@@ -182,12 +197,23 @@ p3_timeout (bufin, bufout, timeout)
     }
   else
     {
-      if (cli.lastseq != srv.lastack)
+      if ((timeout > 35 && (cli.lastseq != srv.lastack || nack_sent)) || 
+	(timeout > 90 && ping_sent))
         {
-          /* Always some unacknowledged packets??!!
+          /* Always some data to wait after 40 s...
            * The server seems out or lost
            */
-
+	log (LOG_WARNING, gettext("Server seems dead, disconnecting...\n"));
+	engine_stop();
+        }
+      if (timeout > 60)
+        {
+	/*
+	 * No data to wait for more than 1 minute,
+	 * send a ping to be sure, we're always connected
+	 */
+	ping_sent = 1;
+	p3_put_packet (TYPE_PING, NULL, 0);
         }
     }
   if (nack_sent)

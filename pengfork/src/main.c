@@ -43,24 +43,17 @@
 #endif
 
 #include <stdlib.h>
-#include <stdio.h>
-#include <signal.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 #include <unistd.h>
-#include <errno.h>
-#include <string.h>
-#include <libintl.h>
 #ifdef WITH_MODEM
 #  include <guile/gh.h>
 #endif
 
 #include "common.h"
+#include "gettext.h"
 #include "log.h"
+#include "misc.h"
 #include "options.h"
 #include "resolver.h"
-#include "sighndl.h"
 #include "engine.h"
 #include "access.h"
 #include "protocol.h"
@@ -69,62 +62,22 @@
 
 /* defined in common.h */
 char *program_name;
+status_t status = sinit;
+
 
 void
-handle_signals (void)
+clean_exit(n)
+     int n;
 {
-  signal (SIGINT, sig_exit);
-  signal (SIGTERM, sig_exit);
-  if (!PARAM_DAEMON)
-    signal (SIGHUP, sig_exit);
+  haccess->disconnect ();
+  iface->disconnect ();
+
+  if(PARAM_PID_FILE) 
+    remove_pidfile ();
+
+  exit(n);
 }
 
-void
-daemon_mode (void)
-{
-  int pid;
-  int f;
-
-  pid = fork ();
-  if (pid == 0)
-    {
-      f = open ("/dev/null", O_RDWR);
-      if (f < 0)
-        log (LOG_WARNING, gettext ("Unable to open /dev/null: %s (%d)\n"),
-             strerror (errno), errno);
-      else
-        {
-          if (dup2 (f, 0) < 0)
-            log (LOG_WARNING, gettext ("Error calling dup2 stdin: %s (%d)\n"),
-                 strerror (errno), errno);
-          if (dup2 (f, 1) < 0)
-            log (LOG_WARNING,
-                 gettext ("Error calling dup2 stdout: %s (%d)\n"),
-                 strerror (errno), errno);
-          if (dup2 (f, 2) < 0)
-            log (LOG_WARNING,
-                 gettext ("Error calling dup2 stderr: %s (%d)\n"),
-                 strerror (errno), errno);
-          if (close (f) < 0)
-            log (LOG_WARNING,
-                 gettext ("Error calling close /dev/null: %s (%d)\n"),
-                 strerror (errno), errno);
-        }
-      if (setsid () < 0)
-        log (LOG_WARNING, gettext ("Error calling setsid: %s (%d)\n"),
-             strerror (errno), errno);
-    }
-  else if (pid > 0)
-    {
-      exit (0);
-    }
-  else
-    {
-      log (LOG_ERR, gettext ("Unable to fork: %s (%d)\n"), strerror (errno),
-           errno);
-      exit (1);
-    }
-}
 
 #ifndef WITH_MODEM
 int
@@ -162,37 +115,60 @@ main2 (argc, argv)
       exit (1);
     }
 
+  if (!resolve_functions ())
+      exit (1);
+
+  if(PARAM_PID_FILE && running_from_pidfile ())
+    exit (1);
+
   if (PARAM_DAEMON)
     daemon_mode ();
 
+  if(PARAM_PID_FILE) 
+    write_pidfile ();
+
   handle_signals ();
 
-  if (!resolve_functions ())
-    {
-      log (LOG_ERR, gettext ("Fatal error, exiting.\n"));
-      exit (1);
-    }
+  do {
+    status=sconnect;
+    if (iface->connect () && haccess->connect ())
+      {
+        if (!engine_init ())
+	{
+	  /* Should not happen */
+	  log (LOG_ERR, gettext ("Unable to init engine, exiting.\n"));
+	  clean_exit (1);
+	}
+        
+        protocol->register_to_engine (haccess);
+        fdo_init ();
+        status = srun;
+        engine_loop ();
+        haccess->disconnect ();
+        iface->disconnect ();
+      }
+    else
+      {
+        if(!PARAM_AUTO_RECONNECT)
+	{
+	log (LOG_ERR, gettext ("Fatal error, exiting.\n"));
+	clean_exit (1);
+	}
+        else
+	{
+	  if(PARAM_RECONNECT_DELAY)
+	    {
+	      log (LOG_NOTICE, gettext ("Reconnection in %d seconds...\n"),
+		 PARAM_RECONNECT_DELAY);
+	      sleep(PARAM_RECONNECT_DELAY);
+	    }
+	  else
+	    log (LOG_NOTICE, gettext ("Immediate reconnection...\n"));
+	}
 
-  if (iface->connect () && haccess->connect ())
-    {
-      if (!engine_init ())
-        {
-          /* Should not happen */
-          log (LOG_ERR, gettext ("Unable to init engine, exiting.\n"));
-          exit (1);
-        }
-
-      protocol->register_to_engine (haccess);
-      fdo_init ();
-      engine_loop ();
-      haccess->disconnect ();
-      iface->disconnect ();
-    }
-  else
-    {
-      log (LOG_ERR, gettext ("Fatal error, exiting.\n"));
-      exit (1);
-    }
+      }
+  }
+  while (PARAM_AUTO_RECONNECT && status!=sexit);
 
 #ifndef WITH_MODEM
   return 0;

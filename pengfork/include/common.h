@@ -25,4 +25,7 @@
 
 extern char *program_name;
 
+typedef enum {sinit, sconnect, srun, sexit} status_t;
+extern status_t status;
+
 #endif /* __COMMON_H__ */

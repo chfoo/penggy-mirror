@@ -27,6 +27,15 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+
+void daemon_mode (void);
+
+void handle_signals (void);
+
+int running_from_pidfile (void);
+int write_pidfile (void);
+int remove_pidfile (void);
+
 int launch_ip_up (char *if_name, struct in_addr if_addr, struct in_addr dns, 
 	        char *domain, int mtu);
 

@@ -27,6 +27,8 @@
 #include "fdo.h"
 #include "buffer.h"
 
+extern int need_extra;
+
 void get_ip_aol (token_t token, char *data, size_t data_size);
 void get_ip_extra (token_t token, char *data, size_t data_size);
 void get_uncompressed_ip (char *vjip, size_t vjiplen);

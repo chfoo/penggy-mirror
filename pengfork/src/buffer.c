@@ -140,7 +140,7 @@ buffer_recv (buffer, fd)
   while (nread > 0 && len > 0);
   buffer_alloc (buffer, total);
   if (nread == -1 && errno != EAGAIN)
-    return 0;
+    return -1;
 
   if (len == 0 && buffer->used < buffer->size)
     {
@@ -160,12 +160,12 @@ buffer_recv (buffer, fd)
       while (nread > 0 && len > 0);
       buffer_alloc (buffer, total2);
       if (nread == -1 && errno != EAGAIN)
-        return 0;
+        return -1;
       total += total2;
     }
 
   debug (3, "buffer - %d bytes received\n", total);
-  return 1;
+  return total;
 }
 
 int
@@ -193,12 +193,12 @@ buffer_send (buffer, fd)
   while (nwrote > 0 && len > 0);
 
   if (nwrote == -1 && errno != EAGAIN)
-    return 0;
+    return -1;
 
   buffer_free (buffer, total);
 
   debug (3, "buffer - %d bytes sended\n", total);
-  return 1;
+  return total;
 }
 
 

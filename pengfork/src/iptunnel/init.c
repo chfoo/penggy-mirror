@@ -154,6 +154,7 @@ ip_tunnel_config (token, data, data_size)
   engine_register (*(iface->fd), 0, ip_tunnel_fn);
 
   fdo_register (TOKEN ("yc"), get_ip_aol);
+  need_extra=0;
   log(LOG_NOTICE, gettext("IP tunnel is working.\n"), domain);
 }
 
@@ -185,10 +186,11 @@ destroy_iface (in, out)
      buffer_t *in;
      buffer_t *out;
 {
+  fdo_unregister (TOKEN ("ya"));
+  fdo_unregister (TOKEN ("yc"));
+  fdo_unregister (TOKEN ("yd"));
   launch_ip_down (PARAM_INTERFACE_NAME);
   if(PARAM_SET_DNS) 
     unset_dns ();
-  destroy_buffer (in);
-  destroy_buffer (out);
   return 1;
 }
