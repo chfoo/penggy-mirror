@@ -24,12 +24,16 @@
 
 #ifdef WITH_CABLE
 
+#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+#include <sys/types.h>
 #include <sys/socket.h>
 #include <net/if.h>
 #include <netinet/in.h>
-#include <fcntl.h>
+#include <netdb.h>
 
 #include "options.h"
 
@@ -44,11 +48,11 @@ cable_getfd ()
 int
   cable_connect ()
 {
-/*  int port = PARAM_CABLE_AOL_PORT;
+  int port = PARAM_CABLE_AOL_PORT;
   char *hostname = PARAM_CABLE_AOL_HOST;
 
   struct sockaddr_in intcable;
-  struct hosten *hp;
+  struct hostent *hp;
 
   if ((hp = gethostbyname (hostname))== 0)
     {
@@ -59,7 +63,7 @@ int
   intcable.sin_family = AF_INET;
   intcable.sin_port = htons(port);
   intcable.sin_addr.s_addr = *((unsigned long *) hp->h_addr);
-  strcpy(PARAM_CABLE_CONNECT_IP,inet_ntoa(adresse));
+//  strcpy(PARAM_CABLE_CONNECT_IP,inet_ntoa(adresse));
 
   if ((cablefd = socket (PF_INET, SOCK_STREAM, 0))<0)
     {
@@ -70,26 +74,24 @@ int
 
   if (connect (cablefd, (struct sockaddr *) &intcable, sizeof (struct sockaddr_in)) == 0)
     return 1;
-*/
+
   return 0;
 }
 
 int
   cable_close ()
 {
-/*  if (cablefd != -1)
+  if (cablefd != -1)
     {
     if ((close (cablefd)) == -1)
       {
       perror ("error closing socket !\n");
-      return -1;
+      return 1;
       }
       return 0;
     }
   perror ("error closing socket !\n");
-  return -1;
-*/
-  return 0;
+  return 1;
 }
 
 int
