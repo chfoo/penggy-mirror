@@ -33,6 +33,7 @@ pengfork_SOURCES = 	buffer.c		\
 			modem.c			\
 			p30init.c		\
 			p30tcpip.c		\
-			utils.c
+			utils.c			\
+			@ARCH_DIR@/tun.c
 
 INCLUDES = -I$(top_srcdir)/include

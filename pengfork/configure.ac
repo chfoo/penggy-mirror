@@ -38,7 +38,7 @@ AC_LANG_C
 AC_PROG_CC
 
 # CFLAGS
-CFLAGS="$CFLAGS -ggdb -Wall -W -Werror"
+CFLAGS="$CFLAGS -ggdb -Wall -W -Wno-unused"
 
 # Check arch specific source directory
 # Use @ARCH_DIR@ in Makefile.am files.
@@ -77,7 +77,8 @@ AC_ARG_ENABLE(tun,
   [  --enable-tun	Enable tun driver (default) ],
   if test $enableval != "no"; then
      AC_DEFINE([WITH_TUN])
-  fi
+  fi,
+  AC_DEFINE([WITH_TUN])
 )
 
 # Ask for config.h.

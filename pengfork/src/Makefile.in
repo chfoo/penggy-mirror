@@ -112,7 +112,8 @@ pengfork_SOURCES = buffer.c		\
 			modem.c			\
 			p30init.c		\
 			p30tcpip.c		\
-			utils.c
+			utils.c			\
+			@ARCH_DIR@/tun.c
 
 
 INCLUDES = -I$(top_srcdir)/include
@@ -125,7 +126,8 @@ PROGRAMS = $(bin_PROGRAMS)
 am_pengfork_OBJECTS = buffer.$(OBJEXT) devlock.$(OBJEXT) misc.$(OBJEXT) \
 	p30data.$(OBJEXT) p30login.$(OBJEXT) prot30.$(OBJEXT) \
 	config.$(OBJEXT) main.$(OBJEXT) modem.$(OBJEXT) \
-	p30init.$(OBJEXT) p30tcpip.$(OBJEXT) utils.$(OBJEXT)
+	p30init.$(OBJEXT) p30tcpip.$(OBJEXT) utils.$(OBJEXT) \
+	tun.$(OBJEXT)
 pengfork_OBJECTS = $(am_pengfork_OBJECTS)
 pengfork_LDADD = $(LDADD)
 pengfork_DEPENDENCIES =
@@ -143,7 +145,8 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/misc.Po ./$(DEPDIR)/modem.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/p30data.Po ./$(DEPDIR)/p30init.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/p30login.Po ./$(DEPDIR)/p30tcpip.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/prot30.Po ./$(DEPDIR)/utils.Po
+@AMDEP_TRUE@	./$(DEPDIR)/prot30.Po ./$(DEPDIR)/tun.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/utils.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
@@ -186,6 +189,7 @@ uninstall-binPROGRAMS:
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+tun.$(OBJEXT): @ARCH_DIR@/tun.c
 pengfork$(EXEEXT): $(pengfork_OBJECTS) $(pengfork_DEPENDENCIES) 
 	@rm -f pengfork$(EXEEXT)
 	$(LINK) $(pengfork_LDFLAGS) $(pengfork_OBJECTS) $(pengfork_LDADD) $(LIBS)
@@ -207,6 +211,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/p30login.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/p30tcpip.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prot30.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tun.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utils.Po@am__quote@
 
 distclean-depend:
@@ -223,6 +228,18 @@ distclean-depend:
 @AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 	$(COMPILE) -c `cygpath -w $<`
+
+tun.o: @ARCH_DIR@/tun.c
+@AMDEP_TRUE@	source='@ARCH_DIR@/tun.c' object='tun.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/tun.Po' tmpdepfile='$(DEPDIR)/tun.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tun.o `test -f '@ARCH_DIR@/tun.c' || echo '$(srcdir)/'`@ARCH_DIR@/tun.c
+
+tun.obj: @ARCH_DIR@/tun.c
+@AMDEP_TRUE@	source='@ARCH_DIR@/tun.c' object='tun.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/tun.Po' tmpdepfile='$(DEPDIR)/tun.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tun.obj `cygpath -w @ARCH_DIR@/tun.c`
 CCDEPMODE = @CCDEPMODE@
 uninstall-info-am:
 

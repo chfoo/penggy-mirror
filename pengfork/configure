@@ -2513,7 +2513,7 @@ CCDEPMODE=depmode=$am_cv_CC_dependencies_compiler_type
 
 
 # CFLAGS
-CFLAGS="$CFLAGS -ggdb -Wall -W -Werror"
+CFLAGS="$CFLAGS -ggdb -Wall -W -Wno-unused"
 
 # Check arch specific source directory
 # Use @ARCH_DIR@ in Makefile.am files.
@@ -2566,6 +2566,11 @@ if test "${enable_tun+set}" = set; then
 _ACEOF
 
   fi
+else
+  cat >>confdefs.h <<\_ACEOF
+#define WITH_TUN 1
+_ACEOF
+
 
 fi;
 
