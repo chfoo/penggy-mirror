@@ -1605,6 +1605,8 @@ host_os=`echo $ac_cv_host | sed 's/^\([^-]*\)-\([^-]*\)-\(.*\)$/\3/'`
 
 
 # Look for a C compiler
+# CFLAGS must be defined to avoid AC_PROG_CC adding default FLAGS
+CFLAGS=$CFLAGS
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
@@ -2513,7 +2515,9 @@ CCDEPMODE=depmode=$am_cv_CC_dependencies_compiler_type
 
 
 # CFLAGS
-CFLAGS="$CFLAGS -ggdb -Wall -W -Wno-unused"
+if test $GCC = yes; then
+  CFLAGS="$CFLAGS -g -Wall"
+fi
 
 # Check arch specific source directory
 # Use @ARCH_DIR@ in Makefile.am files.

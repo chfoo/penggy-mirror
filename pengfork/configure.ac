@@ -34,11 +34,15 @@ AM_INIT_AUTOMAKE([foreign 1.6 dist-bzip2])
 AC_CANONICAL_HOST
 
 # Look for a C compiler
+# CFLAGS must be defined to avoid AC_PROG_CC adding default FLAGS
+CFLAGS=$CFLAGS
 AC_LANG_C
 AC_PROG_CC
 
 # CFLAGS
-CFLAGS="$CFLAGS -ggdb -Wall -W -Wno-unused"
+if test $GCC = yes; then
+  CFLAGS="$CFLAGS -g -Wall"
+fi
 
 # Check arch specific source directory
 # Use @ARCH_DIR@ in Makefile.am files.
