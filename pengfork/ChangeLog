@@ -1,3 +1,10 @@
+2002-09-03  Nicolas Burrus  <nes@lrde.epita.fr>
+
+	* src/prot30.c: Add return value checking, debug msg.
+	* src/Makefile.am: Fix make distcheck.
+	* src/misc.c: Fix shell script execution.
+	* src/options.c: Fix return values.
+
 2002-09-01  Jean-Charles Salzeber <jc@varspool.net>
 
 	* include/p30tcpip.h, src/buffer.c, src/p30data.c, src/p30init.c, 
