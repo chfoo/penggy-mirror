@@ -63,7 +63,7 @@ param_t param[PARAM_MAX] = {
 {"d", "daemon", "daemon", boolean, false, {boolean:false}
    }
   ,
-{"l", "log-level", "log_level", integer, false, {integer:0}
+{"D", "debug-level", "debug_level", integer, false, {integer:-1}
    }
   ,
 {NULL, "dns", "set_dns", boolean, false, {boolean:true}

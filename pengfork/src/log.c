@@ -21,46 +21,44 @@
  */
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <getopt.h>
+#include <stdarg.h>
 
 #include "log.h"
-#include "prot30.h"
 #include "options.h"
-#include "access.h"
-#include "if.h"
 
-int
-main (argc, argv)
-     int argc;
-     char **argv;
+int 
+init_log (void)
 {
-  init_log ();
+  int flags = 0;
 
-  if (parse_config ())
-    {
-      fprintf (stderr, "Error parsing configuration files, exiting !\n");
-      exit (1);
-    }
-  if (!config_set_functions ())
-    {
-      fprintf (stderr, "Fatal error, exiting.\n");
-      exit (1);
-    }
+#ifdef LOG_PERROR
+  flags = LOG_PERROR;
+#endif
+  openlog ("pengfork", flags, LOG_DAEMON);
+  return 1;
+}
 
-  if (if_connect () && access_connect ())
-    {
-      if (!prot30_start ())
-	{
-	  fprintf (stderr, "Fatal error, exiting.\n");
-	  exit (1);
-	}
-    }
-  else
-    {
-      fprintf (stderr, "Fatal error, exiting.\n");
-      exit (1);
-    }
+int 
+log (int level, char *format, ...)
+{
+  va_list ap;
+  va_start (ap, format);
+  
+#ifndef LOG_ERROR
+  vfprintf (stderr, format, ap);
+#endif
+  syslog (level, format, ap);
+  return 1;
+}
 
-  return 0;
+int 
+debug (int level, char *format, ...)
+{
+  va_list ap;
+
+  va_start (ap, format);
+  if (level <= PARAM_DEBUG_LEVEL)
+    vfprintf (stderr, format, ap);
+
+  return 1;
 }

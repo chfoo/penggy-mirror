@@ -20,47 +20,14 @@
  *                
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <getopt.h>
+#ifndef __MODEM_H__
+# define __MODEM_H__
 
-#include "log.h"
-#include "prot30.h"
-#include "options.h"
-#include "access.h"
-#include "if.h"
+/* allow easier usage */
+# include <syslog.h>
 
-int
-main (argc, argv)
-     int argc;
-     char **argv;
-{
-  init_log ();
+int init_log(void);
+int log (int level, char *format, ...);
+int debug (int level, char *format, ...);
 
-  if (parse_config ())
-    {
-      fprintf (stderr, "Error parsing configuration files, exiting !\n");
-      exit (1);
-    }
-  if (!config_set_functions ())
-    {
-      fprintf (stderr, "Fatal error, exiting.\n");
-      exit (1);
-    }
-
-  if (if_connect () && access_connect ())
-    {
-      if (!prot30_start ())
-	{
-	  fprintf (stderr, "Fatal error, exiting.\n");
-	  exit (1);
-	}
-    }
-  else
-    {
-      fprintf (stderr, "Fatal error, exiting.\n");
-      exit (1);
-    }
-
-  return 0;
-}
+#endif /* __MODEM_H__ */
