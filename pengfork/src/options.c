@@ -616,7 +616,12 @@ check_config (void)
 	    debug(5, "  %s = false\n", param[i].name);
 	}
         else
-	debug(8, "  %s = (default)\n", param[i].name);
+	{
+	  if(PARAM_BOOLEAN(i) == true)
+	    debug(8, "  %s = true (default)\n", param[i].name);
+	  else
+	    debug(8, "  %s = false (default)\n", param[i].name);
+	}
 
         if(param[i].checkfn.check_boolean != NULL)
 	good &= param[i].checkfn.check_boolean (param[i].name, 
@@ -626,7 +631,7 @@ check_config (void)
         if(param[i].defined)
 	debug(5, "  %s = %d\n", param[i].name, PARAM_INTEGER(i));
         else
-	debug(8, "  %s = (default)\n", param[i].name);
+	debug(8, "  %s = %d (default)\n", param[i].name, PARAM_INTEGER(i));
 
         if(param[i].checkfn.check_integer != NULL)
 	good &= param[i].checkfn.check_integer (param[i].name, 

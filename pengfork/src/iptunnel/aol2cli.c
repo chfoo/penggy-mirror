@@ -62,6 +62,7 @@ get_ip_aol (token, data, data_size)
     }
 
   ipnum = small->ipnum;
+  ip_recv = 1;
   if (small->long_bit)
     /* This packet is a long ip (>=128 bytes) */
     {

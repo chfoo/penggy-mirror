@@ -24,7 +24,10 @@
 #define __IPTUNNEL_INIT_H__
 
 #include <sys/types.h>
+#include <sys/socket.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
+
 #include "buffer.h"
 #include "fdo.h"
 
@@ -35,29 +38,17 @@ struct ip_config_request
 __attribute__ ((packed));
 
 
-struct ip_config_reply1
+struct ip_config_header
 {
-  u_int8_t unknow1;
-  in_addr_t address;
-  u_int8_t unknow2[8];
-  in_addr_t dns_address;
-  u_int8_t unknow3[8];
-  u_int8_t hostname_len;
-  char hostname;
-}
-__attribute__ ((packed));
+  u_int8_t type;
+  u_int8_t length;
+};
 
-struct ip_config_reply2
-{
-  u_int8_t unknow1[4];
-  in_addr_t address;
-  u_int8_t unknow2[8];
-  in_addr_t dns_address;
-  u_int8_t unknow3[5];
-  u_int8_t hostname_len;
-  char hostname;
-}
-__attribute__ ((packed));
+#define TYPE_IP_ADDR    3
+#define TYPE_DNS_ADDR   4
+#define TYPE_MTU        5
+#define TYPE_HOSTNAME  10
+#define TYPE_SUBNET    12
 
 #define DEFAULT_IP_CONFIG_REQUEST (struct ip_config_request)\
   { {0x07, 0x01, 0x01, 0x0c, 0x01, 0x01, 0x0d, 0x01, 0x01} }
@@ -66,7 +57,8 @@ __attribute__ ((packed));
 void ip_tunnel_init ();
 int ip_tunnel_ready (buffer_t *bufin);
 void ip_tunnel_config (token_t token, char *data, size_t data_size);
+struct in_addr netmask(int bits);
 void init_iface (buffer_t *in, buffer_t *out);
-
+int destroy_iface (buffer_t *in, buffer_t *out);
 
 #endif /* __IPTUNNEL_INIT_H__ */

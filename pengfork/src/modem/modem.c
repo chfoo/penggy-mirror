@@ -199,7 +199,7 @@ modem_send_init_string (string)
   if (!string)
     return 1;
 
-  if (!modem_send_command (string, 1000, response, sizeof (response)))
+  if (!modem_send_command (string, 10000, response, sizeof (response)))
     return 0;
   switch (modem_response_value (response))
     {
@@ -255,7 +255,7 @@ modem_dial_to (phone)
     snprintf (dialcmd, sizeof (dialcmd), "%s%s%s", PARAM_MODEM_DIALSTR,
               PARAM_MODEM_DIAL_PREFIX, phone);
 
-  if (!modem_send_command (dialcmd, 60 * 1000, response, sizeof (response)))
+  if (!modem_send_command (dialcmd, 60 * 10000, response, sizeof (response)))
     return 0;
   switch (modem_response_value (response))
     {

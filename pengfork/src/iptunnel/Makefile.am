@@ -25,5 +25,6 @@ noinst_LIBRARIES = libiptunnel.a
 libiptunnel_a_SOURCES = init.c		\
 			aol2cli.c	\
 			cli2aol.c	\
-			vjcompress.c
+			vjcompress.c	\
+			dns.c
 

@@ -15,13 +15,13 @@ IFCONFIG=/sbin/ifconfig
 ROUTE=/sbin/route
 
 if [ -x $IFCONFIG ]; then
-	$IFCONFIG $IFNAME $ADDRESS pointopoint $GATEWAY netmask $NETMASK broadcast $BROADCAST mtu 1500 up
+	$IFCONFIG $IFNAME $ADDRESS mtu $MTU up
 else
 	echo "$0: $IFCONFIG not found"
 fi
 
 if [ -x $ROUTE ]; then
-        $ROUTE add default gw $GATEWAY
+        $ROUTE add default gw $ADDRESS
 else
         echo "$0: $ROUTE not found"
 fi

@@ -55,6 +55,7 @@ void engine_set_writers (fd_set * fdset, int *maxfd);
 void engine_read (fd_set * fdset);
 void engine_write (fd_set * fdset);
 void engine_timeout ();
+void engine_end_clients ();
 
 
 #endif /* __ENGINE_H__ */

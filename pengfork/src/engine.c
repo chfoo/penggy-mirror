@@ -87,7 +87,7 @@ engine_loop ()
   struct timeval tv;
   int fds;
 
-  while (!exiting && nbclients>0)
+  while (!exiting || nbclients>0)
     {
       FD_ZERO (&rfdset);
       FD_ZERO (&wfdset);
@@ -127,7 +127,10 @@ engine_loop ()
           debug (9, "engine - Timed out\n");
           engine_timeout ();
         }
+      if(exiting && nbclients>0) 
+        engine_end_clients ();
     }
+  debug (1, "engine - ended\n");
 }
 
 void
@@ -326,5 +329,22 @@ engine_timeout ()
 	      }
 	  }
         }
+    }
+}
+
+void
+engine_end_clients ()
+{
+  int i;
+
+  for (i = 0; i < nbclients; i++)
+    {
+      if (client[i].fn.end != NULL)
+        {
+	if(client[i].fn.end(&client[i].in, &client[i].out))
+	  engine_unregister(client[i--].fd);
+        }
+      else
+        engine_unregister(client[i--].fd);
     }
 }

@@ -48,10 +48,4 @@ sig_exit (signum)
       break;
     }
   engine_stop ();
-  if (haccess != NULL && haccess->is_connected ())
-    haccess->disconnect ();
-  if (iface != NULL && iface->is_connected ())
-    iface->disconnect ();
-
-  exit (0);
 }

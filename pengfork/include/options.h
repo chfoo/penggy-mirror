@@ -154,7 +154,7 @@ enum
 #define PARAM_SET_DNS                 PARAM_BOOLEAN(__set_dns)
 #define PARAM_PID_FILE                PARAM_STRING(__pid_file)
 #define PARAM_IP_UP                   PARAM_STRING(__ip_up)
-#define PARAM_IP_DOWN                 PARAM_STRING(__ip_up)
+#define PARAM_IP_DOWN                 PARAM_STRING(__ip_down)
 
 #ifdef WITH_MODEM
 #define PARAM_MODEM_DEVICE            PARAM_STRING(__modem_device)

@@ -55,6 +55,6 @@ extern struct vjcompress vj_comp;
 extern buffer_t *acout, *ifout;
 
 extern int ipnum;
-extern int mtu;
+extern int ip_recv;
 
 #endif /* __IPTUNNEL_TUNNEL_H__ */

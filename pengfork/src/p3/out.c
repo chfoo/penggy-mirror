@@ -66,7 +66,10 @@ p3_put_packet (type, data, data_size)
   if (type == TYPE_DATA)
     cli.lastseq = p3_next_seq (cli.lastseq);
   header->seq = cli.lastseq;
-  header->ack = srv.lastseq;
+  if (type == TYPE_NACK)
+    header->ack = p3_add_seq (srv.lastseq, (PACKET_MAX_SEQ - PACKET_MIN_SEQ) - 1);
+  else 
+    header->ack =srv.lastseq;
   header->client = 1;
   header->type = type;
   /* Copy data */

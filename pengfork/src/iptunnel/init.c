@@ -21,6 +21,9 @@
  */
 
 #include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -34,6 +37,7 @@
 #include "protocol.h"
 
 #include "iptunnel/init.h"
+#include "iptunnel/dns.h"
 #include "iptunnel/vjcompress.h"
 #include "iptunnel/aol2cli.h"
 #include "iptunnel/cli2aol.h"
@@ -41,7 +45,7 @@
 buffer_t *acout, *ifout;
 
 int ipnum = 0;
-int mtu = 1450;
+int ip_recv = 0;
 
 struct vjcompress vj_comp;
 #define MAX_VJHEADER 16         /* Maximum size of compressed header */
@@ -53,7 +57,7 @@ const struct engine_functions ip_tunnel_fn = (struct engine_functions) {
   get_ip_client,
   NULL,
   NULL,
-  NULL
+  destroy_iface
 };
 
 
@@ -82,49 +86,63 @@ ip_tunnel_config (token, data, data_size)
      char *data;
      size_t data_size;
 {
-  struct ip_config_reply1 *config1;
-  struct ip_config_reply2 *config2;
-  u_int8_t *flags;
-  in_addr_t *address;
-  in_addr_t *dns_address;
+  struct ip_config_header *cfg_hdr;
+  void *cfg_data;
+  struct in_addr address;
+  struct in_addr dns;
+  struct in_addr net;
+  int mask;
+  int mtu;
   char hostname[255];
+  char *domain;
   int len;
+  int nparsed = 0;
 
-  flags = (u_int8_t *) data;
-  config1 = (struct ip_config_reply1 *) (data + sizeof(*flags));
-  config2 = (struct ip_config_reply2 *) (data + sizeof(*flags));
-  if(*flags == 7)
+  while(nparsed<data_size)
     {
-      address = &config2->address;
-      dns_address = &config2->dns_address;
-    }
-  else
-    {
-      address = &config1->address;
-      dns_address = &config1->dns_address;
-    }
-  *address = ntohl (*address);
-  *dns_address = ntohl (*dns_address);
+      cfg_hdr = (struct ip_config_header *) (data + nparsed);
+      cfg_data = data + nparsed + sizeof(struct ip_config_header);
+      switch(cfg_hdr->type)
+        {
+        case TYPE_IP_ADDR:
+	address.s_addr = *((in_addr_t *)cfg_data);
+	log (LOG_INFO, "IP address: %s\n", inet_ntoa(address));
+	break;
+        case TYPE_DNS_ADDR:
+	dns.s_addr = *((in_addr_t *)cfg_data);
+	log (LOG_INFO, "DNS server: %s\n", inet_ntoa(dns));
+	break;
+        case TYPE_MTU:
+	mtu= ntohs(*((u_int16_t *)cfg_data));
+	log (LOG_INFO, "MTU: %d\n", mtu);
+	break;
+        case TYPE_HOSTNAME:
+	len = cfg_hdr->length;
+	if (len > sizeof(hostname))
+	  len = sizeof(hostname);
+	strncpy (hostname, cfg_data, len);
+	hostname[len] = '\0';
+	domain = strchr(hostname,'.');
+	if(domain) domain++;
 
-  len = config1->hostname_len;
-  if (len > sizeof(hostname))
-    len = sizeof(hostname);
-  strncpy (hostname, &config1->hostname, len);
-  hostname[len] = '\0';
-  log (LOG_INFO, "IP address: %d.%d.%d.%d\n",
-       *address >> 24 & 0xff,
-       *address >> 16 & 0xff,
-       *address >> 8 & 0xff, *address & 0xff);
-  log (LOG_INFO, "DNS address: %d.%d.%d.%d\n",
-       *dns_address >> 24 & 0xff,
-       *dns_address >> 16 & 0xff,
-       *dns_address >> 8 & 0xff, *dns_address & 0xff);
-  log (LOG_INFO, "Hostname: %s\n", hostname);
+	log (LOG_INFO, "Hostname: %s\n", hostname);
+	if(domain)
+	  log (LOG_INFO, "Domain: %s\n", domain);
+	break;
+        case TYPE_SUBNET:
+	mask = *((u_int8_t *)cfg_data);
+	net.s_addr = 0;
+	memcpy(&net.s_addr, cfg_data+1, cfg_hdr->length-1);
+	/* Need 2 instructions because inet_ntoa use a static buffer */
+	log (LOG_INFO, "Subnet: %s/", inet_ntoa(net)); 
+	log (LOG_INFO, "%s\n", inet_ntoa(netmask(mask)));
+	break;
+        }
+      nparsed += sizeof(struct ip_config_header) + cfg_hdr->length;
+    }
 
-  launch_ip_up (PARAM_INTERFACE_NAME,
-                *address, 0xffffffff,
-                *address & 0xffff0000,
-                *address | 0x0000ffff, *address);
+  set_dns(domain, dns);
+  launch_ip_up (PARAM_INTERFACE_NAME, address, dns, domain, mtu);
 
   vj_compress_init (&vj_comp, -1);
 
@@ -133,13 +151,35 @@ ip_tunnel_config (token, data, data_size)
   fdo_register ( TOKEN ("yc"), get_ip_aol);
 }
 
+struct in_addr
+netmask(bits)
+     int bits;
+{
+  unsigned long ret=0;
+  
+  ret = ~( ( 1 << (32 - bits) ) - 1 );
+
+  return (struct in_addr) { htonl(ret) };
+}
+
 void
 init_iface (in, out)
      buffer_t *in;
      buffer_t *out;
 {
   ifout = out;
-  create_buffer(in,2*mtu);
-  create_buffer(out,2*mtu);
+  create_buffer(in,2*1500);
+  create_buffer(out,2*1500);
 }
 
+int
+destroy_iface (in, out)
+     buffer_t *in;
+     buffer_t *out;
+{
+  launch_ip_down (PARAM_INTERFACE_NAME);
+  unset_dns();
+  destroy_buffer(in);
+  destroy_buffer(out);
+  return 1;
+}

@@ -129,7 +129,7 @@ p3_check_ordering (header)
       return 0;
     }
   if ((header->type == TYPE_PING || header->type == TYPE_NACK) &&
-      header->seq !=srv.lastseq)
+      header->seq != srv.lastseq && header->seq != 0x03)
     {
       debug (1, "P3 - Bad ordering for packet received\n");
       debug (1, "\tseq received: %d\n", header->seq);
