@@ -1,3 +1,6 @@
+IMPORTANT NOTE
+==============
+
 It's the CVS version of pengaol.
 
 It may not compile or freeze your computer.
@@ -6,3 +9,10 @@ You need autoconf and automake.
 
 Lordheavy
 
+HOW TO USE CVS VERSION
+======================
+
+You need automake >= 1.6 and autoconf > 2.53.
+
+penfork/$ autoreconf -fiv
+penfork/$ ./configure && make
