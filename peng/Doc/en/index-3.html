@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <META NAME="GENERATOR" CONTENT="SGML-Tools 1.0.9">
+ <TITLE>The Pengaol2 Handbook: Usage </TITLE>
+ <LINK HREF="index-4.html" REL=next>
+ <LINK HREF="index-2.html" REL=previous>
+ <LINK HREF="index.html#toc3" REL=contents>
+</HEAD>
+<BODY>
+<A HREF="index-4.html">Next</A>
+<A HREF="index-2.html">Previous</A>
+<A HREF="index.html#toc3">Contents</A>
+<HR>
+<H2><A NAME="s3">3. Usage </A></H2>
+
+<P>
+<H2><A NAME="ss3.1">3.1 Configuration</A>
+</H2>
+<P>To use PengAol first click to Config or edit the /etc/PengAol.conf file.
+<P>In section [CLoader] you can select the input and ouput driver to use.
+<P>Availlable input driver are:
+<P>CModemDriver for :
+<P> -Rtc modem (device=/dev/modem or /dev/ttySx with x from 0 to 4)
+<P> -Isdn Modem (device=/dev/ttyIx with x from 0 to 4)
+<P>
+<P>For use a Isdn modem, please change in section [CModemDriver]
+<P>- Device= your isdn device (normally ttyI0)
+<P>- Initstring1=AT&F
+<P>- Initstring2=ATExxxx with xxx = the last 4 numbers from you phone number.
+<P>
+<P>CCableDriver for:
+<P>A Tcp/Ip connection.
+<P>In section [CCableDriver] change device= to you connecting interface (normally eth0)
+<P>
+<P>Availlable ouput driver are:
+<P>CTunTapDriver : To use Ethertap (/dev/tap0) or Tun/tap modules (/dev/net/tun)
+<P>CPppDriver : To use the /dev/ppp interface.
+<HR>
+<H2><A NAME="ss3.2">3.2 General Usage</A>
+</H2>
+<P>Enter you Login, Password and click Connect , That´s all !
+<P>But if you don´t want the graphik interface :
+<P>First add a user with : pengaol -AddUser [login] [Pass]
+<P>than you can connect you with : pengaol -Connect [login]
+<P>To stop pengaol in console mode, tape ctrl+c or send a SIGINT signal.
+<HR>
+<A HREF="index-4.html">Next</A>
+<A HREF="index-2.html">Previous</A>
+<A HREF="index.html#toc3">Contents</A>
+</BODY>
+</HTML>

@@ -1,0 +1,8 @@
+Wenn sie zum ein deutch aol server verbindet mochten
+sir mussen am erte das /etc/Pengaol/PengAol.conf editieren
+und im [CModemDriver] , ServerType=French bei ServerType=German anderen
+
+recompile at found german linux
+If you want to a german aol server connecting
+You must /etc/Pengaol/PengAol.conf edit
+and in [CModemDriver] , ServerType=French with ServerType=German change

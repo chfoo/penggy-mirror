@@ -1,0 +1,10 @@
+Todo (05.10.2002):
+
+- fix bug main.cpp:
+		arg lisdriver, -i (not verbose anymore)
+- fix bug cmodemdriver.cpp:
+		WaitFor() , timeout is not absolute, escape unable to initialize modem(1)
+- fix bug auto dns:
+		Not verbose anymore, take the first dns in the list without trying it
+- fix main.cpp:
+		escape safe with SIGTERM 

@@ -1,0 +1,390 @@
+#Peng
+#Fichier regroupant tous les messages et erreurs
+#la class entre [ ] definie la langue à utiliser
+
+[fr]
+
+1=Impossible d'ouvrir le device
+2=Ce port n'est pas un port tty
+3=Initialisation du périphérique impossible
+4=Les lignes d'inits ne sont pas initialiees
+5=Impossible d'initialiser le modem (1)
+6=Impossible d'initialiser le modem (2)
+7=Le port ou sa vitesse ne sont pas definis
+8=fonction WaitFor : impossible d'initialiser le Timeout
+9=TimeOut Reponse Modem sur la ligne Init1
+10=TimeOut Reponse Modem sur la ligne Init2
+11=Impossible de numeroter
+12=Le fournisseur ne decroche pas ou la ligne est occupee
+13=Le fournisseur ne repond pas
+14=TimeOut sur l'acces au reseau
+15=Impossible en mode hors-connexion
+16=Impossible d'ecrire sur le peripherique
+17=Impossible de lire sur le peripherique
+18=Vous devez compiler Peng avec l'option debug pour faire cela !
+
+20=Erreur d'ouverture du peripherique
+21=Erreur d'ouverture /dev/tap0 ou /dev/tun
+22=open_tun_linux_kernel_2_4_x() : ioctl(etfd,TUNSETIFF,&ifr) error
+23=open_tun_linux_kernel_2_4_x() : ioctl(etfd,TUNSETNOCSUM,1) error
+
+30=Erreur à la requete config
+
+40=Erreur à l'acces au fichier de configuration
+41=Erreur à la creation du fichier de configuration
+
+50=Fichier d'initialisation cree avec succes
+51=Impossible de charger les drivers : Verifiez qu'ils soient correctement configures avec l'option -ListDriver
+52=Connexion au fournisseur d'acces
+53=Vitesse de connexion
+54=Ouverture d'une session sur le reseau
+55=Verification du mot de passe
+56=Mot de passe accepte
+57=Demarrage du noyau :
+58=Echec au routage
+59=Impossible de router des drivers inconnus
+
+60=Nom du driver
+61=Auteur
+62=Message inclus
+63=Guid
+64=Le pilote fonctionne sur cette configuration
+65=Oui
+66=Non
+67=Kernel : Impossible de se connecter au driver d'entree
+68=Kernel : Impossible de se connecter au driver de sortie
+69=Echec à la sauvegarde de /etc/resolv.conf	
+70=Echec au routage specifique du driver
+71=Bizarre !!!, les drivers sont inconnus à la suppression du routage
+72=Impossible de restorer /etc/resolv.conf
+73=Echec à la supression du routage
+74=Adresse IP : 
+75=Adresse DNS : 
+76=Nom d'hote :
+77=Arret du noyau
+78=Arret avant connexion
+79=Arret Normal de Peng
+80=Arret suite à une erreur grave
+81=La derniere session de Peng à ete interrompue : restoration de la config originale
+82=Perte de la connexion : reconnexion dans 5 seconde
+83=Teste du dns :
+84=Activation du Dns
+85=echec
+
+#textes d'explications
+
+100=Peng lite 1.0.3 par Stéphane Guth (Birdy57)
+101=-------------------------------------------------------
+102=
+103=Liste des commandes :
+104=
+105=-i--listdriver			: Permet de donner une liste des pilotes actifs et leurs
+106=              			  fonctionnalités sur le systeme present.
+107=-m --makeinit			: Genere le fichier de configuration avec les parametres
+108=             			  par defaut des pilotes .
+109=		              		  par defaut le fichier s'appelle /etc/PengAol/PengAol.conf
+110=-b   				: Permet de specifier le fichier de configuration à utiliser.
+111=-x --log       			: Active les logs      
+112=-c --connect [login]  		: Demarre la connexion sur le compte defini
+113=-r --restore   			: Restaure les parametres reseaux (Core dump ou sigkill)
+114=-a --adduser [Login] [Password]	: Ajoute un utilisateur sur le compte actuel
+115=-d --deluser [Login]		: Efface un Utilisateur
+116=-l --listuser 			: Liste tous les utilisateurs connus sur ce compte
+117=Work in progress ;-) 
+118=
+119=
+120=
+
+#driver modem
+
+130=Numerotation de :
+131=Recherche du fournisseur
+
+#UserManager
+
+140=Le fichier d'utilisateur n'existe pas !! Faite d'abord -AddUser
+141=L'utilisateur n'est pas enregistre !
+142=Impossible d'ajouter un utilisateur : acces au fichier refuse
+143=Utilisateur Ajoute avec succes
+144=Utilisateur supprime avec succes
+145=Impossible d'ouvrir le fichier
+146=Utilisateur inconnu
+147=Connect : impossible d'ouvrir le fichier des acces
+
+#ppp driver
+
+160=Impossible d'ouvrir /dev/ppp
+161=Impossible de placer /dev/ppp en non-bloquant
+162=Echec à la creation du socket IP
+163=Impossible d'allouer l'inferface ppp
+164=Echec à la creation d'un nouveau peripherique ppp
+165=Erreur sur :ioctl(PPPIOCSFLAGS, x)
+166=Erreur ioctl(transfer ppp unit)
+167=Impossible de controler le periph tty
+168=Impossible de recevoir le numero du canal
+169=Impossible de reouvrir /dev/ppp
+170=Impossible de s'attacher au canal
+171=Impossible de passer l'interface en non-bloquant
+172=Impossible d'attacher ppp à l'interface
+173=Erreur : ioctl(PPPIOCGUNIT)
+174=Impossible de determiner l'adresse ethernet de l'interface
+175=Erreur : ioctl(SIOCSARP)
+176=Impossible d'activer l'ip forward
+177=Erreur : ioctl(SIOCGIFCONF)
+
+[en]
+
+1=Unable to open the device
+2=This port is not a tty port
+3=Unable to initialise the device
+4=The init strings were not initialised
+5=Unable to initialise the modem (1)
+6=Unable to initialise the modem (2)
+7=The port or it's speed is not defined
+8=function WaitFor : unable to set the Timeout
+9=TimeOut response from Modem using Init String Init1
+10=TimeOut response from Modem using Init String Init2
+11=Unable to dial number
+12=The provider did not pick up the line or the line is occupied
+13=The provider is not responding
+14=TimeOut accessing the network
+15=Impossible in offline mode
+16=Unable to write to the peripheral
+17=Unable to read from the peripheral
+18=You must compile Peng with option Debug to do this !
+
+20=Error opening the peripheral
+21=Error opening /dev/tap0 or /dev/tun
+22=open_tun_linux_kernel_2_4_x() : ioctl(etfd,TUNSETIFF,&ifr) error
+23=open_tun_linux_kernel_2_4_x() : ioctl(etfd,TUNSETNOCSUM,1) error
+
+30=Error at config request
+
+40=Error when accessing the configuration file
+41=Error when creating the configuration file
+
+50=Initialisation file created successfully
+51=Unable to load the drivers : Check that they are correctly configured u=ing the option -ListDriver
+52=Connection to access provider
+53=Connection speed
+54=Opening a session on the network
+55=Verification of password
+56=Password accepted
+57=Starting kernel :
+58=Routing failed
+59=Unable to route throught the unknown drivers
+
+60=Driver Name
+61=Author
+62=Message included
+63=Guid
+64=The pilot works on this configuration
+65=Yes
+66=No
+67=Kernel: Unable to conect to the incoming driver
+68=Kernel: Unable to connect to the outgoing driver
+69=Failed saving /etc/resolv.conf
+70=Failed specific routing of the driver
+71=Bizarre !!!, the drivers are unknown at deletion of routage
+72=Unable to restore /etc/resolv/conf
+73=Failed at the deletion of routing
+74=IP Address:
+75=DNS Address:
+76=Domain name:
+77=Kernal Stopped
+78=Stopped before connection
+79=Normal stop of Peng
+80=Stopped following a serious error
+81=The last session of Peng was interrupted: restoring original config
+82=Connection reseted by peer , please wait reconnecting
+83=Trying Dns :
+84=Activating Dns
+85=error
+
+100=Peng lite 1.0.3 by GUTH Stéphane (Birdy57)
+101=-------------------------------------------------
+102=
+103=Command List
+104=
+105=-i --listdriver 			: Display a list of drivers and their status on
+106=		  			  the present system.
+107=-m --makeinit   			: Generates the configuration file with default values
+108=		 			  of the drivers
+109=		  			  By default the file is called /etc/PengAol/PengAol.conf
+110=-b					: Location of a new configuration file
+111=
+112=-x --log				: Enable logs
+113=-c --connect [login]		: Connect using the specified account
+114=
+115=
+116=-r --restore			: Restore network parameters (Core dump or sigkill)
+117=-a --adduser [Login] [password]	: Add an user 
+118=-d --deluser [Login] 		: Delete an user
+119=-l --listuser 			: List all the known users 
+120=Work in progress ;-) 
+
+#driver modem
+
+130=Dialing :
+131=Finding provider
+
+#UserManager
+
+140=The user file does not exist !! Make one using -AddUser option
+141=The user is not registered!
+142=Unable to add user : file access denied
+143=Success adding user
+144=Success deleting user
+145=Unable to open the file
+146=User unknown
+147=Connect: unable to open the access file
+
+#ppp driver
+
+160=Unable to open /dev/ppp
+161=Unable to place /dev/ppp in non-blocking
+162=Creation of IP socket failed
+163=Unable to allocate the ppp interface
+164=Failed at the creation of a new ppp peripheral
+165 Error :ioctl(PPPIOCSFLAGS, x)
+166=Error ioctl(transfer ppp unit)
+167=Unable to control the tty peripheral
+168=Unable to receive the number of the channel
+169=Unable to reopen /dev/ppp
+170=Unable to attach to channel
+171=Unable to pass the interface in non-blocking
+172=Unable to attach ppp to the interface
+173=Error : ioctl(PPPIOCGUNIT)
+174=Unable to determine the ethernet address of the interface
+175=Error : ioctl(SIOCSARP)
+176=Unable to activate IP forwarding
+177=Error : ioctl(SIOCGIFCONF)
+
+[de]
+
+1= Unmöglich zum Öffnen das gerat
+2= Das ist kein tty Port
+3= Initialisierung von das gerat nicht möglich
+4= Die Inits Zeile ist nicht initialisiert
+5= Initialisierung des Modem (1) nicht möglich
+6= Initialisierung des Modem (2) nicht möglich
+7= Der Port oder die Geschwindigkeit ist nicht definiert
+8= Funktion WaitFor : Initialisierung nicht möglich : Timeout
+9= Timeout Antwort des Modem auf Zeile Init1
+10=Timeout Antwort des Modem auf Zeile Init2
+11= Wählen nicht möglich
+12= Der Teilnehmer nimmt nicht ab oder ist Besetzt
+13= Der Teilnehmer Antwortet nicht
+14= Timeout, keine Netzwerk Verbindung
+15= Ohne Verbindung kein Kontakt
+16= Schreiben nicht möglich (peripherique)
+17= Lesen nicht möglich (peripherique)
+18= Sie mussen Peng kompilieren mit das fonction Debug !
+
+20= Fehler beim Öffnen das gerat
+21= Fehler beim Öffnen /dev/tap0
+22=open_tun_linux_kernel_2_4_x() : ioctl(etfd,TUNSETIFF,&ifr) error
+23=open_tun_linux_kernel_2_4_x() : ioctl(etfd,TUNSETNOCSUM,1) error
+
+30= Fehler
+
+40= Fehler beim Zugriff der Konfigurationsdatei
+41= Fehler bei der Erstellung der Konfigurationsdatei
+
+50= Initialisierungsdatei mit Erfolg erstellt
+51= Treiber können nicht geladen werden, überprüfe die korrekte konfiguration mit der Option - ListDriver
+52= Verbindung zum Anbieter
+53= Geschwindigkeit der Verbindung
+54= Öffne eine Session
+55= Passwort überprüfung
+56= Passwort akzeptiert
+57= Start (du noyau)
+58=Route fehler
+59=kann nicht route von unbekannt gerat
+
+60= Name des Treiber
+61= Autor
+62= Nachricht
+63= Guid
+64= Der Pilot funktioniert auf dieser Konfiguration
+65= Ja
+66= Nein
+67= Kernel: keine Verbindung zum Eingangstreiber
+68= Kernel: keine Verbindung zum Ausgangstreiber
+69= Speichern fehlgeschlagen: /etc/rersolv.conf
+70= Kann nicht initialisiere das route von des gerat
+71= Fehler bei loschen des gerat
+72= Schreiben nicht möglich: /etc/rersolv.conf
+73= Failed at the deletion of routing
+74= IP Adresse lp:
+75= DNS Adresse:
+76= Domänen Name:
+77= Host name nicht gefunden
+78= Verbindung beenden
+79= Herunterfahren von Peng
+80= Beenden nach einem Fehler
+81= Die letzte Sitzung von Peng wurde beendet: Restauriere die Original Konfiguration
+82= Verbindung fehler: bitte warten, neu starten
+83=Probierung dns :
+84=Ok
+85=fehler
+
+# textes dexplication
+
+100=Peng lite 1.0.3 by GUTH Stéphane (Birdy57)
+101=-------------------------------------------------
+102=
+103=Command List
+104=
+105=-i --listdriver 			: Display a list of drivers and their status on
+106=		  			  the present system.
+107=-m --makeinit   			: Generates the configuration file with default values
+108=		  			  of the drivers
+109=		  			  By default the file is called /etc/PengAol/PengAol.conf
+110=-b					: New configuration file location
+111=
+112=-x --log				: Enable logs
+113=-c --connect [login] 		: Connect using the specified account
+114=
+115=
+116=-r --restore 			: Restore network parameters (Core dump or sigkill)
+117=-a --adduser [Login] [password] 	: Add an user 
+118=-d --deluser [Login] 		: Delete an user
+119=-l --listuser 			: List all the known users 
+120=Work in progress ;-) 
+
+
+130= Nummerisch von
+131= Hersteller suchen
+
+#UserManager
+
+140=The user file does not exist !! Make one using -AddUser option
+141=The user is not registered!
+142=Unable to add user : file access denied
+143=Success adding user
+144=Success deleting user
+145=Unable to open the file
+146=User unknown
+147=Connect: unable to open the access file
+
+#ppp driver
+
+160=Unable to open /dev/ppp
+161=Unable to place /dev/ppp in non-blocking
+162=Creation of IP socket failed
+163=Unable to allocate the ppp interface
+164=Failed at the creation of a new ppp peripheral
+165 Error :ioctl(PPPIOCSFLAGS, x)
+166=Error ioctl(transfer ppp unit)
+167=Unable to control the tty peripheral
+168=Unable to receive the number of the channel
+169=Unable to reopen /dev/ppp
+170=Unable to attach to channel
+171=Unable to pass the interface in non-blocking
+172=Unable to attach ppp to the interface
+173=Error : ioctl(PPPIOCGUNIT)
+174=Unable to determine the ethernet address of the interface
+175=Error : ioctl(SIOCSARP)
+176=Unable to activate IP forwarding
+177=Error : ioctl(SIOCGIFCONF)

@@ -1,0 +1,79 @@
+Summary of changes from Peng Exp 1.0.2 to lite 1.0.3
+
+Nicolas Burrus  <nes@lrde.epita.fr> & code34 <athome1@caramail.com>
+- fix cloader.h:
+		Remove Config_File macro.
+		Add CONFIG_DIR macro
+		Use Aol dns as default
+
+- fix recompile:
+		Add CONFIG_DIR macro
+
+- fix cconfig.cpp:
+		Add CONFIG_DIR macro.
+
+- fix modemdriver.cpp:
+		active loop with ISDN (missing fcntl).
+
+- main.cpp: 	
+		Add Regpid() & Killpid(), support SIGTERM 
+		Add CONFIG_DIR macro
+		Add usage arg (?)
+
+
+Summary of changes from Peng Exp 1.0.1 to Exp 1.0.2
+
+chupa <jc@varspool.net> 09.30.2002
+- fix kernel30.cpp:
+		add support for old resolv ip, dns
+
+- fix cclienttoaol.cpp:
+		fix Mtu problem (bFistrame=off)
+		
+- fix cppp.cpp:
+		read(): control buffer size
+
+
+Summary of changes from Peng 1.0.0 to Exp 1.0.1
+
+code34 <athome1@caramail.com> 09.28.2002
+- fix recompile:
+		must be root to install & execute peng 
+		remove bit sid
+		delete old pengaol binary
+		chmod 600 /etc/pengaol
+		rename pengaol as peng
+		delete wavplay installer
+		export Lang=eng by default
+
+- fix kernel30.cpp:
+		fix bug on resolv ip, dns
+
+- fix ctuntapdriver:
+		delete ethertap support for kernel 2.2
+
+- fix main.cpp:
+		add getopt, support long & short options  
+		fix --help option
+		delete output verbose on Lang dismiss
+		init char variables -> NULL
+
+- fix ccommand.cpp:
+		delete Check(), CheckOpt2(), Getopt(), Getopt2()
+
+- clean-up /peng:
+		delete Setup, PenGui, Setup, Guicomp, Install
+		delete wavplay-1.4/
+		delete CVS/
+		delete peng/.o & peng~
+		move Dns,  Modem.txt, PengMessages.txt, german.txt in Doc/
+		indent sources as RK 
+		correct PengMessage.txt
+
+- experimental modemdriver.cpp:
+		add at3 - modem firmware sn_modem()
+
+- fix cppp.cpp:
+		clean Read()
+
+
