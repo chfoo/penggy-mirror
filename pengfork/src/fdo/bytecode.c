@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002  Jean-Charles Salzeber <jc@varspool.net>
+ * Copyright (C) 2002-2003  Jean-Charles Salzeber <jc@varspool.net>
  *
  * This file is part of penggy.
  *
@@ -77,6 +77,7 @@ fdo_lookup_atom(pid, aid, def)
   return 0;
 }
 
+/*
 void
 display_raw_arg(arg,length)
      unsigned char *arg;
@@ -150,6 +151,7 @@ display_atom(atom)
       printf("\n");
     }
 }
+*/
 
 void
 extract_atoms(id, length, stream)
@@ -235,7 +237,7 @@ extract_atoms(id, length, stream)
       f->last_pid = atom.protid;
       if(is_eos_atom(atom.protid, atom.atomid))
         close_stream(id);
-      display_atom(atom);
+      /*display_atom(atom);*/
     }
 }
 
@@ -244,7 +246,7 @@ add_atom(stream_t *stream, int pid, int aid, ...)
 {
   va_list ap;
   int arg_len;
-  void *arg;
+  void *arg = NULL;
   unsigned char b;
   atomdef_t *def;
   u_int32_t ui32;

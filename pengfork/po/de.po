@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: penggy 0.1\n"
-"POT-Creation-Date: 2003-01-06 15:46+0100\n"
-"PO-Revision-Date: 2003-01-01 15:45+0100\n"
+"POT-Creation-Date: 2003-01-31 16:03+0100\n"
+"PO-Revision-Date: 2003-01-31 16:38+0100\n"
 "Last-Translator: Sebastian Schmidt <yath@yath.eu.org>\n"
 "Language-Team: German <yath@yath.eu.org>\n"
 "MIME-Version: 1.0\n"
@@ -151,6 +151,10 @@ msgstr "tun-Unterstützung wurde nicht einkompiliert\n"
 #: src/resolver.c:125
 msgid "Sorry P3 support is not compiled in\n"
 msgstr "P3-Unterstützung wurde nicht einkompiliert\n"
+
+#: src/resolver.c:134
+msgid "Sorry FLAP support is not compiled in\n"
+msgstr "FLAP-Unterstützung wurde nicht einkompiliert\n"
 
 #: src/modem/devlock.c:119
 #, c-format
@@ -346,23 +350,23 @@ msgstr ""
 msgid "Error while closing socket: %s(%d)\n"
 msgstr "Fehler beim Schließen des Sockets: %s (%d)\n"
 
-#: src/iptunnel/aol2cli.c:124
+#: src/iptunnel/aol2cli.c:123
 msgid "IP tunnel - bad size for a small packet\n"
 msgstr "IP-Tunnel - falsche Größe für ein kleines Paket\n"
 
-#: src/iptunnel/aol2cli.c:138
+#: src/iptunnel/aol2cli.c:137
 msgid "IP tunnel - Packet overflow detected\n"
 msgstr "IP-Tunnel - Paketüberlauf festgestellt\n"
 
-#: src/iptunnel/aol2cli.c:175
+#: src/iptunnel/aol2cli.c:174
 msgid "IP tunnel - Unable to uncompress the packet\n"
 msgstr "IP-Tunnel - Konnte Paket nicht dekomprimieren\n"
 
-#: src/iptunnel/aol2cli.c:192
+#: src/iptunnel/aol2cli.c:189
 msgid "IP tunnel - Unable to allocate memory\n"
 msgstr "IP-Tunnel - Konnte keinen Speicher reservieren\n"
 
-#: src/iptunnel/aol2cli.c:212
+#: src/iptunnel/aol2cli.c:209
 msgid "IP tunnel - received an unknown IP packet\n"
 msgstr "IP-Tunnel - Unbekanntes IP-Paket empfangen\n"
 

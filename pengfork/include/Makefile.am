@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2002  Jean-Charles Salzeber <jc@varspool.net>
+# Copyright (c) 2002-2003  Jean-Charles Salzeber <jc@varspool.net>
 #
 # This file is part of penggy program.
 #
@@ -42,4 +42,4 @@ noinst_HEADERS = 	access.h	\
 			stream.h	\
 			utils.h
 
-SUBDIRS = fdo iptunnel modem cable dsl tcpip tun p3 l2tp
+SUBDIRS = fdo iptunnel modem cable dsl tcpip tun p3 flap

@@ -3,7 +3,7 @@
 ## 'PPP compatible' and 'type' fields are not mandatory
 ## by default the number is considered not PPP compatible and of type aolnet
 ##
-## Phone		PPP compatible		type
+## Phone	PPP compatible		type
 ##
 # 12345
 # 12345		no

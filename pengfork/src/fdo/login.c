@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002  Jean-Charles Salzeber <jc@varspool.net>
+ * Copyright (C) 2002-2003  Jean-Charles Salzeber <jc@varspool.net>
  *
  * This file is part of penggy.
  *
@@ -96,7 +96,6 @@ logon ()
   add_atom(&stream, UNI_PID, UNI_END_STREAM, 0);
   fdo_send (TOKEN ("Dd"), stream.data, stream.used);
   printf("Dd atom stream:\n");
-  extract_atoms(0, stream.used, stream.data);
   stream_destroy(&stream);
 
   fdo_unregister (TOKEN ("SD"));
@@ -132,21 +131,18 @@ atom_handler (token, data, data_size)
     {
       memcpy(((char *)&id)+1, data, 3);
       id=ntohl(id);
-      printf("New atom stream (id=%06x):\n", id);
       extract_atoms(id, data_size-3, data+3);
     }
   else if(token == TOKEN("AT"))
     {
       memcpy(((char *)&id)+2, data, 2);
       id=ntohl(id);
-      printf("New atom stream (id=%04x):\n",id);
       extract_atoms(id, data_size-2, data+2);
     }
   else if(token == TOKEN("at"))
     {
       memcpy(&id, data, 4);
       id=ntohl(id);
-      printf("New atom stream  (id=%08x):\n", id);
       extract_atoms(id, data_size-4, data+4);
     }
 }

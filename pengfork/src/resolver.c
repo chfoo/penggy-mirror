@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002  Jean-Charles Salzeber <jc@varspool.net>
+ * Copyright (C) 2002-2003  Jean-Charles Salzeber <jc@varspool.net>
  *
  * This file is part of penggy.
  *
@@ -123,6 +123,15 @@ resolve_protocol ()
       protocol = &p3_protocol;
 #else
       log (LOG_ERR, gettext ("Sorry P3 support is not compiled in\n"));
+      return 0;
+#endif
+    }
+  else if (strstr (PARAM_PROTOCOL, "flap"))
+    {
+#if ENABLE_FLAP
+      protocol = NULL; /*&flap_protocol;*/
+#else
+      log (LOG_ERR, gettext ("Sorry FLAP support is not compiled in\n"));
       return 0;
 #endif
     }

@@ -621,6 +621,7 @@ vj_uncompress_tcp (buf, buflen, total_len, comp, hdrp, hlenp)
 
   /* recompute the ip header checksum */
   bp = (u_short *) & cs->cs_ip;
+  cs->cs_ip.ip_v = 4; /* added for penggy since the header returned is a UNCOMPRESSED_TCP and we need a valid checksum*/
   cs->cs_ip.ip_sum = 0;
   for (changes = 0; hlen > 0; hlen -= 2)
     changes += *bp++;

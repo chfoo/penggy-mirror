@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2002  Jean-Charles Salzeber <jc@varspool.net>
+# Copyright (c) 2002-2003  Jean-Charles Salzeber <jc@varspool.net>
 #
 # This file is part of penggy program.
 #
@@ -25,11 +25,11 @@
 
 INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib -I$(top_srcdir)/intl
 
-l2tp_c = dummy.c
+flap_c = dummy.c
 
-if BUILD_L2TP
-noinst_LIBRARIES = libl2tp.a
-libl2tp_a_SOURCES = $(l2tp_c)
-else !BUILD_L2TP
-EXTRA_libl2tp_a_SOURCES = $(l2tp_c)
-endif !BUILD_L2TP
+if BUILD_FLAP
+noinst_LIBRARIES = libflap.a
+libflap_a_SOURCES = $(flap_c)
+else !BUILD_FLAP
+EXTRA_libflap_a_SOURCES = $(flap_c)
+endif !BUILD_FLAP

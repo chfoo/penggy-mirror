@@ -9,8 +9,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: penggy 0.1\n"
-"POT-Creation-Date: 2003-01-06 15:46+0100\n"
-"PO-Revision-Date: 2002-12-31 14:11+0100\n"
+"POT-Creation-Date: 2003-01-31 16:03+0100\n"
+"PO-Revision-Date: 2003-01-31 22:29+0100\n"
 "Last-Translator: Jean-Charles Salzeber <jc@varspool.net>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -159,6 +159,10 @@ msgstr "Désolé, le support de tun n'est pas compilé\n"
 #: src/resolver.c:125
 msgid "Sorry P3 support is not compiled in\n"
 msgstr "Désolé, le support de P3 n'est pas compilé\n"
+
+#: src/resolver.c:134
+msgid "Sorry FLAP support is not compiled in\n"
+msgstr "Désolé, le support FLAP n'est pas compilé\n"
 
 #: src/modem/devlock.c:119
 #, c-format
@@ -354,23 +358,23 @@ msgstr "Erreur en mettant la socket non blocante: %s(%d)\n"
 msgid "Error while closing socket: %s(%d)\n"
 msgstr "Erreur pendant la fermeture de la socket: %s(%d)\n"
 
-#: src/iptunnel/aol2cli.c:124
+#: src/iptunnel/aol2cli.c:123
 msgid "IP tunnel - bad size for a small packet\n"
 msgstr "Tunnel IP - Mauvaise taille pour un petit paquet\n"
 
-#: src/iptunnel/aol2cli.c:138
+#: src/iptunnel/aol2cli.c:137
 msgid "IP tunnel - Packet overflow detected\n"
 msgstr "Tunnel IP - Dépassement de paquet détécté\n"
 
-#: src/iptunnel/aol2cli.c:175
+#: src/iptunnel/aol2cli.c:174
 msgid "IP tunnel - Unable to uncompress the packet\n"
 msgstr "Tunnel IP - Impossible de décompressé le paquet\n"
 
-#: src/iptunnel/aol2cli.c:192
+#: src/iptunnel/aol2cli.c:189
 msgid "IP tunnel - Unable to allocate memory\n"
 msgstr "Tunnel IP - Impossible d'allouer la mémoire\n"
 
-#: src/iptunnel/aol2cli.c:212
+#: src/iptunnel/aol2cli.c:209
 msgid "IP tunnel - received an unknown IP packet\n"
 msgstr "Tunnel IP - Paquet IP inconnu reçu\n"
 
@@ -645,7 +649,7 @@ msgstr "définit la chaîne à utiliser pour numéroter."
 
 #: src/options.c:206
 msgid "uses STRING to obtain an extern line."
-msgstr ""
+msgstr "utilise STRING pour obtenir une ligne externe."
 
 #: src/options.c:209
 msgid "sets the file where phone numbers will be searched."

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002  Jean-Charles Salzeber <jc@varspool.net>
+ * Copyright (C) 2002-2003  Jean-Charles Salzeber <jc@varspool.net>
  *
  * This file is part of penggy.
  *
@@ -62,6 +62,5 @@ extern struct vjcompress vj_comp;
 extern buffer_t *acout, *ifout;
 
 extern int ipnum;
-extern int ip_recv;
 
 #endif /* __IPTUNNEL_TUNNEL_H__ */

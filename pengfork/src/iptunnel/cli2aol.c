@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002  Jean-Charles Salzeber <jc@varspool.net>
+ * Copyright (C) 2002-2003  Jean-Charles Salzeber <jc@varspool.net>
  *
  * This file is part of penggy.
  *
@@ -73,11 +73,6 @@ get_ip_client (in)
           data_size = (ip_size > MAX_OUTPUT) ? MAX_OUTPUT : ip_size;
           data = malloc (data_size + sizeof (*big));
           big = (struct long_ip *) data;
-          if (ip_recv)
-            {
-              ipnum++;
-              ip_recv = 0;
-            }
           big->ipnum = ipnum;
           big->len = htons (ip_size | ~IP_LEN_MASK);
           ip_data = data + sizeof (*big);

@@ -1,4 +1,4 @@
-penggy 0.1.0 INSTALL instructions
+penggy 0.2.0 INSTALL instructions
 =================================
 
  1. Introduction
@@ -8,14 +8,15 @@ penggy 0.1.0 INSTALL instructions
     AOL is a registered trademark of America Online, Inc.
     Penggy is not endorsed by or affiliated with the AOL trademark.
 
-  Penggy is a free Linux client for AOL. It allows Linux users to connect
+  Penggy is a free UNIX client for AOL. It allows UNIX users to connect
   to the Internet using AOL, through an IP tunneling system.
 
-  Right now, dialup and TCP/IP connections are supported.
+  Right now, dialup and TCP/IP connections are supported. It should work
+  on Linux and BSD platforms.
   It is based on a reverse-engineering of the P3 protocol, therefore 
   nothing was disassembled. It is a continuation of the Peng project, 
   which was abandonned. Everything was totally rewritten from scratch, and
-  the P3 implementation is more rigorous than before. The authors does not
+  the P3 implementation is more rigorous than before. The authors do not
   take responsibilty for any damage this program could cause to your 
   computer. In other words, if you computer suddenly blows up, starts 
   dancing to the song that's on the radio, or calls you names, you are 
@@ -26,8 +27,8 @@ penggy 0.1.0 INSTALL instructions
  2. Requirements
  ===============
 
-  2.1. Universal TUN/TAP device driver
-  ====================================
+  2.1. Universal TUN/TAP device driver¹ (Linux)
+  ============================================
 
   Penggy uses the Universal TUN/TAP device driver, written by 
   Maxim Krasnyansky.
@@ -53,6 +54,10 @@ penggy 0.1.0 INSTALL instructions
 
      The driver will be automatically loaded whenever the application 
      tries to access /dev/net/tun.
+     
+  ¹: on BSD platform you have nothing to do, except if you installed a tuned
+    kernel without TUN/TAP support. Otherwise the GENERIC kernel have support
+    for TUN/TAP.
 
   2.2. Guile, Project GNU's extension language library
   ====================================================
@@ -81,17 +86,26 @@ penggy 0.1.0 INSTALL instructions
   Installation is quite simple. Get the package, which is provided as 
   a .tar.gz archive, and put it somewhere on your system. Now you need to 
   uncompress and untar the files contained within the archive. That can be 
-  done very simply (we'll assume your archive is version 0.1.0)
+  done very simply (we'll assume your archive is version 0.2.0)
 
-  # tar xvzf penggy-0.1.0.tar.gz
+  $ tar xvzf penggy-0.2.0.tar.gz
 
-  The files should have been decompressed to a directory called penggy-0.1.0
+  The files should have been decompressed to a directory called penggy-0.2.0
   You now need to go to that directory and compile the program :
 
-  # cd penggy-0.1.0
-  # ./configure
-  # make
-  # make install
+  $ cd penggy-0.2.0
+  $ ./configure
+  $ make
+  $ make install
+
+  NOTE REGARDING DEFAULT DIRECTORIES:
+    Now everything is installed under $prefix (which default is /usr/local),
+    so configuration is under $prefix/etc/penggy !
+    This is the normal configure behaviour. I realize it may be annoying for
+    some users but this may be changed with configure parameters.
+    Example:
+      $ ./configure --sysconfdir=/etc --localstatedir=/var
+    (this is the parameters to give to have the previous default behaviour)
 
   If you need any particular option, such as cross-compiling, you can get 
   some help by typing :
@@ -104,6 +118,7 @@ penggy 0.1.0 INSTALL instructions
  4. Configuration
  ================
 
+  In this section we assume your configuration directory is /etc.
   During the install process, the /etc/penggy directory was created, and it
   has withing it several files we need to look at.
 
@@ -119,7 +134,12 @@ penggy 0.1.0 INSTALL instructions
     [YourScreenName]	[YourPassword]
     [AnotherScreenName]	[AnotherPassword]
     ....
-
+    
+  In /etc/penggy/phonetab put your AOL dialup number(s) :
+      [YourAOLDialupNumber]
+      [AnAlternativeOne]	          
+      ....
+	      
   The file /etc/penggy/penggy.cfg is self-documented but the most commonly
   used options are:
 
@@ -128,14 +148,12 @@ penggy 0.1.0 INSTALL instructions
     # daemon = yes
     modem_device = /dev/modem (Note : If this doesn't work, you might want
                                to try /dev/ttyS0)
-    phone = [AOL's dialup number]
-    phone1 = [An alternative one]
 
   Depending on your modem, you might need to change the initialization 
-  strings.
+  strings using initstr1 to initstr9 parameters.
   You can configure penggy to automatically redial (or reconnect) if you 
   get disconnected, by activating the corresponding option. You can also 
-  set it  to run as a daemon.
+  set it to run as a daemon.
 
 
  5. Usage
@@ -147,9 +165,9 @@ penggy 0.1.0 INSTALL instructions
 
   The last step after compiling, installing and configuring is running the
   software, and praying for it to work :
-    # penggy
+    $ penggy
 
-  Penggy must be run as root. If you're looking for a way to run it as a user
+  PENGGY MUST BE RUN AS ROOT. If you're looking for a way to run it as a user
   the use of sudo is greatly recommended (see sudo(8) and sudoers(5))
 
   Have fun!
@@ -168,5 +186,5 @@ penggy 0.1.0 INSTALL instructions
   The program itself was coded by Jean-Charles Salzeber <jc@varspool.net>. 
   Greetings to him and to his genius :)
   
-  Last update : Nov 8th, 2002.
+  Last update : Jan 31th, 2003.
   Reviewed by Jean-Charles

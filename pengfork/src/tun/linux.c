@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002  Jean-Charles Salzeber <jc@varspool.net>
+ * Copyright (C) 2002-2003  Jean-Charles Salzeber <jc@varspool.net>
  *
  * This file is part of penggy.
  *
@@ -97,7 +97,7 @@ tun_open_old ()
 
   if (PARAM_INTERFACE_NAME)
     {
-      sprintf (tunname, "/dev/%s", PARAM_INTERFACE_NAME);
+      snprintf (tunname, sizeof(tunname), "/dev/%s", PARAM_INTERFACE_NAME);
       tun_fd = open (tunname, O_RDWR);
       strncpy (tun_ifname, PARAM_INTERFACE_NAME, sizeof(tun_ifname));
     }

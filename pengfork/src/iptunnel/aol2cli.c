@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002  Jean-Charles Salzeber <jc@varspool.net>
+ * Copyright (C) 2002-2003  Jean-Charles Salzeber <jc@varspool.net>
  *
  * This file is part of penggy.
  *
@@ -91,7 +91,6 @@ get_ip_aol (token, data, data_size)
     }
 
   ipnum = small->ipnum;
-  ip_recv = 1;
   if (small->long_bit)
     /* This packet is a long ip (>=128 bytes) */
     {
@@ -170,7 +169,7 @@ get_uncompressed_ip (vjip, vjiplen)
                                     &vj_comp, &iphdr, &iphdrlen);
       /* allocate a buffer to contruct the uncompressed packet */
       iplen = iphdrlen + (vjiplen - vjhdrlen);
-      if (iplen == -1)
+      if (vjhdrlen == -1)
         {
           log (LOG_WARNING, gettext ("IP tunnel - Unable to uncompress the packet\n"));
           return;
@@ -180,8 +179,6 @@ get_uncompressed_ip (vjip, vjiplen)
         {
           /* copy header */
           memcpy (tmp, iphdr, iphdrlen);
-          tmp[0] &= ~TYPE_UNCOMPRESSED_TCP;
-          tmp[0] |= TYPE_IP;
           /* copy data */
           memcpy (&tmp[iphdrlen], &vjip[vjhdrlen], vjiplen - vjhdrlen);
           iface->put (ifout, tmp, iplen);

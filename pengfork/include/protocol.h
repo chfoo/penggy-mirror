@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002  Jean-Charles Salzeber <jc@varspool.net>
+ * Copyright (C) 2002-2003  Jean-Charles Salzeber <jc@varspool.net>
  *
  * This file is part of penggy.
  *
@@ -49,6 +49,9 @@ extern const protocol_t *protocol;
 
 #if ENABLE_P3
 extern const protocol_t p3_protocol;
+#endif
+#if ENABLE_FLAP
+extern const protocol_t flap_protocol;
 #endif
 
 #endif /* __PROTOCOL_H__ */

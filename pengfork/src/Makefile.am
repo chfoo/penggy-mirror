@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2002  Jean-Charles Salzeber <jc@varspool.net>
+# Copyright (c) 2002-2003  Jean-Charles Salzeber <jc@varspool.net>
 #
 # This file is part of penggy program.
 #
@@ -74,19 +74,11 @@ if BUILD_P3
   P3_LIBS = $(top_builddir)/src/p3/libp3.a
 endif BUILD_P3
 
-if BUILD_L2TP
-  L2TP_LIBS = $(top_builddir)/src/l2tp/libl2tp.a
-endif BUILD_L2TP
+if BUILD_FLAP
+  FLAP_LIBS = $(top_builddir)/src/flap/libflap.a
+endif BUILD_FLAP
 
-SUBDIRS = 	fdo			\
-		iptunnel		\
-		modem			\
-		cable			\
-		dsl			\
-		tcpip			\
-		tun			\
-		p3			\
-		l2tp
+SUBDIRS = fdo iptunnel modem cable dsl tcpip tun p3 flap
 
 
 penggy_LDADD = 	$(top_builddir)/src/fdo/libfdo.a		\
@@ -99,5 +91,5 @@ penggy_LDADD = 	$(top_builddir)/src/fdo/libfdo.a		\
 			$(TCPIP_LIBS)					\
 			$(TUN_LIBS)					\
 			$(P3_LIBS)					\
-			$(L2TP_LIBS)
+			$(FLAP_LIBS)
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002  Jean-Charles Salzeber <jc@varspool.net>
+ * Copyright (C) 2002-2003  Jean-Charles Salzeber <jc@varspool.net>
  *
  * This file is part of penggy.
  *
@@ -175,6 +175,7 @@ ip_tunnel_config (token, data, data_size)
   launch_ip_up (ifname, address, dns, domain, mtu);
 
   vj_compress_init (&vj_comp, -1);
+  ipnum = 0;
 
   engine_register (*(iface->fd), 0, ip_tunnel_fn);
 

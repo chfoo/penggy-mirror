@@ -1,3 +1,16 @@
+version 0.2.0   (01/31/03):
+	* Fixed the "server seems dead" message when it's only inactivity
+	* Fixed segfault when modem_device does not exist
+	* Fixed segfault when interface_type is specified
+	* Fixed compilation with guile 1.6
+	* Added support for BSD platform (FreeBSD, NetBSD and OpenBSD)
+	* Phone specification is now made in a separate file
+	* Let the default behaviour for configure (i.e. sysconfdir default is
+	  /usr/local/etc)
+	* Added support for CompuServe2000 (untested)
+	* Added german translation (thanks to yath)
+	* Moved chat scripts under $prefix/share/penggy
+	
 version 0.1.0	(12/07/02):
 	* Initial release
 	* Project is now called penggy

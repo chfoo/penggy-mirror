@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002  Jean-Charles Salzeber <jc@varspool.net>
+ * Copyright (C) 2002-2003  Jean-Charles Salzeber <jc@varspool.net>
  *
  * This file is part of penggy.
  *
@@ -116,7 +116,7 @@ check_protocol (option, protocol)
      char *option;
      char *protocol;
 {
-  char *choices[] = { "p3", "l2tp", NULL };
+  char *choices[] = { "p3", "flap", NULL };
 
   return check_multiple (option, protocol, choices);
 }

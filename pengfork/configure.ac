@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2002  Jean-Charles Salzeber <jc@varspool.net>
+# Copyright (c) 2002-2003  Jean-Charles Salzeber <jc@varspool.net>
 #
 # This file is part of penggy program.
 #
@@ -26,7 +26,7 @@
 # Autoconf 2.53 needed so that buggy PATH_SEPARATOR is fixed.
 AC_PREREQ(2.53)
 
-AC_INIT(penggy, 0.1.0+CVS)
+AC_INIT(penggy, 0.2.0)
 AC_CONFIG_HEADER([config.h])
 
 # Auxiliary files
@@ -132,13 +132,13 @@ AM_CONDITIONAL(NEED_GETOPT, test "$ac_cv_func_getopt_long" != yes)
 
 # Disable debugging
 AC_ARG_ENABLE(debug,
-  AC_HELP_STRING([--disable-debug], [Disable debugging. ]),
+  AC_HELP_STRING([--enable-debug], [enable debugging. ]),
   [case "${enableval}" in
     yes) debug=yes ;;
     no)  debug=no ;;
     *) AC_MSG_ERROR(bad value ${enableval} for --disable-debug) ;;
   esac],
-  [debug=yes]
+  [debug=no]
 )
 
 if test "$debug" = yes; then
@@ -281,28 +281,28 @@ fi
 AM_CONDITIONAL(BUILD_P3, test "$p3" = yes)
 
      
-# L2TP protocol
-AC_ARG_ENABLE(l2tp,
-  AC_HELP_STRING([--enable-l2tp], [Enable L2TP protocol support. (EXPERIMENTAL)]),
+# FLAP protocol
+AC_ARG_ENABLE(flap,
+  AC_HELP_STRING([--enable-flap], [Enable FLAP protocol support. (EXPERIMENTAL)]),
   [case "${enableval}" in
-    yes) l2tp=yes ;;
-    no)  l2tp=no  ;;
-    *) AC_MSG_ERROR(bad value ${enableval} for --disable-l2tp) ;;
+    yes) flap=yes ;;
+    no)  flap=no  ;;
+    *) AC_MSG_ERROR(bad value ${enableval} for --enable-flap) ;;
   esac],
- [l2tp=yes]
+ [flap=yes]
 )
 
-if test "$l2tp" = yes; then
-  AC_DEFINE([ENABLE_L2TP], 1,[ Enable/disable L2TP protocol ])
+if test "$flap" = yes; then
+  AC_DEFINE([ENABLE_FLAP], 1,[ Enable/disable FLAP protocol ])
 fi
-AM_CONDITIONAL(BUILD_L2TP, test "$l2tp" = yes)
+AM_CONDITIONAL(BUILD_FLAP, test "$flap" = yes)
 
 
-if test "$p3" != yes -a "$l2tp" != yes; then
+if test "$p3" != yes -a "$flap" != yes; then
   AC_MSG_ERROR([
 ************************************************************
 * No protocol will be compiled.                            *
-* You must choose P3, L2TP or both.                        *
+* You must choose P3, FLAP or both.                        *
 * Try ./configure --help for more information.             *
 ************************************************************
 ])
@@ -363,7 +363,7 @@ AC_CONFIG_FILES([Makefile
                  include/fdo/Makefile
                  include/fdo/atoms/Makefile
                  include/iptunnel/Makefile
-                 include/l2tp/Makefile
+                 include/flap/Makefile
                  include/modem/Makefile
                  include/p3/Makefile
                  include/tcpip/Makefile
@@ -377,7 +377,7 @@ AC_CONFIG_FILES([Makefile
                  src/fdo/Makefile
                  src/fdo/atoms/Makefile
                  src/iptunnel/Makefile
-                 src/l2tp/Makefile
+                 src/flap/Makefile
                  src/modem/Makefile
                  src/p3/Makefile
                  src/tcpip/Makefile

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2002  Jean-Charles Salzeber <jc@varspool.net>
+# Copyright (c) 2002-2003  Jean-Charles Salzeber <jc@varspool.net>
 #
 # This file is part of penggy program.
 #
@@ -34,4 +34,4 @@ archcheck:
 
 ACLOCAL_AMFLAGS = -I m4
 
-EXTRA_DIST = config/config.rpath DISCLAIMER
+EXTRA_DIST = config/config.rpath DISCLAIMER README.redhat

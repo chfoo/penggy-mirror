@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002  Jean-Charles Salzeber <jc@varspool.net>
+ * Copyright (C) 2002-2003  Jean-Charles Salzeber <jc@varspool.net>
  *
  * This file is part of penggy.
  *
@@ -343,7 +343,7 @@ static void
 version (void)
 {
   printf("\n%s (%s) %s\n\n" , program_name, PACKAGE, VERSION);
-  printf("Copyright (C) 2002 Jean-Charles Salzeber.\n");
+  printf("Copyright (C) 2002-2003 Jean-Charles Salzeber.\n");
   printf(gettext ("%s comes with ABSOLUTELY NO WARRANTY.\n"
 	        "This is free software, and you are welcome to redistribute it under the terms\n"
 	        "of the GNU General Public License, version 2 or any later version.\n\n")

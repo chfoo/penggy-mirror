@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002  Jean-Charles Salzeber <jc@varspool.net>
+ * Copyright (C) 2002-2003  Jean-Charles Salzeber <jc@varspool.net>
  *
  * This file is part of penggy.
  *
@@ -17,9 +17,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
  * 02111-1307, USA.
- *                
+ *
  * $Id$
- *               
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -37,7 +37,7 @@
 #if HAVE_UNISTD_H
 # include <unistd.h>
 #endif
-#ifdef ENABLE_MODEM
+#if ENABLE_MODEM
 #  include <libguile.h>
 #endif
 
@@ -72,7 +72,7 @@ clean_exit(n)
 }
 
 
-#ifndef ENABLE_MODEM
+#if !ENABLE_MODEM
 int
 main (argc, argv)
      int argc;
@@ -173,14 +173,14 @@ main2 (closure, argc, argv)
   if(PARAM_PID_FILE) 
     remove_pidfile ();
 
-#ifndef ENABLE_MODEM
+#if !ENABLE_MODEM
   return 0;
 #else
   exit (0);
 #endif
 }
 
-#ifdef ENABLE_MODEM
+#if ENABLE_MODEM
 int
 main (argc, argv)
      int argc;
