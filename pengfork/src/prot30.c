@@ -55,7 +55,12 @@ int
 prot30_start ()
 {
   access_fd = access_getfd ();
-  if_fd = if_getfd ();
+  if ((if_fd = if_getfd ()) < 0)
+    {
+      fprintf (stderr, "Could not open interface file descriptor\n");
+      /* FIXME: uncomment line when ready */
+      /* return 0; */
+    }
 
   client_seq = PACKET_MAX_SEQ;
   server_lastack = 0;           /* We have never received a packet */
@@ -112,7 +117,8 @@ prot30_loop ()
         case disconnect:
           maxfd = MAX (access_fd, if_fd) + 1;
           FD_SET (access_fd, &rfdset);
-          FD_SET (if_fd, &rfdset);
+	  if (if_fd >= 0) /* FIXME: remove when ready */
+	    FD_SET (if_fd, &rfdset);
           if (access_out.used > 0)
             FD_SET (access_fd, &wfdset);
           if (if_out.used > 0)

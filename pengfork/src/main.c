@@ -47,7 +47,13 @@ main (argc, argv)
     }
 
   if (if_connect () && access_connect ())
-    prot30_start ();
+    {
+      if (!prot30_start ())
+	{
+	  fprintf (stderr, "Fatal error, exiting.\n");
+	  exit (1);
+	}
+    }
   else
     {
       fprintf (stderr, "Fatal error, exiting.\n");
