@@ -54,12 +54,12 @@ tun_open()
   
   if (PARAM_INTERFACE_NAME) {
     snprintf(tunname, sizeof(tunname), "/dev/%s", PARAM_INTERFACE_NAME);
-    fd = open(tunname, O_RDWR);
+    fd = open(tunname, O_RDWR | O_NONBLOCK);
   } else {
     for (i = 0; i < 255; i++) {
       snprintf(tunname, sizeof(tunname), "/dev/tun%d", i);
       /* Open device */
-      if ((fd = open(tunname, O_RDWR)) > 0) {
+      if ((fd = open(tunname, O_RDWR | O_NONBLOCK)) > 0) {
         sprintf(PARAM_INTERFACE_NAME, "tun%d", i);
         break;
       }
@@ -95,8 +95,8 @@ tun_get(buffer, data, data_size)
   u_int32_t *type;
   struct ip *ip;
 
-  type=(u_int32_t *)buffer_end(buffer);
-  ip=(struct ip *)(buffer_end(buffer)+sizeof(u_int32_t));
+  type=(u_int32_t *)buffer_start(buffer);
+  ip=(struct ip *)(buffer_start(buffer)+sizeof(u_int32_t));
 
   *data=NULL;
   *data_size=0;

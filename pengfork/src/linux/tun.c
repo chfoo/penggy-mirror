@@ -83,7 +83,7 @@ tun_open ()
 {
   struct ifreq ifr;
 
-  if ((fd = open ("/dev/net/tun", O_RDWR)) < 0)
+  if ((fd = open ("/dev/net/tun", O_RDWR | O_NONBLOCK)) < 0)
     return 0;
   /* We will try old tuntap when new support is ok */
   /* return tun_open_old (dev); */
@@ -156,7 +156,7 @@ tun_get (buffer, data, data_size)
 {
   struct iphdr *ip;
 
-  ip = (struct iphdr*) buffer_end(buffer);
+  ip = (struct iphdr*) buffer_start(buffer);
   *data = NULL;
   *data_size = 0;
   if (buffer->used < sizeof(struct iphdr))
