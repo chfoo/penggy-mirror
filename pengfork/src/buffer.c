@@ -50,6 +50,18 @@ destroy_buffer (buffer)
 }
 
 int
+buffer_reserve (buffer, size)
+     buffer_t *buffer;
+     size_t size;
+{
+  if (buffer->used + size > buffer->size)
+    return 0;
+  if (buffer->used + buffer->start + size > buffer->size)
+    buffer_align (buffer);
+  return 1;
+}
+
+int
 buffer_alloc (buffer, size)
      buffer_t *buffer;
      size_t size;

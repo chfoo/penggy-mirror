@@ -26,7 +26,7 @@
 #include <netinet/in.h>
 
 #include "misc.h"
-#include "config.h"
+#include "options.h"
 
 int
 launch_ip_up (if_name, if_addr, if_netmask, if_network, if_broadcast,

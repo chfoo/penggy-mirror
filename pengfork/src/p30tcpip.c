@@ -28,7 +28,7 @@
 #include "p30data.h"
 #include "p30tcpip.h"
 
-#include "config.h"
+#include "options.h"
 #include "if.h"
 #include "misc.h"
 
@@ -102,7 +102,12 @@ prot30_get_ip (data, data_size)
   if (small->len & LONG_IP_BIT)
     /* This packet is a long ip (>128 bytes) */
     {
+      big->len &= LONG_IP_MASK;
       if_put (&if_out, big->ip_data, data_size - 3);
+    }
+  else
+    {
+      if_put (&if_out, big->ip_data, data_size - 2);
     }
 }
 
@@ -111,4 +116,22 @@ prot30_get_ip_extra (data, data_size)
      char *data;
      size_t data_size;
 {
+  if_put (&if_out, data, data_size);
+}
+
+void
+prot30_send_ip ()
+{
+  char *data;
+  size_t data_size;
+  struct short_ip_t small;
+  struct long_ip_t big;
+
+  while (if_get (&if_in, &data, &data_size))
+    {
+      if (data_size > 0x7f)
+        {
+        }
+    }
+
 }

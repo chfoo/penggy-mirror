@@ -34,7 +34,7 @@
 
 #include "modem.h"
 #include "devlock.h"
-#include "config.h"
+#include "options.h"
 #include "utils.h"
 
 struct speed_lookup
@@ -136,7 +136,8 @@ int
 modem_connect ()
 {
 
-  if (!modem_open (PARAM_MODEM_DEVICE, PARAM_MODEM_LINE_SPEED, 1))
+  if (!modem_open
+      (PARAM_MODEM_DEVICE, PARAM_MODEM_LINE_SPEED, PARAM_MODEM_RTSCTS))
     return 0;
   printf ("Device %s opened\n", PARAM_MODEM_DEVICE);
 
@@ -180,11 +181,11 @@ modem_send_init_string (string)
     return 0;
   switch (modem_response_value (response))
     {
-    case 0:                    /* OK */
+    case RESPONSE_OK:          /* OK */
       return 1;
       break;
 
-    case 1:                    /* ERROR */
+    case RESPONSE_ERROR:       /* ERROR */
       return 0;
       break;
 
@@ -231,55 +232,53 @@ modem_dial_to (phone)
     return 0;
   switch (modem_response_value (response))
     {
-    case 1:                    /* ERROR */
+    case RESPONSE_ERROR:       /* ERROR */
       fprintf (stderr, "Bad string\n"
                "Please verify the phone number, dial string and prefix\n");
       return 0;
       break;
 
-    case 2:                    /* CONNECT */
+    case RESPONSE_CONNECT:     /* CONNECT */
       return 1;
       break;
 
-    case 3:                    /* NO CARRIER */
+    case RESPONSE_NO_CARRIER:  /* NO CARRIER */
       fprintf (stderr, "No carrier detected\n");
       return 0;
       break;
 
-    case 4:                    /* NO DIALTONE */
-    case 5:                    /* NO DIAL TONE */
+    case RESPONSE_NO_DIALTONE: /* NO DIALTONE */
       fprintf (stderr, "No dial tone detected\n");
       return 0;
       break;
 
-    case 6:                    /* BUSY */
+    case RESPONSE_BUSY:        /* BUSY */
       fprintf (stderr, "Modem is busy\n");
       return 0;
       break;
 
-    case 7:                    /* DELAYED */
+    case RESPONSE_DELAYED:     /* DELAYED */
       fprintf (stderr, "?\n");
       return 0;
       break;
 
-    case 8:                    /* VOICE */
+    case RESPONSE_VOICE:       /* VOICE */
       fprintf (stderr, "?\n");
       return 0;
       break;
 
-    case 9:                    /* FCLASS */
-    case 10:                   /* FAX */
+    case RESPONSE_FAX:         /* FCLASS */
       fprintf (stderr, "You have been connected to a fax\n"
                "Please verify the phone number\n");
       return 0;
       break;
 
-    case 11:                   /* NO ANSWER */
+    case RESPONSE_NO_ANSWER:   /* NO ANSWER */
       fprintf (stderr, "There was no answer\n");
       return 0;
       break;
 
-    case 0:                    /* OK, should never happen */
+    case RESPONSE_OK:          /* OK, should never happen */
       break;
 
     default:                   /* TIMEOUT */
@@ -386,6 +385,8 @@ setup_modem (rtscts)
   /* Set the baud rate to 0 for half a second to drop DTR... */
   cfsetispeed (&t, B0);
   cfsetospeed (&t, B0);
+  modem_speed (baud);
+  usleep (10 * 1000);
   cfmakeraw (&t);
   tcsetattr (fd, TCSANOW, &t);
   if (modem_carrier ())

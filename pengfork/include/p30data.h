@@ -43,7 +43,7 @@ aol_data_t;
 #define CODE_INIT_CONFIRM 0x5344
 #define CODE_AIM          0x6174
 #define CODE_IP_CONFIG    0x7961
-#define CODE_IP_SMALL     0x7963
+#define CODE_IP_NORMAL    0x7963
 #define CODE_IP_EXTRA     0x7964
 
 

@@ -24,7 +24,7 @@
 #include <stdlib.h>
 
 #include "prot30.h"
-#include "config.h"
+#include "options.h"
 #include "access.h"
 #include "if.h"
 

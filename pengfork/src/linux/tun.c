@@ -94,19 +94,22 @@ tun_open ()
       if (errno == EBADFD)
 	{
 	  /* Try old ioctl */
-	  if (ioctl (fd, OTUNSETIFF, (void *) &ifr) < 0)
-	    goto failed;
+	  if (ioctl (fd, OTUNSETIFF, (void *) &ifr) < 0) 
+	    {
+	      tun_close ();
+	      return 0;
+	    }
 	}
       else
-	goto failed;
+        {
+	tun_close ();
+	return 0;
+        }
     }
 
   strcpy (PARAM_INTERFACE_NAME, ifr.ifr_name);
   return 1;
 
-failed:
-  close (fd);
-  return 0;
 }
 
 #else /* !HAVE_LINUX_IF_TUN_H */

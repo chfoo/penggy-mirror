@@ -25,7 +25,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "config.h"
+#include "options.h"
 
 #include "prot30.h"
 #include "p30data.h"

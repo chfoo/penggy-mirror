@@ -62,7 +62,7 @@ struct long_ip_t
 __attribute__ ((packed));
 
 #define LONG_IP_BIT 0x80
-#define LONG_IP_MASK 0x8000
+#define LONG_IP_MASK 0x7fff
 
 
 #define DEFAULT_IP_CONFIG_REQUEST (struct ip_config_request_t)\
@@ -71,5 +71,7 @@ __attribute__ ((packed));
 void prot30_send_ip_config ();
 void prot30_get_ip_config (char *data, size_t data_size);
 void prot30_get_ip (char *data, size_t data_size);
+void prot30_get_ip_extra (char *data, size_t data_size);
+void prot30_send_ip ();
 
 #endif /* __P30TCPIP_H__ */

@@ -39,7 +39,7 @@
 #include <netinet/in_systm.h>
 #include <netinet/ip.h>
 
-#include "config.h"
+#include "options.h"
 #include "tun.h"
 
 static int fd = -1;
@@ -51,11 +51,11 @@ tun_open()
   int i = -1;
   
   if (PARAM_INTERFACE_NAME) {
-    sprintf(tunname, "/dev/%s", PARAM_INTERFACE_NAME);
+    snprintf(tunname, sizeof(tunname), "/dev/%s", PARAM_INTERFACE_NAME);
     fd = open(tunname, O_RDWR);
   } else {
     for (i = 0; i < 255; i++) {
-      sprintf(tunname, "/dev/tun%d", i);
+      snprintf(tunname, sizeof(tunname), "/dev/tun%d", i);
       /* Open device */
       if ((fd = open(tunname, O_RDWR)) > 0) {
         sprintf(PARAM_INTERFACE_NAME, "tun%d", i);
@@ -103,7 +103,7 @@ tun_get(buffer, data, data_size)
   if(buffer->used < ip->ip_len+sizeof(u_int32_t))
     return 0;
 
-  *data=ip;
+  *data=(char *)ip;
   *data_size=ip->ip_len;
   buffer_free(buffer,ip->ip_len+sizeof(u_int32_t));
   return 1;

@@ -31,7 +31,7 @@
 #include "access.h"
 #include "if.h"
 #include "buffer.h"
-#include "config.h"
+#include "options.h"
 #include "utils.h"
 
 #include "prot30.h"
@@ -163,29 +163,34 @@ prot30_send_packet (type, data, data_size)
 
   if (!data)
     data_size = 0;
-  buf = buffer_end (&access_out);
-  header = (aol_header_t *) buf;
-  pdata = &buf[AOL_DATA_OFFSET];
+  if (buffer_reserve (&access_out, data_size + AOL_DATA_OFFSET + 1))
+    {
+      buf = buffer_end (&access_out);
+      header = (aol_header_t *) buf;
+      pdata = &buf[AOL_DATA_OFFSET];
 
-  header->magic = AOL_MAGIC;
-  header->size = htons (data_size + AOL_SIZE_OFFSET);
-  header->seq = client_seq;
-  header->ack = server_lastseq;
-  header->client = 1;
-  header->type = type;
-  memcpy (pdata, data, data_size);
+      header->magic = AOL_MAGIC;
+      header->size = htons (data_size + AOL_SIZE_OFFSET);
+      header->seq = client_seq;
+      header->ack = server_lastseq;
+      header->client = 1;
+      header->type = type;
+      memcpy (pdata, data, data_size);
 
-  header->checksum =
-    htons (prot30_crc16 ((char *) &header->size, data_size + 5));
-  pdata[data_size] = AOL_STOP;
+      header->checksum =
+        htons (prot30_crc16 ((char *) &header->size, data_size + 5));
+      pdata[data_size] = AOL_STOP;
 
-  /*prot30_dump_raw (buf, data_size + AOL_DATA_OFFSET + 1); */
+      /*prot30_dump_raw (buf, data_size + AOL_DATA_OFFSET + 1); */
 
-  buffer_alloc (&access_out, data_size + AOL_DATA_OFFSET + 1);
+      buffer_alloc (&access_out, data_size + AOL_DATA_OFFSET + 1);
 
-  if (type == TYPE_DATA || type == TYPE_INIT)
-    if (++client_seq > PACKET_MAX_SEQ)
-      client_seq = PACKET_MIN_SEQ;
+      if (type == TYPE_DATA || type == TYPE_INIT)
+        if (++client_seq > PACKET_MAX_SEQ)
+          client_seq = PACKET_MIN_SEQ;
+    }
+  else
+    fprintf (stderr, "Unable to send packet, buffer full.\n");
 }
 
 void

@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "config.h"
+#include "options.h"
 #include "utils.h"
 #include "access.h"
 #include "if.h"
@@ -34,149 +34,152 @@
 
 param_t param[PARAM_MAX] = {
   /* GENERAL CONFIGURATION */
-{"access_method", string, false, {string:"modem"}
+{NULL, "access-method", "access_method", string, false, {string:"modem"}
    }
   ,
-{"protocol", string, false, {string:"aol30"}
+{NULL, "protocol", "protocol", string, false, {string:"aol30"}
    }
   ,
-{"interface_type", string, false, {string:"tun"}
+{"it", "interface-type", "interface_type", string, false, {string:"tun"}
    }
   ,
-{"interface_name", string, false, {string:"tun0"}
+{"i", "interface", "interface_name", string, false, {string:"tun0"}
    }
   ,
-{"user", string, false, {string:NULL}
+{"u", "user", "user", string, false, {string:NULL}
    }
   ,
-{"pass", string, false, {string:NULL}
+{"p", "pass", "pass", string, false, {string:NULL}
    }
   ,
-{"auto_reconnect", boolean, false, {boolean:false}
+{"r", "auto-reconnect", "auto_reconnect", boolean, false, {boolean:false}
    }
   ,
-{"reconnect_delay", integer, false, {integer:0}
+{NULL, "reconnect-delay", "reconnect_delay", integer, false, {integer:0}
    }
   ,
-{"daemon", boolean, false, {boolean:false}
+{"d", "daemon", "daemon", boolean, false, {boolean:false}
    }
   ,
-{"debug_level", integer, false, {integer:0}
+{"l", "log-level", "log_level", integer, false, {integer:0}
    }
   ,
-{"set_dns", boolean, false, {boolean:true}
+{NULL, "dns", "set_dns", boolean, false, {boolean:true}
    }
   ,
-{"pid_file", string, false, {string:"/var/run/pengaol.pid"}
+{NULL, "pid", "pid_file", string, false, {string:"/var/run/pengaol.pid"}
    }
   ,
-{"ip-up_script", string, false, {string:"/etc/pengaol/ip-up"}
+{NULL, "ip-up", "ip-up_script", string, false, {string:"/etc/pengaol/ip-up"}
    }
   ,
-{"ip-down_script", string, false, {string:"/etc/pengaol/ip-down"}
+{NULL, "ip-down", "ip-down_script", string, false, {string:"/etc/pengaol/ip-down"}
    }
   ,
 
   /* MODEM SPECIFIC */
-{"modem_device", string, false, {string:"/dev/modem"}
+{"m", "modem", "modem_device", string, false, {string:"/dev/modem"}
    }
   ,
-{"initstr1", string, false, {string:"ATZ"}
+{NULL, "rtscts", "rtscts", boolean, false, {boolean:true}
    }
   ,
-{"initstr2", string, false, {string:NULL}
+{NULL, "init-str", "initstr1", string, false, {string:"ATZ"}
    }
   ,
-{"initstr3", string, false, {string:NULL}
+{NULL, NULL, "initstr2", string, false, {string:NULL}
    }
   ,
-{"initstr4", string, false, {string:NULL}
+{NULL, NULL, "initstr3", string, false, {string:NULL}
    }
   ,
-{"initstr5", string, false, {string:NULL}
+{NULL, NULL, "initstr4", string, false, {string:NULL}
    }
   ,
-{"initstr6", string, false, {string:NULL}
+{NULL, NULL, "initstr5", string, false, {string:NULL}
    }
   ,
-{"initstr7", string, false, {string:NULL}
+{NULL, NULL, "initstr6", string, false, {string:NULL}
    }
   ,
-{"initstr8", string, false, {string:NULL}
+{NULL, NULL, "initstr7", string, false, {string:NULL}
    }
   ,
-{"initstr9", string, false, {string:NULL}
+{NULL, NULL, "initstr8", string, false, {string:NULL}
    }
   ,
-{"dialstr", string, false, {string:"ATDT"}
+{NULL, NULL, "initstr9", string, false, {string:NULL}
    }
   ,
-{"dial_prefix", string, false, {string:NULL}
+{NULL, "dial-str", "dialstr", string, false, {string:"ATDT"}
    }
   ,
-{"phone", string, false, {string:NULL}
+{NULL, NULL, "dial_prefix", string, false, {string:NULL}
    }
   ,
-{"phone1", string, false, {string:NULL}
+{"n", "phone", "phone", string, false, {string:NULL}
    }
   ,
-{"phone2", string, false, {string:NULL}
+{NULL, NULL, "phone1", string, false, {string:NULL}
    }
   ,
-{"phone3", string, false, {string:NULL}
+{NULL, NULL, "phone2", string, false, {string:NULL}
    }
   ,
-{"phone4", string, false, {string:NULL}
+{NULL, NULL, "phone3", string, false, {string:NULL}
    }
   ,
-{"phone5", string, false, {string:NULL}
+{NULL, NULL, "phone4", string, false, {string:NULL}
    }
   ,
-{"line_speed", integer, false, {integer:115200}
+{NULL, NULL, "phone5", string, false, {string:NULL}
    }
   ,
-{"login_prompt", string, false, {string:"ogin:"}
+{"s", "line-speed", "line_speed", integer, false, {integer:115200}
    }
   ,
-{"server_pass_prompt", string, false, {string:"assword:"}
+{NULL, NULL, "login_prompt", string, false, {string:"ogin:"}
    }
   ,
-{"server_login", string, false, {string:"aol"}
+{NULL, NULL, "server_pass_prompt", string, false, {string:"assword:"}
    }
   ,
-{"server_pass", string, false, {string:"aol"}
+{"sl", "server-login", "server_login", string, false, {string:"aol"}
    }
   ,
-{"server_connected", string, false, {string:"onnected"}
+{"sp", "server-pass", "server_pass", string, false, {string:"aol"}
    }
   ,
-{"server_bad_passwd", string, false, {string:"assword"}
+{NULL, NULL, "server_connected", string, false, {string:"onnected"}
    }
   ,
-{"dial_retry", integer, false, {integer:3}
+{NULL, NULL, "server_bad_passwd", string, false, {string:"assword"}
    }
   ,
-{"retry_delay", integer, false, {integer:0}
+{NULL, NULL, "dial_retry", integer, false, {integer:3}
    }
   ,
-{"abort_busy", boolean, false, {boolean:true}
+{NULL, NULL, "retry_delay", integer, false, {integer:0}
    }
   ,
-{"abort_dialtone", boolean, false, {boolean:true}
+{NULL, NULL, "abort_busy", boolean, false, {boolean:true}
+   }
+  ,
+{NULL, NULL, "abort_dialtone", boolean, false, {boolean:true}
    }
   ,
 
   /* CABLE SPECIFIC */
-{"aol_host", string, false, {string:"americaonline.aol.com"}
+{NULL, NULL, "aol_host", string, false, {string:"americaonline.aol.com"}
    }
   ,
-{"aol_port", integer, false, {integer:5190}
+{NULL, NULL, "aol_port", integer, false, {integer:5190}
    }
   ,
-{"cable_iface", string, false, {string:"eth0"}
+{NULL, NULL, "cable_iface", string, false, {string:"eth0"}
    }
   ,
-{"connect_ip", string, false, {string:"0.0.0.0"}
+{NULL, NULL, "connect_ip", string, false, {string:"0.0.0.0"}
    }
 };
 
@@ -185,8 +188,7 @@ parse_config_file (filename)
      char *filename;
 {
   FILE *f;
-#define MAX_BUFFER 256
-  char line[MAX_BUFFER];
+  char line[256];
   int i, lineno = 0;
   char *name, *value;
 
@@ -199,7 +201,7 @@ parse_config_file (filename)
   while (!feof (f))
     {
       lineno++;
-      if (fgets (line, MAX_BUFFER, f) == NULL)
+      if (fgets (line, sizeof (line), f) == NULL)
         break;
       strip_comments (line);
       trim (line);
@@ -215,7 +217,6 @@ parse_config_file (filename)
         }
     }
   return 0;
-#undef MAX_BUFFER
 }
 
 void
@@ -295,7 +296,7 @@ get_integer (integer, value)
   char *end;
 
   ival = strtol (value, &end, 10);
-  if (*value != '\0' && *end != '\0')
+  if (*value != '\0' && *end == '\0')
     *integer = ival;
   else
     return 0;

@@ -56,11 +56,11 @@ prot30_rcv_data (data, data_size)
     case CODE_IP_CONFIG:
       prot30_get_ip_config (data->raw, data_size - sizeof (data->code));
       break;
-    case CODE_IP_SMALL:
+    case CODE_IP_NORMAL:
       prot30_get_ip (data->raw, data_size - sizeof (data->code));
       break;
     case CODE_IP_EXTRA:
-      /* prot30_get_ip_extra (data->raw, data_size - sizeof (data->code)); */
+      prot30_get_ip_extra (data->raw, data_size - sizeof (data->code));
       break;
     default:
       printf ("Unknow data code received: code= %04x\n", data->code);
