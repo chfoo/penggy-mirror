@@ -20,7 +20,7 @@
 #
 
 
-EXTRA_DIST = 	config.h		\
+EXTRA_DIST = 	options.h		\
 		misc.h			\
 		p30init.h		\
 		prot30.h		\
@@ -36,5 +36,6 @@ EXTRA_DIST = 	config.h		\
 		utils.h			\
 		log.h			\
 		common.h                \
-		cable.h
-		
+		cable.h			\
+		vjcompress.h		\
+		bsdtcp.h

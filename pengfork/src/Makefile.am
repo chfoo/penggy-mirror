@@ -42,4 +42,4 @@ pengfork_SOURCES = 	buffer.c		\
 
 INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib
 
-pengfork_LDADD = $(top_srcdir)/src/@ARCH_DIR@/libsystem.a $(top_srcdir)/lib/lib.a
+pengfork_LDADD = $(top_builddir)/src/@ARCH_DIR@/libsystem.a $(top_builddir)/lib/lib.a
