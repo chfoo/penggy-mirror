@@ -20,6 +20,8 @@
  *                
  */
 
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -46,6 +48,7 @@ launch_ip_up (if_name, if_addr, if_netmask, if_network, if_broadcast,
   char gateway[128];
   int pid;
   char *args[] = { PARAM_IP_UP, NULL };
+  struct stat st;
 
   snprintf (name, sizeof (name) - 1, "IFNAME=%s", if_name);
   snprintf (addr, sizeof (addr) - 1, "ADDRESS=%d.%d.%d.%d",
@@ -68,7 +71,7 @@ launch_ip_up (if_name, if_addr, if_netmask, if_network, if_broadcast,
             if_gateway >> 16 & 0xff,
             if_gateway >> 8 & 0xff, if_gateway & 0xff);
 
-  if (PARAM_IP_UP)
+  if (PARAM_IP_UP && !stat (PARAM_IP_UP, &st))
     {
       pid = fork ();
       if (pid == 0)
@@ -115,6 +118,7 @@ launch_down_up (if_name, if_addr, if_netmask, if_network, if_broadcast,
   char gateway[128];
   int pid;
   char *args[] = { PARAM_IP_DOWN, NULL };
+  struct stat st;
 
   snprintf (name, sizeof (name) - 1, "IFNAME=%s", if_name);
   snprintf (addr, sizeof (addr) - 1, "ADDRESS=%d.%d.%d.%d",
@@ -137,7 +141,7 @@ launch_down_up (if_name, if_addr, if_netmask, if_network, if_broadcast,
             if_gateway >> 16 & 0xff,
             if_gateway >> 8 & 0xff, if_gateway & 0xff);
 
-  if (PARAM_IP_DOWN)
+  if (PARAM_IP_DOWN && !stat (PARAM_IP_DOWN, &st))
     {
       pid = fork ();
       if (pid > 0)
