@@ -1,0 +1,73 @@
+<!-- here is the synopsis of the pengfork
+     command -->
+
+<cmdsynopsis>
+  <command>pengfork</command>
+  <group>
+    <arg>-h</arg>
+    <arg>--help</arg>
+  </group>
+  <group>
+    <arg>-v</arg>
+    <arg>--version</arg>
+  </group>
+</cmdsynopsis>
+
+<cmdsynopsis>
+  <command>pengfork</command>
+  <arg>--access-method=
+    <arg choice='plain'>
+      <replaceable>METHOD</replaceable>
+    </arg>
+  </arg>
+  <arg>--protocol=
+    <arg choice='plain'>
+      <replaceable>PROTOCOL</replaceable>
+    </arg>
+  </arg>
+  <sbr>
+  <group>
+    <arg>-r</arg>
+    <arg>--auto-reconnect
+      <arg>--reconnect-delay=
+        <arg choice='plain'>
+          <replaceable>DELAY</replaceable>
+       </arg>
+      </arg>
+    </arg>
+  </group>
+  <sbr>
+  <group>
+    <arg> -d</arg>
+    <arg> --daemon</arg>
+  </group>
+  <group>
+    <arg>-D</arg>
+    <arg>--debug-level=
+      <arg choice='plain'>
+        <replaceable>LEVEL</replaceable>
+      </arg>
+    </arg>
+  </group>
+  <sbr>
+  <group>
+    <arg>-u</arg>
+    <arg>--use-sn=
+      <arg choice='plain'>
+        <replaceable>NUMBER</replaceable>
+          <arg>--screen-name=
+            <arg choice='plain'>
+              <replaceable>SN</replaceable>
+            </arg>
+          </arg>
+          <arg>--password=
+            <arg choice='plain'>
+              <replaceable>PASS</replaceable>
+            </arg>
+          </arg>
+      </arg>
+    </arg>
+  </group>
+
+</cmdsynopsis>
+

@@ -1,0 +1,34 @@
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook V4.0//EN" [
+  <!ENTITY synopsis SYSTEM "synopsis.sgm">
+  <!ENTITY description SYSTEM "description.sgm">
+  <!ENTITY options SYSTEM "options.sgm">
+]>
+
+<!-- This file is part of the pengfork project
+     it is the manpage file in french -->
+
+<refentry id="pengfork">
+
+    <refmeta>
+      <refentrytitle>pengfork</refentrytitle>
+      <manvolnum>1</manvolnum>
+    </refmeta>
+
+    <refnamediv>
+      <refname>pengfork</refname>
+      <refpurpose>se connecter à internet avec son compte AOL</refpurpose>
+    </refnamediv>
+
+    <refsynopsisdiv>
+      &synopsis;
+    </refsynopsisdiv>
+    
+    <refsect1><title>Description</title>
+      &description;
+    </refsect1>
+
+    <refsect1><title>Options</title>
+      &options;
+    </refsect1>
+
+</refentry>
