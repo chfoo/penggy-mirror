@@ -66,10 +66,24 @@ case $host in
 esac
 AC_SUBST([ARCH_DIR])
 
+#Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS(fcntl.h sys/ioctl.h sys/time.h syslog.h unistd.h)
 AC_CHECK_HEADERS([netinet/in_systm.h])
 
 # linux tuntap driver
 AC_CHECK_HEADERS([linux/if_tun.h])
+
+#Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_TYPE_PID_T
+AC_TYPE_SIZE_T
+AC_HEADER_TIME
+
+#Checks for library functions.
+AC_PROG_GCC_TRADITIONAL
+AC_FUNC_VPRINTF
+AC_CHECK_FUNCS(putenv select socket strdup strstr strtol)
 
 # Enable -Werror flag
 AC_ARG_ENABLE(werror,
@@ -81,7 +95,7 @@ AC_ARG_ENABLE(werror,
 
 # Modem driver
 AC_ARG_ENABLE(modem,
-  [  --enable-modem	Enable modem driver (default) ],
+  [  --disable-modem	Disable modem driver],
   if test $enableval != "no"; then
      AC_DEFINE([WITH_MODEM],,[ Enable/disable modem driver ])
   fi,
@@ -90,16 +104,31 @@ AC_ARG_ENABLE(modem,
 
 # Cable driver
 AC_ARG_ENABLE(cable,
-  [  --enable-cable	Enable cable driver (default) ],
+  [  --enable-cable	Enable cable driver (EXPERIMENTAL) ],
     if test $enableval != "no"; then
        AC_DEFINE([WITH_CABLE],,[ Enable/disable cable driver ])
   fi,
-  AC_DEFINE([WITH_CABLE])
+)
+
+# DSL driver
+AC_ARG_ENABLE(dsl,
+  [  --enable-dsl		Enable DSL driver (EXPERIMENTAL) ],
+    if test $enableval != "no"; then
+       AC_DEFINE([WITH_DSL],,[ Enable/disable DSL driver ])
+  fi,
+)
+
+# TCP/IP driver
+AC_ARG_ENABLE(tcpip,
+  [  --enable-tcpip	Enable TCP/IP driver (EXPERIMENTAL) ],
+    if test $enableval != "no"; then
+       AC_DEFINE([WITH_DSL],,[ Enable/disable TCP/IP driver ])
+  fi,
 )
 
 # Universal tuntap driver
 AC_ARG_ENABLE(tun,
-  [  --enable-tun	Enable tun driver (default) ],
+  [  --disable-tun		Disable tun driver ],
   if test $enableval != "no"; then
      AC_DEFINE([WITH_TUN],,[ Enable/disable tun driver ])
   fi,
@@ -108,7 +137,7 @@ AC_ARG_ENABLE(tun,
 
 # P3 protocol
 AC_ARG_ENABLE(p3,
-  [  --enable-p3	Enable P3 protocol (default) ],
+  [  --disable-p3		Disable P3 protocol ],
   if test $enableval != "no"; then
      AC_DEFINE([WITH_P3],,[ Enable/disable P3 protocol ])
   fi,
@@ -117,11 +146,10 @@ AC_ARG_ENABLE(p3,
      
 # L2TP protocol
 AC_ARG_ENABLE(l2tp,
-  [  --enable-l2tp	Enable L2TP protocol (default) ],
+  [  --enable-l2tp		Enable L2TP protocol (EXPERIMENTAL) ],
   if test $enableval != "no"; then
      AC_DEFINE([WITH_L2TP],,[ Enable/disable L2TP protocol ])
   fi,
-  AC_DEFINE([WITH_L2TP])
 )
 	     
 # Ask for config.h.
@@ -140,8 +168,9 @@ AC_CONFIG_FILES([Makefile
 		    src/dsl/Makefile
 		    src/tcpip/Makefile
 		    src/tun/Makefile
-		    src/linux/Makefile 
-		    src/openbsd/Makefile
-		    src/freebsd/Makefile
+		    src/tun/linux/Makefile 
+		    src/tun/openbsd/Makefile
+		    src/tun/freebsd/Makefile
+		    src/iptunnel/Makefile
 		  include/Makefile])
 AC_OUTPUT

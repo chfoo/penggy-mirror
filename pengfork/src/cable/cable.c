@@ -36,17 +36,22 @@
 #include <netdb.h>
 
 #include "options.h"
+#include "access.h"
+#include "cable/cable.h"
 
-int cablefd = -1;
+static int cablefd = -1;
+
+const access_t cable_access = (access_t) {
+  cable_connect,
+  cable_close,
+  cable_connected, 
+  &cablefd
+};
+
+
 
 int
-cable_getfd ()
-{
-  return cablefd;
-}
-
-int
-  cable_connect ()
+cable_connect ()
 {
   int port = PARAM_CABLE_AOL_PORT;
   char *hostname = PARAM_CABLE_AOL_HOST;
@@ -63,7 +68,7 @@ int
   intcable.sin_family = AF_INET;
   intcable.sin_port = htons(port);
   intcable.sin_addr.s_addr = *((unsigned long *) hp->h_addr);
-//  strcpy(PARAM_CABLE_CONNECT_IP,inet_ntoa(adresse));
+  /*  strcpy(PARAM_CABLE_CONNECT_IP,inet_ntoa(adresse));*/
 
   if ((cablefd = socket (PF_INET, SOCK_STREAM, 0))<0)
     {
@@ -72,14 +77,15 @@ int
     }
 
 
-  if (connect (cablefd, (struct sockaddr *) &intcable, sizeof (struct sockaddr_in)) == 0)
+  if (connect (cablefd, (struct sockaddr *) &intcable, 
+	     sizeof (struct sockaddr_in)) == 0)
     return 1;
 
   return 0;
 }
 
 int
-  cable_close ()
+cable_close ()
 {
   if (cablefd != -1)
     {
@@ -95,7 +101,7 @@ int
 }
 
 int
-  cable_carrier ()
+cable_connected ()
 {
   return 0;
 }

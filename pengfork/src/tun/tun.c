@@ -20,17 +20,19 @@
  *                
  */
 
-#if !defined(__TUN_H__) && defined(WITH_TUN)
-#define __TUN_H__
-
+#include <sys/types.h>
 #include "buffer.h"
+#include "if.h"
 
-int tun_open ();
-int tun_close ();
-int tun_ready ();
-int tun_getfd ();
-int tun_get (buffer_t * buffer, char **data, size_t * data_size);
-int tun_put (buffer_t * buffer, char *data, size_t data_size);
+#include "tun/tun.h"
 
+static int tun_fd = -1;
 
-#endif /* !defined(__TUN_H__) && defined(WITH_TUN) */
+const iface_t tun_iface = (iface_t) {
+  tun_open,
+  tun_close,
+  tun_ready,
+  &tun_fd,
+  tun_put,
+  tun_get
+};

@@ -20,11 +20,17 @@
  *                
  */
 
-#ifndef __P3_H__
-#define __P3_H__
+#ifndef __TUN_H__
+#define __TUN_H__
 
-#include "protocol.h"
-/* External interface to the P3 protocol */
-extern protocol_t prot_p3;
+#include <sys/types.h>
+#include "buffer.h"
 
-#endif /* __P3_H__ */
+int tun_open ();
+int tun_close ();
+int tun_ready ();
+int tun_get (buffer_t * buffer, char **data, size_t * data_size);
+int tun_put (buffer_t * buffer, char *data, size_t data_size);
+
+
+#endif /* __TUN_H__ */

@@ -22,8 +22,6 @@
 
 #include "config.h"
 
-#ifdef WITH_TUN
-
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -42,9 +40,9 @@
 #include <netinet/ip.h>
 
 #include "options.h"
-#include "tun.h"
+#include "tun/tun.h"
 
-static int fd = -1;
+extern int tun_fd;
 
 int
 tun_open()
@@ -54,12 +52,12 @@ tun_open()
   
   if (PARAM_INTERFACE_NAME) {
     snprintf(tunname, sizeof(tunname), "/dev/%s", PARAM_INTERFACE_NAME);
-    fd = open(tunname, O_RDWR | O_NONBLOCK);
+    tun_fd = open(tunname, O_RDWR | O_NONBLOCK);
   } else {
     for (i = 0; i < 255; i++) {
       snprintf(tunname, sizeof(tunname), "/dev/tun%d", i);
       /* Open device */
-      if ((fd = open(tunname, O_RDWR | O_NONBLOCK)) > 0) {
+      if ((tun_fd = open(tunname, O_RDWR | O_NONBLOCK)) > 0) {
         sprintf(PARAM_INTERFACE_NAME, "tun%d", i);
         break;
       }
@@ -71,19 +69,13 @@ tun_open()
 int
 tun_close()
 {
-  return close(fd);
+  return close(tun_fd);
 }
 
 int
 tun_ready ()
 {
-  return (fd != -1);
-}
-
-int
-tun_getfd ()
-{
-  return fd;
+  return (tun_fd != -1);
 }
 
 int
@@ -127,5 +119,3 @@ tun_put(buffer, data, data_size)
   memcpy(p,data,data_size);
   return 1;
 }
-
-#endif /* WITH_TUN */

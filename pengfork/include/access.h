@@ -23,9 +23,25 @@
 #ifndef __ACCESS_H__
 #define __ACCESS_H__
 
-int (*access_connect) (void);
-int (*access_disconnect) (void);
-int (*access_is_connected) (void);
-int (*access_getfd) (void);
+#include "config.h"
+
+typedef struct 
+{
+  int (*connect) (void);
+  int (*disconnect) (void);
+  int (*is_connected) (void);
+  int *fd;
+}
+access_t;
+
+extern access_t *haccess;
+
+#ifdef WITH_MODEM
+extern const access_t modem_access;
+#endif
+
+#ifdef WITH_CABLE
+extern const access_t cable_access;
+#endif
 
 #endif /* __ACCESS_H__ */

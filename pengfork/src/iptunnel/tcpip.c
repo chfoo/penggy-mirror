@@ -33,15 +33,14 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "vjcompress.h"
-
 #include "log.h"
 #include "options.h"
 #include "if.h"
 #include "misc.h"
-
 #include "fdo.h"
-#include "fdo/tcpip.h"
+
+#include "iptunnel/tcpip.h"
+#include "iptunnel/vjcompress.h"
 
 extern buffer_t if_out;
 extern buffer_t if_in;

@@ -28,8 +28,8 @@
 #include "log.h"
 #include "buffer.h"
 #include "utils.h"
+#include "protocol.h"
 
-#include "p3.h"
 #include "p3/header.h"
 #include "p3/p3.h"
 #include "p3/misc.h"
@@ -41,7 +41,7 @@ int nack_win[WINDOW_SIZE];
 
 struct p3state cli, srv;
 
-protocol_t prot_p3 = (protocol_t) {
+const protocol_t p3_protocol = (protocol_t) {
   p3_init,
   p3_loop,
   p3_put_data,

@@ -22,8 +22,6 @@
 
 #include "config.h"
 
-#ifdef WITH_MODEM
-
 #include <sys/ioctl.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -35,18 +33,27 @@
 #include <unistd.h>
 
 #include "log.h"
-#include "modem.h"
-#include "devlock.h"
+#include "modem/modem.h"
+#include "modem/devlock.h"
 #include "options.h"
 #include "utils.h"
+#include "access.h"
 
-struct speed_lookup
+static int fd = -1;
+
+const access_t modem_access = (access_t) {
+  modem_connect,
+  modem_close,
+  modem_carrier, 
+  &fd
+};
+
+const struct speed_lookup
 {
   int baud;
   speed_t speedt;
-};
-
-struct speed_lookup speeds[] = {
+}
+speeds[] = {
 #ifdef B460800
   {460800, B460800},
 #endif /* B460800 */
@@ -64,19 +71,11 @@ struct speed_lookup speeds[] = {
   {300, B300}
 };
 
-#define RESPONSE_OK 0
-#define RESPONSE_ERROR 1
-#define RESPONSE_CONNECT 2
-#define RESPONSE_NO_CARRIER 3
-#define RESPONSE_NO_DIALTONE 4
-#define RESPONSE_BUSY 5
-#define RESPONSE_DELAYED 6
-#define RESPONSE_VOICE 7
-#define RESPONSE_FAX 8
-#define RESPONSE_NO_ANSWER 9
-#define RESPONSE_TIMEDOUT 10
+enum{ RESPONSE_OK, RESPONSE_ERROR, RESPONSE_CONNECT, RESPONSE_NO_CARRIER, 
+        RESPONSE_NO_DIALTONE, RESPONSE_BUSY, RESPONSE_DELAYED, RESPONSE_VOICE, 
+        RESPONSE_FAX, RESPONSE_NO_ANSWER, RESPONSE_TIMEDOUT};
 
-struct
+const struct
 {
   char *response;
   int value;
@@ -123,17 +122,9 @@ modem_responses[] =
   NULL, RESPONSE_TIMEDOUT}
 };
 
-
-int fd = -1;
 int baud;
 int closing = 0;
 struct termios t, old_t;
-
-int
-modem_getfd ()
-{
-  return fd;
-}
 
 int
 modem_connect ()
@@ -713,5 +704,3 @@ modem_sync_write(fd,string,size)
 
   return 1;
 }
-
-#endif /* WITH_MODEM */

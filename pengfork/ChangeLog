@@ -1,3 +1,7 @@
+2002-09-05  Jean-Charles Salzeber <jc@varspool.net>
+
+	* Major re-design.
+	
 2002-09-03  Nicolas Burrus  <nes@lrde.epita.fr>
 
 	* src/log.c: Fix return value and init_log.

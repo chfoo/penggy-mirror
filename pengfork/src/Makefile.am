@@ -19,8 +19,7 @@
 # 02111-1307, USA.
 #
 
-SUBDIRS = p3 l2tp fdo modem cable dsl tcpip tun @ARCH_DIR@
-DIST_SUBDIRS = p3 l2tp fdo linux openbsd freebsd
+SUBDIRS = p3 l2tp fdo modem cable dsl tcpip tun iptunnel
 
 bin_PROGRAMS = pengfork
 
@@ -43,5 +42,5 @@ pengfork_LDADD = 	$(top_builddir)/src/p3/libp3.a 			\
 			$(top_builddir)/src/dsl/libdsl.a		\
 			$(top_builddir)/src/tcpip/libtcpip.a		\
 			$(top_builddir)/src/tun/libtun.a		\
-			$(top_builddir)/src/@ARCH_DIR@/libsystem.a 	\
+			$(top_builddir)/src/iptunnel/libiptunnel.a	\
 			$(top_builddir)/lib/lib.a

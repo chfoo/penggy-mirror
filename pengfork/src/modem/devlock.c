@@ -30,7 +30,7 @@
 #include <fcntl.h>
 #include <signal.h>
 
-#include "devlock.h"
+#include "modem/devlock.h"
 
 /* note: this function uses the O_EXCL flag to open(), and thus assumes
    that /var/lock is not an NFS-mounted drive (according to the open() man

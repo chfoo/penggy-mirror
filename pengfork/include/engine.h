@@ -20,28 +20,12 @@
  *                
  */
 
-#ifndef __PROTOCOL_H__
-#define __PROTOCOL_H__
 
-#include <sys/types.h>
+#ifndef __ENGINE_H__
+#define __ENGINE_H__
 
-#include "config.h"
+int engine_init (void);
+void engine_loop (void);
 
-#include "buffer.h"
 
-typedef struct
-{
-  void (*init) (buffer_t *bufin, buffer_t *bufout);
-  void (*loop) (buffer_t *bufin, buffer_t *bufout, int timeout);
-  void (*put_data) (buffer_t *buffer, char *data, size_t data_size);
-  size_t max_data;
-}
-protocol_t;
-
-extern protocol_t *protocol;
-
-#ifdef WITH_P3
-extern const protocol_t p3_protocol;
-#endif
-
-#endif /* __PROTOCOL_H__ */
+#endif /* __ENGINE_H__ */

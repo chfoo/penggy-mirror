@@ -21,8 +21,7 @@
 
 INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib
 
-noinst_LIBRARIES = libfdo.a
-libfdo_a_SOURCES = 	fdo.c		\
-			init.c		\
-			login.c
+noinst_LIBRARIES = libiptunnel.a
+libiptunnel_a_SOURCES = tcpip.c		\
+			vjcompress.c
 

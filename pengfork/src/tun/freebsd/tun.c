@@ -22,8 +22,6 @@
 
 #include "config.h"
 
-#ifdef WITH_TUN
-
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -38,10 +36,10 @@
 #include <netinet/in_systm.h>
 #include <netinet/ip.h>
 
-#include "tun.h"
+#include "tun/tun.h"
 #include "options.h"
 
-static int fd = -1;
+extern int tun_fd;
 
 /*
  * Allocate TUN device
@@ -50,16 +48,16 @@ int
 tun_open()
 {
   char tunname[14];
-  int i, fd = -1;
+  int i;
   
   if (PARAM_INTERFACE_NAME) {
     sprintf(tunname, "/dev/%s", PARAM_INTERFACE_NAME);
-    fd = open(tunname, O_RDWR | O_NONBLOCK);
+    tun_fd = open(tunname, O_RDWR | O_NONBLOCK);
   } else {
     for (i = 0; i < 255; i++) {
       sprintf(tunname, "/dev/tun%d", i);
       /* Open device */
-      if ((fd = open(tunname, O_RDWR| O_NONBLOCK)) > 0) {
+      if ((tun_fd = open(tunname, O_RDWR| O_NONBLOCK)) > 0) {
         sprintf(PARAM_INTERFACE_NAME, "tun%d", i);
         break;
       }
@@ -68,8 +66,8 @@ tun_open()
   if (fd > -1) {
     i = 0;
     /* Disable extended modes */
-    ioctl(fd, TUNSLMODE, &i);
-    ioctl(fd, TUNSIFHEAD, &i);
+    ioctl(tun_fd, TUNSLMODE, &i);
+    ioctl(tun_fd, TUNSIFHEAD, &i);
   }
   return tun_ready();
 }
@@ -77,21 +75,15 @@ tun_open()
 int
 tun_close()
 {
-  close(fd);
-  fd = -1;
+  close(tun_fd);
+  tun_fd = -1;
   return 1;
 }
 
 int
 tun_ready ()
 {
-  return (fd != -1);
-}
-
-int
-tun_getfd ()
-{
-  return fd;
+  return (tun_fd != -1);
 }
 
 int
@@ -129,6 +121,3 @@ tun_put(buffer, data, data_size)
   memcpy(p,data,data_size);
   return 1;
 }
-
-
-#endif /* WITH_TUN */

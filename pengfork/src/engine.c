@@ -31,31 +31,26 @@
 #include "access.h"
 #include "if.h"
 #include "buffer.h"
-#include "options.h"
-#include "utils.h"
 
-int access_fd = -1;
-int if_fd = -1;
+#include "protocol.h"
+#include "engine.h"
+
+int fd = -1;
 int exiting;
 
-buffer_t access_in, access_out, if_in, if_out;
+buffer_t in, out;
 
 int
 engine_init ()
 {
-  if ((access_fd = access_getfd ()) < 0)
+  if ((fd = *(haccess->fd)) < 0)
     {
       log (LOG_ERR, "ENGINE - Cound not open input device\n");
       return 0;
     }
-  if ((if_fd = if_getfd ()) < 0)
-    {
-      log (LOG_ERR, "ENGINE - Could not open interface file descriptor\n");
-      return 0;
-    }
-
-  create_buffer (&if_in, 3000);
-  create_buffer (&if_out, 3000);
+  
+  exiting = 0;
+  protocol->init (&in, &out);
 
   return 1;
 }
@@ -72,40 +67,29 @@ engine_loop ()
   int fds;
   int timedout = 0;
 
-  while (exiting)
+  while (!exiting)
     {
       FD_ZERO (&rfdset);
       FD_ZERO (&wfdset);
       FD_ZERO (&efdset);
 
-
+      
       tv.tv_sec = 30;           /* arbitrary value should be good */
       tv.tv_usec = 0;
       timedout = 0;
       fds = select (maxfd, &rfdset, &wfdset, &efdset, &tv);
 
-      if (access_is_connected ())
+      if (haccess->is_connected ())
         {
           if (fds > 0)
             {
-              if (FD_ISSET (access_fd, &rfdset))
+              if (FD_ISSET (fd, &rfdset))
                 {
-                  buffer_recv (&access_in, access_fd);
+                  buffer_recv (&in, fd);
                 }
-              if (FD_ISSET (access_fd, &wfdset))
-                buffer_send (&access_out, access_fd);
-
-              if (FD_ISSET (if_fd, &rfdset))
-                {
-	        debug (5, "Read data from if_fd\n");
-                  buffer_recv (&if_in, if_fd);
-                }
-
-              if (FD_ISSET (if_fd, &wfdset))
-	      {
-	        debug (5, "Send data to if_fd\n");
-	        buffer_send (&if_out, if_fd);
-	      }
+              if (FD_ISSET (fd, &wfdset))
+                buffer_send (&out, fd);
+	    
             }
           else
             {

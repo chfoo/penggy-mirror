@@ -22,7 +22,6 @@
 
 #include "config.h"
 
-#ifdef WITH_TUN
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -37,10 +36,10 @@
 
 #include <linux/if_tun.h>
 
-#include "tun.h"
+#include "tun/tun.h"
 #include "options.h"
 
-static int fd = -1;
+extern int tun_fd;
 
 /* Allocate TUN device,
  */
@@ -60,7 +59,7 @@ tun_open_old ()
     {
       sprintf (tunname, "/dev/tun%d", i);
       /* Open device */
-      if ((fd = open (tunname, O_RDWR)) > 0)
+      if ((tun_fd = open (tunname, O_RDWR)) > 0)
         {
           sprintf (PARAM_INTERFACE_NAME, "tun%d", i);
         }
@@ -83,7 +82,7 @@ tun_open ()
 {
   struct ifreq ifr;
 
-  if ((fd = open ("/dev/net/tun", O_RDWR | O_NONBLOCK)) < 0)
+  if ((tun_fd = open ("/dev/net/tun", O_RDWR | O_NONBLOCK)) < 0)
     return 0;
   /* We will try old tuntap when new support is ok */
   /* return tun_open_old (dev); */
@@ -93,12 +92,12 @@ tun_open ()
   if (PARAM_INTERFACE_NAME)
     strncpy (ifr.ifr_name, PARAM_INTERFACE_NAME, IFNAMSIZ);
 
-  if (ioctl (fd, TUNSETIFF, (void *) &ifr) < 0)
+  if (ioctl (tun_fd, TUNSETIFF, (void *) &ifr) < 0)
     {
       if (errno == EBADFD)
         {
           /* Try old ioctl */
-          if (ioctl (fd, OTUNSETIFF, (void *) &ifr) < 0)
+          if (ioctl (tun_fd, OTUNSETIFF, (void *) &ifr) < 0)
             {
               tun_close ();
               return 0;
@@ -131,21 +130,15 @@ tun_open ()
 int
 tun_close ()
 {
-  close (fd);
-  fd = -1;
+  close (tun_fd);
+  tun_fd = -1;
   return 1;
 }
 
 int
 tun_ready ()
 {
-  return (fd != -1);
-}
-
-int
-tun_getfd ()
-{
-  return fd;
+  return (tun_fd != -1);
 }
 
 int
@@ -183,5 +176,3 @@ tun_put (buffer, data, data_size)
   memcpy (p, data, data_size);
   return 1;
 }
-
-#endif /* WITH_TUN */

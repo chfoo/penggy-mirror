@@ -62,10 +62,10 @@ typedef u_long n_long;
 #endif
 
 #include <netinet/ip.h>
-#include "bsdtcp.h"
+#include "iptunnel/bsdtcp.h"
 
 #include <net/ppp_defs.h>
-#include "vjcompress.h"
+#include "iptunnel/vjcompress.h"
 
 #ifndef VJ_NO_STATS
 #define INCR(counter) ++comp->stats.counter

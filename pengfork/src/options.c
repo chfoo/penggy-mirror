@@ -33,11 +33,6 @@
 #include "common.h"
 #include "options.h"
 #include "utils.h"
-#include "access.h"
-#include "if.h"
-#include "modem.h"
-#include "cable.h"
-#include "tun.h"
 
 param_t param[PARAM_MAX] = {
   /* GENERAL CONFIGURATION */

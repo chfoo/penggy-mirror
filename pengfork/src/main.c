@@ -20,12 +20,36 @@
  *                
  */
 
+#include "config.h"
+
+/* Check configure options */
+#if !defined(WITH_P3) && !defined(WITH_L2TP)
+#  error "No protocol will be compiled."
+#  error "You must choose P3, L2TP or both."
+#  error "Try ./configure --help for more information."
+#endif
+
+#if !defined(WITH_MODEM) && !defined(WITH_CABLE) && \
+    !defined(WITH_DSL) && !defined(WITH_TCPIP)
+#  error "No access method will be compiled."
+#  error "You must choose between modem, cable, dsl and tcpip."
+#  error "Try ./configure --help for more information."
+#endif
+
+#if !defined(WITH_TUN)
+#  error "No interface will be compiled."
+#  error "You must choose tun."
+#  error "Try ./configure --help for more information."
+#endif
+
 #include <stdlib.h>
 #include <getopt.h>
 
 #include "common.h"
 #include "log.h"
 #include "options.h"
+#include "resolver.h"
+#include "engine.h"
 #include "access.h"
 #include "if.h"
 
@@ -59,14 +83,14 @@ main (argc, argv)
       exit (1);
     }
 
-  if (if_connect () && access_connect ())
+  if (iface->connect () && haccess->connect ())
     {
-      /*if (!prot30_start ())
+      if ( !engine_init () )
 	{
-	  fprintf (stderr, "Fatal error, exiting.\n");
+	  log (LOG_ERR, "Fatal error, exiting.\n");
 	  exit (1);
 	}
-      */
+      engine_loop ();
     }
   else
     {
