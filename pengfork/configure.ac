@@ -41,7 +41,7 @@ AC_PROG_CC
 
 # CFLAGS
 if test $GCC = yes; then
-  CFLAGS="$CFLAGS -g -Wall"
+  CFLAGS="$CFLAGS -Wall"
 fi
 
 # Look for auxiliary programs
@@ -66,10 +66,16 @@ case $host in
 esac
 AC_SUBST([ARCH_DIR])
 
+#Checks for libraries.
+#Replace `main' with a function in -le:
+AC_CHECK_LIB(e, main)
+#Replace `main' with a function in -links:
+AC_CHECK_LIB(inks, main)
+
+
 #Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS(fcntl.h sys/ioctl.h sys/time.h syslog.h unistd.h)
-AC_CHECK_HEADERS([netinet/in_systm.h])
 
 # linux tuntap driver
 AC_CHECK_HEADERS([linux/if_tun.h])
@@ -85,11 +91,23 @@ AC_PROG_GCC_TRADITIONAL
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS(putenv select socket strdup strstr strtol)
 
+# Disable debugging
+AC_ARG_ENABLE(debug,
+  [  --disable-debug	Disable debugging. ],
+  if test "$enableval" != "yes"; then
+     CFLAGS="$CFLAGS -O2"
+     LDFLAGS="$LDFLAGS -s"
+  else
+     CFLAGS="$CFLAGS -g"
+  fi,
+  CFLAGS="$CFLAGS -g"
+)
+	   
 # Enable -Werror flag
 AC_ARG_ENABLE(werror,
   [  --enable-werror	Set warnings as errors. ],
   if test "$enableval" != "no"; then
-     CFLAGS="$CFLAGS -Werror"
+     CFLAGS = "$CFLAGS -Werror"
   fi
 )
 
@@ -107,7 +125,7 @@ AC_ARG_ENABLE(cable,
   [  --enable-cable	Enable cable driver (EXPERIMENTAL) ],
     if test $enableval != "no"; then
        AC_DEFINE([WITH_CABLE],,[ Enable/disable cable driver ])
-  fi,
+  fi
 )
 
 # DSL driver
@@ -115,7 +133,7 @@ AC_ARG_ENABLE(dsl,
   [  --enable-dsl		Enable DSL driver (EXPERIMENTAL) ],
     if test $enableval != "no"; then
        AC_DEFINE([WITH_DSL],,[ Enable/disable DSL driver ])
-  fi,
+  fi
 )
 
 # TCP/IP driver
@@ -123,7 +141,7 @@ AC_ARG_ENABLE(tcpip,
   [  --enable-tcpip	Enable TCP/IP driver (EXPERIMENTAL) ],
     if test $enableval != "no"; then
        AC_DEFINE([WITH_DSL],,[ Enable/disable TCP/IP driver ])
-  fi,
+  fi
 )
 
 # Universal tuntap driver
@@ -149,7 +167,7 @@ AC_ARG_ENABLE(l2tp,
   [  --enable-l2tp		Enable L2TP protocol (EXPERIMENTAL) ],
   if test $enableval != "no"; then
      AC_DEFINE([WITH_L2TP],,[ Enable/disable L2TP protocol ])
-  fi,
+  fi
 )
 	     
 # Ask for config.h.
