@@ -33,12 +33,14 @@
 SCM
 chat_success (void)
 {
+  log(LOG_NOTICE, "Script: Chat success\n");
   return SCM_BOOL_T;
 }
 
 SCM
 chat_failure (void)
 {
+  log(LOG_NOTICE, "Script: Chat failure\n");
   return SCM_BOOL_F;
 }
 
@@ -50,6 +52,7 @@ chat_send (string)
   int len;
 
   text = gh_scm2newstr (string, &len);
+  log(LOG_NOTICE, "Script: Send %s\n", text);
   modem_sync_write (text, len);
   return SCM_UNDEFINED;
 }
@@ -81,6 +84,7 @@ compare_elem (buffer, elem, result)
 
   if (strstr (bufmin, textmin))
     {
+      log(LOG_NOTICE, "Script: String '%s' matched\n", text);
       /* evaluate next elem */
       *result = gh_call1 (eval, gh_car (gh_cdr (elem)));
       match = 1;
@@ -130,6 +134,7 @@ do_else (others, result)
      SCM *result;
 {
   SCM  elem;
+  log(LOG_NOTICE, "Script: No string matched\n");
   if (gh_length(others) > 0)
     {
       elem = gh_car(gh_reverse(others));  

@@ -75,21 +75,8 @@ enum
   __protocol,
   __interface_type,
   __interface_name,
-  __use_screen_name,
-  __screen_name1,
-  __password1,
-  __screen_name2,
-  __password2,
-  __screen_name3,
-  __password3,
-  __screen_name4,
-  __password4,
-  __screen_name5,
-  __password5,
-  __screen_name6,
-  __password6,
-  __screen_name7,
-  __password7,
+  __secret_file,
+  __screen_name,
   __auto_reconnect,
   __reconnect_delay,
   __daemon,
@@ -139,9 +126,9 @@ enum
 #define PARAM_PROTOCOL                PARAM_STRING(__protocol)
 #define PARAM_INTERFACE_TYPE          PARAM_STRING(__interface_type)
 #define PARAM_INTERFACE_NAME          PARAM_STRING(__interface_name)
+#define PARAM_SECRET_FILE             PARAM_STRING(__secret_file)
 #define PARAM_USE_SCREEN_NAME         PARAM_INTEGER(__use_screen_name)
-#define PARAM_SCREEN_NAME(i)          PARAM_STRING(__screen_name1+ (i-1)*2)
-#define PARAM_PASSWORD(i)             PARAM_STRING(__password1 + (i-1)*2)
+#define PARAM_SCREEN_NAME             PARAM_STRING(__screen_name)
 #define PARAM_AUTO_RECONNECT          PARAM_BOOLEAN(__auto_reconnect)
 #define PARAM_RECONNECT_DELAY         PARAM_INTEGER(__reconnect_delay)
 #define PARAM_DAEMON                  PARAM_BOOLEAN(__daemon)

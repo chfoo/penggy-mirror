@@ -33,6 +33,7 @@ EXTRA_DIST = 	access.h	\
 		fdo.h		\
 		log.h		\
 		options.h	\
+		getpass.h	\
 		resolver.h	\
 		utils.h
 

@@ -30,6 +30,7 @@
 
 #include "utils.h"
 #include "options.h"
+#include "getpass.h"
 #include "log.h"
 #include "modem/modem.h"
 #include "checkopt.h"
@@ -108,24 +109,27 @@ check_iface_type(option, type)
 }
 
 int
-check_use_sn(option, sn)
+check_screen_name(option, sn)
      char *option;
-     int sn;
+     char *sn;
 {
-  if(sn>=1 && sn<=7)
+  char *pass;
+  
+  if(!sn)
     {
-      if(PARAM_SCREEN_NAME(sn)!=NULL && PARAM_PASSWORD(sn)!=NULL)
-        return 1;
-      else
-        {
-	log(LOG_ERR, "%s is set to %d, but corresponding screen name "
-	    "or password isn't defined.\n", option, sn);
-	return 0;
-        }
+      log(LOG_ERR, "Screen name not defined, please edit your configuration file (%s).\n",
+	PARAM_CONFIG_FILE);
+      return 0;      
     }
-
-  log(LOG_ERR, "%s must be between 1 and 7.\n", option);
-  return 0;
+  if(get_password(sn,&pass)) 
+    {
+      free(pass);
+      return 1;
+    }
+  else {
+    log(LOG_ERR, "Screen name '%s' not found in %s.\n", sn, PARAM_SECRET_FILE);
+    return 0;
+  }
 }
 
 int
@@ -163,7 +167,7 @@ check_line_speed(option, speed)
 }
 #endif /* WITH_MODEM */
 
-#ifdef WITH_CABLE
+#ifdef WITH_TCPIP
 int
 check_port(option, port)
      char *option;
@@ -187,4 +191,4 @@ check_ip(option, ip)
   log(LOG_ERR, "%s must be a valid IP address.\n", option);
   return 0;
 }
-#endif /* WITH_CABLE */
+#endif /* WITH_TCPIP */

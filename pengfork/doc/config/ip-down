@@ -1,15 +1,10 @@
 #!/bin/sh
 
-# This is a sample script for ip-up
-# this script is called when pengfork setup the inteface
+# This is a sample script for ip-down
+# this script is called when pengfork delete the interface
 #
 # defined variables:
 # IFNAME : the interface name where tunneling is done
-# ADDRESS : local ip address
-# NETMASK : netmask for the address
-# NETWORK : network for the address
-# BROADCAST : broadcast address
-# GATEWAY : the default gateway
 
 IFCONFIG=/sbin/ifconfig
 ROUTE=/sbin/route
@@ -21,7 +16,7 @@ else
 fi
 
 if [ -x $ROUTE ]; then
-        $ROUTE del default gw $GATEWAY
+        $ROUTE del default dev $IFNAME
 else
         echo "$0: $ROUTE not found"
 fi

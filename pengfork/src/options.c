@@ -78,65 +78,13 @@ param_t param[PARAM_MAX] = {
       "set the interface name.", "NAME", 
       __netiface, NULL),
 
-  INT('u', "use-sn", "use_screen_name", 1, 
-      "use screen-name number NUM to connect.", "NUM", 
-      __auth, check_use_sn),
-
-  STR(0, "screen-name", "screen_name1", NULL, 
-      "set the primary screen-name.", "SN", 
-      __auth, NULL),
-
-  STR(0, "password", "password1", NULL, 
-      "set the primary password", "PASS", 
-      __auth, NULL),
-
-  STR(0, NULL, "screen_name2", NULL, 
+  STR(0, NULL, "secret_file", CONFDIR "/aol-secrets", 
       NULL, NULL, 
       __auth, NULL),
 
-  STR(0, NULL, "password2", NULL, 
-      NULL, NULL,
-      __auth, NULL),
-
-  STR(0, NULL, "screen_name3", NULL, 
-      NULL, NULL, 
-      __auth, NULL),
-
-  STR(0, NULL, "password3", NULL, 
-      NULL, NULL,
-      __auth, NULL),
-
-  STR(0, NULL, "screen_name4", NULL,
-      NULL, NULL, 
-      __auth, NULL),
-
-  STR(0, NULL, "password4", NULL,
-      NULL, NULL,
-      __auth, NULL),
-
-  STR(0, NULL, "screen_name5", NULL, 
-      NULL, NULL, 
-      __auth, NULL),
-
-  STR(0, NULL, "password5", NULL, 
-      NULL, NULL, 
-      __auth, NULL),
-
-  STR(0, NULL, "screen_name6", NULL, 
-      NULL, NULL, 
-      __auth, NULL),
-
-  STR(0, NULL, "password6", NULL, 
-      NULL, NULL, 
-      __auth, NULL),
-
-  STR(0, NULL, "screen_name7", NULL, 
-      NULL, NULL, 
-      __auth, NULL),
-
-  STR(0, NULL, "password7", NULL, 
-      NULL, NULL, 
-      __auth, NULL),
+  STR('s', "screen-name", "screen_name", NULL, 
+      "set the screen-name to use.", "SN", 
+      __auth, check_screen_name),
 
   BOOL('r', "auto-reconnect", "auto_reconnect", false, 
        "enable autoreconnection.", NULL, 
@@ -182,7 +130,7 @@ param_t param[PARAM_MAX] = {
        __modem, NULL),
 
   STR(0, "init-str", "initstr1", "ATZ", 
-      "set the primary initialization string send to the modem.", "STRING", 
+      "set the primary initialization string sent to the modem.", "STRING", 
       __modem, NULL),
 
   STR(0, NULL, "initstr2", NULL, 
@@ -610,7 +558,7 @@ check_config (void)
 	{
 	  if(PARAM_STRING(i) != NULL)
 	    {
-	      if(i>__password7 || i<__screen_name1)
+	      if(i != __screen_name)
 	        debug(5, "  %s = %s\n", param[i].name, PARAM_STRING(i));
 	      else
 	        debug(5, "  %s = (hidden)\n", param[i].name);
@@ -681,6 +629,7 @@ parse_config_file (filename)
 	}
         }
     }
+  fclose(f);
   return 1;
 }
 

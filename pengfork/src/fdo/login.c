@@ -23,6 +23,7 @@
 #include <string.h>
 
 #include "options.h"
+#include "getpass.h"
 #include "buffer.h"
 #include "log.h"
 
@@ -36,10 +37,12 @@ logon ()
   char *data;
   struct login_info login_info = DEFAULT_LOGIN_INFO;
   int len;
-  char *sn = PARAM_SCREEN_NAME (PARAM_USE_SCREEN_NAME);
-  char *pass = PARAM_PASSWORD (PARAM_USE_SCREEN_NAME);
+  char *sn = PARAM_SCREEN_NAME;
+  char *pass;
   char login[10];
 
+  log(LOG_NOTICE, "Loging into provider\n");
+  get_password(sn, &pass);
   len = strlen (sn);
   if (len >= 10)
     {
@@ -72,7 +75,7 @@ logon ()
   len += 6;
 
   fdo_send ( TOKEN ("Dd"), data, len);
-  log(LOG_NOTICE,"FDO - Login token sended\n");
+  debug(3,"FDO - Login token sended\n");
   free (data);
 
   fdo_unregister (TOKEN ("SD"));
@@ -85,7 +88,7 @@ login_confirm (token, data, data_size)
      char *data;
      size_t data_size;
 {
-  log(LOG_NOTICE,"FDO - Login confirm received\n");
+  debug(3, "FDO - Login confirm received\n");
   fdo_unregister (TOKEN ("At"));
 
   ip_tunnel_init();

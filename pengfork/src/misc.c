@@ -113,7 +113,7 @@ launch_ip_down (if_name)
 
           if (execlp (PARAM_IP_DOWN, PARAM_IP_DOWN, NULL))
 	  log (LOG_WARNING, "Can't exec script %s: %s (%d)",
-	       PARAM_IP_UP, strerror(errno), errno);	
+	       PARAM_IP_DOWN, strerror(errno), errno);	
           exit (-1);
         }
       else if (pid == 0)

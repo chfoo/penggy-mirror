@@ -20,25 +20,10 @@
  *
  */
 
-#ifndef __CHECKOPT_H__
-#define __CHECKOPT_H__
+#ifndef __GETPASS_H__
+#define __GETPASS_H__
 
-#include "config.h"
+int get_password( char *sn, char **pass);
 
-int check_multiple(char *option, char *value, char **choices);
 
-int check_access_method(char *option, char *method);
-int check_protocol(char *option, char *protocol);
-int check_iface_type(char *option, char *type);
-int check_screen_name(char *option, char *sn);
-int check_debug_level(char *option, int level);
-int check_natural(char *option, int num);
-#ifdef WITH_MODEM
-int check_line_speed(char *option, int speed);
-#endif
-#ifdef WITH_CABLE
-int check_port(char *option, int port);
-int check_ip(char *option, char *ip);
-#endif
-
-#endif /* __CHECKOPT_H__ */
+#endif /* __GETPASS_H__ */

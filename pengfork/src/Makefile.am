@@ -25,6 +25,7 @@ sbin_PROGRAMS = pengfork
 pengfork_SOURCES = 	buffer.c		\
 			misc.c			\
 			options.c		\
+			getpass.c		\
 			checkopt.c		\
 			main.c			\
 			utils.c			\
