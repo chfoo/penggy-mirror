@@ -51,8 +51,8 @@ p3_treat_packet(header, data, data_size)
       dump_raw ("P3 - input", (char *) header, 
 	      data_size + P3_DATA_OFFSET + 1);
       
-      p3_ack( header );
       fdo_recv (data, data_size);
+      p3_ack( header );
       break;
       
     case TYPE_SS:
