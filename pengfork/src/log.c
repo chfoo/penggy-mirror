@@ -86,33 +86,33 @@ dump_raw (text, data, size)
   int i, j;
   unsigned char *p = data;
   
-  if(PARAM_DEBUG_LEVEL < 3) return;
-  debug (3, "%s raw dump: \n",text);
+  if(PARAM_DEBUG_LEVEL < DEBUG_MAX) return;
+  debug (DEBUG_MAX, "%s raw dump: \n",text);
   for (i = 0; i < size; i += 16)
     {
-      debug (3, "  %04x: ", i);
+      debug (DEBUG_MAX, "  %04x: ", i);
       for (j = 0; j < 8; j++)
         if (i + j < size)
-          debug (3, "%c", (p[i + j] > 32 && p[i + j] < 127) ? p[i + j] : '.');
+          debug (DEBUG_MAX, "%c", (p[i + j] > 32 && p[i + j] < 127) ? p[i + j] : '.');
         else
-          debug (3, " ");
+          debug (DEBUG_MAX, " ");
 
-      debug (3, " ");
+      debug (DEBUG_MAX, " ");
 
       for (j = 8; j < 16; j++)
         if (i + j < size)
-          debug (3, "%c", (p[i + j] > 32 && p[i + j] < 127) ? p[i + j] : '.');
+          debug (DEBUG_MAX, "%c", (p[i + j] > 32 && p[i + j] < 127) ? p[i + j] : '.');
         else
-          debug (3, " ");
+          debug (DEBUG_MAX, " ");
 
-      debug (3, "  |  ");
+      debug (DEBUG_MAX, "  |  ");
 
       for (j = 0; i + j < size && j < 8; j++)
-        debug (3, "%02x", p[i + j]);
-      debug (3, " ");
+        debug (DEBUG_MAX, "%02x", p[i + j]);
+      debug (DEBUG_MAX, " ");
       for (j = 8; i + j < size && j < 16; j++)
-        debug (3, "%02x", p[i + j]);
-      debug (3, "\n");
+        debug (DEBUG_MAX, "%02x", p[i + j]);
+      debug (DEBUG_MAX, "\n");
     }
-  debug (3, "\n");
+  debug (DEBUG_MAX, "\n");
 }

@@ -134,12 +134,11 @@ p3_extract_packet (buffer, header, data, data_size)
 
       if (!p3_check_header (h))
         {
-          log (LOG_WARNING, "P3 - Bad header received\n");
           p3_sync_buffer (buffer);
           continue;
         }
 
-      if (buffer->used < P3_SIZE_OFFSET + s + 1)
+      if (buffer->used < (P3_DATA_OFFSET - P3_SIZE_OFFSET) + s + 1)
         /* We have the header but not all data */
         return 0;
 

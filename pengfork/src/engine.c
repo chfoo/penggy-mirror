@@ -124,7 +124,7 @@ engine_loop ()
           /* 
            * There was no data to read/write
            */
-          debug (1, "engine - Timed out\n");
+          debug (9, "engine - Timed out\n");
           engine_timeout ();
         }
     }

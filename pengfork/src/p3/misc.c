@@ -40,20 +40,30 @@ p3_sync_buffer (buffer)
   int len;
   int total = 0;
 
-  while(buffer->used > 0)
+  while(buffer->used > 1)
     {
       /* Try to find a STOP byte first */
       p = memchr (buffer_start (buffer), P3_STOP, buffer->used);
       if (p)
-        len = (int) p - (int) buffer_start (buffer) + 1;
+        len = (int) p - (int) buffer_start (buffer);
       else
         len = buffer->used;
   
+      /* Eliminate all before STOP byte */
       buffer_free (buffer, len);
       total += len;
       p = buffer_start (buffer);
-      /* if the start of the buffer is now a MAGIC byte this seems good */
-      if(buffer->used > 0 && p[0]==P3_MAGIC) break;
+      /* 
+       * if the start of the buffer is now a STOP byte followed by a 
+       * MAGIC byte this seems good 
+       */
+      if(buffer->used > 1) 
+        {
+	/* Just eliminate the BYTE_STOP */
+	buffer_free (buffer, 1);
+	total++;
+	if(p[1]==P3_MAGIC) break;	  
+        }
     }
 
   debug (3, "P3 - %d bytes dropped from buffer.\n", total);

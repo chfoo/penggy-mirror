@@ -34,10 +34,10 @@ int debug (int level, char *format, ...);
 void dump_raw (char *text, char *data, size_t size);
 
 /* Constants for debugging level */
-#define DEBUG_MIN 1
-#define DEBUG_USEFUL 1
-#define DEBUG_ERROR 2
-#define DEBUG_STRANGE 3
-#define DEBUG_MAX 10
+#define DEBUG_MIN       1
+#define DEBUG_USEFUL    1
+#define DEBUG_ERROR     2
+#define DEBUG_STRANGE   3
+#define DEBUG_MAX      10
 
 #endif /* __LOG_H__ */
