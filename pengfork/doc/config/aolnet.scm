@@ -1,7 +1,7 @@
 ;;
 ;; Copyright (C) 2002  Jean-Charles Salzeber <jc@varspool.net>
 ;;
-;; This file is part of pengfork.
+;; This file is part of penggy.
 ;;
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License

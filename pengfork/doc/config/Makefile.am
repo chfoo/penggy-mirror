@@ -1,7 +1,7 @@
 #
 # Copyright (c) 2002 Jean-Charles Salzeber <jc@varspool.net>
 #
-# This file is part of pengfork program.
+# This file is part of penggy program.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -19,7 +19,7 @@
 # 02111-1307, USA.
 #
 
-EXTRA_DIST =	pengfork.cfg	\
+EXTRA_DIST =	penggy.cfg	\
 		aol-secrets	\
 		ip-up		\
 		ip-down		\
@@ -29,10 +29,10 @@ EXTRA_DIST =	pengfork.cfg	\
 
 install-data-local: 
 	$(mkinstalldirs) @CONFDIR@ 
-	if [ -f @CONFDIR@/pengfork.cfg ] ; then \
-		$(INSTALL_DATA) -b pengfork.cfg @CONFDIR@/pengfork.cfg.new ;\
+	if [ -f @CONFDIR@/penggy.cfg ] ; then \
+		$(INSTALL_DATA) -b penggy.cfg @CONFDIR@/pengfork.cfg.new ;\
 	else \
-		$(INSTALL_DATA) -b pengfork.cfg @CONFDIR@/pengfork.cfg ;\
+		$(INSTALL_DATA) -b penggy.cfg @CONFDIR@/pengfork.cfg ;\
 	fi
 	if [ -f @CONFDIR@/aol-secrets ] ; then \
 		$(INSTALL) -b -m 600 aol-secrets @CONFDIR@/aol-secrets.new ;\

@@ -34,7 +34,7 @@
 
 /*
   Modified by Jean-Charles Salzeber <jc@varspool.net>
-  to fit pengfork needs
+  to fit penggy needs
  */
 #include <string.h>
 #include <sys/types.h>

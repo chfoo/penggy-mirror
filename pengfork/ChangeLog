@@ -47,7 +47,7 @@
 2002-08-30  Jean-Charles Salzeber <jc@varspool.net>
 
 	* include/modem.h, src/modem.c: made a synchronous write command
-	* doc/pengfork-sample.cfg: Added a skeleton for a sample configuration
+	* doc/penggy-sample.cfg: Added a skeleton for a sample configuration
 	file
 	* src/options.c: Change some default value
 	* src/Makefile.am, include/bsdtcp.h, include/vjcompress.h, 

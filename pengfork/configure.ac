@@ -1,7 +1,7 @@
 #
 # Copyright (c) 2002  Jean-Charles Salzeber <jc@varspool.net>
 #
-# This file is part of pengfork program.
+# This file is part of penggy program.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -24,7 +24,7 @@
 # Autoconf 2.53 needed so that buggy PATH_SEPARATOR is fixed.
 AC_PREREQ(2.53)
 
-AC_INIT(pengfork, 0.1)
+AC_INIT(penggy, 0.1)
 
 # Auxiliary files
 AC_CONFIG_AUX_DIR(config)
@@ -44,6 +44,7 @@ AC_PROG_INSTALL
 AC_PROG_AWK
 AC_PROG_RANLIB
 AC_PROG_YACC
+AC_PROG_LN_S
 
 # CFLAGS
 if test "$GCC" = yes; then
@@ -112,9 +113,9 @@ AM_GNU_GETTEXT_VERSION(0.11.5)
 AM_ICONV
 
 AC_ARG_WITH(confdir,
-  AC_HELP_STRING([--with-confdir=PATH], [set configuration path (/etc/pengfork)]),
+  AC_HELP_STRING([--with-confdir=PATH], [set configuration path (/etc/penggy)]),
   CONFDIR=$withval, 
-  CONFDIR="/etc/pengfork")
+  CONFDIR="/etc/penggy")
 
 AC_DEFINE_UNQUOTED([CONFDIR], "$CONFDIR", [ Path passed to configure where configuration files are stored ])
 AC_SUBST([CONFDIR])

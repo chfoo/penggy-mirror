@@ -28,35 +28,35 @@
   It uses the Universal TUN/TAP device driver, written by Maxim Krasnyansky.</p>
 <p>&nbsp;</p>
 <h2>2. Installation</h2>
-<p>PengFork can be obtained at <a href="https://savannah.nongnu.org/projects/pengfork/">https://savannah.nongnu.org/projects/pengfork/</a><br>
+<p>PengFork can be obtained at <a href="https://savannah.nongnu.org/projects/penggy/">https://savannah.nongnu.org/projects/pengfork/</a><br>
   Make sure to download the last stable version. If you feel more adventurous, 
   you can try the CVS version, but this is not guaranteed to work.</p>
 <p>Installation is quite simple. Get the package, which is provided as a .tar.gz 
   archive, and put it somewhere on your system. Now you need to uncompress and 
   untar the files contained within the archive. That can be done very simply (we'll 
-  assume your archive is called pengfork.tar.gz)</p>
-<pre>% tar -xvzf pengfork.tar.gz</pre>
-<p>The files should have been decompressed to a directory called pengfork. You 
+  assume your archive is called penggy.tar.gz)</p>
+<pre>% tar -xvzf penggy.tar.gz</pre>
+<p>The files should have been decompressed to a directory called penggy. You 
   now need to go to that directory and compile the program :</p>
-<pre>% cd pengfork
+<pre>% cd penggy
    % ./configure &amp;&amp; make &amp;&amp; make install</pre>
 <p>If you need any particular option, such as cross-compiling, you can get some 
   help by typing :</p>
 <pre>% ./configure --help</pre>
-<p>Now pengfork should be compiled and installed. But we're not all set yet. We 
+<p>Now penggy should be compiled and installed. But we're not all set yet. We 
   still need to configure it.</p>
 <h2><br>
   3. Configuration</h2>
-<p>In order to do this we need to create a directory called pengfork in /etc, 
+<p>In order to do this we need to create a directory called penggy in /etc, 
   which will contain PengFork's configuration files, and copy them there.</p>
-<pre>% mkdir /etc/pengfork
-   % cp doc/pengfork-sample.cfg /etc/pengfork/pengfork.cfg
-   % cp doc/ip-up.sample /etc/pengfork/ip-up
-   % cp doc/ip-down.sample /etc/pengfork/ip-down</pre>
+<pre>% mkdir /etc/penggy
+   % cp doc/penggy-sample.cfg /etc/pengfork/pengfork.cfg
+   % cp doc/ip-up.sample /etc/penggy/ip-up
+   % cp doc/ip-down.sample /etc/penggy/ip-down</pre>
 <p>Last step is configuration. Quite many options are available here.</p>
 <p>If you are connecting with a modem and a phone line, follow these instructions 
   :</p>
-<pre>% joe /etc/pengfork/pengfork.cfg</pre>
+<pre>% joe /etc/penggy/pengfork.cfg</pre>
 <p>You need to modify your configuration file and make it look like as follows 
   :</p>
 <pre>....
@@ -82,7 +82,7 @@ phone1 = [An alternative one]
   4. Usage</h2>
 <p>The last step after compiling, installing and configuring is running the software, 
   and praying for it to work :</p>
-<pre>% pengfork</pre>
+<pre>% penggy</pre>
 <p>If you get a Fatal Error, you need to check whether the configuration files 
   are in the good place, and the Tun driver is loaded. If it's not, you can load 
   it yourself. To do so, type the following command :</p>

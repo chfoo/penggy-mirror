@@ -1,13 +1,13 @@
-# French translations for pengfork package
-# Traduction anglaise du package pengfork.
+# French translations for penggy package
+# Traduction anglaise du package penggy.
 # Copyright (C) 2002 Jean-Charles Salzeber <jc@varspool.net>
-# This file is distributed under the same license as the pengfork package.
+# This file is distributed under the same license as the penggy package.
 # Jean-Charles Salzeber <jc@varspool.net>, 2002.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: pengfork 0.1\n"
-"POT-Creation-Date: 2002-12-04 14:35+0100\n"
+"Project-Id-Version: penggy 0.1\n"
+"POT-Creation-Date: 2002-12-04 16:38+0100\n"
 "PO-Revision-Date: 2002-12-01 00:39+0100\n"
 "Last-Translator: Jean-Charles Salzeber <jc@varspool.net>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -521,7 +521,7 @@ msgstr "Ne peut assigner les variables d'environnement: %s (%d)\n"
 msgid "Can't exec script %s: %s (%d)\n"
 msgstr "Ne peut éxécuter le script %s: %s (%d)\n"
 
-#: src/misc.c:224 src/misc.c:263
+#: src/misc.c:224 src/misc.c:264
 #, c-format
 msgid "Can't fork: %s (%d)\n"
 msgstr "Ne peut 'forker': %s (%d)\n"
@@ -657,8 +657,10 @@ msgid ""
 "\n"
 msgstr ""
 "%s est donné sans AUCUNE GARANTIE.\n"
-"C'est un logiciel libre, et vous pouvez redistribuer des copies selon les termes\n"
-"de la GNU General Public License, version 2 ou ultérieure.\n\n"
+"C'est un logiciel libre, et vous pouvez redistribuer des copies selon les "
+"termes\n"
+"de la GNU General Public License, version 2 ou ultérieure.\n"
+"\n"
 
 #: src/options.c:332
 msgid "Compilation options :\n"

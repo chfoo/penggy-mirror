@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # This is a sample script for ip-down
-# this script is called when pengfork delete the interface
+# this script is called when penggy delete the interface
 #
 # defined variables:
 # IFNAME : the interface name where tunneling is done

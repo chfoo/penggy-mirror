@@ -1,7 +1,7 @@
 #
 # Copyright (c) 2002  Jean-Charles Salzeber <jc@varspool.net>
 #
-# This file is part of pengfork program.
+# This file is part of penggy program.
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -31,9 +31,9 @@ DEFS = -DLOCALEDIR=\"$(localedir)\" @DEFS@
 LIBS = @LIBINTL@ @LIBS@
 
 
-sbin_PROGRAMS = pengfork
+sbin_PROGRAMS = penggy
 
-pengfork_SOURCES = 	buffer.c		\
+penggy_SOURCES = 	buffer.c		\
 			misc.c			\
 			options.c		\
 			getpass.c		\
@@ -88,7 +88,7 @@ SUBDIRS = 	fdo			\
 		l2tp
 
 
-pengfork_LDADD = 	$(top_builddir)/src/fdo/libfdo.a		\
+penggy_LDADD = 	$(top_builddir)/src/fdo/libfdo.a		\
 			$(top_builddir)/src/iptunnel/libiptunnel.a	\
 			$(top_builddir)/lib/lib.a			\
 			$(MODEM_LIBS)					\

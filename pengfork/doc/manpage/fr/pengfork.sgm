@@ -4,18 +4,18 @@
   <!ENTITY options SYSTEM "options.sgm">
 ]>
 
-<!-- This file is part of the pengfork project
+<!-- This file is part of the penggy project
      it is the manpage file in french -->
 
-<refentry id="pengfork">
+<refentry id="penggy">
 
     <refmeta>
-      <refentrytitle>pengfork</refentrytitle>
+      <refentrytitle>penggy</refentrytitle>
       <manvolnum>1</manvolnum>
     </refmeta>
 
     <refnamediv>
-      <refname>pengfork</refname>
+      <refname>penggy</refname>
       <refpurpose>se connecter à internet avec son compte AOL</refpurpose>
     </refnamediv>
 

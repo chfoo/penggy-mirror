@@ -1,8 +1,8 @@
-<!-- here is the synopsis of the pengfork
+<!-- here is the synopsis of the penggy
      command -->
 
 <cmdsynopsis>
-  <command>pengfork</command>
+  <command>penggy</command>
   <group>
     <arg>-h</arg>
     <arg>--help</arg>
@@ -14,7 +14,7 @@
 </cmdsynopsis>
 
 <cmdsynopsis>
-  <command>pengfork</command>
+  <command>penggy</command>
   <arg>--access-method=
     <arg choice='plain'>
       <replaceable>METHOD</replaceable>
