@@ -179,7 +179,7 @@ modem_send_init_string (string)
   if (!string)
     return 1;
 
-  if (!modem_send_command (string, 1000, response, 255))
+  if (!modem_send_command (string, 1000, response, sizeof(response)))
     return 0;
   switch (modem_response_value (response))
     {
@@ -225,12 +225,12 @@ modem_dial_to (phone)
     return 0;
 
   if (!PARAM_MODEM_DIAL_PREFIX)
-    snprintf (dialcmd, 255, "%s%s", PARAM_MODEM_DIALSTR, phone);
+    snprintf (dialcmd, sizeof(dialcmd), "%s%s", PARAM_MODEM_DIALSTR, phone);
   else
-    snprintf (dialcmd, 255, "%s%s%s", PARAM_MODEM_DIALSTR,
+    snprintf (dialcmd, sizeof(dialcmd), "%s%s%s", PARAM_MODEM_DIALSTR,
               PARAM_MODEM_DIAL_PREFIX, phone);
 
-  if (!modem_send_command (dialcmd, 60 * 1000, response, 255))
+  if (!modem_send_command (dialcmd, 60 * 1000, response, sizeof(response)))
     return 0;
   switch (modem_response_value (response))
     {
@@ -255,7 +255,7 @@ modem_dial_to (phone)
       break;
 
     case RESPONSE_BUSY:        /* BUSY */
-      fprintf (stderr, "Modem is busy\n");
+      fprintf (stderr, "Provider is busy\n");
       return 0;
       break;
 
@@ -294,20 +294,20 @@ int
 modem_log_into_aol ()
 {
   printf ("Waiting for login prompt\n");
-  if (!modem_wait_for (PARAM_MODEM_LOGIN_PROMPT, 20 * 1000))
+  if (!modem_wait_for (PARAM_MODEM_LOGIN_PROMPT, 60 * 1000))
     return 0;
   printf ("Sending server's login\n");
   write (fd, PARAM_MODEM_SERVER_LOGIN, strlen (PARAM_MODEM_SERVER_LOGIN));
   write (fd, "\r", 1);
   tcdrain (fd);
   printf ("Waiting for password prompt\n");
-  if (!modem_wait_for (PARAM_MODEM_PASS_PROMPT, 20 * 1000))
+  if (!modem_wait_for (PARAM_MODEM_PASS_PROMPT, 60 * 1000))
     return 0;
   printf ("Sending server's password\n");
   write (fd, PARAM_MODEM_SERVER_PASS, strlen (PARAM_MODEM_SERVER_PASS));
   write (fd, "\r", 1);
   tcdrain (fd);
-  if (!modem_wait_for ("onnected", 20 * 1000))
+  if (!modem_wait_for ("onnected", 60 * 1000))
     return 0;
   printf ("Logged into server\n");
   return 1;
