@@ -536,7 +536,7 @@ msgstr "Authentification de l'utilisateur"
 
 #: src/options.c:73
 msgid "Modem properties"
-msgstr "Propriétés relative au modem"
+msgstr "Propriétés relatives au modem"
 
 #: src/options.c:74
 msgid "Cable properties"

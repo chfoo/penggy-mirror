@@ -21,7 +21,7 @@ else
 fi
 
 if [ -x $ROUTE ]; then
-	#$ROUTE del default
+        $ROUTE add -host $ADDRESS dev $IFNAME
         $ROUTE add default gw $ADDRESS
 else
         echo "$0: $ROUTE not found"

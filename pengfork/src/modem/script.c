@@ -82,12 +82,9 @@ compare_elem (buffer, elem, result)
      SCM elem;
      SCM *result;
 {
-  SCM eval;
   int match = 0;
   char *text, *textmin, *bufmin;
   int len;
-
-  eval = gh_lookup ("eval");
 
   text = gh_scm2newstr (gh_car (elem), &len);
   /* duplicate and lowerize all strings to become case insensitive */
@@ -100,7 +97,11 @@ compare_elem (buffer, elem, result)
     {
       log (LOG_NOTICE, gettext ("Script: String '%s' matched\n"), text);
       /* evaluate next elem */
-      *result = gh_call1 (eval, gh_car (gh_cdr (elem)));
+#if HAVE_R5RS_EVAL
+      *result = scm_eval (gh_car (gh_cdr (elem)), scm_current_module());
+#else
+      *result = scm_eval (gh_car (gh_cdr (elem)));
+#endif
       match = 1;
     }
   free (bufmin);

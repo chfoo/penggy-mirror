@@ -93,8 +93,8 @@ main2 (argc, argv)
 {
   program_name = argv[0];
 
-  init_parameters();
   init_log ();
+  init_parameters();
 
   if (!parse_command_line (argc, argv))
     {

@@ -188,6 +188,14 @@ if test "$modem" = yes; then
   GUILE_FLAGS
   CFLAGS="$CFLAGS $GUILE_CFLAGS"
   LDFLAGS="$LDFLAGS $GUILE_LDFLAGS"
+  AC_MSG_CHECKING(whether scm_eval conforms to R5RS)
+  AC_CACHE_VAL(guile_r5rs_eval, [
+    AC_TRY_COMPILE([#include <guile/gh.h>], [SCM e, m; scm_eval(e, m);],
+      guile_r5rs_eval=yes, guile_r5rs_eval=no)])
+  AC_MSG_RESULT($guile_r5rs_eval)
+  if test $guile_r5rs_eval = yes; then
+    AC_DEFINE([HAVE_R5RS_EVAL],,[Enabled if scm_eval is R5RS compliant])
+  fi
 fi
 AM_CONDITIONAL(BUILD_MODEM, test "$modem" = yes)
 

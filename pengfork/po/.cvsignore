@@ -2,6 +2,6 @@ Makefile
 Makefile.in
 POTFILES
 *.gmo
-pengfork.pot
+penggy.pot
 remove-potcdate.sed
 

@@ -111,10 +111,10 @@ enum
   __modem_retry_delay,
 #endif /* WITH_MODEM */
 
-#ifdef WITH_CABLE
+#ifdef WITH_TCPIP
   __tcpip_aol_host,
   __tcpip_aol_port,
-#endif /* WITH_CABLE */
+#endif /* WITH_TCPIP */
 
   __last_param                  /* not a parameter */
 };

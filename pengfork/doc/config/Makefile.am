@@ -30,9 +30,9 @@ EXTRA_DIST =	penggy.cfg	\
 install-data-local: 
 	$(mkinstalldirs) @CONFDIR@ 
 	if [ -f @CONFDIR@/penggy.cfg ] ; then \
-		$(INSTALL_DATA) -b penggy.cfg @CONFDIR@/pengfork.cfg.new ;\
+		$(INSTALL_DATA) -b penggy.cfg @CONFDIR@/penggy.cfg.new ;\
 	else \
-		$(INSTALL_DATA) -b penggy.cfg @CONFDIR@/pengfork.cfg ;\
+		$(INSTALL_DATA) -b penggy.cfg @CONFDIR@/penggy.cfg ;\
 	fi
 	if [ -f @CONFDIR@/aol-secrets ] ; then \
 		$(INSTALL) -b -m 600 aol-secrets @CONFDIR@/aol-secrets.new ;\
@@ -44,7 +44,7 @@ install-data-local:
 	else \
 		$(INSTALL) -b -m 755 ip-up @CONFDIR@/ip-up ;\
 	fi
-	if [ -f @CONFDIR@/ip-up ] ; then \
+	if [ -f @CONFDIR@/ip-down ] ; then \
 		$(INSTALL) -b -m 755 ip-down @CONFDIR@/ip-down.new ;\
 	else \
 		$(INSTALL) -b -m 755 ip-down @CONFDIR@/ip-down ;\
