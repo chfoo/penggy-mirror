@@ -259,7 +259,7 @@ set_opt_param (int opt_id)
   for (i = 0; i < PARAM_MAX && param[i].shortopt != opt_id; i++)
     ;
   if (i == PARAM_MAX)
-    return 1;
+    return 0;
   if (param[i].shortopt == opt_id)
     {
       /* We now we have a parameter */
@@ -279,7 +279,7 @@ set_opt_param (int opt_id)
 	  param[i].value.string = strdup (optarg);
 	}
     }
-  return 0;
+  return 1;
 }
 
 static char*
@@ -380,7 +380,7 @@ parse_command_line (argc, argv)
 	break;
 	
       default:
-	if (set_opt_param (c))
+	if (!set_opt_param (c))
 	  {
 	    fprintf (stderr, "Try `%s --help' for more information.\n", 
 		     program_name);
@@ -393,7 +393,7 @@ parse_command_line (argc, argv)
   if (long_options)
     free (long_options);
 
-  return 0;
+  return 1;
 }
 
 

@@ -27,6 +27,7 @@
 #include <unistd.h>
 #include <netinet/in.h>
 
+#include "log.h"
 #include "misc.h"
 #include "options.h"
 
@@ -47,7 +48,6 @@ launch_ip_up (if_name, if_addr, if_netmask, if_network, if_broadcast,
   char broadcast[128];
   char gateway[128];
   int pid;
-  char *args[] = { PARAM_IP_UP, NULL };
   struct stat st;
 
   snprintf (name, sizeof (name) - 1, "IFNAME=%s", if_name);
@@ -73,6 +73,8 @@ launch_ip_up (if_name, if_addr, if_netmask, if_network, if_broadcast,
 
   if (PARAM_IP_UP && !stat (PARAM_IP_UP, &st))
     {
+      debug (1, "Launching %s\n", PARAM_IP_UP);
+
       pid = fork ();
       if (pid == 0)
 	{
@@ -82,8 +84,9 @@ launch_ip_up (if_name, if_addr, if_netmask, if_network, if_broadcast,
 	      putenv (network) || putenv (broadcast) || putenv (gateway))
 	    perror ("putenv");
 	  
-	  if (execv (PARAM_IP_UP, args))
-	    perror ("execv");
+	  /* execlp allows shell script execution */
+	  if (execlp (PARAM_IP_UP, PARAM_IP_UP, NULL))
+	    perror ("execlp");
 	  exit (-1);
 	}
       else if (pid > 0)
@@ -117,7 +120,6 @@ launch_down_up (if_name, if_addr, if_netmask, if_network, if_broadcast,
   char broadcast[128];
   char gateway[128];
   int pid;
-  char *args[] = { PARAM_IP_DOWN, NULL };
   struct stat st;
 
   snprintf (name, sizeof (name) - 1, "IFNAME=%s", if_name);
@@ -143,6 +145,8 @@ launch_down_up (if_name, if_addr, if_netmask, if_network, if_broadcast,
 
   if (PARAM_IP_DOWN && !stat (PARAM_IP_DOWN, &st))
     {
+      debug (1, "Launching %s\n", PARAM_IP_DOWN);
+
       pid = fork ();
       if (pid > 0)
 	{
@@ -152,7 +156,7 @@ launch_down_up (if_name, if_addr, if_netmask, if_network, if_broadcast,
 	      putenv (network) || putenv (broadcast) || putenv (gateway))
 	    perror ("putenv");
 	  
-	  if (execv (PARAM_IP_DOWN, args))
+	  if (execlp (PARAM_IP_DOWN, PARAM_IP_DOWN, NULL))
 	    perror ("execv");
 	  exit (-1);
 	}

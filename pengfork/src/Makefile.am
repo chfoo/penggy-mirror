@@ -20,7 +20,7 @@
 #
 
 SUBDIRS = @ARCH_DIR@
-EXTRA_DIST = linux openbsd freebsd
+DIST_SUBDIRS = linux openbsd freebsd
 
 bin_PROGRAMS = pengfork
 

@@ -43,7 +43,7 @@ main (argc, argv)
 
   init_log ();
 
-  if (parse_command_line (argc, argv))
+  if (!parse_command_line (argc, argv))
     {
       fprintf (stderr, "Error parsing command line, exiting !\n");
       exit (1);

@@ -51,15 +51,24 @@ int server_lastseq;
 
 buffer_t access_in, access_out, if_in, if_out;
 
-#define BUFFER_SIZE MAX_PACKET_SIZE*2   /* each buffer can handle 2 full packets */
+/* each buffer can handle 2 full packets */
+#define BUFFER_SIZE MAX_PACKET_SIZE*2
 
 #define WINDOW 10               /* Packet we can send/receive without ack */
 
 int
 prot30_start ()
 {
-  access_fd = access_getfd ();
-  if_fd = if_getfd ();
+  if ((access_fd = access_getfd ()) < 0)
+    {
+      fprintf (stderr, "Cound not open input device\n");
+      return 0;
+    }
+  if ((if_fd = if_getfd ()) < 0)
+    {
+      fprintf (stderr, "Could not open interface file descriptor\n");
+      return 0;
+    }
 
   client_seq = PACKET_MAX_SEQ;
   server_lastack = 0;           /* We have never received a packet */
@@ -113,12 +122,14 @@ prot30_loop ()
 
         case normal:
           FD_SET (access_fd, &rfdset);
-          if (access_out.used > 0)
-            FD_SET (access_fd, &wfdset);
 
           if (buffer_percent_free (&access_out) > 20)
             /* Make sure we have enough space for some ACK */
             FD_SET (if_fd, &rfdset);
+
+          if (access_out.used > 0)
+            FD_SET (access_fd, &wfdset);
+
           if (if_out.used > 0)
             FD_SET (if_fd, &wfdset);
 
@@ -131,7 +142,7 @@ prot30_loop ()
           continue;
         }
 
-      tv.tv_sec = 10;           /* arbitrary value should be good */
+      tv.tv_sec = 30;           /* arbitrary value should be good */
       tv.tv_usec = 0;
       timedout = 0;
       fds = select (maxfd, &rfdset, &wfdset, &efdset, &tv);
@@ -149,11 +160,16 @@ prot30_loop ()
 
               if (FD_ISSET (if_fd, &rfdset))
                 {
+		  debug (5, "Read data from if_fd\n");
                   buffer_recv (&if_in, if_fd);
                   prot30_send_ip ();
                 }
+
               if (FD_ISSET (if_fd, &wfdset))
-                buffer_send (&if_out, if_fd);
+		{
+		  debug (5, "Send data to if_fd\n");
+		  buffer_send (&if_out, if_fd);
+		}
             }
           else
             {

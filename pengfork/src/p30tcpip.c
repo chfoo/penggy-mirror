@@ -171,7 +171,6 @@ prot30_send_ip ()
           prot30_send_data (CODE_IP_NORMAL, &data, ip_size + 2);
         }
     }
-
 }
 
 void
