@@ -1,17 +1,168 @@
-penggy 0.1 INSTALL instructions
+penggy 0.1.0 INSTALL instructions
 =================================
 
-FIXME: to be rewritten
+ 1. Introduction
+ ===============
 
-$ ./configure && make && make install
+  DISCLAIMER:
+    AOL is a registered trademark of America Online, Inc.
+    Penggy is not endorsed by or affiliated with AOL trademark.
 
-Configure insteresting options
-==============================
+  Penggy is a free Linux client for AOL. It allows Linux users to connect
+  to the Internet using AOL, through an IP tunneling system.
 
---prefix=$PATH	: specifies installation root directory.
+  Right now, dialup and TCP/IP connections are supported.
+  It is based on a reverse-engineering of the P3 protocol, therefore 
+  nothing was disassembled. It is a continuation of the Peng project, 
+  which was abandonned. Everything was totally rewritten from scratch, and
+  the P3 implementation is more rigorous than before. The authors does not
+  take responsibilty for any damage this program could cause to your 
+  computer. In other words, if you computer suddenly blows up, starts 
+  dancing to the song that's on the radio, or calls you names, you are 
+  responsible.
 
---enable-modem	: Enable modem driver (default).
---disable-modem : Disable modem driver.
+  It is provided as a command-line tool. No GUI is currently available.
 
---enable-tun  	: Enable tuntap driver (default).
---disable-tun	: Disable tuntap driver.
+ 2. Requirements
+ ===============
+
+  2.1. Universal TUN/TAP device driver
+  ===================================
+
+  Penggy uses the Universal TUN/TAP device driver, written by 
+  Maxim Krasnyansky.
+
+  Make sure that "Universal TUN/TAP device driver support" is enabled in
+  your kernel.
+
+  If TUN/TAP support is already present and penggy always have trouble with
+  it, follow these instructions:
+
+  Create device node:
+     # mknod /dev/net/tun c 10 200
+
+  Driver module autoloading
+     Make sure that "Kernel module loader" - module auto-loading support is
+     enabled in your kernel. 
+
+     Add following line to the /etc/modules.conf:
+        alias char-major-10-200 tun
+     
+     Run:
+       # depmod -a 
+
+     Driver will be automatically loaded when application 
+     access /dev/net/tun.
+
+  2.2. Guile, Project GNU's extension language library
+  ====================================================
+
+  You must install libguile and libguile-dev packages on your system in
+  order to run and compile penggy.
+
+  The Guile WWW page is at
+    http://www.gnu.org/software/guile/guile.html
+
+  If you don't have a packaging system on your distribution or you
+  can't find them, the latest official Guile release should be available
+  via anonymous FTP from
+    ftp://ftp.gnu.org/pub/gnu/guile/
+
+
+ 3. Installation
+ ===============
+
+  Penggyk can be obtained at https://savannah.nongnu.org/projects/pengfork/
+
+  Make sure to download the last stable version. If you feel more 
+  adventurous, you can try the CVS version, but this is not guaranteed
+  to work.
+
+  Installation is quite simple. Get the package, which is provided as 
+  a .tar.gz archive, and put it somewhere on your system. Now you need to 
+  uncompress and untar the files contained within the archive. That can be 
+  done very simply (we'll assume your archive is version 0.1.0)
+
+  $ tar xvzf penggy-0.1.0.tar.gz
+
+  The files should have been decompressed to a directory called penggy-0.1.0
+  You now need to go to that directory and compile the program :
+
+  $ cd penggy-0.1.0
+  $ ./configure
+  $ make
+  # make install
+
+  If you need any particular option, such as cross-compiling, you can get 
+  some help by typing :
+
+  $ ./configure --help
+
+  Now penggy should be compiled and installed. But we're not all set yet. 
+  We still need to configure it.
+
+ 4. Configuration
+ ================
+
+  In the install process, the directory /etc/penggy had been created with
+  several files within it.
+
+  If files were previously installed on your system, the install process
+  will not overwrite them but will create files with .new suffixes instead.
+
+  Last step is configuration. Quite many options are available here.
+
+  You need to modify your configuration files and make it look like as 
+  follows :
+
+  In /etc/penggy/aol-secrets put your AOL account infos:
+    [YourScreenName]	[YourPassword]
+    [AnotherScreenName]	[AnotherPassword]
+    ....
+
+  The file /etc/penggy/penggy.cfg is self-documented but commonly used
+  options are:
+    screen_name = [YourScreenName]
+    # auto_reconnect = yes
+    # daemon = yes
+    modem_device = /dev/modem (Note : If this doesn't work, you might want
+                               to try /dev/ttyS0)
+    phone = [AOL's dialup number]
+    phone1 = [An alternative one]
+
+  Depending on your modem, you might need to change the initialization 
+  strings.
+  You can configure penggy to automatically redial (or reconnect) if you 
+  get disconnected, by activating the corresponding option. You can also 
+  set it  to run as a daemon.
+
+
+ 5. Usage
+ ========
+
+  Near all options specified in the config file might changed on the
+  command line. For more information run:
+    $ penggy --help
+
+  The last step after compiling, installing and configuring is running the
+  software, and praying for it to work :
+    # penggy
+
+  Penggy must be run as root, if you're looking for a way to run it as user
+  the use of sudo is greatly recommended (see sudo(8) and sudoers(5))
+
+  Have fun!
+
+  * If you encounter any problems, or need additional help, you can go to
+     http://www.peng.apinc.org/forum
+
+ 6. About
+ ========
+
+  This little install guide was written by Pascal Roget <pascal@epascal.net>. 
+  If you have any suggestion or want to report a typo or just chat, feel 
+  free to send me an email. I am very likely to respond, and I like getting 
+  mail :)
+
+  The program itself was coded by Jean-Charles Salzeber <jc@varspool.net>. 
+  Greetings to him and to his genius :)
