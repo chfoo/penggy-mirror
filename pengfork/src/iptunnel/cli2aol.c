@@ -26,6 +26,7 @@
 #include "fdo.h"
 #include "log.h"
 #include "if.h"
+#include "protocol.h"
 
 #include "iptunnel/tunnel.h"
 #include "iptunnel/cli2aol.h"
@@ -44,7 +45,7 @@ get_ip_client (in)
   int i;
 
   debug (1, "IP TUNNEL - Sending IP...\n");
-  while (iface->get (in, &ip, &ip_size))
+  while (iface->get (in, &ip, &ip_size) && protocol->ready())
     {
       if (ip_size > 0x7f)
         {

@@ -118,7 +118,7 @@ ip_tunnel_config (token, data, data_size)
 
   vj_compress_init (&vj_comp, -1);
 
-  engine_register (*(iface->fd), ip_tunnel_fn);
+  engine_register (*(iface->fd), 0, ip_tunnel_fn);
 
   fdo_register ( TOKEN ("yc"), get_ip_aol);
 }

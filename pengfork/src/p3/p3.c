@@ -47,6 +47,7 @@ struct p3state cli, srv;
 const protocol_t p3_protocol = (protocol_t) {
   p3_register_to_engine,
   p3_send,
+  p3_ready,
   (P3_MAX_SIZE - P3_DATA_OFFSET - 1)
 };
 
@@ -56,7 +57,7 @@ const struct engine_functions p3_fn = (struct engine_functions) {
   p3_want_write,
   p3_recv,
   NULL,
-  NULL,
+  p3_timeout,
   NULL
 };
 
@@ -67,10 +68,16 @@ p3_register_to_engine (myaccess)
      const access_t *myaccess;
 {
   if (myaccess->is_connected ())
-    engine_register (*(myaccess->fd), p3_fn);
+    engine_register (*(myaccess->fd),P3_TIMEOUT , p3_fn);
   else
     log (LOG_ERR,
          "P3 - Unable to register functions, access is not connected\n");
+}
+
+int
+p3_ready()
+{
+  return !win_full(&wsend);
 }
 
 void
@@ -134,6 +141,49 @@ p3_recv (bufin)
         {
 	p3_treat_packet(header,data,data_size);
 	buffer_free (bufin, data_size + P3_DATA_OFFSET + 1);
+        }
+    }
+}
+
+void
+p3_timeout(bufin, bufout, timeout)
+     buffer_t *bufin;
+     buffer_t *bufout;
+     int timeout;
+{
+  debug(1,"P3 - timeout notified\n");
+  if(timeout<10) 
+    {
+      if(srv.lastseq != cli.lastack)
+        {
+	/* Server has some unacknowledged packets */
+	p3_put_packet(TYPE_ACK,NULL,0);
+        }
+    }
+  else if(timeout < 15) 
+    {
+      if(cli.lastseq != srv.lastack)
+        {
+	/* we have some unacknowledged packets */
+	p3_put_packet(TYPE_PING,NULL,0);
+        }
+    }
+  else if(timeout < 35) 
+    {
+      if(cli.lastseq != srv.lastack)
+        {
+	/* we have some unacknowledged packets */
+	p3_put_packet(TYPE_PING,NULL,0);
+        }
+    }
+  else 
+    {
+      if(cli.lastseq != srv.lastack)
+        {
+	/* Always some unacknowledged packets??!!
+	 * The server seems out or lost
+	 */
+	
         }
     }
 }

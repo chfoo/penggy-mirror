@@ -40,12 +40,16 @@ struct p3state
 #define WINDOW_SIZE 32          /* Packet we can send/receive without ack */
 #define WINDOW_HIGH 24          /* when the window is considered near closed */
 
+#define P3_TIMEOUT 5
+
 extern struct p3state cli, srv;
 extern window_t wsend, wunack, wnack;
 
 void p3_register_to_engine (const access_t * myaccess);
+int p3_ready ();
 void p3_init (buffer_t * bufin, buffer_t * bufout);
 int p3_want_write(buffer_t * out);
 void p3_recv (buffer_t * bufin);
+void p3_timeout(buffer_t *bufin, buffer_t *bufout, int timeout);
 
 #endif /* __P3_P3_H__ */

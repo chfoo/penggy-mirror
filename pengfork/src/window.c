@@ -78,7 +78,7 @@ win_add(win, packet, packet_size)
   if(win_full(win)) return;
   
   win->packet[win->used] = malloc(packet_size);
-  memcpy(win->packet[win->used], packet,packet_size);
+  memcpy(win->packet[win->used], packet, packet_size);
   win->packet_size[win->used] = packet_size;
   win->used++;
 }
@@ -106,6 +106,11 @@ win_delete(win, nb)
 	    (win->used - nb) * sizeof(size_t));
     }
   win->used-=nb;
+  for(i=win->used; i<win->size; i++)
+    {
+      win->packet[i]=NULL;
+      win->packet_size[i]=0;
+    }
 }
 
 
@@ -116,7 +121,7 @@ win_get(win, num, packet, packet_size)
      char **packet;
      size_t *packet_size;
 {
-  if(num > win->used || num < 0)
+  if(num > win->used - 1 || num < 0)
     {
       *packet = NULL;
       *packet_size = 0;

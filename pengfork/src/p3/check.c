@@ -26,6 +26,7 @@
 
 #include "p3/header.h"
 #include "p3/p3.h"
+#include "p3/ack.h"
 #include "p3/misc.h"
 #include "p3/check.h"
 
@@ -69,6 +70,7 @@ p3_check_packet (header, data, data_size)
     {
       debug(1,"P3 - Bad packet received:\n");
       debug(1,"\tnot 0x0d terminated\n");
+      p3_send_nack (header);
       return 0;
     }
 
@@ -77,6 +79,7 @@ p3_check_packet (header, data, data_size)
     {
       debug(1,"P3 - Bad packet received:\n");
       debug(1,"\tthis is a client packet!\n");
+      p3_send_nack (header);
       return 0;
     }
 
@@ -86,6 +89,7 @@ p3_check_packet (header, data, data_size)
     {
       debug(1,"P3 - Bad packet received:\n");
       debug(1,"\tbad CRC checksum\n");
+      p3_send_nack (header);
       return 0;
     }
 
@@ -104,6 +108,7 @@ p3_check_ordering (header)
       debug (1, "\tseq received: %d\n", header->seq);
       debug (1, "\tseq expected: %d\n", p3_next_seq (srv.lastseq));
       /* packet is data and the seq isn't what we expect */
+      p3_send_nack (header);
       return 0;
     }
   if ((header->type == TYPE_PING || header->type == TYPE_NACK) &&
@@ -113,6 +118,7 @@ p3_check_ordering (header)
       debug (1, "\tseq received: %d\n", header->seq);
       debug (1, "\tseq expected: %d\n", srv.lastseq);
       /* packet is data and the seq isn't what we expect */
+      p3_send_nack (header);
       return 0;
     }
 

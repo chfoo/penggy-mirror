@@ -38,6 +38,7 @@
 
 #include "tun/tun.h"
 #include "options.h"
+#include "log.h"
 
 extern int tun_fd;
 
@@ -155,7 +156,7 @@ tun_get (buffer, data, data_size)
   if (buffer->used < sizeof (struct iphdr))
     return 0;
   if (buffer->used < ntohs (ip->tot_len))
-    return 0;
+      return 0;
 
   *data = (char *) ip;
   *data_size = ntohs (ip->tot_len);

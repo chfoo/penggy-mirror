@@ -43,6 +43,8 @@ struct
   int fd;
   buffer_t in;
   buffer_t out;
+  int timeout;
+  int last_timeout;
   time_t lastread;
   struct engine_functions fn;
 }
@@ -59,6 +61,8 @@ engine_init ()
   for (i = 0; i < MAX_CLIENTS; i++)
     {
       client[i].fd = -1;
+      client[i].timeout = 0;
+      client[i].last_timeout = 0;
       client[i].fn.init = NULL;
       client[i].fn.want_read = NULL;
       client[i].fn.want_write = NULL;
@@ -120,8 +124,8 @@ engine_loop ()
           /* 
            * There was no data to read/write
            */
-          engine_timeout ();
           debug (1, "engine - Timed out\n");
+          engine_timeout ();
         }
     }
 }
@@ -133,8 +137,9 @@ engine_stop ()
 }
 
 void
-engine_register (fd, fn)
+engine_register (fd, timeout, fn)
      int fd;
+     int timeout;
      struct engine_functions fn;
 {
   int index = nbclients;
@@ -164,6 +169,8 @@ engine_register (fd, fn)
 
   /* Fill structure */
   client[index].fd = fd;
+  client[index].timeout = timeout;
+  client[index].last_timeout = 0;
   client[index].fn = fn;
   init_buffer (&client[index].in);
   init_buffer (&client[index].out);
@@ -195,8 +202,8 @@ engine_unregister (fd)
   if (index < nbclients - 1)
     {
       /* Shift all next clients */
-      memcpy (&client[index], &client[index + 1],
-              (nbclients - index) * sizeof (client[0]));
+      memmove (&client[index], &client[index + 1],
+	     (nbclients - index) * sizeof (client[0]));
     }
 
   nbclients--;
@@ -225,8 +232,12 @@ engine_set_readers (fdset, maxfd)
             }
         }
       else
-        /* Normally the input buffer mustn't be full */
-        log (LOG_ERR, "engine - An input buffer is full\n");
+        {
+	/* Normally the input buffer mustn't be full */
+	log (LOG_ERR, "engine - An input buffer is full\n");
+	buffer_free(&client[i].in,client[i].in.used);
+	debug( 1, "\tBuffer flushed\n",i);
+        }
     }
 }
 
@@ -262,12 +273,13 @@ engine_read (fdset)
       if (FD_ISSET (client[i].fd, fdset))
         {
 	client[i].lastread = time(NULL);
+	client[i].last_timeout = 0;
           /* Fill buffer with available data */
           buffer_recv (&client[i].in, client[i].fd);
-          /* And ask the client to treat the buffer */
-          if (client[i].fn.readfn != NULL)
-            client[i].fn.readfn (&client[i].in);
         }
+      /* And ask the client to treat the buffer */
+      if (client[i].in.used > 0 && client[i].fn.readfn != NULL)
+        client[i].fn.readfn (&client[i].in);
     }
 }
 
@@ -293,14 +305,26 @@ engine_write (fdset)
 void
 engine_timeout ()
 {
-  /*
-   * UNIMPLEMENTED do not use timeouts
-   */
-  int i;
+  int i, nb;
+  time_t t = time(NULL);
 
   for (i = 0; i < nbclients; i++)
     {
-      if (client[i].fn.timeoutfn != NULL)
-        client[i].fn.timeoutfn (&client[i].in, &client[i].out, 1);
+      /* Client want timeout notification ? */
+      if (client[i].fn.timeoutfn != NULL && client[i].timeout > 0)
+        {
+	/* Is the client in timeout ? */
+	if(t - client[i].lastread >= client[i].timeout)
+	  {
+	    nb=(t - client[i].lastread)/client[i].timeout;
+	    /* How many timeouts had happened ? */
+	    if(nb > client[i].last_timeout)
+	      {
+	        client[i].last_timeout = nb;
+	        client[i].fn.timeoutfn (&client[i].in, &client[i].out, 
+				  t - client[i].lastread);
+	      }
+	  }
+        }
     }
 }

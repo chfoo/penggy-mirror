@@ -156,9 +156,6 @@ p3_extract_packet (buffer, header, data, data_size)
       else
         {
 	p3_sync_buffer (buffer);
-	/* Ask the server to retransmit the bad packet if any */
-	if(!p3_check_ordering (h))
-	  p3_send_nack (h);
         }
     }
 

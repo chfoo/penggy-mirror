@@ -34,6 +34,7 @@ typedef struct
 {
   void (*register_to_engine) (const access_t *);
   void (*send) (char *, size_t);
+  int (*ready) (void);
   size_t max_data;
 }
 protocol_t;

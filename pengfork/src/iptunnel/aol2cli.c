@@ -114,6 +114,8 @@ get_ip_extra (token, data, data_size)
     {
       get_uncompressed_ip (extra_ip.data, extra_ip.len);
       free(extra_ip.data);
+      extra_ip.filled = 0;
+      extra_ip.len = 0;
       need_extra = 0;
       fdo_unregister ( TOKEN ("yd") );
     }
@@ -145,8 +147,8 @@ get_uncompressed_ip (vjip, vjiplen)
         {
           /* copy header */
           memcpy (tmp, iphdr, iphdrlen);
-	iphdr[0] &= ~TYPE_UNCOMPRESSED_TCP;
-	iphdr[0] |= TYPE_IP;
+	tmp[0] &= ~TYPE_UNCOMPRESSED_TCP;
+	tmp[0] |= TYPE_IP;
 	/* copy data */
           memcpy (&tmp[iphdrlen], &vjip[vjhdrlen], vjiplen - vjhdrlen);
           iface->put (ifout, tmp, iplen);

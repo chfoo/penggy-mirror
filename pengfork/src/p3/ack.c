@@ -41,7 +41,11 @@ p3_ack( header )
   
   nack_sent = 0;
   if(header->type == TYPE_DATA)
-    srv.lastseq = header->seq;
+    {
+      srv.lastseq = header->seq;
+      if(p3_diff_seq(srv.lastseq,cli.lastack)>=8)
+        p3_put_packet(TYPE_ACK,NULL,0);
+    }
   if(srv.lastack != header->ack)
     {
       srv.lastack = header->ack;
@@ -72,13 +76,15 @@ void
 p3_send_nack(header)
      struct p3hdr *header;
 {
-  if(header->seq > srv.lastseq)
+  if(header->type == TYPE_PING) 
     {
-      nack_sent++;
-      if(nack_sent > 8) nack_sent=0;
-      if(!nack_sent)
-        {
-	p3_put_packet(TYPE_NACK,NULL,0);
-        }
+      p3_put_packet(TYPE_ACK,NULL,0);
+      p3_put_packet(TYPE_NACK,NULL,0);
+      nack_sent=1;
+    }
+  if(!nack_sent) 
+    {
+      p3_put_packet(TYPE_NACK,NULL,0);
+      nack_sent=1;      
     }
 }

@@ -28,8 +28,11 @@
 
 #include "buffer.h"
 
-/* the timeout in seconds */
-#define ENGINE_TIMEOUT  30
+/* 
+ *  the timeout in seconds, we need a small engine timeout 
+ *  for clients wanting an accurate timeout notification
+ */
+#define ENGINE_TIMEOUT  1
 
 struct engine_functions
 {
@@ -45,7 +48,7 @@ struct engine_functions
 int engine_init (void);
 void engine_loop (void);
 void engine_stop (void);
-void engine_register (int fd, struct engine_functions fn);
+void engine_register (int fd, int timeout, struct engine_functions fn);
 void engine_unregister (int fd);
 void engine_set_readers (fd_set * fdset, int *maxfd);
 void engine_set_writers (fd_set * fdset, int *maxfd);

@@ -75,3 +75,16 @@ p3_add_seq (seq, add)
   return (seq - PACKET_MIN_SEQ + add) % (PACKET_MAX_SEQ - PACKET_MIN_SEQ +
                                          1) + PACKET_MIN_SEQ;
 }
+
+int
+p3_diff_seq (s1, s2)
+     int s1, s2;
+{
+  int i;
+
+  if(s1 < PACKET_MIN_SEQ || s2 < PACKET_MIN_SEQ ||
+     s1 > PACKET_MAX_SEQ || s2 > PACKET_MAX_SEQ)
+    return -1;
+  for(i=0; p3_add_seq(s2,i)!=s1; i++);
+  return i;
+}
