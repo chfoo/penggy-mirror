@@ -23,6 +23,7 @@
 #include <sys/types.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include <locale.h>
 
 #include "log.h"
 #include "options.h"
@@ -30,6 +31,7 @@
 int
 init_log (void)
 {
+  setlocale(LC_ALL, NULL);
   if (PARAM_DAEMON)
     openlog ("pengfork", 0, LOG_DAEMON);
   return 1;
