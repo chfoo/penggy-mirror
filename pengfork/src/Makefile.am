@@ -37,6 +37,6 @@ pengfork_SOURCES = 	buffer.c		\
 			p30tcpip.c		\
 			utils.c
 
-INCLUDES = -I$(top_srcdir)/include
+INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)
 
 pengfork_LDADD = $(top_srcdir)/src/@ARCH_DIR@/libsystem.a

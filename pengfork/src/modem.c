@@ -20,6 +20,8 @@
  *                
  */
 
+#include "config.h"
+
 #ifdef WITH_MODEM
 
 #include <sys/ioctl.h>

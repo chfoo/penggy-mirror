@@ -19,7 +19,7 @@
 # 02111-1307, USA.
 #
 
-INCLUDES = -I$(top_srcdir)/include
+INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)
 noinst_LIBRARIES = libsystem.a
 
 libsystem_a_SOURCES = tun.c

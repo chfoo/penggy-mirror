@@ -70,24 +70,22 @@ AC_SUBST([ARCH_DIR])
 AC_ARG_ENABLE(modem,
   [  --enable-modem	Enable modem driver (default) ], 
   if test $enableval != "no"; then
-     AC_DEFINE([WITH_MODEM])
+     AC_DEFINE([WITH_MODEM],,[ Enable/disable modem driver ])
   fi,
   AC_DEFINE([WITH_MODEM])
 )
 
 # Universal tuntap driver
-# FIXME: Enable by default when ready 
 AC_ARG_ENABLE(tun,
   [  --enable-tun	Enable tun driver (default) ],
   if test $enableval != "no"; then
-     AC_DEFINE([WITH_TUN])
+     AC_DEFINE([WITH_TUN],,[ Enable/disable tun driver ])
   fi,
   AC_DEFINE([WITH_TUN])
 )
 
 # Ask for config.h.
-# FIXME: disabled until src/config.h renamed.
-# AM_CONFIG_HEADER(config.h)
+AM_CONFIG_HEADER(config.h)
 
 # Output Files
 AC_CONFIG_FILES([Makefile 

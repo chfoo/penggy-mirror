@@ -20,6 +20,8 @@
  *                
  */
 
+#include "config.h"
+
 #ifdef WITH_TUN
 #include <stdlib.h>
 #include <stdio.h>
