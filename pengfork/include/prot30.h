@@ -82,18 +82,25 @@ extern enum state_t state;
 
 extern buffer_t access_in, access_out, if_in, if_out;
 
-int prot30_start ();
-void prot30_loop ();
+int prot30_start (void);
+void prot30_loop (void);
 void prot30_send_packet (int type, aol_data_t * data, size_t data_size);
 u_int16_t prot30_crc16 (char *buffer, int length);
 void prot30_dump_raw (char *packet, size_t size);
-void prot30_dialog ();
-void prot30_treat_input ();
+void prot30_dialog (void);
+void prot30_treat_input (void);
 void prot30_set_state (int _state);
-int prot30_new_state ();
+int prot30_new_state (void);
 void prot30_print_state (int state);
 int prot30_get_packet (aol_header_t ** packet, aol_data_t ** data,
                        size_t * data_size);
+void prot30_sync_buffer (void);
+int prot30_check_header (aol_header_t * header);
+int prot30_check_packet (aol_header_t * header, aol_data_t * data,
+                         size_t data_size);
+int prot30_check_ordering (aol_header_t * header);
+int prot30_next_server_seq (void);
+
 
 
 #endif /* __PROT30_H__ */

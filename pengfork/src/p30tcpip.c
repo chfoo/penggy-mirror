@@ -32,7 +32,7 @@
 #include "if.h"
 #include "misc.h"
 
-int ipnum;
+int ipnum = 0;
 
 void
 prot30_send_ip_config ()
@@ -132,17 +132,17 @@ prot30_send_ip ()
     {
       if (data_size > 0x7f)
         {
-	offset=0;
-	while(data_size-offset>MAX_PACKET_SIZE-AOL_DATA_OFFSET-3)
-	big.ipnum=ipnum;
-	big.len=data_size & LONG_IP_MASK;
-	memcpy(big.ip_data,data,data_size);
+          offset = 0;
+          while (data_size - offset > MAX_PACKET_SIZE - AOL_DATA_OFFSET - 3)
+            big.ipnum = ipnum;
+          big.len = data_size & LONG_IP_MASK;
+          memcpy (big.ip_data, data, data_size);
         }
       else
         {
-	small.ipnum=ipnum;
-	small.len=data_size;
-	memcpy(small.ip_data,data,data_size);
+          small.ipnum = ipnum;
+          small.len = data_size;
+          memcpy (small.ip_data, data, data_size);
         }
     }
 

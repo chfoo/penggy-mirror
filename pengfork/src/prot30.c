@@ -50,7 +50,9 @@ int server_lastseq;
 
 buffer_t access_in, access_out, if_in, if_out;
 
-#define BUFFER_SIZE MAX_PACKET_SIZE*2 /* each buffer can handle 2 full packets */
+#define BUFFER_SIZE MAX_PACKET_SIZE*2   /* each buffer can handle 2 full packets */
+
+#define WINDOW 10               /* Packet we can send/receive without ack */
 
 int
 prot30_start ()
@@ -114,17 +116,22 @@ prot30_loop ()
           break;
 
         case normal:
-          maxfd = MAX (access_fd, if_fd) + 1;
           FD_SET (access_fd, &rfdset);
-          if (if_fd >= 0 && /* FIXME: remove when ready */
-	    buffer_percent_free(&access_out) > 20 ) 
-	         /* Make sure we have enough space for some ACK */
-	  FD_SET (if_fd, &rfdset);
+          if (if_fd >= 0 &&     /* FIXME: remove when ready */
+              buffer_percent_free (&access_out) > 20)
+            /* Make sure we have enough space for some ACK */
+            FD_SET (if_fd, &rfdset);
 
           if (access_out.used > 0)
             FD_SET (access_fd, &wfdset);
-          if (if_out.used > 0)
+          if (if_fd >= 0 && if_out.used > 0)    /* FIXME: remove when ready */
             FD_SET (if_fd, &wfdset);
+
+          if (if_fd >= 0 &&     /* FIXME: remove when ready */
+              (FD_ISSET (if_fd, &rfdset) || FD_ISSET (if_fd, &wfdset)))
+            maxfd = MAX (access_fd, if_fd) + 1;
+          else
+            maxfd = access_fd + 1;
           break;
         case exiting:
           continue;
@@ -134,37 +141,37 @@ prot30_loop ()
       tv.tv_usec = 0;
       timedout = 0;
       fds = select (maxfd, &rfdset, &wfdset, &efdset, &tv);
-      if( access_is_connected() )
+      if (access_is_connected ())
         {
-	if (fds > 0)
-	  {
-	    if (FD_ISSET (access_fd, &rfdset))
-	      {
-	        buffer_recv (&access_in, access_fd);
-	        prot30_treat_input ();
-	      }
-	    if (FD_ISSET (access_fd, &wfdset))
-	      buffer_send (&access_out, access_fd);
-	    
-	    if (if_fd != -1 && FD_ISSET (if_fd, &rfdset))
-	      {
-	        buffer_recv (&if_in, if_fd);
-	        prot30_send_ip ();
-	      }	   	    
-	    if (if_fd != -1 && FD_ISSET (if_fd, &wfdset))
-	      buffer_send (&if_out, if_fd);	
-	  }
-	else
-	  {
-	    timedout = 1;
-	    printf ("Timed out\n");
-	  }
+          if (fds > 0)
+            {
+              if (FD_ISSET (access_fd, &rfdset))
+                {
+                  buffer_recv (&access_in, access_fd);
+                  prot30_treat_input ();
+                }
+              if (FD_ISSET (access_fd, &wfdset))
+                buffer_send (&access_out, access_fd);
+
+              if (if_fd != -1 && FD_ISSET (if_fd, &rfdset))
+                {
+                  buffer_recv (&if_in, if_fd);
+                  prot30_send_ip ();
+                }
+              if (if_fd != -1 && FD_ISSET (if_fd, &wfdset))
+                buffer_send (&if_out, if_fd);
+            }
+          else
+            {
+              timedout = 1;
+              printf ("Timed out\n");
+            }
         }
       else
         {
-	printf("Your connection has been closed!\n");
-	prot30_set_state(exiting);
-        }      
+          printf ("Your connection has been closed!\n");
+          prot30_set_state (exiting);
+        }
     }
 }
 
@@ -222,8 +229,8 @@ prot30_treat_input ()
       if (!header->client)
         {
           /* $$$ TODO $$$ */
-          /* Verify that the server sequence number is good.
-             If not send a RESYNC packet.
+          /* Check we don't have send more than WINDOW packet without
+             receiving ack
            */
           server_lastseq = header->seq;
           server_lastack = header->ack;
@@ -303,56 +310,161 @@ prot30_get_packet (header, data, data_size)
      aol_data_t **data;
      size_t *data_size;
 {
-  void *p;
-  int len;
+  char *p;
   aol_header_t *h;
   aol_data_t *d;
   size_t ds;
   size_t s;
+  int loop = 1;
 
   *header = NULL;
   *data = NULL;
   *data_size = 0;
-  if (access_in.used < AOL_DATA_OFFSET)
-    return 0;
-  
-  p = memchr (buffer_start (&access_in), AOL_MAGIC, access_in.used);
-  if (p != buffer_start (&access_in))
+  while (loop)
     {
-      /* There is some unknow data in the buffer they could have sense
-         but it is probably transmission error
-      */
-      if(p)
-        len = (int) p - (int) buffer_start (&access_in);
-      else 
-        len = access_in.used;
-      printf ("%d bytes dropped from buffer!\n", len);
-      buffer_free (&access_in, len);
+      if (access_in.used < AOL_DATA_OFFSET)
+        return 0;
+
+      p = buffer_start (&access_in);
+      if (*p != AOL_MAGIC)
+        /* There is some unknow data in the buffer they could have sense
+           but it is probably transmission error
+         */
+        prot30_sync_buffer ();
+
+      if (access_in.used < AOL_DATA_OFFSET)
+        return 0;
+
+      /* So here we have a full header */
+      h = (aol_header_t *) p;
+      d = (aol_data_t *) (p + AOL_DATA_OFFSET);
+      s = ntohs (h->size);
+      ds = s - AOL_SIZE_OFFSET;
+
+      if (!prot30_check_header (h))
+        {
+          printf ("Bad header received\n");
+          prot30_sync_buffer ();
+          continue;
+        }
+
+      if (access_in.used < s + 1)
+        return 0;
+
+      if (prot30_check_packet (h, d, ds) && prot30_check_ordering (h))
+        {
+          /* Good we have an entire and well done packet */
+          *header = h;
+          h->size = s;
+          h->checksum = ntohs (h->checksum);
+          *data = d;
+          *data_size = ds;
+          loop = 0;
+        }
+      else
+        {
+          printf ("Bad packet received\n");
+          prot30_sync_buffer ();
+        }
     }
-  if (access_in.used < AOL_DATA_OFFSET)
-    return 0;
-    
-  /* So here we have a full header */
-  h = p;
-  d = p + AOL_DATA_OFFSET;
-  s = ntohs (h->size);
-  ds = s - AOL_SIZE_OFFSET;
-  
-  if (access_in.used < s + 1)
-    return 0;
-  
-  /* Good we have an entire packet */
-  /* $$$ TODO $$$ */
-  /* We should verify the CRC and that the packet is well 0x0d terminated */
-  *header = h;
-  h->size = s;
-  h->checksum = ntohs (h->checksum);
-  *data = d;
-  *data_size = ds;
-  
+
   return 1;
 }
 
+/* Synchronize the start of the buffer to something that could be a packet
+ */
+void
+prot30_sync_buffer ()
+{
+  void *p;
+  int len;
+
+  if (access_in.used < 2)
+    {
+      buffer_free (&access_in, access_in.used);
+      return;
+    }
+
+  p = memchr (buffer_start (&access_in) + 1, AOL_MAGIC, access_in.used);
+  if (p)
+    len = (int) p - (int) buffer_start (&access_in);
+  else
+    len = access_in.used;
+  printf ("%d bytes dropped from buffer!\n", len);
+  buffer_free (&access_in, len);
+}
+
+int
+prot30_check_header (header)
+     aol_header_t *header;
+{
+  /* Check size */
+  if (ntohs (header->size) > MAX_PACKET_SIZE - AOL_SIZE_OFFSET ||
+      ntohs (header->size) < AOL_SIZE_OFFSET)
+    return 0;
+
+  /* Check sequence number */
+  if (header->seq < 0x10 || header->seq > 0x7f)
+    return 0;
+
+  /* Check ack number */
+  if (header->ack < 0x10 || header->ack > 0x7f)
+    return 0;
+
+  /* Don't know if we should check type as we could have missed something in 
+     the protocol
+   */
+
+  return 1;
+}
+
+int
+prot30_check_packet (header, data, data_size)
+     aol_header_t *header;
+     aol_data_t *data;
+     size_t data_size;
+{
+  char *p;
+  u_int16_t crc;
+
+  p = (char *) data;
+
+  /* Check packet is 0x0d terminated */
+  if (p[data_size] != AOL_STOP)
+    return 0;
+
+  /* Check CRC */
+  crc = htons (prot30_crc16 ((char *) &header->size, data_size + 5));
+  if (crc != header->checksum)
+    return 0;
+
+  /* So it seems to be a valid packet */
+
+  return 1;
+}
+
+int
+prot30_check_ordering (header)
+     aol_header_t *header;
+{
+  if ((header->type == TYPE_DATA && header->seq != prot30_next_server_seq ())
+      || (header->type != TYPE_DATA && header->seq != server_lastseq))
+    {
+      /* Ordering problem so resync with server */
+      prot30_send_packet (TYPE_RESYNC, NULL, 0);
+      /* And flush the buffer */
+      buffer_free (&access_in, access_in.used);
+      return 0;
+    }
+
+  return 1;
+}
+
+int
+prot30_next_server_seq ()
+{
+  return (server_lastseq - 0x10 + 1) % 0x70 + 0x10;
+}
 
 void
 prot30_dialog ()
@@ -385,13 +497,16 @@ void
 prot30_set_state (_state)
      int _state;
 {
-  printf ("Change state: ");
-  prot30_print_state (state);
-  printf (" -> ");
-  state = _state;
-  newstate = 1;
-  prot30_print_state (_state);
-  printf ("\n");
+  if (_state != state)
+    {
+      printf ("Change state: ");
+      prot30_print_state (state);
+      printf (" -> ");
+      state = _state;
+      newstate = 1;
+      prot30_print_state (_state);
+      printf ("\n");
+    }
 }
 
 int
@@ -418,6 +533,9 @@ prot30_print_state (state)
     printf (statestr[state]);
 }
 
+/* Make a human readable dump of a packet
+   only useful for debug
+*/
 void
 prot30_dump_raw (packet, size)
      char *packet;
