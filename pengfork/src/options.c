@@ -49,7 +49,7 @@ param_t param[PARAM_MAX] = {
 {opt_interface_type, "interface_type", string, false, {string:"tun"}
    }
   ,
-{opt_interface_name, "interface_name", string, false, {string:"tun0"}
+{opt_interface_name, "interface_name", string, false, {string:NULL}
    }
   ,
 {opt_user, "user", string, false, {string:NULL}

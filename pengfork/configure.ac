@@ -66,6 +66,9 @@ case $host in
 esac
 AC_SUBST([ARCH_DIR])
 
+# linux tuntap driver
+AC_CHECK_HEADERS([linux/if_tun.h])
+
 # Enable -Werror flag
 AC_ARG_ENABLE(werror,
   [  --enable-werror	Set warnings as errors. ],

@@ -84,7 +84,9 @@ tun_open ()
   struct ifreq ifr;
 
   if ((fd = open ("/dev/net/tun", O_RDWR)) < 0)
-    return tun_open_old (dev);
+    return 0;
+  /* We will try old tuntap when new support is ok */
+  /* return tun_open_old (dev); */
 
   memset (&ifr, 0, sizeof (ifr));
   ifr.ifr_flags = IFF_TUN | IFF_NO_PI;
@@ -104,14 +106,18 @@ tun_open ()
 	}
       else
         {
-	tun_close ();
-	return 0;
+	  tun_close ();
+	  return 0;
         }
     }
 
-  strcpy (PARAM_INTERFACE_NAME, ifr.ifr_name);
+  /*
+   * FIXME: total mess with allocation of parameters.
+   * Can't strcpy in a constant string, but we should not always strdup.
+   * And we don't know when to free old value (can be string constant).
+   */
+  PARAM_INTERFACE_NAME = strdup(ifr.ifr_name);
   return 1;
-
 }
 
 #else /* !HAVE_LINUX_IF_TUN_H */
@@ -143,38 +149,38 @@ tun_getfd ()
 }
 
 int
-tun_get(buffer, data, data_size)
+tun_get (buffer, data, data_size)
      buffer_t *buffer;
      char **data;
      size_t *data_size;
 {
   struct iphdr *ip;
 
-  ip=(struct iphdr*) buffer_end(buffer);
-  *data=NULL;
-  *data_size=0;
-  if(buffer->used < sizeof(struct iphdr))
+  ip = (struct iphdr*) buffer_end(buffer);
+  *data = NULL;
+  *data_size = 0;
+  if (buffer->used < sizeof(struct iphdr))
     return 0;
-  if(buffer->used < ip->tot_len)
+  if (buffer->used < ip->tot_len)
     return 0;
 
-  *data=(char*) ip;
-  *data_size=ip->tot_len;
-  buffer_free(buffer,ip->tot_len);
+  *data = (char*) ip;
+  *data_size = ip->tot_len;
+  buffer_free (buffer,ip->tot_len);
   return 1;
 }
 
 int
-tun_put(buffer, data, data_size)
+tun_put (buffer, data, data_size)
      buffer_t *buffer;
      char *data;
      size_t data_size;
 {
   char *p;
 
-  p=buffer_end(buffer);
-  buffer_alloc(buffer,data_size);
-  memcpy(p,data,data_size);
+  p = buffer_end(buffer);
+  buffer_alloc (buffer,data_size);
+  memcpy (p,data,data_size);
   return 1;
 }
 
