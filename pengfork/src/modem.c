@@ -297,16 +297,17 @@ modem_log_into_aol ()
   debug (1, "Waiting for login prompt\n");
   if (!modem_wait_for (PARAM_MODEM_LOGIN_PROMPT, 60 * 1000))
     return 0;
+
   debug (1, "Sending server's login\n");
-  write (fd, PARAM_MODEM_SERVER_LOGIN, strlen (PARAM_MODEM_SERVER_LOGIN));
-  write (fd, "\r", 1);
+  modem_sync_write (fd, PARAM_MODEM_SERVER_LOGIN, strlen (PARAM_MODEM_SERVER_LOGIN));
+  modem_sync_write (fd, "\r", 1);
   tcdrain (fd);
   debug (1, "Waiting for password prompt\n");
   if (!modem_wait_for (PARAM_MODEM_PASS_PROMPT, 60 * 1000))
     return 0;
   debug (1, "Sending server's password\n");
-  write (fd, PARAM_MODEM_SERVER_PASS, strlen (PARAM_MODEM_SERVER_PASS));
-  write (fd, "\r", 1);
+  modem_sync_write (fd, PARAM_MODEM_SERVER_PASS, strlen (PARAM_MODEM_SERVER_PASS));
+  modem_sync_write (fd, "\r", 1);
   tcdrain (fd);
   if (!modem_wait_for ("onnected", 60 * 1000))
     return 0;
@@ -370,7 +371,7 @@ setup_modem (rtscts)
     {
       for (i = 0; i < 5; i++)
         {
-          write (fd, "\r", 1);
+          modem_sync_write (fd, "\r", 1);
           usleep (10 * 1000);
         }
       tcdrain (fd);
@@ -446,9 +447,9 @@ modem_hangup ()
      we should only do this if we have received any response from the modem
    */
   tcdrain (fd);
-  write (fd, "\r", 1);
+  modem_sync_write (fd, "\r", 1);
   for (i = 0; !modem_data_ready (200) && i < 10; i++)
-    write (fd, "\r", 1);
+    modem_sync_write (fd, "\r", 1);
   tcdrain (fd);
 
   /* drop DTR for a while, if still online */
@@ -466,9 +467,9 @@ modem_hangup ()
   if (modem_carrier ())
     {
       /* need to do +++ manual-disconnect stuff */
-      write (fd, "+++", 3);     /* command line mode */
+      modem_sync_write (fd, "+++", 3);     /* command line mode */
       usleep (1500 * 1000);
-      write (fd, "ATH\r", 4);   /* hang-up command */
+      modem_sync_write (fd, "ATH\r", 4);   /* hang-up command */
 
       for (i = 0; modem_carrier () && i < 5; i++)
         usleep (100 * 1000);
@@ -545,21 +546,21 @@ int
 modem_data_ready (timeout)
      int timeout;
 {
-  fd_set read;
+  fd_set readfd;
   struct timeval tv;
   int sel;
 
   if (fd == -1)
     return 0;
 
-  FD_ZERO (&read);
+  FD_ZERO (&readfd);
 
-  FD_SET (fd, &read);
+  FD_SET (fd, &readfd);
 
   tv.tv_sec = timeout / 1000;
   tv.tv_usec = (timeout % 1000) * 1000;
 
-  sel = select (fd + 1, &read, NULL, NULL, &tv);
+  sel = select (fd + 1, &readfd, NULL, NULL, &tv);
   if (sel <= 0)
     return 0;
   else
@@ -575,15 +576,15 @@ modem_send_command (command, timeout, response, size)
 {
   debug (2, "Sending: %s\n", command);
 
-  write (fd, command, strlen (command));
-  write (fd, "\r", 1);
+  modem_sync_write (fd, command, strlen (command));
+  modem_sync_write (fd, "\r", 1);
 
   /* Get the response from the modem with/without echo enabled */
   if (!modem_readline(response, timeout, size))
     return 0;
-  if (!strcmp (response, command))
+ 
+  if(!strcmp (response, command))
     {
-      /* FIXME: echo is enabled, it should't happen */
       if (!modem_readline(response, timeout, size))
         return 0;
     }
@@ -671,6 +672,44 @@ modem_readline (response, timeout, size)
       nread++;
     }
   *p = '\0';
+
+  return 1;
+}
+
+/* Simulate a synchronous write */
+int
+modem_sync_write(fd,string,size)
+     int fd;
+     char *string;
+     size_t size;
+{
+  fd_set writefd;
+  struct timeval tv;
+  int sel,total,nwrote;
+  char *p;
+
+  if (fd == -1)
+    return 0;
+
+  FD_ZERO (&writefd);
+  total=0;
+  p=string;
+  while(total<size)
+    {
+      FD_SET (fd, &writefd);
+      
+      tv.tv_sec = 0;
+      tv.tv_usec = 1000;
+      
+      sel = select (fd + 1, NULL, &writefd, NULL, &tv);
+      if (sel <= 0)
+        return 0;
+      nwrote=write(fd, string, size-total);
+      if(nwrote<=0)
+        return 0;
+      p+=nwrote;
+      total+=nwrote;
+    }
 
   return 1;
 }

@@ -23,6 +23,8 @@
 #if !defined(__MODEM_H__) && defined(WITH_MODEM)
 #define __MODEM_H__
 
+#include <sys/types.h>
+
 int modem_getfd (void);
 int modem_connect (void);
 int modem_init (void);
@@ -45,5 +47,6 @@ int modem_send_command (char *command, int timeout, char *response,
 int modem_response_value (char *response);
 int modem_wait_for (char *prompt, int timeout);
 int modem_readline (char *response, int timeout, size_t size);
+int modem_sync_write(int fd, char *string, size_t size);
 
 #endif /* !defined(__MODEM_H__) && defined(WITH_MODEM) */
