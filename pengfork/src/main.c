@@ -43,8 +43,14 @@
 #endif
 
 #include <stdlib.h>
-#include <getopt.h>
+#include <stdio.h>
 #include <signal.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
 #ifdef WITH_MODEM
 #  include <guile/gh.h>
 #endif
@@ -64,12 +70,49 @@
 char *program_name;
 
 void
-handle_signals ()
+handle_signals (void)
 {
   signal (SIGINT, sig_exit);
   signal (SIGTERM, sig_exit);
   if (!PARAM_DAEMON)
     signal (SIGHUP, sig_exit);
+}
+
+void
+daemon_mode (void)
+{
+  int pid;
+  int f;
+  
+  pid=fork();
+  if(pid == 0)
+    {
+      f=open("/dev/null", O_RDWR);
+      if(f<0)
+        log (LOG_ERR, "Unable to open /dev/null: %s (%d)\n", strerror(errno), errno);
+      else
+        {
+	if(dup2(f, 0) < 0)
+	  log (LOG_ERR, "Error calling dup2 stdin: %s (%d)\n", strerror(errno), errno);
+	if(dup2(f, 1) < 0)
+	  log (LOG_ERR, "Error calling dup2 stdout: %s (%d)\n", strerror(errno), errno);
+	if(dup2(f, 2) < 0 )
+	  log (LOG_ERR, "Error calling dup2 stderr: %s (%d)\n", strerror(errno), errno);
+	if(close(f) < 0)
+	  log (LOG_ERR, "Error calling close /dev/null: %s (%d)\n", strerror(errno), errno);
+        }
+      if( setsid() <0 )
+        log (LOG_ERR, "Error calling setsid: %s (%d)\n", strerror(errno), errno);
+    }
+  else if(pid > 0)
+    {
+      exit(0);
+    }
+  else
+    {
+      log (LOG_ERR, "Unable to fork: %s (%d)\n", strerror(errno), errno);
+      exit(1);
+    }
 }
 
 #ifndef WITH_MODEM
@@ -106,6 +149,9 @@ main2 (argc, argv)
       exit (1);
     }
 
+  if(PARAM_DAEMON) 
+    daemon_mode();
+
   handle_signals ();
 
   if (!resolve_functions ())
@@ -113,7 +159,7 @@ main2 (argc, argv)
       log (LOG_ERR, "Fatal error, exiting.\n");
       exit (1);
     }
-
+  
   if (iface->connect () && haccess->connect ())
     {
       if (!engine_init ())

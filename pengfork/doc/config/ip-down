@@ -9,15 +9,15 @@
 IFCONFIG=/sbin/ifconfig
 ROUTE=/sbin/route
 
-if [ -x $IFCONFIG ]; then
-	$IFCONFIG $IFNAME down 
-else
-	echo "$0: $IFCONFIG not found"
-fi
-
 if [ -x $ROUTE ]; then
         $ROUTE del default dev $IFNAME
 else
         echo "$0: $ROUTE not found"
 fi
 		
+
+if [ -x $IFCONFIG ]; then
+	$IFCONFIG $IFNAME down 
+else
+	echo "$0: $IFCONFIG not found"
+fi

@@ -127,7 +127,6 @@ enum
 #define PARAM_INTERFACE_TYPE          PARAM_STRING(__interface_type)
 #define PARAM_INTERFACE_NAME          PARAM_STRING(__interface_name)
 #define PARAM_SECRET_FILE             PARAM_STRING(__secret_file)
-#define PARAM_USE_SCREEN_NAME         PARAM_INTEGER(__use_screen_name)
 #define PARAM_SCREEN_NAME             PARAM_STRING(__screen_name)
 #define PARAM_AUTO_RECONNECT          PARAM_BOOLEAN(__auto_reconnect)
 #define PARAM_RECONNECT_DELAY         PARAM_INTEGER(__reconnect_delay)

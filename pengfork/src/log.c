@@ -40,6 +40,7 @@ init_log (void)
 int
 log (int level, char *format, ...)
 {
+  char line[1024];
   va_list ap;
   va_start (ap, format);
 
@@ -58,7 +59,10 @@ log (int level, char *format, ...)
       }
 
   else
-    syslog (level, format, ap);
+    {
+      vsnprintf(line, sizeof(line), format, ap);
+      syslog (level, line, ap);
+    }
   return 1;
 }
 
