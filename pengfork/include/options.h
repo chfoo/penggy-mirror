@@ -28,38 +28,10 @@ typedef enum
 { false = 0, true }
 bool_t;
 
-/* command line getopt values */
-typedef enum
-  {
-    /* use this if no command line option is associated */
-    opt_none = 256,
-    /* letter correspond to short option alias */
-    opt_help = 'h',
-    opt_version = 'V',
-    opt_interface_type = 't',
-    opt_interface_name = 'i',
-    opt_user = 'u',
-    opt_pass = 'p',
-    opt_auto_reconnect = 'r',
-    opt_daemon = 'd',
-    opt_debug_level = 'D',
-    opt_modem = 'm',
-    opt_phone = 'n',
-    opt_speed = 's',
-    opt_server_login = 'l',
-    opt_server_pass = 'w',
-    /* numeric opt_id, not associated with any short option */
-    opt_pid_file = 300,
-    opt_ip_up = 301,
-    opt_ip_down = 302,
-    opt_rtscts = 303,
-    opt_init_str = 304,
-    opt_dial_str = 305
-  } option_e;
-
 typedef struct
 {
-  option_e opt_id;
+  char shortopt;
+  char *longopt;
   char *name;
   enum
   { boolean, integer, string }

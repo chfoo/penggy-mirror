@@ -40,7 +40,19 @@ log (int level, char *format, ...)
   va_start (ap, format);
   
   if (!PARAM_DAEMON)
-    vfprintf (stderr, format, ap);
+    switch (level)
+      {
+      case LOG_EMERG:
+      case LOG_ALERT:
+      case LOG_CRIT:
+      case LOG_ERR:
+      case LOG_WARNING:
+	vfprintf (stderr, format, ap);
+	break;
+      default:
+	vfprintf (stdout, format, ap);
+      }
+
   else
     syslog (level, format, ap);
   return 0;

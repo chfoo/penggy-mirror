@@ -1,3 +1,7 @@
+2002-08-30  Nicolas Burrus  <nes@lrde.epita.fr>
+
+	* src/options.c, src/options.h: Generate getopt tabs.
+
 2002-08-29  Nicolas Burrus  <nes@lrde.epita.fr>
 
 	* src/modem.c: Update with log and debug.

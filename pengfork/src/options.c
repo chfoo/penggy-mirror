@@ -40,188 +40,175 @@
 
 param_t param[PARAM_MAX] = {
   /* GENERAL CONFIGURATION */
-{opt_none, "access_method", string, false, {string:"modem"}
+{0, "access-method", "access_method", string, false, {string:"modem"}
    }
   ,
-{opt_none, "protocol", string, false, {string:"aol30"}
+{0, "protocol", "protocol", string, false, {string:"aol30"}
    }
   ,
-{opt_interface_type, "interface_type", string, false, {string:"tun"}
+{'t', "interface-type", "interface_type", string, false, {string:"tun"}
    }
   ,
-{opt_interface_name, "interface_name", string, false, {string:NULL}
+{'i', "interface", "interface_name", string, false, {string:NULL}
    }
   ,
-{opt_user, "user", string, false, {string:NULL}
+{'u', "user", "user", string, false, {string:NULL}
    }
   ,
-{opt_pass, "pass", string, false, {string:NULL}
+{'p', "pass", "pass", string, false, {string:NULL}
    }
   ,
-{opt_auto_reconnect, "auto_reconnect", boolean, false, {boolean:false}
+{'r', "auto-reconnect", "auto_reconnect", boolean, false, {boolean:false}
    }
   ,
-{opt_none, "reconnect_delay", integer, false, {integer:0}
+{0, "reconnect-delay", "reconnect_delay", integer, false, {integer:0}
    }
   ,
-{opt_daemon, "daemon", boolean, false, {boolean:false}
+{'d', "daemon", "daemon", boolean, false, {boolean:false}
    }
   ,
-{opt_debug_level, "debug_level", integer, false, {integer:-1}
+{'D', "debug-level", "debug_level", integer, false, {integer:-1}
    }
   ,
-{opt_none, "set_dns", boolean, false, {boolean:true}
+{0, "dns", "set_dns", boolean, false, {boolean:true}
    }
   ,
-{opt_pid_file, "pid_file", string, false, {string:"/var/run/pengaol.pid"}
+{0, "pid-file", "pid_file", string, false, {string:"/var/run/pengaol.pid"}
    }
   ,
-{opt_ip_up, "ip-up_script", string, false, {string:NULL}
+{0, "ip-up", "ip-up_script", string, false, {string:"/etc/pengaol/ip-up"}
    }
   ,
-{opt_ip_down, "ip-down_script", string, false, {string:NULL}
+{0, "ip-down", "ip-down_script", string, false, {string:"/etc/pengaol/ip-down"}
+   }
+  ,   /* MODEM SPECIFIC */
+{'m', "modem", "modem_device", string, false, {string:"/dev/modem"}
    }
   ,
-
-  /* MODEM SPECIFIC */
-{opt_modem, "modem_device", string, false, {string:"/dev/modem"}
+{0, "rtscts", "rtscts", boolean, false, {boolean:true}
    }
   ,
-{opt_rtscts, "rtscts", boolean, false, {boolean:true}
+{0, "init-str", "initstr1", string, false, {string:"ATZ"}
    }
   ,
-{opt_init_str, "initstr1", string, false, {string:"ATZ"}
+{0, NULL, "initstr2", string, false, {string:NULL}
    }
   ,
-{opt_none, "initstr2", string, false, {string:NULL}
+{0, NULL, "initstr3", string, false, {string:NULL}
    }
   ,
-{opt_none, "initstr3", string, false, {string:NULL}
+{0, NULL, "initstr4", string, false, {string:NULL}
    }
   ,
-{opt_none, "initstr4", string, false, {string:NULL}
+{0, NULL, "initstr5", string, false, {string:NULL}
    }
   ,
-{opt_none, "initstr5", string, false, {string:NULL}
+{0, NULL, "initstr6", string, false, {string:NULL}
    }
   ,
-{opt_none, "initstr6", string, false, {string:NULL}
+{0, NULL, "initstr7", string, false, {string:NULL}
    }
   ,
-{opt_none, "initstr7", string, false, {string:NULL}
+{0, NULL, "initstr8", string, false, {string:NULL}
    }
   ,
-{opt_none, "initstr8", string, false, {string:NULL}
+{0, NULL, "initstr9", string, false, {string:NULL}
    }
   ,
-{opt_none, "initstr9", string, false, {string:NULL}
+{0, "dial-str", "dialstr", string, false, {string:"ATDT"}
    }
   ,
-{opt_dial_str, "dialstr", string, false, {string:"ATDT"}
+{0, NULL, "dial_prefix", string, false, {string:NULL}
    }
   ,
-{opt_none, "dial_prefix", string, false, {string:NULL}
+{'n', "phone", "phone", string, false, {string:NULL}
    }
   ,
-{opt_phone, "phone", string, false, {string:NULL}
+{0, NULL, "phone1", string, false, {string:NULL}
    }
   ,
-{opt_none, "phone1", string, false, {string:NULL}
+{0, NULL, "phone2", string, false, {string:NULL}
    }
   ,
-{opt_none, "phone2", string, false, {string:NULL}
+{0, NULL, "phone3", string, false, {string:NULL}
    }
   ,
-{opt_none, "phone3", string, false, {string:NULL}
+{0, NULL, "phone4", string, false, {string:NULL}
    }
   ,
-{opt_none, "phone4", string, false, {string:NULL}
+{0, NULL, "phone5", string, false, {string:NULL}
    }
   ,
-{opt_none, "phone5", string, false, {string:NULL}
+{'s', "line-speed", "line_speed", integer, false, {integer:115200}
    }
   ,
-{opt_speed, "line_speed", integer, false, {integer:115200}
+{0, NULL, "login_prompt", string, false, {string:"ogin:"}
    }
   ,
-{opt_none, "login_prompt", string, false, {string:"ogin:"}
+{0, NULL, "server_pass_prompt", string, false, {string:"assword:"}
    }
   ,
-{opt_none, "server_pass_prompt", string, false, {string:"assword:"}
+{'l', "server-login", "server_login", string, false, {string:"aol"}
    }
   ,
-{opt_server_login, "server_login", string, false, {string:"aol"}
+{'w', "server-pass", "server_pass", string, false, {string:"aol"}
    }
   ,
-{opt_server_pass, "server_pass", string, false, {string:"aol"}
+{0, NULL, "server_connected", string, false, {string:"onnected"}
    }
   ,
-{opt_none, "server_connected", string, false, {string:"onnected"}
+{0, NULL, "server_bad_passwd", string, false, {string:"assword"}
    }
   ,
-{opt_none, "server_bad_passwd", string, false, {string:"assword"}
+{0, NULL, "dial_retry", integer, false, {integer:3}
    }
   ,
-{opt_none, "dial_retry", integer, false, {integer:3}
+{0, NULL, "retry_delay", integer, false, {integer:0}
    }
   ,
-{opt_none, "retry_delay", integer, false, {integer:0}
+{0, NULL, "abort_busy", boolean, false, {boolean:true}
    }
   ,
-{opt_none, "abort_busy", boolean, false, {boolean:true}
+{0, NULL, "abort_dialtone", boolean, false, {boolean:true}
+   }
+  ,   /* CABLE SPECIFIC */
+{0, NULL, "aol_host", string, false, {string:"americaonline.aol.com"}
    }
   ,
-{opt_none, "abort_dialtone", boolean, false, {boolean:true}
+{0, NULL, "aol_port", integer, false, {integer:5190}
    }
   ,
-
-  /* CABLE SPECIFIC */
-{opt_none, "aol_host", string, false, {string:"americaonline.aol.com"}
+{0, NULL, "cable_iface", string, false, {string:"eth0"}
    }
   ,
-{opt_none, "aol_port", integer, false, {integer:5190}
-   }
-  ,
-{opt_none, "cable_iface", string, false, {string:"eth0"}
-   }
-  ,
-{opt_none, "connect_ip", string, false, {string:"0.0.0.0"}
+{0, NULL, "connect_ip", string, false, {string:"0.0.0.0"}
    }
 };
+
 
 /*
  * Command line options
  */
 
-/* Be sure to keep both sync. */
-static const char short_options[] = "hVrt:i:u:p:dD:m:n:s:l:w:";
+/* Extra options */
+enum option_e
+  {
+    opt_help = 'h',
+    opt_version = 'V'
+  };
 
-int toto;
+/* short_options merged with generated ones. */
+static const char short_options_head[] = "hV";
 
-static struct option const long_options[] =
+/* long_options merged with generated ones. */
+static struct option const long_options_head[] =
 {
   {"help",		    no_argument,  0,	opt_help},
   {"version",		    no_argument,  0,	opt_version},
-  {"interface-type",  required_argument,  0,	opt_interface_type},
-  {"interface_name",  required_argument,  0,	opt_interface_name},
-  {"user",            required_argument,  0,	opt_user},
-  {"password",        required_argument,  0,	opt_pass},
-  {"auto-reconnect",        no_argument,  0,    opt_auto_reconnect},
-  {"daemon",                no_argument,  0,    opt_daemon},
-  {"debug-level",     required_argument,  0,	opt_debug_level},
-  {"modem-device",    required_argument,  0,	opt_modem},
-  {"phone",           required_argument,  0,	opt_phone},
-  {"speed",           required_argument,  0,	opt_speed},
-  {"server-login",    required_argument,  0,	opt_server_login},
-  {"server-password", required_argument,  0,	opt_server_pass},
-  {"pid-file",        required_argument,  0,	opt_pid_file},
-  {"rtscts",          required_argument,  0,	opt_rtscts},
-  {"init-str",        required_argument,  0,	opt_init_str},
-  {"dial-str",        required_argument,  0,	opt_dial_str},
   {NULL, 0, NULL, 0}
 };
 
-void 
+static void 
 usage ()
 {
   printf("Usage : %s [OPTIONS]\n
@@ -256,7 +243,7 @@ Misc :
   exit (0);
 }
 
-void 
+static void 
 version (void)
 {
   printf ("%s (" PACKAGE ") v" VERSION "\n", program_name);
@@ -264,15 +251,15 @@ version (void)
 }
 
 static int
-set_opt_param (option_e opt_id)
+set_opt_param (int opt_id)
 {
   int i;
 
-  for (i = 0; i < PARAM_MAX && param[i].opt_id != opt_id; i++)
+  for (i = 0; i < PARAM_MAX && param[i].shortopt != opt_id; i++)
     ;
   if (i == PARAM_MAX)
     return 1;
-  if (param[i].opt_id == opt_id)
+  if (param[i].shortopt == opt_id)
     {
       /* We now we have a parameter */
       assert ((param[i].type == boolean) || (optarg != NULL));
@@ -294,13 +281,87 @@ set_opt_param (option_e opt_id)
   return 0;
 }
 
+static char*
+generate_short_options (void)
+{
+  char *tab, *p;
+  int i;
+  
+  /* FIXME: should alloc less memory */
+  tab = (char*) malloc ((PARAM_MAX * 2) * sizeof(char) + 
+			strlen (short_options_head));
+  p = tab;
+  strcpy (p, short_options_head);
+  p += strlen (short_options_head);
+  for (i = 0; i < PARAM_MAX; i++)
+    {
+      if (param[i].shortopt != 0)
+	{
+	  *p++ = param[i].shortopt;
+	  if (param[i].type != boolean) /* we need an argument */
+	    *p++ = ':';
+	}
+    }
+  *p = '\0';
+  return tab;
+}
+
+static struct option*
+generate_long_options (void)
+{
+  struct option* tab;
+  struct option* p;
+  int i;
+  /* 
+   * Needed for long options without any corresponding short options
+   * Start at 257 to be sure not to interfere with real short options.
+   */
+  unsigned last_free_id = 257;
+
+  /* calcule head size */
+  for (i = 0; long_options_head[i].name != 0; i++)
+    ;
+
+  /* FIXME: malloc smaller size */
+  tab = (struct option*) malloc ((PARAM_MAX + i) * sizeof (struct option));
+  p = tab;
+  for (i = 0; long_options_head[i].name != 0; i++)
+    memcpy (p++, &long_options_head[i], sizeof(struct option));
+  for (i = 0; i < PARAM_MAX; i++)
+    {
+      if (param[i].longopt)
+	{
+	  p->name = param[i].longopt;
+	  if (param[i].type == boolean)
+	    p->has_arg = no_argument;
+	  else
+	    p->has_arg = required_argument;
+	  p->flag = NULL;
+	  p->val = (param[i].shortopt ? param[i].shortopt : last_free_id++);
+	  p++;
+	}
+    }
+
+  p->name = NULL;
+  p->has_arg = 0;
+  p->flag = NULL;
+  p->val = 0;
+
+  return tab;
+}
+
 int
 parse_command_line (argc, argv)
      int argc;
      char **argv;
 {
   int c;
-  
+  char *short_options;
+  struct option *long_options;
+
+  short_options = generate_short_options ();
+  long_options = generate_long_options ();
+
   while ((c = getopt_long (argc, argv, short_options, long_options,
 			   NULL)) != -1)
     switch (c)
@@ -325,6 +386,12 @@ parse_command_line (argc, argv)
 	    exit (1);
 	  }
       }
+  
+  if (short_options)
+    free (short_options);
+  if (long_options)
+    free (long_options);
+
   return 0;
 }
 
