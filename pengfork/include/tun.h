@@ -23,6 +23,8 @@
 #if !defined(__TUN_H__) && defined(WITH_TUN)
 #define __TUN_H__
 
+#include "buffer.h"
+
 int tun_open ();
 int tun_close ();
 int tun_ready ();
