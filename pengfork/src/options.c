@@ -17,7 +17,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
  * 02111-1307, USA.
- *                
+ *
+ * $Id$ 
+ *
  */
 
 #if HAVE_CONFIG_H
@@ -381,30 +383,53 @@ set_opt_param (int opt_id)
 {
   int i;
 
-  for (i = 0; i < PARAM_MAX && param[i].shortopt != opt_id; i++)
-    ;
+  for (i = 0; i < PARAM_MAX && param[i].shortopt != opt_id; i++);
   if (i == PARAM_MAX)
     return 0;
-  if (param[i].shortopt == opt_id)
-    {
-      /* We now we have a parameter */
-      assert ((param[i].type == boolean) || (optarg != NULL));
 
-      switch (param[i].type)
-        {
-        case boolean:
-          param[i].value.boolean = true;
-          break;
-        case integer:
-          param[i].value.integer = atoi (optarg);
-          break;
-        case string:
-          if (param[i].allocated && (param[i].value.string != NULL))
-            free (param[i].value.string);
-          param[i].value.string = strdup (optarg);
-        }
-      param[i].defined = true;
+  switch (param[i].type)
+    {
+    case boolean:
+      param[i].value.boolean = true;
+      break;
+    case integer:
+      param[i].value.integer = atoi (optarg);
+      break;
+    case string:
+      if (param[i].allocated && (param[i].value.string != NULL))
+        free (param[i].value.string);
+      param[i].value.string = strdup (optarg);
     }
+  param[i].defined = true;
+
+  return 1;
+}
+
+static int
+set_opt_param_long (opt)
+     char *opt;
+{
+  int i;
+
+  for (i = 0; i < PARAM_MAX && strcmp(opt,param[i].longopt); i++);
+  if (i == PARAM_MAX)
+    return 0;
+
+  switch (param[i].type)
+    {
+    case boolean:
+      param[i].value.boolean = true;
+      break;
+    case integer:
+      param[i].value.integer = atoi (optarg);
+      break;
+    case string:
+      if (param[i].allocated && (param[i].value.string != NULL))
+        free (param[i].value.string);
+      param[i].value.string = strdup (optarg);
+    }
+  param[i].defined = true;
+
   return 1;
 }
 
@@ -485,12 +510,12 @@ parse_command_line (argc, argv)
   int c;
   char *short_options;
   struct option *long_options;
+  int option_index = -1;
 
   short_options = generate_short_options ();
   long_options = generate_long_options ();
 
-  while ((c = getopt_long (argc, argv, short_options, long_options,
-                           NULL)) != -1)
+  while ((c = getopt_long (argc, argv, short_options, long_options, &option_index)) != -1)
     switch (c)
       {
       case 0:
@@ -506,7 +531,9 @@ parse_command_line (argc, argv)
         break;
 
       default:
-        if (!set_opt_param (c))
+        if (c<0 || (c<257 && !set_opt_param (c)) || 
+	  (c > 257 && option_index>=0 && 
+	   !set_opt_param_long(long_options[option_index].name))) 
           {
             fprintf (stderr, gettext ("Try `%s --help' for more information.\n"),
                      program_name);
@@ -723,10 +750,9 @@ get_string (string, value)
      char **string;
      char *value;
 {
-  *string = (char *) malloc (strlen (value) + 1);
+  *string = strdup (value);
   if (*string == NULL)
     return 0;
-  strcpy (*string, value);
   return 1;
 }
 

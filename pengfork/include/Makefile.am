@@ -20,6 +20,8 @@
 #
 # Nicolas Burrus <nes@lrde.epita.fr>, 2002
 #
+# $Id$
+#
 
 
 EXTRA_DIST = 	access.h		\

@@ -20,6 +20,8 @@
 #
 # Nicolas Burrus <nes@lrde.epita.fr>, 2002
 #
+# $Id$
+#
 
 SUBDIRS = m4 config include lib intl src doc po
 

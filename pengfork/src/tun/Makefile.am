@@ -20,6 +20,8 @@
 #
 # Nicolas Burrus <nes@lrde.epita.fr>, 2002
 #
+# $Id$
+#
 
 DIST_SUBDIRS = linux openbsd freebsd
 

@@ -20,7 +20,10 @@
  *
  * Carlier Laurent <lordheavy@infonie.fr>, 2002
  *
+ * $Id$
+ *               
  */
+
 #if defined(WITH_TCPIP) && !defined(__TCPIP_TCPIP_H__)
 #define __TCPIP_TCPIP_H__
 

@@ -20,6 +20,8 @@
 #
 # Nicolas Burrus <nes@lrde.epita.fr>, 2002
 #
+# $Id$
+#
 
 INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib
 noinst_LIBRARIES = libsystem.a

@@ -4,6 +4,8 @@
 # This file is distributed under the same license as the penggy package.
 # Jean-Charles Salzeber <jc@varspool.net>, 2002.
 #
+# $Id$
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: penggy 0.1\n"

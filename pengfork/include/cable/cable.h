@@ -20,6 +20,8 @@
  *
  * Carlier Laurent <lordheavy@infonie.fr>, 2002
  *
+ * $Id$
+ *               
  */
 #if defined(WITH_CABLE) && !defined(__CABLE_CABLE_H__)
 #define __CABLE_CABLE_H__

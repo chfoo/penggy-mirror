@@ -20,6 +20,8 @@
  *
  * Carlier Laurent <lordheavy@infonie.fr>, 2002
  *
+ * $Id$
+ *               
  */
 
 #if HAVE_CONFIG_H
