@@ -1,0 +1,42 @@
+Debug verbosity level meaning
+
+Try to make this comment up to date
+
+Level 0: 
+ - No debug
+
+Level 1:
+ - warn about extra IP packets not received
+ - show P3 timeouts
+ - show bad packets received
+
+Level 2:
+ - Modem commands sent
+ - Modem responses received
+ - FDO token register/unregister
+ - show type of P3 packets received
+
+Level 3:
+ - show type of IP packets received(big/small/extra)
+ - show type of IP packets sent(big/small/extra)
+ - extra informations on bad P3 packets
+
+Level 4:
+ - warn about unregistered token received
+ - show compression of IP packets
+
+Level 5:
+ - configuration dump
+
+Level 6:
+
+Level 7:
+
+Level 8:
+ - full configuration dump (even default value)
+
+Level 9:
+ - engine timeouts
+
+Level 10:
+ - Input/output raw dump of the protocol

@@ -75,7 +75,7 @@ fdo_recv (data, data_size)
   if (index != -1)
     module[index].handler (*token, data, data_size);
   else
-    debug (2, "FDO - unregistered token received: '%c%c'\n",
+    debug (4, "FDO - unregistered token received: '%c%c'\n",
 	 (*token >> 8) & 0xff, *token & 0xff);
 }
 

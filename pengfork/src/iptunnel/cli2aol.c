@@ -44,12 +44,11 @@ get_ip_client (in)
   struct long_ip *big;
   int i;
 
-  debug (1, "IP TUNNEL - Sending IP...\n");
   while (iface->get (in, &ip, &ip_size) && protocol->ready())
     {
       if (ip_size > 0x7f)
         {
-	debug (1, "IP TUNNEL - Sending a big packet\n");
+	debug (3, "IP TUNNEL - Sending a big packet\n");
 	data_size = (ip_size>MAX_OUTPUT)?MAX_OUTPUT:ip_size;
 	data = malloc( data_size + sizeof(*big) );
 	big = (struct long_ip *) data;
@@ -62,7 +61,7 @@ get_ip_client (in)
 	/* Send extra packets if needed */
 	for(i=1;ip_size-i*MAX_OUTPUT<MAX_OUTPUT;i++)
 	  {
-	    debug (1, "IP TUNNEL - Sending an extra packet\n");
+	    debug (3, "IP TUNNEL - Sending an extra packet\n");
 	    data_size = (ip_size-i*MAX_OUTPUT>MAX_OUTPUT)?
 	      MAX_OUTPUT:ip_size-i*MAX_OUTPUT;
 	    data = malloc( data_size );
@@ -73,7 +72,7 @@ get_ip_client (in)
         }
       else
         {
-          debug (1, "IP TUNNEL - Sending a small packet\n");
+          debug (3, "IP TUNNEL - Sending a small packet\n");
 	data = malloc( ip_size + sizeof(*small) );
 	small = (struct short_ip *) data;
           small->ipnum = ipnum;

@@ -72,7 +72,7 @@ p3_register_to_engine (myaccess)
     engine_register (*(myaccess->fd),P3_TIMEOUT , p3_fn);
   else
     log (LOG_ERR,
-         "P3 - Unable to register functions, access is not connected\n");
+         "Unable to register P3 protocol functions, access is not connected\n");
 }
 
 int

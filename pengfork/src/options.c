@@ -146,7 +146,7 @@ param_t param[PARAM_MAX] = {
        "enable daemon mode, run in background.", NULL, 
        __general, NULL),
 
-  INT('D', "debug-level", "debug_level", -1, 
+  INT('D', "debug-level", "debug_level", 0, 
       "set the verbosity level of the debug.", "LEVEL", 
       __general, check_debug_level),
 
@@ -674,7 +674,7 @@ parse_config ()
   if (!parse_config_file (homeconfig))
     debug (5,"No personnal config found.\n");
 
-  debug (1,"\n");
+  debug (5,"\n");
   return 1;
 }
 
@@ -693,6 +693,8 @@ parse_config_file (filename)
       debug (6,"%s: %s(%d)\n",filename, strerror(errno), errno);
       return 0;
     }
+  else
+    debug(3, "Parsing config file: %s\n", filename);
   while (!feof (f))
     {
       lineno++;

@@ -133,7 +133,7 @@ check_debug_level(option, level)
      char *option;
      int level;
 {
-  if(level>=0 && level<=10) return 1;
+  if(level>=0 && level<=DEBUG_MAX) return 1;
 
   log(LOG_ERR, "%s must be between 0 and 10.\n", option);
   return 0;

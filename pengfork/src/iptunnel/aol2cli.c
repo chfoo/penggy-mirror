@@ -65,7 +65,7 @@ get_ip_aol (token, data, data_size)
   if (small->long_bit)
     /* This packet is a long ip (>=128 bytes) */
     {
-      debug (1, "IP tunnel - Received a big packet\n");
+      debug (3, "IP tunnel - Received a big packet\n");
       ip_data=data + sizeof(*big);
       big->len=ntohs(big->len) & IP_LEN_MASK;
       if (data_size - sizeof(*big) < big->len)
@@ -74,7 +74,7 @@ get_ip_aol (token, data, data_size)
 	 * The packet is incomplete, we should receive yd tokens to
 	 * complete him
 	 */
-	debug (1, "IP tunnel - big packet need extra packet(s)\n");
+	debug (3, "IP tunnel - big packet need extra packet(s)\n");
 	need_extra = 1;
 	extra_ip.len = big->len;
 	extra_ip.data = malloc( big->len );
@@ -88,7 +88,7 @@ get_ip_aol (token, data, data_size)
   else
     /* This packet is a small ip (<128 bytes) */
     {
-      debug (1, "IP tunnel - Received a small packet\n");
+      debug (3, "IP tunnel - Received a small packet\n");
       ip_data=data + sizeof(*small);
       if (data_size - sizeof(*small) != small->len)
         log (LOG_WARNING, "IP tunnel - bad size for a small packet\n");
@@ -133,7 +133,7 @@ get_uncompressed_ip (vjip, vjiplen)
 
   if ((vjip[0] & TYPE_COMPRESSED_TCP) == TYPE_COMPRESSED_TCP)
     {
-      debug (2, "IP tunnel - packet type: TYPE_COMPRESSED_TCP\n");
+      debug (4, "IP tunnel - packet type: TYPE_COMPRESSED_TCP\n");
       vjhdrlen = vj_uncompress_tcp (vjip, vjiplen, vjiplen,
                                     &vj_comp, &iphdr, &iphdrlen);
       /* allocate a buffer to contruct the uncompressed packet */
@@ -163,7 +163,7 @@ get_uncompressed_ip (vjip, vjiplen)
     }
   else if ((vjip[0] & TYPE_UNCOMPRESSED_TCP) == TYPE_UNCOMPRESSED_TCP)
     {
-      debug (2, "IP tunnel - packet type: TYPE_UNCOMPRESSED_TCP\n");
+      debug (4, "IP tunnel - packet type: TYPE_UNCOMPRESSED_TCP\n");
       /* an uncompressed TCP do *NOT* modify the size of the packet */
       vj_uncompress_uncomp (vjip, vjiplen, &vj_comp);
       vjip[0] &= ~TYPE_UNCOMPRESSED_TCP;
@@ -172,7 +172,7 @@ get_uncompressed_ip (vjip, vjiplen)
     }
   else if ((vjip[0] & TYPE_IP) == TYPE_IP)
     {
-      debug (2, "IP tunnel - packet type: TYPE_IP\n");
+      debug (4, "IP tunnel - packet type: TYPE_IP\n");
       /* So it's a raw IP packet */
       iface->put (ifout, vjip, vjiplen);
     }
