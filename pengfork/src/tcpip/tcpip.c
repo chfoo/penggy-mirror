@@ -38,6 +38,7 @@
 #include <netdb.h>
 #include <fcntl.h>
 
+#include "gettext.h"
 #include "options.h"
 #include "access.h"
 #include "log.h"
@@ -63,18 +64,18 @@ tcpip_connect ()
   struct in_addr address;
   struct hostent *hp;
 
-  if( !inet_aton(hostname, &address) )
+  if (!inet_aton (hostname, &address))
     {
-      log(LOG_NOTICE, "Resolving %s...\n", hostname);
+      log (LOG_NOTICE, gettext ("Resolving %s...\n"), hostname);
       if ((hp = gethostbyname (hostname)) == 0)
         {
-	log (LOG_ERR, "Unable to resolve %s: %s (%d)\n", hostname,
-	     hstrerror(h_errno), h_errno);
-	return 0;
+          log (LOG_ERR, gettext ("Unable to resolve %s: %s (%d)\n"), hostname,
+               hstrerror (h_errno), h_errno);
+          return 0;
         }
-      address.s_addr= *((unsigned long *) hp->h_addr_list[0]);
+      address.s_addr = *((unsigned long *) hp->h_addr_list[0]);
     }
-    
+
   memset ((char *) &aol_addr, 0, sizeof (struct sockaddr_in));
   aol_addr.sin_family = AF_INET;
   aol_addr.sin_port = htons (port);
@@ -82,26 +83,26 @@ tcpip_connect ()
 
   if ((tcpipfd = socket (PF_INET, SOCK_STREAM, 0)) < 0)
     {
-      log (LOG_ERR, "Error while opening socket: %s (%d)\n",
-	 strerror(errno), errno);
+      log (LOG_ERR, gettext ("Error while opening socket: %s (%d)\n"),
+           strerror (errno), errno);
       return 0;
     }
 
-  log(LOG_NOTICE,"Connecting to %s:%d ...\n", inet_ntoa(aol_addr.sin_addr), 
-      port);
-      
+  log (LOG_NOTICE, gettext ("Connecting to %s:%d ...\n"), inet_ntoa (aol_addr.sin_addr),
+       port);
+
   if (connect (tcpipfd, (struct sockaddr *) &aol_addr,
                sizeof (struct sockaddr_in)) == -1)
     {
-      log (LOG_ERR, "Error while connecting to AOL: %s (%d)\n",strerror(errno), 
-	 errno);
+      log (LOG_ERR, gettext ("Error while connecting to AOL: %s (%d)\n"),
+           strerror (errno), errno);
       return 0;
     }
 
-  if (fcntl(tcpipfd, F_SETFL, O_NONBLOCK) < 0)
+  if (fcntl (tcpipfd, F_SETFL, O_NONBLOCK) < 0)
     {
-      log (LOG_ERR, "Error while putting the socket non-blocking: %s(%d)\n",
-	 strerror(errno), errno);
+      log (LOG_ERR, gettext ("Error while putting the socket non-blocking: %s(%d)\n"),
+           strerror (errno), errno);
       return 0;
     }
 
@@ -115,8 +116,8 @@ tcpip_close ()
     {
       if ((close (tcpipfd)) == -1)
         {
-          log (LOG_WARNING, "Error while closing socket: %s(%d)\n", 
-	     strerror(errno), errno);
+          log (LOG_WARNING, gettext ("Error while closing socket: %s(%d)\n"),
+               strerror (errno), errno);
           return 0;
         }
       tcpipfd = -1;

@@ -20,9 +20,13 @@
  *                
  */
 
+#include "config.h"
+
+#include <stdlib.h>
 #include <guile/gh.h>
 #include <string.h>
 
+#include "gettext.h"
 #include "options.h"
 #include "log.h"
 #include "utils.h"
@@ -33,14 +37,14 @@
 SCM
 chat_success (void)
 {
-  log(LOG_NOTICE, "Script: Chat success\n");
+  log (LOG_NOTICE, gettext ("Script: Chat success\n"));
   return SCM_BOOL_T;
 }
 
 SCM
 chat_failure (void)
 {
-  log(LOG_NOTICE, "Script: Chat failure\n");
+  log (LOG_NOTICE, gettext ("Script: Chat failure\n"));
   return SCM_BOOL_F;
 }
 
@@ -48,11 +52,20 @@ SCM
 chat_send (string)
      SCM string;
 {
-  char *text;
+  char *text, *print, *p;
   int len;
 
   text = gh_scm2newstr (string, &len);
-  log(LOG_NOTICE, "Script: Send %s\n", text);
+  print = strdup(text);
+  p=print;
+  while(*p != '\0')
+    {
+      if(*p < 32 || *p > 127) 
+        *p=' ';
+      p++;
+    }
+  log (LOG_NOTICE, gettext ("Script: Send '%s'\n"), print);
+  free(print);
   modem_sync_write (text, len);
   return SCM_UNDEFINED;
 }
@@ -76,7 +89,7 @@ compare_elem (buffer, elem, result)
   eval = gh_lookup ("eval");
 
   text = gh_scm2newstr (gh_car (elem), &len);
-  /* duplicate and lowerize all strings to become case insensitive*/
+  /* duplicate and lowerize all strings to become case insensitive */
   bufmin = strdup (buffer);
   textmin = strdup (text);
   lowerize (bufmin);
@@ -84,7 +97,7 @@ compare_elem (buffer, elem, result)
 
   if (strstr (bufmin, textmin))
     {
-      log(LOG_NOTICE, "Script: String '%s' matched\n", text);
+      log (LOG_NOTICE, gettext ("Script: String '%s' matched\n"), text);
       /* evaluate next elem */
       *result = gh_call1 (eval, gh_car (gh_cdr (elem)));
       match = 1;
@@ -113,16 +126,16 @@ compare_buf (buffer, first, others, result)
   remainder = others;
   do
     {
-      found = compare_elem(buffer,elem, result);
+      found = compare_elem (buffer, elem, result);
       elem = gh_car (remainder);
       remainder = gh_cdr (remainder);
     }
   while (gh_length (remainder) > 0 && !found);
-  
+
   /* treat the last element only if it isn't an else */
   if (!found && gh_string_p (elem))
     {
-      found = compare_elem(buffer,elem, result);
+      found = compare_elem (buffer, elem, result);
     }
 
   return found;
@@ -133,14 +146,14 @@ do_else (others, result)
      SCM others;
      SCM *result;
 {
-  SCM  elem;
-  log(LOG_NOTICE, "Script: No string matched\n");
-  if (gh_length(others) > 0)
+  SCM elem;
+  log (LOG_NOTICE, gettext ("Script: No string matched\n"));
+  if (gh_length (others) > 0)
     {
-      elem = gh_car(gh_reverse(others));  
+      elem = gh_car (gh_reverse (others));
     }
   return 0;
-} 
+}
 
 /*
   Scheme function (chat-try)
@@ -173,13 +186,13 @@ chat_try (timeout, first, others)
           nread++;
           p++;
           *p = '\0';
-	
-	end = compare_buf (buffer, first, others, &result);
+
+          end = compare_buf (buffer, first, others, &result);
         }
       else
         {
-	/* treat the else case */
-	do_else(others, result);
+          /* treat the else case */
+          do_else (others, result);
           end = 1;
         }
     }
@@ -205,18 +218,21 @@ chat_connect ()
   gh_new_procedure ("chat-try", chat_try, 2, 0, 1);
 
   gh_eval_file (PARAM_MODEM_CHAT_SCRIPT);
-  connect = gh_lookup("chat-connect");
-  result = gh_call0(connect);
+  connect = gh_lookup ("chat-connect");
+  result = gh_call0 (connect);
 
-  if (!gh_boolean_p(result))
+  if (!gh_boolean_p (result))
     {
-      log (LOG_ERR, "%s: returned value isn't a boolean.\n",
+      log (LOG_ERR, gettext ("%s: returned value isn't a boolean.\n"),
            PARAM_MODEM_CHAT_SCRIPT);
-      log (LOG_ERR, "Couldn't continue, exiting.\n");
+      log (LOG_ERR, gettext ("Couldn't continue, exiting.\n"));
       exit (1);
     }
 
-  if(result == SCM_BOOL_T) return 1;
-  else if(result == SCM_BOOL_F) return 0;
-  else return -1;
+  if (result == SCM_BOOL_T)
+    return 1;
+  else if (result == SCM_BOOL_F)
+    return 0;
+  else
+    return -1;
 }

@@ -32,201 +32,17 @@
 #include <errno.h>
 
 #include "common.h"
+#include "gettext.h"
 #include "options.h"
 #include "checkopt.h"
 #include "utils.h"
 #include "log.h"
 
-enum { __general, __auth, __modem, __cable, __tcpip, __netiface, __sect_end };
-const char *section_name[__sect_end] = {
-  "General properties",
-  "User authentification",
-  "Modem properties",
-  "Cable properties",
-  "TCP/IP properties",
-  "Network interface properties"
-};
+enum
+{ __general, __auth, __modem, __cable, __tcpip, __netiface, __sect_end };
+char *section_name[__sect_end];
 
-#define STR(s,l,n,v,d,p,e,c)  \
-   {s, l, n, string, false, false, {string: v}, d, p, e, {check_string: c} }
-#define BOOL(s,l,n,v,d,p,e,c)  \
-   {s, l, n, boolean, false, false, {boolean: v}, d, p, e, {check_boolean: c} }
-#define INT(s,l,n,v,d,p,e,c)  \
-   {s, l, n, integer, false, false, {integer: v}, d, p, e, {check_integer: c} }
-
-
-
-param_t param[PARAM_MAX] = {
-  /* GENERAL CONFIGURATION */
-  STR('f', "config-file", NULL, CONFDIR "/pengfork.cfg", 
-      "read configuration file PATH.", "PATH", 
-      __general, NULL),
-
-  STR(0, "access-method", "access_method", "modem", 
-      "set the media used to access AOL.", "METHOD", 
-      __general, check_access_method),
-
-  STR(0, "protocol", "protocol", "p3", 
-      "set the protocol used for communication with AOL.", "PROT", 
-      __general, check_protocol),
-
-  STR('t', "interface-type", "interface_type", "tun", 
-      "set the interface type.", "TYPE", 
-      __netiface, check_iface_type),
-
-  STR('i', "interface", "interface_name", NULL, 
-      "set the interface name.", "NAME", 
-      __netiface, NULL),
-
-  STR(0, NULL, "secret_file", CONFDIR "/aol-secrets", 
-      NULL, NULL, 
-      __auth, NULL),
-
-  STR('s', "screen-name", "screen_name", NULL, 
-      "set the screen-name to use.", "SN", 
-      __auth, check_screen_name),
-
-  BOOL('r', "auto-reconnect", "auto_reconnect", false, 
-       "enable autoreconnection.", NULL, 
-       __general, NULL),
-
-  INT(0, "reconnect-delay", "reconnect_delay", 0, 
-      "set the delay between reconnections.", "DELAY", 
-      __general, check_natural),
-
-  BOOL('d', "daemon", "daemon", false,  
-       "enable daemon mode, run in background.", NULL, 
-       __general, NULL),
-
-  INT('D', "debug-level", "debug_level", 0, 
-      "set the verbosity level of the debug.", "LEVEL", 
-      __general, check_debug_level),
-
-  BOOL(0, "dns", "set_dns", true, 
-       "set the dns when connected.", NULL, 
-       __netiface, NULL),
-
-  STR(0, "pid-file", "pid_file", "/var/run/pengfork.pid", 
-      "set the PID file to create", "PATH", 
-      __general, NULL),
-
-  STR(0, "ip-up", "ip-up_script", CONFDIR "/ip-up", 
-      "set the script automaticly called when IP is up.", "PATH", 
-      __netiface, NULL),
-
-  STR(0, "ip-down", "ip-down_script", CONFDIR "/ip-down", 
-      "set the script automaticly called when IP is down.", "PATH", 
-      __netiface, NULL),
-
-
-#ifdef WITH_MODEM
-  /* MODEM SPECIFIC */
-  STR('m', "modem", "modem_device", "/dev/modem", 
-      "set the serial device to use for the modem.", "PATH", 
-      __modem, NULL),
-
-  BOOL(0, "rtscts", "rtscts", true, 
-       "enable hardware flow control", NULL, 
-       __modem, NULL),
-
-  STR(0, "init-str", "initstr1", "ATZ", 
-      "set the primary initialization string sent to the modem.", "STRING", 
-      __modem, NULL),
-
-  STR(0, NULL, "initstr2", NULL, 
-      NULL, NULL, 
-      __modem, NULL),
-
-  STR(0, NULL, "initstr3", NULL, 
-      NULL, NULL, 
-      __modem, NULL),
-
-  STR(0, NULL, "initstr4", NULL, 
-      NULL, NULL,
-      __modem, NULL),
-
-  STR(0, NULL, "initstr5", NULL, 
-      NULL, NULL, 
-      __modem, NULL),
-
-  STR(0, NULL, "initstr6", NULL, 
-      NULL, NULL,
-      __modem, NULL),
-
-  STR(0, NULL, "initstr7", NULL, 
-      NULL, NULL, 
-      __modem, NULL),
-
-  STR(0, NULL, "initstr8", NULL, 
-      NULL, NULL,
-      __modem, NULL),
-
-  STR(0, NULL, "initstr9", NULL, 
-      NULL, NULL, 
-      __modem, NULL),
-
-  STR(0, "dial-str", "dialstr", "ATDT", 
-      "set the string used to dial.", "STRING", 
-      __modem, NULL),
-
-  STR(0, NULL, "dial_prefix", NULL, 
-      NULL, NULL,
-      __modem, NULL),
-
-  STR('n', "phone", "phone", NULL, 
-      "set the primary phone number to use.", "NUMBER", 
-      __modem, NULL),
-
-  STR(0, NULL, "phone1", NULL, 
-      NULL, NULL, 
-      __modem, NULL),
-
-  STR(0, NULL, "phone2", NULL, 
-      NULL, NULL, 
-      __modem, NULL),
-
-  STR(0, NULL, "phone3", NULL,
-      NULL, NULL, 
-      __modem, NULL),
-
-  STR(0, NULL, "phone4", NULL, 
-      NULL, NULL,
-      __modem, NULL),
-
-  STR(0, NULL, "phone5", NULL, 
-      NULL, NULL, 
-      __modem, NULL),
-
-  INT('s', "line-speed", "line_speed", 115200, 
-      "set the serial line speed.", "SPEED", 
-      __modem, check_line_speed),
-
-  STR('c', "chat-script", "chat_script", CHATDIR "/aolnet.scm", 
-      "set the chat script used for logging into AOL.", "SCRIPT", 
-      __modem, NULL),
-
-  INT(0, NULL, "dial_retry", 3, 
-      NULL, NULL, 
-      __modem, check_natural),
-
-  INT(0, NULL, "retry_delay", 0, 
-      NULL, NULL, 
-      __modem, check_natural),
-#endif /* WITH_MODEM */
-
-
-#ifdef WITH_TCPIP
-  /* CABLE SPECIFIC */
-  STR(0, NULL, "aol_host", "AmericaOnline.aol.com", 
-      NULL, NULL, 
-      __cable, NULL),
-
-  INT(0, NULL, "aol_port", 5190, 
-      NULL, NULL, 
-      __cable, check_port),
-#endif /* WITH_TCPIP */
-};
-
+param_t param[PARAM_MAX];
 
 /*
  * Command line options
@@ -249,97 +65,257 @@ static struct option const long_options_head[] = {
   {NULL, 0, NULL, 0}
 };
 
+void
+init_parameters (void)
+{
+  char *sections[__sect_end] =  {
+    gettext ("General properties"),
+    gettext ("User authentification"),
+    gettext ("Modem properties"),
+    gettext ("Cable properties"),
+    gettext ("TCP/IP properties"),
+    gettext ("Network interface properties")
+  };
+
+#define STR(s,l,n,v,d,p,e,c)  \
+    {s, l, n, string, false, false, {string: v}, d, p, e, {check_string: c} }
+#define BOOL(s,l,n,v,d,p,e,c)  \
+    {s, l, n, boolean, false, false, {boolean: v}, d, p, e, {check_boolean: c} }
+#define INT(s,l,n,v,d,p,e,c)  \
+    {s, l, n, integer, false, false, {integer: v}, d, p, e, {check_integer: c} }
+
+  param_t params[PARAM_MAX] =  {
+    /* GENERAL CONFIGURATION */
+    STR ('f', "config-file", NULL, CONFDIR "/pengfork.cfg",
+         gettext ("read configuration file PATH."), "PATH",
+         __general, NULL),
+    STR (0, "access-method", "access_method", "modem",
+         gettext ("set the media used to access AOL."), "METHOD",
+         __general, check_access_method),
+    STR (0, "protocol", "protocol", "p3",
+         gettext ("set the protocol used for communication with AOL."), "PROT", 
+         __general, check_protocol), 
+    STR ('t', "interface-type", "interface_type", "tun",
+         gettext ("set the interface type."), "TYPE", 
+         __netiface, check_iface_type),
+    STR ('i', "interface", "interface_name", NULL,
+         gettext ("set the interface name."), "NAME", 
+         __netiface, NULL),
+    STR (0, NULL, "secret_file", CONFDIR "/aol-secrets", 
+         NULL, NULL, 
+         __auth, NULL), 
+    STR ('s', "screen-name", "screen_name", NULL,
+         gettext ("set the screen-name to use."), "SN", 
+         __auth, check_screen_name), 
+    BOOL ('r', "auto-reconnect", "auto_reconnect", false,
+	gettext ("enable autoreconnection."), NULL,
+	__general, NULL),
+    INT (0, "reconnect-delay", "reconnect_delay", 0,
+         gettext ("set the delay between reconnections."), "DELAY",
+         __general, check_natural), 
+    BOOL ('d', "daemon", "daemon", false,
+	gettext ("enable daemon mode, run in background."), NULL, 
+	__general, NULL), 
+    INT ('D', "debug-level", "debug_level", 0,
+         gettext ("set the verbosity level of the debug."), "LEVEL",
+         __general, check_debug_level),
+    BOOL (0, "dns", "set_dns", true,
+	gettext ("set the dns when connected."), NULL, 
+	__netiface, NULL),
+    STR (0, "pid-file", "pid_file", "/var/run/pengfork.pid",
+         gettext ("set the PID file to create"), "PATH", 
+         __general, NULL),
+    STR (0, "ip-up", "ip-up_script", CONFDIR "/ip-up",
+         gettext ("set the script automaticly called when IP is up."), "PATH", 
+         __netiface, NULL), 
+    STR (0, "ip-down", "ip-down_script", CONFDIR "/ip-down",
+         gettext ("set the script automaticly called when IP is down."), "PATH", 
+         __netiface, NULL)
+
+#ifdef WITH_MODEM
+    /* MODEM SPECIFIC */
+    , STR ('m', "modem", "modem_device", "/dev/modem",
+	 gettext ("set the serial device to use for the modem."), "PATH",
+	 __modem, NULL),
+    BOOL (0, "rtscts", "rtscts", true,
+	gettext ("enable hardware flow control"), NULL,
+	__modem, NULL),
+    STR (0, "init-str", "initstr1", "ATZ",
+         gettext ("set the primary initialization string sent to the modem."), "STRING", 
+         __modem, NULL), 
+    STR (0, NULL, "initstr2", NULL,
+         NULL, NULL, 
+         __modem, NULL), 
+    STR (0, NULL, "initstr3", NULL,
+         NULL, NULL,
+         __modem, NULL),
+    STR (0, NULL, "initstr4", NULL, 
+         NULL, NULL, 
+         __modem, NULL), 
+    STR (0, NULL, "initstr5", NULL,
+         NULL, NULL,
+         __modem, NULL),
+    STR (0, NULL, "initstr6", NULL, 
+         NULL, NULL, 
+         __modem, NULL),
+    STR (0, NULL, "initstr7", NULL,
+         NULL, NULL,
+         __modem, NULL),
+    STR (0, NULL, "initstr8", NULL, 
+         NULL, NULL, 
+         __modem, NULL), 
+    STR (0, NULL, "initstr9", NULL, 
+         NULL, NULL,
+         __modem, NULL),
+    STR (0, "dial-str", "dialstr", "ATDT",
+         gettext ("set the string used to dial."), "STRING", 
+         __modem, NULL),
+    STR (0, NULL, "dial_prefix", NULL, 
+         NULL, NULL, 
+         __modem, NULL), 
+    STR ('n', "phone", "phone", NULL,
+         gettext ("set the primary phone number to use."), "NUMBER",
+         __modem, NULL),
+    STR (0, NULL, "phone1", NULL, 
+         NULL, NULL, 
+         __modem, NULL), 
+    STR (0, NULL, "phone2", NULL,
+         NULL, NULL,
+         __modem, NULL),
+    STR (0, NULL, "phone3", NULL, 
+         NULL, NULL, 
+         __modem, NULL), 
+    STR (0, NULL, "phone4", NULL,
+         NULL, NULL,
+         __modem, NULL),
+    STR (0, NULL, "phone5", NULL, NULL, NULL, __modem, NULL), 
+    INT ('s', "line-speed", "line_speed", 115200,
+         gettext ("set the serial line speed."), "SPEED",
+         __modem, check_line_speed),
+    STR ('c', "chat-script", "chat_script", CHATDIR "/aolnet.scm",
+         gettext ("set the chat script used for logging into AOL."), "SCRIPT", 
+         __modem, NULL), 
+    INT (0, NULL, "dial_retry", 3, 
+         NULL, NULL, 
+         __modem, check_natural),
+    INT (0, NULL, "retry_delay", 0, 
+         NULL, NULL, 
+         __modem, check_natural)
+#endif /* WITH_MODEM */
+
+#ifdef WITH_TCPIP
+    /* CABLE SPECIFIC */
+    , STR (0, NULL, "aol_host", "AmericaOnline.aol.com",
+	 NULL, NULL,
+	 __cable, NULL),
+    INT (0, NULL, "aol_port", 5190, 
+         NULL, NULL,
+         __cable, check_port)
+#endif /* WITH_TCPIP */
+  };
+
+#undef STR
+#undef BOOL
+#undef INT
+  
+  memcpy(section_name, sections, sizeof(section_name));
+  memcpy(param, params, sizeof(param));
+}
+
+
 static void
 usage ()
 {
-  int s,i,j,len,ok;
-  
+  int s, i, j, len, ok;
+
   /* FIXME: wow this function is very BIG */
-  printf ("Usage : %s [OPTIONS]\n"
-	"Operation modes :\n"
-	"  -h, --help                       print this help, then exit.\n"
-	"  -V, --version                    print version, then exit.\n",
-	program_name);
-  for(s=0; s<__sect_end; s++)
+  printf (gettext ("Usage : %s [OPTIONS]\n"
+	         "Operation modes :\n"
+	         "  -h, --help                       print this help, then exit.\n"
+	         "  -V, --version                    print version, then exit.\n"),
+          program_name);
+  for (s = 0; s < __sect_end; s++)
     {
       /* 
        * determine if there is at least one element to print in
        * this section
        */
-      for(i=0, ok=0; i<PARAM_MAX && !ok; i++)
-        if( param[i].section == s && 
-	  (param[i].shortopt != 0 || param[i].longopt != NULL)) 
-	ok=1;
+      for (i = 0, ok = 0; i < PARAM_MAX && !ok; i++)
+        if (param[i].section == s &&
+            (param[i].shortopt != 0 || param[i].longopt != NULL))
+          ok = 1;
 
-      if(ok)
+      if (ok)
         {
-	printf("\n%s:\n", section_name[s] );
-	for(i=0; i<PARAM_MAX; i++)
-	  {
-	    if( param[i].section == s && 
-	        (param[i].shortopt != 0 || param[i].longopt != NULL)) 
-	      {
-	        /* First indentation */
-	        printf("  ");
-	        len=2;
-	        /* Put the short option if any */
-	        if(param[i].shortopt != 0) 
-		{
-		  printf("-%c",param[i].shortopt);
-		  if(param[i].longopt != NULL) 
-		    printf(", ");
-		  else printf("  ");
-		}
-	        else printf("    ");
-	        len+=4;
-	        /* Put the long option if any */
-	        if(param[i].longopt != NULL)
-		{
-		  printf("--%s",param[i].longopt);
-		  len += 2 + strlen(param[i].longopt);
-		  if(param[i].type==integer || param[i].type==string)
-		    {
-		      /* Put the parameter name */
-		      printf("=");
-		      len++;
-		      if(param[i].param_name != NULL)
-		        {
-			printf ("%s",param[i].param_name);
-			len += strlen(param[i].param_name);
-		        }
-		      else
-		        {
-			if(param[i].type==integer)
-			  {
-			    printf("INTEGER");
-			    len += 7;
-			  }
-			else
-			  {
-			    printf("STRING");
-			    len += 6;
-			  }
-		        }
-		    }
-	  
-		  /* 
-		   * now complete with white space so the description start 
-		   * at col 35
-		   */
-		  for(j=0;len+j < 35;j++) 
-		    printf(" ");
+          printf ("\n%s:\n", section_name[s]);
+          for (i = 0; i < PARAM_MAX; i++)
+            {
+              if (param[i].section == s &&
+                  (param[i].shortopt != 0 || param[i].longopt != NULL))
+                {
+                  /* First indentation */
+                  printf ("  ");
+                  len = 2;
+                  /* Put the short option if any */
+                  if (param[i].shortopt != 0)
+                    {
+                      printf ("-%c", param[i].shortopt);
+                      if (param[i].longopt != NULL)
+                        printf (", ");
+                      else
+                        printf ("  ");
+                    }
+                  else
+                    printf ("    ");
+                  len += 4;
+                  /* Put the long option if any */
+                  if (param[i].longopt != NULL)
+                    {
+                      printf ("--%s", param[i].longopt);
+                      len += 2 + strlen (param[i].longopt);
+                      if (param[i].type == integer || param[i].type == string)
+                        {
+                          /* Put the parameter name */
+                          printf ("=");
+                          len++;
+                          if (param[i].param_name != NULL)
+                            {
+                              printf ("%s", param[i].param_name);
+                              len += strlen (param[i].param_name);
+                            }
+                          else
+                            {
+                              if (param[i].type == integer)
+                                {
+                                  printf ("INTEGER");
+                                  len += 7;
+                                }
+                              else
+                                {
+                                  printf ("STRING");
+                                  len += 6;
+                                }
+                            }
+                        }
 
-		  /* Put the description */
-		  if(param[i].descr != NULL)
-		    printf("%s\n",param[i].descr);
-		  else
-		    printf("(no description)\n");
-		}
-	      }
-	  }
+                      /* 
+                       * now complete with white space so the description start 
+                       * at col 35
+                       */
+                      for (j = 0; len + j < 35; j++)
+                        printf (" ");
+
+                      /* Put the description */
+                      if (param[i].descr != NULL)
+                        printf ("%s\n", param[i].descr);
+                      else
+                        printf ("(no description)\n");
+                    }
+                }
+            }
         }
     }
-  printf("\n");
+  printf ("\n");
   exit (0);
 }
 
@@ -348,23 +324,23 @@ static void
 version (void)
 {
   printf ("%s (" PACKAGE ") v" VERSION "\n", program_name);
-  printf ("Compilation options :\n");
+  printf (gettext ("Compilation options :\n"));
 #ifdef WITH_MODEM
-  printf("WITH_MODEM ");
+  printf ("WITH_MODEM ");
 #endif
 #ifdef WITH_CABLE
-  printf("WITH_CABLE ");
+  printf ("WITH_CABLE ");
 #endif
 #ifdef WITH_DSL
-  printf("WITH_DSL ");
+  printf ("WITH_DSL ");
 #endif
 #ifdef WITH_TCPIP
-  printf("WITH_TCPIP ");
+  printf ("WITH_TCPIP ");
 #endif
 #ifdef WITH_TUN
-  printf("WITH_TUN ");
+  printf ("WITH_TUN ");
 #endif
-  printf("\n");
+  printf ("\n");
   exit (0);
 }
 
@@ -500,7 +476,7 @@ parse_command_line (argc, argv)
       default:
         if (!set_opt_param (c))
           {
-            fprintf (stderr, "Try `%s --help' for more information.\n",
+            fprintf (stderr, gettext ("Try `%s --help' for more information.\n"),
                      program_name);
             exit (1);
           }
@@ -517,65 +493,67 @@ parse_command_line (argc, argv)
 int
 check_config (void)
 {
-  int good = 1,i;
-  
-  debug(5, "Checking options:\n");
+  int good = 1, i;
+
+  debug (5, "Checking options:\n");
   for (i = 0; i < PARAM_MAX; i++)
-    switch(param[i].type)
+    switch (param[i].type)
       {
       case boolean:
-        if(param[i].defined)
-	{
-	  if(PARAM_BOOLEAN(i) == true)
-	    debug(5, "  %s = true\n", param[i].name);
-	  else
-	    debug(5, "  %s = false\n", param[i].name);
-	}
+        if (param[i].defined)
+          {
+            if (PARAM_BOOLEAN (i) == true)
+              debug (5, "  %s = true\n", param[i].name);
+            else
+              debug (5, "  %s = false\n", param[i].name);
+          }
         else
-	{
-	  if(PARAM_BOOLEAN(i) == true)
-	    debug(8, "  %s = true (default)\n", param[i].name);
-	  else
-	    debug(8, "  %s = false (default)\n", param[i].name);
-	}
+          {
+            if (PARAM_BOOLEAN (i) == true)
+              debug (8, "  %s = true (default)\n", param[i].name);
+            else
+              debug (8, "  %s = false (default)\n", param[i].name);
+          }
 
-        if(param[i].checkfn.check_boolean != NULL)
-	good &= param[i].checkfn.check_boolean (param[i].name, 
-					PARAM_BOOLEAN(i));
+        if (param[i].checkfn.check_boolean != NULL)
+          good &= param[i].checkfn.check_boolean (param[i].name,
+                                                  PARAM_BOOLEAN (i));
         break;
       case integer:
-        if(param[i].defined)
-	debug(5, "  %s = %d\n", param[i].name, PARAM_INTEGER(i));
+        if (param[i].defined)
+          debug (5, "  %s = %d\n", param[i].name, PARAM_INTEGER (i));
         else
-	debug(8, "  %s = %d (default)\n", param[i].name, PARAM_INTEGER(i));
+          debug (8, "  %s = %d (default)\n", param[i].name,
+                 PARAM_INTEGER (i));
 
-        if(param[i].checkfn.check_integer != NULL)
-	good &= param[i].checkfn.check_integer (param[i].name, 
-					PARAM_INTEGER(i));
+        if (param[i].checkfn.check_integer != NULL)
+          good &= param[i].checkfn.check_integer (param[i].name,
+                                                  PARAM_INTEGER (i));
         break;
       case string:
-        if(param[i].defined)
-	{
-	  if(PARAM_STRING(i) != NULL)
-	    {
-	      if(i != __screen_name)
-	        debug(5, "  %s = %s\n", param[i].name, PARAM_STRING(i));
-	      else
-	        debug(5, "  %s = (hidden)\n", param[i].name);
-	    }
-	  else
-	    debug(5, "  %s = (undefined)\n", param[i].name);
-	}
+        if (param[i].defined)
+          {
+            if (PARAM_STRING (i) != NULL)
+              {
+                if (i != __screen_name)
+                  debug (5, "  %s = %s\n", param[i].name, PARAM_STRING (i));
+                else
+                  debug (5, "  %s = (hidden)\n", param[i].name);
+              }
+            else
+              debug (5, "  %s = (undefined)\n", param[i].name);
+          }
         else
-	debug(8, "  %s = %s (default)\n", param[i].name, 
-	      (PARAM_STRING(i)==NULL)?"(undefined)":PARAM_STRING(i));
-        if(param[i].checkfn.check_string != NULL)
-	good &= param[i].checkfn.check_string (param[i].name, 
-				         PARAM_STRING(i));
+          debug (8, "  %s = %s (default)\n", param[i].name,
+                 (PARAM_STRING (i) ==
+                  NULL) ? "(undefined)" : PARAM_STRING (i));
+        if (param[i].checkfn.check_string != NULL)
+          good &= param[i].checkfn.check_string (param[i].name,
+                                                 PARAM_STRING (i));
         break;
-        }
-  debug(5,"\n");
-  
+      }
+  debug (5, "\n");
+
   return good;
 }
 
@@ -586,9 +564,9 @@ int
 parse_config ()
 {
   if (!parse_config_file (PARAM_CONFIG_FILE))
-    debug (5,"Unable to open configuration file %s.\n",PARAM_CONFIG_FILE);
+    debug (5, "Unable to open configuration file %s.\n", PARAM_CONFIG_FILE);
 
-  debug (5,"\n");
+  debug (5, "\n");
   return 1;
 }
 
@@ -604,11 +582,11 @@ parse_config_file (filename)
   f = fopen (filename, "r");
   if (f == NULL)
     {
-      debug (6,"%s: %s(%d)\n",filename, strerror(errno), errno);
+      debug (6, "%s: %s(%d)\n", filename, strerror (errno), errno);
       return 0;
     }
   else
-    debug(3, "Parsing config file: %s\n", filename);
+    debug (3, "Parsing config file: %s\n", filename);
   while (!feof (f))
     {
       lineno++;
@@ -617,19 +595,20 @@ parse_config_file (filename)
       strip_comments (line);
       trim (line);
       if (strlen (line) > 0 && !tokenize_line (line, &name, &value))
-        log (LOG_WARNING, "%s:%d bad line format\n", filename, lineno);
+        log (LOG_WARNING, gettext ("%s:%d bad line format\n"), filename, lineno);
       else
         {
-	if (strlen (line) > 0) {
-	  for (i = 0, found = 0; i < PARAM_MAX && !found; i++)
-	    found=try_param (&param[i], filename, lineno, name, value);
-	  if(!found)
-	    log (LOG_WARNING, "%s:%d unrecognized option - %s\n", 
-	         filename, lineno, name);
-	}
+          if (strlen (line) > 0)
+            {
+              for (i = 0, found = 0; i < PARAM_MAX && !found; i++)
+                found = try_param (&param[i], filename, lineno, name, value);
+              if (!found)
+                log (LOG_WARNING, gettext ("%s:%d unrecognized option - %s\n"),
+                     filename, lineno, name);
+            }
         }
     }
-  fclose(f);
+  fclose (f);
   return 1;
 }
 
@@ -644,41 +623,45 @@ try_param (param, filename, lineno, name, value)
 
   if (param->name && !strcmp (name, param->name))
     {
-      if (param->defined) return 1;
+      if (param->defined)
+        return 1;
       else
         {
-	switch (param->type)
-	  {
-	  case boolean:
-	    if (get_boolean (&param->value.boolean, value))
-	      param->defined = true;
-	    else
-	      log (LOG_WARNING, "%s:%d bad boolean value\n", filename, lineno);
-	    break;
-	  case string:
-	    if (get_string (&param->value.string, value))
-	      {
-	        param->defined = true;
-	        param->allocated = true;
-	      }
-	    else
-	      {
-	        log (LOG_CRIT, "%s:%d not enough memory to get the parameter\n",
-		   filename, lineno);
-	        exit(1);
-	      }
-	    break;
-	  case integer:
-	    if (get_integer (&param->value.integer, value))
-	      param->defined = true;
-	    else
-	      log (LOG_WARNING, "%s:%d bad integer value\n", filename, lineno);
-	    break;
-	  }
-	return 1;
+          switch (param->type)
+            {
+            case boolean:
+              if (get_boolean (&param->value.boolean, value))
+                param->defined = true;
+              else
+                log (LOG_WARNING, gettext ("%s:%d bad boolean value\n"), filename,
+                     lineno);
+              break;
+            case string:
+              if (get_string (&param->value.string, value))
+                {
+                  param->defined = true;
+                  param->allocated = true;
+                }
+              else
+                {
+                  log (LOG_CRIT,
+                       gettext ("%s:%d not enough memory to get the parameter\n"),
+                       filename, lineno);
+                  exit (1);
+                }
+              break;
+            case integer:
+              if (get_integer (&param->value.integer, value))
+                param->defined = true;
+              else
+                log (LOG_WARNING, gettext ("%s:%d bad integer value\n"), filename,
+                     lineno);
+              break;
+            }
+          return 1;
         }
     }
-  else 
+  else
     return 0;
 }
 

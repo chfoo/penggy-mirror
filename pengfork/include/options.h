@@ -157,6 +157,7 @@ enum
 
 extern param_t param[PARAM_MAX];
 
+void init_parameters (void);
 int parse_command_line (int argc, char **argv);
 int check_config ();
 int parse_config (void);

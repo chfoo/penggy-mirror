@@ -26,7 +26,6 @@
 #include "log.h"
 
 #include "p3/header.h"
-
 #include "p3/misc.h"
 
 /* 
@@ -40,7 +39,7 @@ p3_sync_buffer (buffer)
   int len;
   int total = 0;
 
-  while(buffer->used > 1)
+  while (buffer->used > 1)
     {
       /* Try to find a STOP byte first */
       p = memchr (buffer_start (buffer), P3_STOP, buffer->used);
@@ -48,7 +47,7 @@ p3_sync_buffer (buffer)
         len = (int) p - (int) buffer_start (buffer);
       else
         len = buffer->used;
-  
+
       /* Eliminate all before STOP byte */
       buffer_free (buffer, len);
       total += len;
@@ -57,12 +56,13 @@ p3_sync_buffer (buffer)
        * if the start of the buffer is now a STOP byte followed by a 
        * MAGIC byte this seems good 
        */
-      if(buffer->used > 1) 
+      if (buffer->used > 1)
         {
-	/* Just eliminate the BYTE_STOP */
-	buffer_free (buffer, 1);
-	total++;
-	if(p[1]==P3_MAGIC) break;	  
+          /* Just eliminate the BYTE_STOP */
+          buffer_free (buffer, 1);
+          total++;
+          if (p[1] == P3_MAGIC)
+            break;
         }
     }
 
@@ -92,9 +92,9 @@ p3_diff_seq (s1, s2)
 {
   int i;
 
-  if(s1 < PACKET_MIN_SEQ || s2 < PACKET_MIN_SEQ ||
-     s1 > PACKET_MAX_SEQ || s2 > PACKET_MAX_SEQ)
+  if (s1 < PACKET_MIN_SEQ || s2 < PACKET_MIN_SEQ ||
+      s1 > PACKET_MAX_SEQ || s2 > PACKET_MAX_SEQ)
     return -1;
-  for(i=0; p3_add_seq(s2,i)!=s1; i++);
+  for (i = 0; p3_add_seq (s2, i) != s1; i++);
   return i;
 }

@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2002  Jean-Charles Salzeber <jc@varspool.net>
- * Copyright (C) 2001  Stephane Guth (birdy57) <birdy57@multimania.com>
  *
  * This file is part of pengfork.
  *
@@ -21,11 +20,14 @@
  *                
  */
 
+#include "config.h"
+
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "gettext.h"
 #include "log.h"
 #include "buffer.h"
 #include "utils.h"
@@ -69,16 +71,16 @@ p3_register_to_engine (myaccess)
      const access_t *myaccess;
 {
   if (myaccess->is_connected ())
-    engine_register (*(myaccess->fd),P3_TIMEOUT , p3_fn);
+    engine_register (*(myaccess->fd), P3_TIMEOUT, p3_fn);
   else
     log (LOG_ERR,
-         "Unable to register P3 protocol functions, access is not connected\n");
+         gettext ("Unable to register P3 protocol functions, access is not connected\n"));
 }
 
 int
-p3_ready()
+p3_ready ()
 {
-  return !win_full(&wsend);
+  return !win_full (&wsend);
 }
 
 void
@@ -102,25 +104,26 @@ p3_init (bufin, bufout)
 }
 
 int
-p3_want_write(out)
-     buffer_t * out;
+p3_want_write (out)
+     buffer_t *out;
 {
   int i;
-  char *packet,*p;
+  char *packet, *p;
   size_t packet_size;
-  
-  for(i=0;i<wsend.used;i++)
+
+  for (i = 0; i < wsend.used; i++)
     {
-      win_get(&wsend, i, &packet, &packet_size);
-      if( buffer_reserve(out,packet_size) )
+      win_get (&wsend, i, &packet, &packet_size);
+      if (buffer_reserve (out, packet_size))
         {
-	p=buffer_end(out);
-	buffer_alloc(out,packet_size);
-	memcpy(p, packet, packet_size);
+          p = buffer_end (out);
+          buffer_alloc (out, packet_size);
+          memcpy (p, packet, packet_size);
         }
-      else break;
+      else
+        break;
     }
-  win_delete(&wsend,i);
+  win_delete (&wsend, i);
   return 1;
 }
 
@@ -136,60 +139,60 @@ p3_recv (bufin)
    * Do not try to treat the buffer until we have enough space into the
    * send window to put some ack and data packets
    */
-  if(wsend.used <= WINDOW_HIGH)
+  if (wsend.used <= WINDOW_HIGH)
     {
       while (p3_extract_packet (bufin, &header, &data, &data_size))
         {
-	p3_treat_packet(header,data,data_size);
-	buffer_free (bufin, data_size + P3_DATA_OFFSET + 1);
+          p3_treat_packet (header, data, data_size);
+          buffer_free (bufin, data_size + P3_DATA_OFFSET + 1);
         }
     }
 }
 
 void
-p3_timeout(bufin, bufout, timeout)
+p3_timeout (bufin, bufout, timeout)
      buffer_t *bufin;
      buffer_t *bufout;
      int timeout;
 {
-  debug(1,"P3 - timeout notified\n");
-  if(timeout<10) 
+  debug (1, "P3 - timeout notified\n");
+  if (timeout < 10)
     {
-      if(srv.lastseq != cli.lastack)
+      if (srv.lastseq != cli.lastack)
         {
-	/* Server has some unacknowledged packets */
-	p3_put_packet(TYPE_ACK,NULL,0);
+          /* Server has some unacknowledged packets */
+          p3_put_packet (TYPE_ACK, NULL, 0);
         }
     }
-  else if(timeout < 15) 
+  else if (timeout < 15)
     {
-      if(cli.lastseq != srv.lastack)
+      if (cli.lastseq != srv.lastack)
         {
-	/* we have some unacknowledged packets */
-	p3_put_packet(TYPE_PING,NULL,0);
+          /* we have some unacknowledged packets */
+          p3_put_packet (TYPE_PING, NULL, 0);
         }
     }
-  else if(timeout < 35) 
+  else if (timeout < 35)
     {
-      if(cli.lastseq != srv.lastack)
+      if (cli.lastseq != srv.lastack)
         {
-	/* we have some unacknowledged packets */
-	p3_put_packet(TYPE_PING,NULL,0);
+          /* we have some unacknowledged packets */
+          p3_put_packet (TYPE_PING, NULL, 0);
         }
     }
-  else 
+  else
     {
-      if(cli.lastseq != srv.lastack)
+      if (cli.lastseq != srv.lastack)
         {
-	/* Always some unacknowledged packets??!!
-	 * The server seems out or lost
-	 */
-	
+          /* Always some unacknowledged packets??!!
+           * The server seems out or lost
+           */
+
         }
     }
-  if(nack_sent)
+  if (nack_sent)
     {
       /* Server do not have responded to NACK, retry */
-      p3_put_packet(TYPE_NACK,NULL,0);
+      p3_put_packet (TYPE_NACK, NULL, 0);
     }
 }

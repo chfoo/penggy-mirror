@@ -41,32 +41,28 @@ p3_send_init_packet ()
   init_data = (p3_init30_t)
   {
     0x03,                       /* plateform = PC */
-    139,                      /* version is an AOL 3.0 */
-    109,                      /* subversion */
-    0,                        /* unused */
-    16,                       /* machinmem always 16 */
-    0,                        /* appmem always 0 */
-    0,                        /* pctype always 0 */
-    5,                        /* release_month alway 5 */
-    15,                       /* release_day alway 15 */
-    0,                        /* customer_class always 0 */
-    htolel(0x4db26e25),       /* timestamp */
-    htoles(0x00c0),           /* dos version :) */
-    htoles(0xc014),           /* flags */
-    8,                        /* video (8=??) */
-    5,                        /* processor (5=??) */
-    0,                        /* media ??? */
-    htolel(0x00000a04),       /* windows version :) */
-    1,                        /* windows mode 1=enhanced :) */
-
-    htoles(1024), 
-    htoles(768), 
-    htoles(65535),            /* Resolution 1024x768, 16/24 bits */
-
-    0,                        /* filler always 0 */
-    0,                        /* region */
-    LANGUAGE_FRENCH,          /* the language */
-    0x17                      /* connection speed */
+      139,                      /* version is an AOL 3.0 */
+      109,                      /* subversion */
+      0,                        /* unused */
+      16,                       /* machinmem always 16 */
+      0,                        /* appmem always 0 */
+      0,                        /* pctype always 0 */
+      5,                        /* release_month alway 5 */
+      15,                       /* release_day alway 15 */
+      0,                        /* customer_class always 0 */
+      htolel (0x4db26e25),      /* timestamp */
+      htoles (0x00c0),          /* dos version :) */
+      htoles (0xc014),          /* flags */
+      8,                        /* video (8=??) */
+      5,                        /* processor (5=??) */
+      0,                        /* media ??? */
+      htolel (0x00000a04),      /* windows version :) */
+      1,                        /* windows mode 1=enhanced :) */
+      htoles (1024), htoles (768), htoles (65535),      /* Resolution 1024x768, 16/24 bits */
+      0,                        /* filler always 0 */
+      0,                        /* region */
+      LANGUAGE_FRENCH,          /* the language */
+      0x17                      /* connection speed */
   };
   p3_put_packet (TYPE_INIT, (char *) &init_data, sizeof (init_data));
 }

@@ -21,6 +21,8 @@
  *                
  */
 
+#include "config.h"
+
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdlib.h>
@@ -31,6 +33,8 @@
 #include <signal.h>
 
 #include "modem/devlock.h"
+#include "log.h"
+#include "gettext.h"
 
 /* note: this function uses the O_EXCL flag to open(), and thus assumes
    that /var/lock is not an NFS-mounted drive (according to the open() man
@@ -79,7 +83,7 @@ device_lock (devicename)
         {
           /* we can create a lockfile now */
           close (fd);
-          printf ("Removing stale lock file %s.\n", filename);
+          log (LOG_WARNING, gettext ("Removing stale lock file %s.\n"), filename);
           if (unlink (filename))
             {
               perror (filename);

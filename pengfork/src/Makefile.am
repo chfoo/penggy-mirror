@@ -20,6 +20,16 @@
 #
 
 
+PACKAGE = @PACKAGE@
+VERSION = @VERSION@
+
+
+datadir = @datadir@
+localedir = $(datadir)/locale
+DEFS = -DLOCALEDIR=\"$(localedir)\" @DEFS@
+LIBS = @LIBINTL@ @LIBS@
+
+
 sbin_PROGRAMS = pengfork
 
 pengfork_SOURCES = 	buffer.c		\

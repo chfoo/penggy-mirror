@@ -20,17 +20,20 @@
  *                
  */
 
+#include "config.h"
+
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
 #include <ctype.h>
 
+#include "gettext.h"
 #include "options.h"
 #include "log.h"
 #include "utils.h"
 
 int
-get_password( sn, pass )
+get_password (sn, pass)
      char *sn;
      char **pass;
 {
@@ -42,7 +45,8 @@ get_password( sn, pass )
   f = fopen (PARAM_SECRET_FILE, "r");
   if (f == NULL)
     {
-      log (LOG_ERR,"%s: %s(%d)\n", PARAM_SECRET_FILE, strerror(errno), errno);
+      log (LOG_ERR, "%s: %s(%d)\n", PARAM_SECRET_FILE, strerror (errno),
+           errno);
       return 0;
     }
 
@@ -54,30 +58,32 @@ get_password( sn, pass )
       strip_comments (line);
       trim (line);
 
-      if(strlen(line) > 0) 
+      if (strlen (line) > 0)
         {
-	c=line;
-	while(!isspace(*c) && *c!='\0') c++;
-	if(*c != '\0')
-	  *c='\0';
-	else
-	  log (LOG_WARNING, "%s:%d bad line format\n", PARAM_SECRET_FILE, lineno);
-	
-	c++;
-	if( !strcmp(line, sn) )
-	  {
-	    if(pass) {
-	      trim(c);
-	      *pass=strdup(c);
-	    }
-	    fclose(f);
-	    return 1;
-	  }
+          c = line;
+          while (!isspace (*c) && *c != '\0')
+            c++;
+          if (*c != '\0')
+            *c = '\0';
+          else
+            log (LOG_WARNING, gettext ("%s:%d bad line format\n"), PARAM_SECRET_FILE,
+                 lineno);
+
+          c++;
+          if (!strcmp (line, sn))
+            {
+              if (pass)
+                {
+                  trim (c);
+                  *pass = strdup (c);
+                }
+              fclose (f);
+              return 1;
+            }
         }
     }
 
-  *pass=NULL;
-  fclose(f);
+  *pass = NULL;
+  fclose (f);
   return 0;
 }
-

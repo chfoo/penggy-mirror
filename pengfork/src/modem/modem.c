@@ -32,6 +32,7 @@
 #include <termios.h>
 #include <unistd.h>
 
+#include "gettext.h"
 #include "log.h"
 #include "modem/modem.h"
 #include "modem/devlock.h"
@@ -154,11 +155,11 @@ struct termios t, old_t;
 int
 modem_connect ()
 {
-  
+
   if (!modem_open
       (PARAM_MODEM_DEVICE, PARAM_MODEM_LINE_SPEED, PARAM_MODEM_RTSCTS))
     return 0;
-  log (LOG_NOTICE, "Using %s device...\n", PARAM_MODEM_DEVICE);
+  log (LOG_NOTICE, gettext ("Using %s device...\n"), PARAM_MODEM_DEVICE);
   debug (1, "Device %s opened\n", PARAM_MODEM_DEVICE);
 
   if (!modem_init ())
@@ -167,20 +168,21 @@ modem_connect ()
   if (!modem_dial ())
     return 0;
 
-  log (LOG_NOTICE, "Executing chat script (%s)...\n", PARAM_MODEM_CHAT_SCRIPT);
-  switch(chat_connect())
-    { 
+  log (LOG_NOTICE, gettext ("Executing chat script (%s)...\n"),
+       PARAM_MODEM_CHAT_SCRIPT);
+  switch (chat_connect ())
+    {
     case 1:
-      log (LOG_NOTICE, "Chat success, connected...\n");
+      log (LOG_NOTICE, gettext ("Chat success, connected...\n"));
       tcflush (fd, TCIOFLUSH);
       return 1;
     case 0:
-      log (LOG_WARNING, "Chat failure, you're not connected...\n");
+      log (LOG_WARNING, gettext ("Chat failure, you're not connected...\n"));
       tcflush (fd, TCIOFLUSH);
       break;
     default:
-      log (LOG_ERR, "Chat return a non boolean value.\n");
-      log (LOG_ERR, "Please verify your chat script.\n");      
+      log (LOG_ERR, gettext ("Chat return a non boolean value.\n"));
+      log (LOG_ERR, gettext ("Please verify your chat script.\n"));
       tcflush (fd, TCIOFLUSH);
       return 0;
     }
@@ -200,7 +202,7 @@ modem_init ()
       !modem_send_init_string (PARAM_MODEM_INITSTR (8)) ||
       !modem_send_init_string (PARAM_MODEM_INITSTR (9)))
     {
-      log (LOG_ERR,"Unable to initialize the modem\n");
+      log (LOG_ERR, gettext ("Unable to initialize the modem\n"));
       return 0;
     }
 
@@ -238,7 +240,7 @@ modem_dial ()
 {
   int i;
 
-  log (LOG_NOTICE, "Dialing provider...\n");
+  log (LOG_NOTICE, gettext ("Dialing provider...\n"));
   for (i = 0; i < PARAM_MODEM_DIAL_RETRY; i++)
     if (modem_dial_to (PARAM_MODEM_PHONE (0)) ||
         modem_dial_to (PARAM_MODEM_PHONE (1)) ||
@@ -249,7 +251,7 @@ modem_dial ()
       break;
   if (i >= PARAM_MODEM_DIAL_RETRY)
     {
-      log (LOG_ERR, "Too many failures, dialing process aborted.\n");
+      log (LOG_ERR, gettext ("Too many failures, dialing process aborted.\n"));
       return 0;
     }
   return 1;
@@ -265,7 +267,7 @@ modem_dial_to (phone)
   if (!phone)
     return 0;
 
-  log(LOG_INFO, "Dialing %s\n",phone);
+  log (LOG_INFO, gettext ("Dialing %s\n"), phone);
   if (!PARAM_MODEM_DIAL_PREFIX)
     snprintf (dialcmd, sizeof (dialcmd), "%s%s", PARAM_MODEM_DIALSTR, phone);
   else
@@ -277,8 +279,8 @@ modem_dial_to (phone)
   switch (modem_response_value (response))
     {
     case RESPONSE_ERROR:       /* ERROR */
-      log (LOG_ERR, "Bad string\n"
-           "Please verify the phone number, dial string and prefix\n");
+      log (LOG_ERR, gettext ("Bad string\n"
+           "Please verify the phone number, dial string and prefix\n"));
       return 0;
       break;
 
@@ -287,38 +289,38 @@ modem_dial_to (phone)
       break;
 
     case RESPONSE_NO_CARRIER:  /* NO CARRIER */
-      log (LOG_WARNING, "No carrier detected\n");
+      log (LOG_WARNING, gettext ("No carrier detected\n"));
       return 0;
       break;
 
     case RESPONSE_NO_DIALTONE: /* NO DIALTONE */
-      log (LOG_WARNING, "No dial tone detected\n");
+      log (LOG_WARNING, gettext ("No dial tone detected\n"));
       return 0;
       break;
 
     case RESPONSE_BUSY:        /* BUSY */
-      log (LOG_WARNING, "Provider is busy\n");
+      log (LOG_WARNING, gettext ("Provider is busy\n"));
       return 0;
       break;
 
     case RESPONSE_DELAYED:     /* DELAYED */
-      log (LOG_WARNING, "Response delayed\n");
+      log (LOG_WARNING, gettext ("Response delayed\n"));
       return 0;
       break;
 
     case RESPONSE_VOICE:       /* VOICE */
-      log (LOG_WARNING, "Response voice\n");
+      log (LOG_WARNING, gettext ("Response voice\n"));
       return 0;
       break;
 
     case RESPONSE_FAX:         /* FCLASS */
-      log (LOG_WARNING, "You have been connected to a fax\n"
-           "Please verify the phone number\n");
+      log (LOG_WARNING, gettext ("You have been connected to a fax\n"
+           "Please verify the phone number\n"));
       return 0;
       break;
 
     case RESPONSE_NO_ANSWER:   /* NO ANSWER */
-      log (LOG_WARNING, "There was no answer\n");
+      log (LOG_WARNING, gettext ("There was no answer\n"));
       return 0;
       break;
 
@@ -326,7 +328,7 @@ modem_dial_to (phone)
       break;
 
     default:                   /* TIMEOUT */
-      log (LOG_WARNING, "Modem timed out during dialing\n");
+      log (LOG_WARNING, gettext ("Modem timed out during dialing\n"));
       return 0;
     }
   return 0;
@@ -343,7 +345,7 @@ modem_open (filename, _baud, rtscts)
 
   if (!device_lock (filename))
     {
-      log (LOG_ERR, "Device %s is locked\n", filename);
+      log (LOG_ERR, gettext ("Device %s is locked\n"), filename);
       return 0;
     }
 
@@ -388,7 +390,7 @@ setup_modem (rtscts)
     {
       for (i = 0; i < 5; i++)
         {
-          modem_sync_write ( "\r", 1);
+          modem_sync_write ("\r", 1);
           usleep (10 * 1000);
         }
       tcdrain (fd);
@@ -465,9 +467,9 @@ modem_hangup ()
      we should only do this if we have received any response from the modem
    */
   tcdrain (fd);
-  modem_sync_write ( "\r", 1);
+  modem_sync_write ("\r", 1);
   for (i = 0; !modem_data_ready (200) && i < 10; i++)
-    modem_sync_write ( "\r", 1);
+    modem_sync_write ("\r", 1);
   tcdrain (fd);
 
   /* drop DTR for a while, if still online */
@@ -485,9 +487,9 @@ modem_hangup ()
   if (modem_carrier ())
     {
       /* need to do +++ manual-disconnect stuff */
-      modem_sync_write ( "+++", 3);  /* command line mode */
+      modem_sync_write ("+++", 3);      /* command line mode */
       usleep (1500 * 1000);
-      modem_sync_write ( "ATH\r", 4);        /* hang-up command */
+      modem_sync_write ("ATH\r", 4);    /* hang-up command */
 
       for (i = 0; modem_carrier () && i < 5; i++)
         usleep (100 * 1000);
@@ -594,8 +596,8 @@ modem_send_command (command, timeout, response, size)
 {
   debug (2, "Sending: %s\n", command);
 
-  modem_sync_write ( command, strlen (command));
-  modem_sync_write ( "\r", 1);
+  modem_sync_write (command, strlen (command));
+  modem_sync_write ("\r", 1);
 
   /* Get the response from the modem with/without echo enabled */
   if (!modem_readline (response, timeout, size))
@@ -696,7 +698,7 @@ modem_readline (response, timeout, size)
 
 /* Simulate a synchronous write */
 int
-modem_sync_write ( string, size)
+modem_sync_write (string, size)
      char *string;
      size_t size;
 {
@@ -732,18 +734,19 @@ modem_sync_write ( string, size)
 }
 
 int
-modem_valid_speed(speed)
+modem_valid_speed (speed)
      int speed;
 {
   int i;
-  for(i=0; i<sizeof(speeds); i++)
-    if(speed==speeds[i].baud) return 1;
+  for (i = 0; i < sizeof (speeds); i++)
+    if (speed == speeds[i].baud)
+      return 1;
   return 0;
 }
 
 int
-modem_readc ( c )
+modem_readc (c)
      char *c;
 {
-  return read(fd , c, 1);
+  return read (fd, c, 1);
 }

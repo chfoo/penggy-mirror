@@ -20,8 +20,11 @@
  *                
  */
 
+#include "config.h"
+
 #include <string.h>
 
+#include "gettext.h"
 #include "options.h"
 #include "getpass.h"
 #include "buffer.h"
@@ -41,8 +44,8 @@ logon ()
   char *pass;
   char login[10];
 
-  log(LOG_NOTICE, "Loging into provider\n");
-  get_password(sn, &pass);
+  log (LOG_NOTICE, gettext ("Loging into provider\n"));
+  get_password (sn, &pass);
   len = strlen (sn);
   if (len >= 10)
     {
@@ -60,8 +63,8 @@ logon ()
   login_info.pass_size = strlen (pass);
   login_info.pass = pass;
 
-  data = malloc ( 21 + 1 + login_info.login_size + 15 + 1 + 
-	       login_info.pass_size + 6);
+  data = malloc (21 + 1 + login_info.login_size + 15 + 1 +
+                 login_info.pass_size + 6);
 
   memcpy (data, login_info.unknow1, 21 + 1);
   len = 21 + 1;
@@ -74,8 +77,8 @@ logon ()
   memcpy (&data[len], login_info.unknow3, 6);
   len += 6;
 
-  fdo_send ( TOKEN ("Dd"), data, len);
-  debug(3,"FDO - Login token sended\n");
+  fdo_send (TOKEN ("Dd"), data, len);
+  debug (3, "FDO - Login token sended\n");
   free (data);
 
   fdo_unregister (TOKEN ("SD"));
@@ -88,8 +91,8 @@ login_confirm (token, data, data_size)
      char *data;
      size_t data_size;
 {
-  debug(3, "FDO - Login confirm received\n");
+  debug (3, "FDO - Login confirm received\n");
   fdo_unregister (TOKEN ("At"));
 
-  ip_tunnel_init();
+  ip_tunnel_init ();
 }

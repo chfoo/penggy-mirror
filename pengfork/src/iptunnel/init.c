@@ -20,6 +20,8 @@
  *                
  */
 
+#include "config.h"
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -27,6 +29,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "gettext.h"
 #include "buffer.h"
 #include "options.h"
 #include "misc.h"
@@ -66,18 +69,18 @@ ip_tunnel_init ()
 {
   struct ip_config_request request = DEFAULT_IP_CONFIG_REQUEST;
 
-  fdo_send ( TOKEN ("ya"), (char *) &request, sizeof (request));
+  fdo_send (TOKEN ("ya"), (char *) &request, sizeof (request));
 
-  fdo_register ( TOKEN ("ya"), ip_tunnel_config);
+  fdo_register (TOKEN ("ya"), ip_tunnel_config);
 }
 
 int
 ip_tunnel_ready (bufin)
      buffer_t *bufin;
 {
-  if( (bufin->used == bufin->size) && protocol->ready())
-    get_ip_client(bufin);
-  return protocol->ready();
+  if ((bufin->used == bufin->size) && protocol->ready ())
+    get_ip_client (bufin);
+  return protocol->ready ();
 }
 
 void
@@ -92,74 +95,77 @@ ip_tunnel_config (token, data, data_size)
   struct in_addr dns;
   struct in_addr net;
   int mask;
-  int mtu=1500;
+  int mtu = 1500;
   char hostname[255];
   char *domain = NULL;
   int len;
   int nparsed = 0;
 
-  while(nparsed<data_size)
+  while (nparsed < data_size)
     {
       cfg_hdr = (struct ip_config_header *) (data + nparsed);
-      cfg_data = data + nparsed + sizeof(struct ip_config_header);
-      switch(cfg_hdr->type)
+      cfg_data = data + nparsed + sizeof (struct ip_config_header);
+      switch (cfg_hdr->type)
         {
         case TYPE_IP_ADDR:
-	address.s_addr = *((in_addr_t *)cfg_data);
-	log (LOG_INFO, "IP address: %s\n", inet_ntoa(address));
-	break;
+          address.s_addr = *((in_addr_t *) cfg_data);
+          log (LOG_INFO, gettext ("IP address: %s\n"), inet_ntoa (address));
+          break;
         case TYPE_DNS_ADDR:
-	dns.s_addr = *((in_addr_t *)cfg_data);
-	log (LOG_INFO, "DNS server: %s\n", inet_ntoa(dns));
-	break;
+          dns.s_addr = *((in_addr_t *) cfg_data);
+          log (LOG_INFO, gettext ("DNS server: %s\n"), inet_ntoa (dns));
+          break;
         case TYPE_MTU:
-	mtu= ntohs(*((u_int16_t *)cfg_data));
-	log (LOG_INFO, "MTU: %d\n", mtu);
-	break;
+          mtu = ntohs (*((u_int16_t *) cfg_data));
+          log (LOG_INFO, gettext ("MTU: %d\n"), mtu);
+          break;
         case TYPE_HOSTNAME:
-	len = cfg_hdr->length;
-	if (len > sizeof(hostname))
-	  len = sizeof(hostname);
-	strncpy (hostname, cfg_data, len);
-	hostname[len] = '\0';
-	domain = strchr(hostname,'.');
-	if(domain) domain++;
+          len = cfg_hdr->length;
+          if (len > sizeof (hostname))
+            len = sizeof (hostname);
+          strncpy (hostname, cfg_data, len);
+          hostname[len] = '\0';
+          domain = strchr (hostname, '.');
+          if (domain)
+            domain++;
 
-	log (LOG_INFO, "Hostname: %s\n", hostname);
-	if(domain)
-	  log (LOG_INFO, "Domain: %s\n", domain);
-	break;
+          log (LOG_INFO, gettext ("Hostname: %s\n"), hostname);
+          if (domain)
+            log (LOG_INFO, gettext ("Domain: %s\n"), domain);
+          break;
         case TYPE_SUBNET:
-	mask = *((u_int8_t *)cfg_data);
-	net.s_addr = 0;
-	memcpy(&net.s_addr, cfg_data+1, cfg_hdr->length-1);
-	/* Need 2 instructions because inet_ntoa use a static buffer */
-	log (LOG_INFO, "Subnet: %s/", inet_ntoa(net)); 
-	log (LOG_INFO, "%s\n", inet_ntoa(netmask(mask)));
-	break;
+          mask = *((u_int8_t *) cfg_data);
+          net.s_addr = 0;
+          memcpy (&net.s_addr, cfg_data + 1, cfg_hdr->length - 1);
+          /* Need 2 instructions because inet_ntoa use a static buffer */
+          debug (1, "Subnet: %s/", inet_ntoa (net));
+          debug (1, "%s\n", inet_ntoa (netmask (mask)));
+          break;
         }
-      nparsed += sizeof(struct ip_config_header) + cfg_hdr->length;
+      nparsed += sizeof (struct ip_config_header) + cfg_hdr->length;
     }
 
-  set_dns(domain, dns);
+  set_dns (domain, dns);
   launch_ip_up (PARAM_INTERFACE_NAME, address, dns, domain, mtu);
 
   vj_compress_init (&vj_comp, -1);
 
   engine_register (*(iface->fd), 0, ip_tunnel_fn);
 
-  fdo_register ( TOKEN ("yc"), get_ip_aol);
+  fdo_register (TOKEN ("yc"), get_ip_aol);
 }
 
 struct in_addr
-netmask(bits)
+netmask (bits)
      int bits;
 {
-  unsigned long ret=0;
+  unsigned long ret = 0;
   
-  ret = ~( ( 1 << (32 - bits) ) - 1 );
+  ret = ~((1 << (32 - bits)) - 1);
 
-  return (struct in_addr) { htonl(ret) };
+  return (struct in_addr)
+  {
+  htonl (ret)};
 }
 
 void
@@ -168,8 +174,8 @@ init_iface (in, out)
      buffer_t *out;
 {
   ifout = out;
-  create_buffer(in,2*1500);
-  create_buffer(out,2*1500);
+  create_buffer (in, 2 * 1500);
+  create_buffer (out, 2 * 1500);
 }
 
 int
@@ -178,8 +184,8 @@ destroy_iface (in, out)
      buffer_t *out;
 {
   launch_ip_down (PARAM_INTERFACE_NAME);
-  unset_dns();
-  destroy_buffer(in);
-  destroy_buffer(out);
+  unset_dns ();
+  destroy_buffer (in);
+  destroy_buffer (out);
   return 1;
 }

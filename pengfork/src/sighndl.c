@@ -20,9 +20,12 @@
  *                
  */
 
+#include "config.h"
+
 #include <stdlib.h>
 #include <signal.h>
 
+#include "gettext.h"
 #include "sighndl.h"
 #include "log.h"
 #include "engine.h"
@@ -33,7 +36,7 @@ void
 sig_exit (signum)
      int signum;
 {
-  char *string = "%s received, exiting.\n";
+  char *string = gettext ("%s received, exiting.\n");
 
   switch (signum)
     {

@@ -20,10 +20,13 @@
  *                
  */
 
+#include "config.h"
+
 #include <sys/types.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "gettext.h"
 #include "fdo.h"
 #include "log.h"
 #include "buffer.h"
@@ -39,7 +42,9 @@ struct
   size_t filled;
   char *data;
 }
-extra_ip = {0, 0, NULL};
+extra_ip =
+{
+0, 0, NULL};
 
 int need_extra = 0;
 
@@ -53,15 +58,17 @@ get_ip_aol (token, data, data_size)
   struct long_ip *big = (struct long_ip *) data;
   char *ip_data;
 
-  if(need_extra)
+  if (need_extra)
     {
-      debug(1, "IP tunnel - No extra packet received, cancelling the packet");
+      debug (1,
+             "IP tunnel - No extra packet received, cancelling the packet");
       need_extra = 0;
-      if(extra_ip.data) free(extra_ip.data);
+      if (extra_ip.data)
+        free (extra_ip.data);
       extra_ip.data = NULL;
       extra_ip.filled = 0;
       extra_ip.len = 0;
-      fdo_unregister ( TOKEN ("yd") );
+      fdo_unregister (TOKEN ("yd"));
     }
 
   ipnum = small->ipnum;
@@ -70,21 +77,21 @@ get_ip_aol (token, data, data_size)
     /* This packet is a long ip (>=128 bytes) */
     {
       debug (3, "IP tunnel - Received a big packet\n");
-      ip_data=data + sizeof(*big);
-      big->len=ntohs(big->len) & IP_LEN_MASK;
-      if (data_size - sizeof(*big) < big->len)
+      ip_data = data + sizeof (*big);
+      big->len = ntohs (big->len) & IP_LEN_MASK;
+      if (data_size - sizeof (*big) < big->len)
         {
-	/* 
-	 * The packet is incomplete, we should receive yd tokens to
-	 * complete him
-	 */
-	debug (3, "IP tunnel - big packet need extra packet(s)\n");
-	need_extra = 1;
-	extra_ip.len = big->len;
-	extra_ip.data = malloc( big->len );
-	memcpy(extra_ip.data, ip_data, data_size - sizeof(*big));
-	extra_ip.filled = data_size - sizeof(*big);
-	fdo_register ( TOKEN ("yd"), get_ip_extra);
+          /* 
+           * The packet is incomplete, we should receive yd tokens to
+           * complete him
+           */
+          debug (3, "IP tunnel - big packet need extra packet(s)\n");
+          need_extra = 1;
+          extra_ip.len = big->len;
+          extra_ip.data = malloc (big->len);
+          memcpy (extra_ip.data, ip_data, data_size - sizeof (*big));
+          extra_ip.filled = data_size - sizeof (*big);
+          fdo_register (TOKEN ("yd"), get_ip_extra);
         }
       else
         get_uncompressed_ip (ip_data, big->len);
@@ -93,9 +100,9 @@ get_ip_aol (token, data, data_size)
     /* This packet is a small ip (<128 bytes) */
     {
       debug (3, "IP tunnel - Received a small packet\n");
-      ip_data=data + sizeof(*small);
-      if (data_size - sizeof(*small) != small->len)
-        log (LOG_WARNING, "IP tunnel - bad size for a small packet\n");
+      ip_data = data + sizeof (*small);
+      if (data_size - sizeof (*small) != small->len)
+        log (LOG_WARNING, gettext ("IP tunnel - bad size for a small packet\n"));
       else
         get_uncompressed_ip (ip_data, small->len);
     }
@@ -107,23 +114,24 @@ get_ip_extra (token, data, data_size)
      char *data;
      size_t data_size;
 {
-  if(data_size + extra_ip.filled > extra_ip.len)
+  if (data_size + extra_ip.filled > extra_ip.len)
     {
-      log(LOG_ERR, "IP tunnel - Packet overflow detected\n");
-      /* drop overflow data*/
+      log (LOG_ERR, gettext ("IP tunnel - Packet overflow detected\n"));
+      /* drop overflow data */
       data_size = extra_ip.len - extra_ip.filled;
     }
-  memcpy(extra_ip.data + extra_ip.filled, data, data_size);
+  memcpy (extra_ip.data + extra_ip.filled, data, data_size);
   extra_ip.filled += data_size;
-  if( extra_ip.filled == extra_ip.len)
+  if (extra_ip.filled == extra_ip.len)
     {
       get_uncompressed_ip (extra_ip.data, extra_ip.len);
-      if(extra_ip.data) free(extra_ip.data);
+      if (extra_ip.data)
+        free (extra_ip.data);
       extra_ip.data = NULL;
       extra_ip.filled = 0;
       extra_ip.len = 0;
       need_extra = 0;
-      fdo_unregister ( TOKEN ("yd") );
+      fdo_unregister (TOKEN ("yd"));
     }
 }
 
@@ -145,7 +153,7 @@ get_uncompressed_ip (vjip, vjiplen)
       iplen = iphdrlen + (vjiplen - vjhdrlen);
       if (iplen == -1)
         {
-          log (LOG_WARNING, "IP tunnel - Unable to uncompress the packet");
+          log (LOG_WARNING, gettext ("IP tunnel - Unable to uncompress the packet\n"));
           return;
         }
       tmp = malloc (iplen);
@@ -153,16 +161,16 @@ get_uncompressed_ip (vjip, vjiplen)
         {
           /* copy header */
           memcpy (tmp, iphdr, iphdrlen);
-	tmp[0] &= ~TYPE_UNCOMPRESSED_TCP;
-	tmp[0] |= TYPE_IP;
-	/* copy data */
+          tmp[0] &= ~TYPE_UNCOMPRESSED_TCP;
+          tmp[0] |= TYPE_IP;
+          /* copy data */
           memcpy (&tmp[iphdrlen], &vjip[vjhdrlen], vjiplen - vjhdrlen);
           iface->put (ifout, tmp, iplen);
           free (tmp);
         }
       else
         {
-          log (LOG_CRIT, "IP tunnel - Unable to allocate memory\n");
+          log (LOG_CRIT, gettext ("IP tunnel - Unable to allocate memory\n"));
           exit (1);
         }
     }
@@ -182,5 +190,5 @@ get_uncompressed_ip (vjip, vjiplen)
       iface->put (ifout, vjip, vjiplen);
     }
   else
-    log (LOG_WARNING, "IP tunnel - received an unknown IP packet\n");
+    log (LOG_WARNING, gettext ("IP tunnel - received an unknown IP packet\n"));
 }

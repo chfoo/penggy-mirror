@@ -51,6 +51,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
+#include <libintl.h>
 #ifdef WITH_MODEM
 #  include <guile/gh.h>
 #endif
@@ -83,35 +84,45 @@ daemon_mode (void)
 {
   int pid;
   int f;
-  
-  pid=fork();
-  if(pid == 0)
+
+  pid = fork ();
+  if (pid == 0)
     {
-      f=open("/dev/null", O_RDWR);
-      if(f<0)
-        log (LOG_ERR, "Unable to open /dev/null: %s (%d)\n", strerror(errno), errno);
+      f = open ("/dev/null", O_RDWR);
+      if (f < 0)
+        log (LOG_WARNING, gettext ("Unable to open /dev/null: %s (%d)\n"),
+             strerror (errno), errno);
       else
         {
-	if(dup2(f, 0) < 0)
-	  log (LOG_ERR, "Error calling dup2 stdin: %s (%d)\n", strerror(errno), errno);
-	if(dup2(f, 1) < 0)
-	  log (LOG_ERR, "Error calling dup2 stdout: %s (%d)\n", strerror(errno), errno);
-	if(dup2(f, 2) < 0 )
-	  log (LOG_ERR, "Error calling dup2 stderr: %s (%d)\n", strerror(errno), errno);
-	if(close(f) < 0)
-	  log (LOG_ERR, "Error calling close /dev/null: %s (%d)\n", strerror(errno), errno);
+          if (dup2 (f, 0) < 0)
+            log (LOG_WARNING, gettext ("Error calling dup2 stdin: %s (%d)\n"),
+                 strerror (errno), errno);
+          if (dup2 (f, 1) < 0)
+            log (LOG_WARNING,
+                 gettext ("Error calling dup2 stdout: %s (%d)\n"),
+                 strerror (errno), errno);
+          if (dup2 (f, 2) < 0)
+            log (LOG_WARNING,
+                 gettext ("Error calling dup2 stderr: %s (%d)\n"),
+                 strerror (errno), errno);
+          if (close (f) < 0)
+            log (LOG_WARNING,
+                 gettext ("Error calling close /dev/null: %s (%d)\n"),
+                 strerror (errno), errno);
         }
-      if( setsid() <0 )
-        log (LOG_ERR, "Error calling setsid: %s (%d)\n", strerror(errno), errno);
+      if (setsid () < 0)
+        log (LOG_WARNING, gettext ("Error calling setsid: %s (%d)\n"),
+             strerror (errno), errno);
     }
-  else if(pid > 0)
+  else if (pid > 0)
     {
-      exit(0);
+      exit (0);
     }
   else
     {
-      log (LOG_ERR, "Unable to fork: %s (%d)\n", strerror(errno), errno);
-      exit(1);
+      log (LOG_ERR, gettext ("Unable to fork: %s (%d)\n"), strerror (errno),
+           errno);
+      exit (1);
     }
 }
 
@@ -129,43 +140,45 @@ main2 (argc, argv)
 {
   program_name = argv[0];
 
+  init_parameters();
   init_log ();
 
   if (!parse_command_line (argc, argv))
     {
-      log (LOG_ERR, "Error parsing command line, exiting !\n");
+      log (LOG_ERR, gettext ("Error parsing command line, exiting !\n"));
       exit (1);
     }
 
   if (!parse_config ())
     {
-      log (LOG_ERR, "Error parsing configuration files, exiting !\n");
-      exit (1);
-    }
-  
-  if(!check_config ())
-    {
-      log (LOG_ERR, "Bad configuration, exiting !\n");
+      log (LOG_ERR,
+           gettext ("Error parsing configuration files, exiting !\n"));
       exit (1);
     }
 
-  if(PARAM_DAEMON) 
-    daemon_mode();
+  if (!check_config ())
+    {
+      log (LOG_ERR, gettext ("Bad configuration, exiting !\n"));
+      exit (1);
+    }
+
+  if (PARAM_DAEMON)
+    daemon_mode ();
 
   handle_signals ();
 
   if (!resolve_functions ())
     {
-      log (LOG_ERR, "Fatal error, exiting.\n");
+      log (LOG_ERR, gettext ("Fatal error, exiting.\n"));
       exit (1);
     }
-  
+
   if (iface->connect () && haccess->connect ())
     {
       if (!engine_init ())
         {
-	/* Should not happen */
-          log (LOG_ERR, "Unable to init engine, exiting.\n");
+          /* Should not happen */
+          log (LOG_ERR, gettext ("Unable to init engine, exiting.\n"));
           exit (1);
         }
 
@@ -177,14 +190,14 @@ main2 (argc, argv)
     }
   else
     {
-      log (LOG_ERR, "Fatal error, exiting.\n");
+      log (LOG_ERR, gettext ("Fatal error, exiting.\n"));
       exit (1);
     }
 
 #ifndef WITH_MODEM
   return 0;
 #else
-  exit(0);
+  exit (0);
 #endif
 }
 
@@ -194,7 +207,7 @@ main (argc, argv)
      int argc;
      char **argv;
 {
-  gh_enter(argc, argv, main2);
-  return 0; /* never reached */
+  gh_enter (argc, argv, main2);
+  return 0;                     /* never reached */
 }
 #endif

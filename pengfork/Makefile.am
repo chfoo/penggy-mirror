@@ -20,7 +20,11 @@
 #
 
 
-SUBDIRS = config include lib src doc
+SUBDIRS = m4 config include lib src doc po intl
 
 archcheck: 
 	@echo "Arch dir : @ARCH_DIR@"
+
+ACLOCAL_AMFLAGS = -I m4
+
+EXTRA_DIST = config/config.rpath

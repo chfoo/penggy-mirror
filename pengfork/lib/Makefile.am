@@ -4,13 +4,14 @@ noinst_LIBRARIES = lib.a
 
 if NEED_GETOPT
 
-getopt = getopt.h getopt.c getopt1.c
+getopt_sources = getopt.c getopt1.c
 
 else !NEED_GETOPT
 
-EXTRA_DIST = getopt.h getopt.c getopt1.c
+getopt_extra = getopt.c getopt1.c
 
 endif !NEED_GETOPT
 
+EXTRA_DIST = getopt.h gettext.h $(getopt_extra)
 
-lib_a_SOURCES = $(getopt) dummy.c
+lib_a_SOURCES = $(getopt_sources) dummy.c

@@ -39,6 +39,7 @@
 #include <netinet/in_systm.h>
 #include <netinet/ip.h>
 
+#include "gettext.h"
 #include "options.h"
 #include "log.h"
 #include "tun/tun.h"
@@ -70,20 +71,20 @@ tun_open ()
         }
     }
 
-  if(!tun_ready ()) 
+  if (!tun_ready ())
     {
       if (PARAM_INTERFACE_NAME)
-        {	
-	log(LOG_ERR, "Unable to open tun device /dev/%s: %s(%d).\n", 
-	    PARAM_INTERFACE_NAME, strerror(errno), errno);
+        {
+          log (LOG_ERR, gettext ("Unable to open tun device /dev/%s: %s(%d).\n"),
+               PARAM_INTERFACE_NAME, strerror (errno), errno);
         }
       else
         {
-	log(LOG_ERR, "Unable to open a valid tun device.\n");
+          log (LOG_ERR, gettext ("Unable to open a valid tun device.\n"));
         }
       return 0;
     }
-  
+
   return 1;
 }
 

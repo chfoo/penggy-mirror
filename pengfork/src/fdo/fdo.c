@@ -62,8 +62,8 @@ fdo_recv (data, data_size)
     return;
 
   *token = ntohs (*token);
-  data += sizeof(token_t);
-  data_size -= sizeof(token_t);
+  data += sizeof (token_t);
+  data_size -= sizeof (token_t);
   for (i = 0; i < nbmodules; i++)
     {
       if (module[i].token == *token && module[i].handler != NULL)
@@ -76,12 +76,12 @@ fdo_recv (data, data_size)
     module[index].handler (*token, data, data_size);
   else
     debug (4, "FDO - unregistered token received: '%c%c'\n",
-	 (*token >> 8) & 0xff, *token & 0xff);
+           (*token >> 8) & 0xff, *token & 0xff);
 }
 
 
 void
-fdo_send ( token, data, data_size)
+fdo_send (token, data, data_size)
      token_t token;
      char *data;
      size_t data_size;
@@ -90,13 +90,13 @@ fdo_send ( token, data, data_size)
   char *newdata;
   char *fdo;
 
-  fdo = malloc( data_size +sizeof(token) );
-  newdata = fdo + sizeof(token);
+  fdo = malloc (data_size + sizeof (token));
+  newdata = fdo + sizeof (token);
   t = (token_t *) fdo;
   *t = htons (token);
-  memcpy(newdata, data, data_size);
+  memcpy (newdata, data, data_size);
   protocol->send (fdo, data_size + sizeof (token));
-  free(fdo);
+  free (fdo);
 }
 
 void

@@ -20,10 +20,13 @@
  *                
  */
 
+#include "config.h"
+
 #include <sys/types.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <locale.h>
+#include "gettext.h"
 
 #include "log.h"
 #include "options.h"
@@ -31,9 +34,13 @@
 int
 init_log (void)
 {
-  setlocale(LC_ALL, NULL);
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
   if (PARAM_DAEMON)
     openlog ("pengfork", 0, LOG_DAEMON);
+
   return 1;
 }
 
@@ -60,7 +67,7 @@ log (int level, char *format, ...)
 
   else
     {
-      vsnprintf(line, sizeof(line), format, ap);
+      vsnprintf (line, sizeof (line), format, ap);
       syslog (level, line, ap);
     }
   return 1;
@@ -89,15 +96,17 @@ dump_raw (text, data, size)
 {
   int i, j;
   unsigned char *p = data;
-  
-  if(PARAM_DEBUG_LEVEL < DEBUG_MAX) return;
-  debug (DEBUG_MAX, "%s raw dump: \n",text);
+
+  if (PARAM_DEBUG_LEVEL < DEBUG_MAX)
+    return;
+  debug (DEBUG_MAX, gettext ("%s raw dump: \n"), text);
   for (i = 0; i < size; i += 16)
     {
       debug (DEBUG_MAX, "  %04x: ", i);
       for (j = 0; j < 8; j++)
         if (i + j < size)
-          debug (DEBUG_MAX, "%c", (p[i + j] > 32 && p[i + j] < 127) ? p[i + j] : '.');
+          debug (DEBUG_MAX, "%c",
+                 (p[i + j] > 32 && p[i + j] < 127) ? p[i + j] : '.');
         else
           debug (DEBUG_MAX, " ");
 
@@ -105,7 +114,8 @@ dump_raw (text, data, size)
 
       for (j = 8; j < 16; j++)
         if (i + j < size)
-          debug (DEBUG_MAX, "%c", (p[i + j] > 32 && p[i + j] < 127) ? p[i + j] : '.');
+          debug (DEBUG_MAX, "%c",
+                 (p[i + j] > 32 && p[i + j] < 127) ? p[i + j] : '.');
         else
           debug (DEBUG_MAX, " ");
 

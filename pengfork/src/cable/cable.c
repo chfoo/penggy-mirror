@@ -55,19 +55,19 @@ const access_t cable_access = (access_t) {
 int
 cable_connect ()
 {
-  return tcpip_connect();
+  return tcpip_connect ();
 }
 
 int
 cable_close ()
 {
-  return tcpip_close();
+  return tcpip_close ();
 }
 
 int
 cable_connected ()
 {
-  return tcpip_connected();
+  return tcpip_connected ();
 }
 
 #endif

@@ -29,6 +29,7 @@
 #include <stdlib.h>
 
 #include "utils.h"
+#include "gettext.h"
 #include "options.h"
 #include "getpass.h"
 #include "log.h"
@@ -36,7 +37,7 @@
 #include "checkopt.h"
 
 int
-check_multiple(option, value, choices)
+check_multiple (option, value, choices)
      char *option;
      char *value;
      char **choices;
@@ -44,151 +45,159 @@ check_multiple(option, value, choices)
   char *tmp;
   int i;
 
-  if(value != NULL)
+  if (value != NULL)
     {
-      tmp=malloc( strlen(value) + 1 );
-      strcpy(tmp, value);
+      tmp = malloc (strlen (value) + 1);
+      strcpy (tmp, value);
       /* 
        * strcasecmp() is not POSIX compliant 
        * so I must lowerize the string for strcmp
        */
-      lowerize(tmp);
-      for(i=0; choices[i]!=NULL; i++)
-        if(!strcmp(tmp, choices[i]) )
-	{
-	  free(tmp);
-	  return 1;
-	}
-      free(tmp);
+      lowerize (tmp);
+      for (i = 0; choices[i] != NULL; i++)
+        if (!strcmp (tmp, choices[i]))
+          {
+            free (tmp);
+            return 1;
+          }
+      free (tmp);
     }
-  
-  log(LOG_ERR, "%s must be ",option);
-  for(i=0; choices[i]!=NULL; i++)
+
+  log (LOG_ERR, gettext("%s must be "), option);
+  for (i = 0; choices[i] != NULL; i++)
     {
-      log(LOG_ERR, "%s", choices[i]);
-      if(choices[i+1]!=NULL)
+      log (LOG_ERR, "%s", choices[i]);
+      if (choices[i + 1] != NULL)
         {
-	if(choices[i+2]!=NULL)
-	  log(LOG_ERR, ", ");
-	else
-	  log(LOG_ERR, " or ");
+          if (choices[i + 2] != NULL)
+            log (LOG_ERR, ", ");
+          else
+            log (LOG_ERR, gettext(" or "));
         }
     }
-  log(LOG_ERR,".\n");
+  log (LOG_ERR, ".\n");
   return 0;
 }
 
 int
-check_access_method(option, method)
+check_access_method (option, method)
      char *option;
      char *method;
 {
-  char *choices[] = {"modem", "cable", "dsl", "tcpip", NULL};
+  char *choices[] = { "modem", "cable", "dsl", "tcpip", NULL };
 
-  return check_multiple(option, method, choices);
+  return check_multiple (option, method, choices);
 }
 
 int
-check_protocol(option, protocol)
+check_protocol (option, protocol)
      char *option;
      char *protocol;
 {
-  char *choices[] = {"p3", "l2tp", NULL};
+  char *choices[] = { "p3", "l2tp", NULL };
 
-  return check_multiple(option, protocol, choices);
+  return check_multiple (option, protocol, choices);
 }
 
 int
-check_iface_type(option, type)
+check_iface_type (option, type)
      char *option;
      char *type;
 {
-  char *choices[] = {"tun", NULL};
+  char *choices[] = { "tun", NULL };
 
-  return check_multiple(option, type, choices);
+  return check_multiple (option, type, choices);
 }
 
 int
-check_screen_name(option, sn)
+check_screen_name (option, sn)
      char *option;
      char *sn;
 {
   char *pass;
-  
-  if(!sn)
+
+  if (!sn)
     {
-      log(LOG_ERR, "Screen name not defined, please edit your configuration file (%s).\n",
-	PARAM_CONFIG_FILE);
-      return 0;      
+      log (LOG_ERR,
+           gettext ("Screen name not defined, please edit your configuration file (%s).\n"),
+           PARAM_CONFIG_FILE);
+      return 0;
     }
-  if(get_password(sn,&pass)) 
+  if (get_password (sn, &pass))
     {
-      free(pass);
+      free (pass);
       return 1;
     }
-  else {
-    log(LOG_ERR, "Screen name '%s' not found in %s.\n", sn, PARAM_SECRET_FILE);
-    return 0;
-  }
+  else
+    {
+      log (LOG_ERR, gettext ("Screen name '%s' not found in %s.\n"), sn,
+           PARAM_SECRET_FILE);
+      return 0;
+    }
 }
 
 int
-check_debug_level(option, level)
+check_debug_level (option, level)
      char *option;
      int level;
 {
-  if(level>=0 && level<=DEBUG_MAX) return 1;
+  if (level >= 0 && level <= DEBUG_MAX)
+    return 1;
 
-  log(LOG_ERR, "%s must be between 0 and 10.\n", option);
+  log (LOG_ERR, "%s must be between 0 and 10.\n", option);
   return 0;
 }
 
 int
-check_natural(option, num)
+check_natural (option, num)
      char *option;
      int num;
 {
-  if(num>=0) return 1;
+  if (num >= 0)
+    return 1;
 
-  log(LOG_ERR, "%s must be >=0.\n", option);
+  log (LOG_ERR, "%s must be >=0.\n", option);
   return 0;
 }
 
 #ifdef WITH_MODEM
 int
-check_line_speed(option, speed)
+check_line_speed (option, speed)
      char *option;
      int speed;
 {
-  if(modem_valid_speed(speed)) return 1;
+  if (modem_valid_speed (speed))
+    return 1;
 
-  log(LOG_ERR, "%s has an invalid line speed specicification.\n", option);
+  log (LOG_ERR, "%s has an invalid line speed specicification.\n", option);
   return 0;
 }
 #endif /* WITH_MODEM */
 
 #ifdef WITH_TCPIP
 int
-check_port(option, port)
+check_port (option, port)
      char *option;
      int port;
 {
-  if(port>0 && port<65536) return 1;
+  if (port > 0 && port < 65536)
+    return 1;
 
-  log(LOG_ERR, "%s must be a valid port (between 1 and 65535).\n", option);
+  log (LOG_ERR, "%s must be a valid port (between 1 and 65535).\n", option);
   return 0;
 }
 
 int
-check_ip(option, ip)
+check_ip (option, ip)
      char *option;
      char *ip;
 {
   struct in_addr inp;
 
-  if(inet_aton(ip, &inp)) return 1;
+  if (inet_aton (ip, &inp))
+    return 1;
 
-  log(LOG_ERR, "%s must be a valid IP address.\n", option);
+  log (LOG_ERR, "%s must be a valid IP address.\n", option);
   return 0;
 }
 #endif /* WITH_TCPIP */

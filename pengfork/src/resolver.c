@@ -24,6 +24,7 @@
 
 #include <string.h>
 
+#include "gettext.h"
 #include "options.h"
 #include "utils.h"
 #include "log.h"
@@ -54,7 +55,7 @@ resolve_access ()
 #ifdef WITH_MODEM
       haccess = &modem_access;
 #else
-      log (LOG_ERR, "Sorry modem support is not compiled in\n");
+      log (LOG_ERR, gettext ("Sorry modem support is not compiled in\n"));
       return 0;
 #endif
     }
@@ -64,7 +65,7 @@ resolve_access ()
 #ifdef WITH_TCPIP
       haccess = &tcpip_access;
 #else
-      log (LOG_ERR, "Sorry TCP/IP support is not compiled in\n");
+      log (LOG_ERR, gettext ("Sorry TCP/IP support is not compiled in\n"));
       return 0;
 #endif
     }
@@ -74,7 +75,7 @@ resolve_access ()
 #ifdef WITH_CABLE
       haccess = &cable_access;
 #else
-      log (LOG_ERR, "Sorry cable support is not compiled in\n");
+      log (LOG_ERR, gettext ("Sorry cable support is not compiled in\n"));
       return 0;
 #endif
     }
@@ -92,7 +93,7 @@ resolve_iface ()
 #ifdef WITH_TUN
       iface = &tun_iface;
 #else
-      log (LOG_ERR, "Sorry tun support is not compiled in\n");
+      log (LOG_ERR, gettext ("Sorry tun support is not compiled in\n"));
       return 0;
 #endif
     }
@@ -110,7 +111,7 @@ resolve_protocol ()
 #ifdef WITH_P3
       protocol = &p3_protocol;
 #else
-      log (LOG_ERR, "Sorry P3 support is not compiled in\n");
+      log (LOG_ERR, gettext ("Sorry P3 support is not compiled in\n"));
       return 0;
 #endif
     }

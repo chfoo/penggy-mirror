@@ -20,6 +20,8 @@
  *                
  */
 
+#include "config.h"
+
 #include <sys/time.h>
 #include <sys/types.h>
 #include <netinet/in.h>
@@ -28,6 +30,7 @@
 #include <stdio.h>
 #include <time.h>
 
+#include "gettext.h"
 #include "log.h"
 #include "access.h"
 #include "if.h"
@@ -87,7 +90,7 @@ engine_loop ()
   struct timeval tv;
   int fds;
 
-  while (!exiting || nbclients>0)
+  while (!exiting || nbclients > 0)
     {
       FD_ZERO (&rfdset);
       FD_ZERO (&wfdset);
@@ -102,7 +105,7 @@ engine_loop ()
            * well... in fact this should not happen
            * or very rarely
            */
-          log (LOG_WARNING, "engine - No data to wait\n");
+          log (LOG_WARNING, gettext ("engine - No data to wait\n"));
           sleep (ENGINE_TIMEOUT);
           fds = 0;              /* simulate a timeout */
         }
@@ -127,7 +130,7 @@ engine_loop ()
           debug (9, "engine - Timed out\n");
           engine_timeout ();
         }
-      if(exiting && nbclients>0) 
+      if (exiting && nbclients > 0)
         engine_end_clients ();
     }
   debug (1, "engine - ended\n");
@@ -206,7 +209,7 @@ engine_unregister (fd)
     {
       /* Shift all next clients */
       memmove (&client[index], &client[index + 1],
-	     (nbclients - index) * sizeof (client[0]));
+               (nbclients - index) * sizeof (client[0]));
     }
 
   nbclients--;
@@ -236,10 +239,10 @@ engine_set_readers (fdset, maxfd)
         }
       else
         {
-	/* Normally the input buffer mustn't be full */
-	log (LOG_ERR, "engine - An input buffer is full\n");
-	buffer_free(&client[i].in,client[i].in.used);
-	debug( 1, "\tBuffer flushed\n",i);
+          /* Normally the input buffer mustn't be full */
+          log (LOG_ERR, gettext ("engine - An input buffer is full\n"));
+          buffer_free (&client[i].in, client[i].in.used);
+          debug (1, "\tBuffer flushed\n", i);
         }
     }
 }
@@ -254,13 +257,13 @@ engine_set_writers (fdset, maxfd)
   for (i = 0; i < nbclients; i++)
     {
       if (client[i].fn.want_write == NULL ||
-	client[i].fn.want_write (&client[i].out))
+          client[i].fn.want_write (&client[i].out))
         {
-	if (client[i].out.used > 0)
-	  {
-	    FD_SET (client[i].fd, fdset);
-	    *maxfd = MAX (*maxfd, client[i].fd);
-	  }
+          if (client[i].out.used > 0)
+            {
+              FD_SET (client[i].fd, fdset);
+              *maxfd = MAX (*maxfd, client[i].fd);
+            }
         }
     }
 }
@@ -275,8 +278,8 @@ engine_read (fdset)
     {
       if (FD_ISSET (client[i].fd, fdset))
         {
-	client[i].lastread = time(NULL);
-	client[i].last_timeout = 0;
+          client[i].lastread = time (NULL);
+          client[i].last_timeout = 0;
           /* Fill buffer with available data */
           buffer_recv (&client[i].in, client[i].fd);
         }
@@ -309,25 +312,25 @@ void
 engine_timeout ()
 {
   int i, nb;
-  time_t t = time(NULL);
+  time_t t = time (NULL);
 
   for (i = 0; i < nbclients; i++)
     {
       /* Client want timeout notification ? */
       if (client[i].fn.timeoutfn != NULL && client[i].timeout > 0)
         {
-	/* Is the client in timeout ? */
-	if(t - client[i].lastread >= client[i].timeout)
-	  {
-	    nb=(t - client[i].lastread)/client[i].timeout;
-	    /* How many timeouts had happened ? */
-	    if(nb > client[i].last_timeout)
-	      {
-	        client[i].last_timeout = nb;
-	        client[i].fn.timeoutfn (&client[i].in, &client[i].out, 
-				  t - client[i].lastread);
-	      }
-	  }
+          /* Is the client in timeout ? */
+          if (t - client[i].lastread >= client[i].timeout)
+            {
+              nb = (t - client[i].lastread) / client[i].timeout;
+              /* How many timeouts had happened ? */
+              if (nb > client[i].last_timeout)
+                {
+                  client[i].last_timeout = nb;
+                  client[i].fn.timeoutfn (&client[i].in, &client[i].out,
+                                          t - client[i].lastread);
+                }
+            }
         }
     }
 }
@@ -341,10 +344,10 @@ engine_end_clients ()
     {
       if (client[i].fn.end != NULL)
         {
-	if(client[i].fn.end(&client[i].in, &client[i].out))
-	  engine_unregister(client[i--].fd);
+          if (client[i].fn.end (&client[i].in, &client[i].out))
+            engine_unregister (client[i--].fd);
         }
       else
-        engine_unregister(client[i--].fd);
+        engine_unregister (client[i--].fd);
     }
 }

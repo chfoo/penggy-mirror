@@ -1,0 +1,29 @@
+# List of source files containing translatable strings.
+# Copyright (C) 2002 Jean-Charles Salzeber <jc@varspool.net>
+
+# Common library files
+lib/getopt.c
+
+# Package source files
+src/p3/in.c
+src/p3/p3.c
+src/fdo/login.c
+src/tun/linux/tun.c
+src/tun/freebsd/tun.c
+src/tun/openbsd/tun.c
+src/resolver.c
+src/modem/devlock.c
+src/modem/script.c
+src/modem/modem.c
+src/tcpip/tcpip.c
+src/iptunnel/aol2cli.c
+src/iptunnel/dns.c
+src/iptunnel/init.c
+src/engine.c
+src/getpass.c
+src/main.c
+src/misc.c
+src/options.c
+src/checkopt.c
+src/sighndl.c
+

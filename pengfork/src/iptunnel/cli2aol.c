@@ -44,51 +44,49 @@ get_ip_client (in)
   struct long_ip *big;
   int i;
 
-  while (iface->get (in, &ip, &ip_size) && protocol->ready())
+  while (iface->get (in, &ip, &ip_size) && protocol->ready ())
     {
       if (ip_size > 0x7f)
         {
-	debug (3, "IP TUNNEL - Sending a big packet\n");
-	data_size = (ip_size>MAX_OUTPUT)?MAX_OUTPUT:ip_size;
-	data = malloc( data_size + sizeof(*big) );
-	big = (struct long_ip *) data;
-	if(ip_recv)
-	  {
-	    ipnum++;
-	    ip_recv=0;
-	  }
+          debug (3, "IP TUNNEL - Sending a big packet\n");
+          data_size = (ip_size > MAX_OUTPUT) ? MAX_OUTPUT : ip_size;
+          data = malloc (data_size + sizeof (*big));
+          big = (struct long_ip *) data;
+          if (ip_recv)
+            {
+              ipnum++;
+              ip_recv = 0;
+            }
           big->ipnum = ipnum;
-          big->len = htons(ip_size | ~IP_LEN_MASK);
-	ip_data = data + sizeof(*big);
+          big->len = htons (ip_size | ~IP_LEN_MASK);
+          ip_data = data + sizeof (*big);
           memcpy (ip_data, ip, data_size);
-          fdo_send( TOKEN ("yc"), data, data_size + sizeof(*big));
-	free(data);
-	/* Send extra packets if needed */
-	for(i=1;ip_size-i*MAX_OUTPUT<MAX_OUTPUT;i++)
-	  {
-	    debug (3, "IP TUNNEL - Sending an extra packet\n");
-	    data_size = (ip_size-i*MAX_OUTPUT>MAX_OUTPUT)?
-	      MAX_OUTPUT:ip_size-i*MAX_OUTPUT;
-	    data = malloc( data_size );
-	    memcpy (data, ip+i*MAX_OUTPUT, data_size);
-	    fdo_send( TOKEN ("yd"), data, data_size);
-	    free(data);
-	  }
+          fdo_send (TOKEN ("yc"), data, data_size + sizeof (*big));
+          free (data);
+          /* Send extra packets if needed */
+          for (i = 1; ip_size - i * MAX_OUTPUT < MAX_OUTPUT; i++)
+            {
+              debug (3, "IP TUNNEL - Sending an extra packet\n");
+              data_size = (ip_size - i * MAX_OUTPUT > MAX_OUTPUT) ?
+                MAX_OUTPUT : ip_size - i * MAX_OUTPUT;
+              data = malloc (data_size);
+              memcpy (data, ip + i * MAX_OUTPUT, data_size);
+              fdo_send (TOKEN ("yd"), data, data_size);
+              free (data);
+            }
         }
       else
         {
           debug (3, "IP TUNNEL - Sending a small packet\n");
-	data = malloc( ip_size + sizeof(*small) );
-	small = (struct short_ip *) data;
+          data = malloc (ip_size + sizeof (*small));
+          small = (struct short_ip *) data;
           small->ipnum = ipnum;
-	small->long_bit = 0;
+          small->long_bit = 0;
           small->len = ip_size;
-	ip_data = data + sizeof(*small);
+          ip_data = data + sizeof (*small);
           memcpy (ip_data, ip, ip_size);
-          fdo_send ( TOKEN ("yc"), data, ip_size + sizeof(*small));
-	free(data);
+          fdo_send (TOKEN ("yc"), data, ip_size + sizeof (*small));
+          free (data);
         }
     }
 }
-
-

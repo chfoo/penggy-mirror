@@ -36,11 +36,11 @@ p3_check_header (header)
 {
 
   /* Check sequence number */
-  if ( header->type == TYPE_DATA &&
-       (header->seq < PACKET_MIN_SEQ || header->seq > PACKET_MAX_SEQ))
+  if (header->type == TYPE_DATA &&
+      (header->seq < PACKET_MIN_SEQ || header->seq > PACKET_MAX_SEQ))
     {
       debug (2, "P3 - Bad header received\n");
-      debug (3,"\tbad sequence: %02x\n", header->seq);
+      debug (3, "\tbad sequence: %02x\n", header->seq);
       return 0;
     }
 
@@ -48,7 +48,7 @@ p3_check_header (header)
   if (header->ack < PACKET_MIN_SEQ || header->ack > PACKET_MAX_SEQ)
     {
       debug (2, "P3 - Bad header received\n");
-      debug (3,"\tbad ack: %02x\n", header->ack);
+      debug (3, "\tbad ack: %02x\n", header->ack);
       return 0;
     }
 
@@ -57,7 +57,7 @@ p3_check_header (header)
       ntohs (header->size) < P3_SIZE_OFFSET)
     {
       debug (2, "P3 - Bad header received\n");
-      debug (3,"\tbad size: %d\n", ntohs (header->size));
+      debug (3, "\tbad size: %d\n", ntohs (header->size));
       return 0;
     }
 
@@ -65,7 +65,7 @@ p3_check_header (header)
   if (header->type < TYPE_DATA || header->type > TYPE_PING)
     {
       debug (2, "P3 - Bad header received\n");
-      debug (3,"\tbad type: %02x\n", header->type);
+      debug (3, "\tbad type: %02x\n", header->type);
       return 0;
     }
 
@@ -86,17 +86,17 @@ p3_check_packet (header, data, data_size)
   /* Check packet is 0x0d terminated */
   if (p[data_size] != P3_STOP)
     {
-      debug (1,"P3 - Bad packet received:\n");
-      debug (1,"\tnot 0x0d terminated\n");
+      debug (1, "P3 - Bad packet received:\n");
+      debug (1, "\tnot 0x0d terminated\n");
       p3_send_nack (header);
       return 0;
     }
 
   /* Check client bit */
-  if(header->client)
+  if (header->client)
     {
-      debug (1,"P3 - Bad packet received:\n");
-      debug (1,"\tthis is a client packet!\n");
+      debug (1, "P3 - Bad packet received:\n");
+      debug (1, "\tthis is a client packet!\n");
       p3_send_nack (header);
       return 0;
     }
@@ -105,8 +105,8 @@ p3_check_packet (header, data, data_size)
   crc = htons (p3_crc16 ((char *) &header->size, data_size + 5));
   if (crc != header->checksum)
     {
-      debug (1,"P3 - Bad packet received:\n");
-      debug (1,"\tbad CRC checksum\n");
+      debug (1, "P3 - Bad packet received:\n");
+      debug (1, "\tbad CRC checksum\n");
       p3_send_nack (header);
       return 0;
     }

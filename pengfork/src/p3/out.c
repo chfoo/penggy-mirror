@@ -40,7 +40,7 @@ p3_send (data, data_size)
      char *data;
      size_t data_size;
 {
-  p3_put_packet ( TYPE_DATA, data, data_size);
+  p3_put_packet (TYPE_DATA, data, data_size);
 }
 
 void
@@ -56,10 +56,10 @@ p3_put_packet (type, data, data_size)
   if (!data)
     data_size = 0;
 
-  buf = malloc ( data_size + P3_DATA_OFFSET + 1);
+  buf = malloc (data_size + P3_DATA_OFFSET + 1);
   header = (struct p3hdr *) buf;
   pdata = &buf[P3_DATA_OFFSET];
-  
+
   /* Fill header */
   header->magic = P3_MAGIC;
   header->size = htons (data_size + P3_SIZE_OFFSET);
@@ -67,27 +67,28 @@ p3_put_packet (type, data, data_size)
     cli.lastseq = p3_next_seq (cli.lastseq);
   header->seq = cli.lastseq;
   if (type == TYPE_NACK)
-    header->ack = p3_add_seq (srv.lastseq, (PACKET_MAX_SEQ - PACKET_MIN_SEQ) - 1);
-  else 
-    header->ack =srv.lastseq;
+    header->ack =
+      p3_add_seq (srv.lastseq, (PACKET_MAX_SEQ - PACKET_MIN_SEQ) - 1);
+  else
+    header->ack = srv.lastseq;
   header->client = 1;
   header->type = type;
   /* Copy data */
   memcpy (pdata, data, data_size);
-  
+
   /* Calculate the checksum */
-  header->checksum =
-    htons (p3_crc16 ((char *) &header->size, data_size + 5));
+  header->checksum = htons (p3_crc16 ((char *) &header->size, data_size + 5));
   pdata[data_size] = P3_STOP;
 
   if (type == TYPE_DATA || type == TYPE_INIT)
     {
-      dump_raw ("P3 - output", (char *) header, data_size + P3_DATA_OFFSET + 1);
+      dump_raw ("P3 - output", (char *) header,
+                data_size + P3_DATA_OFFSET + 1);
       /* Put the packet into the not yet acknowledged packet window */
-      win_add(&wunack, buf, data_size + P3_DATA_OFFSET + 1);
+      win_add (&wunack, buf, data_size + P3_DATA_OFFSET + 1);
     }
-  
+
   /* Put the packet into the send window */
-  win_add(&wsend, buf, data_size + P3_DATA_OFFSET + 1);
-  free(buf);
+  win_add (&wsend, buf, data_size + P3_DATA_OFFSET + 1);
+  free (buf);
 }

@@ -29,10 +29,26 @@ EXTRA_DIST =	pengfork.cfg	\
 
 install-data-local: 
 	$(mkinstalldirs) @CONFDIR@ 
-	$(INSTALL_DATA) -b --suffix=.old pengfork.cfg @CONFDIR@/pengfork.cfg
-	$(INSTALL) -b --suffix=.old -m 600 aol-secrets @CONFDIR@/aol-secrets
-	$(INSTALL) -b --suffix=.old -m 755 ip-up @CONFDIR@/ip-up
-	$(INSTALL) -b --suffix=.old -m 755 ip-down @CONFDIR@/ip-down
+	if [ -f @CONFDIR@/pengfork.cfg ] ; then \
+		$(INSTALL_DATA) -b pengfork.cfg @CONFDIR@/pengfork.cfg.new ;\
+	else \
+		$(INSTALL_DATA) -b pengfork.cfg @CONFDIR@/pengfork.cfg ;\
+	fi
+	if [ -f @CONFDIR@/aol-secrets ] ; then \
+		$(INSTALL) -b -m 600 aol-secrets @CONFDIR@/aol-secrets.new ;\
+	else \
+		$(INSTALL) -b -m 600 aol-secrets @CONFDIR@/aol-secrets ;\
+	fi
+	if [ -f @CONFDIR@/ip-up ] ; then \
+		$(INSTALL) -b -m 755 ip-up @CONFDIR@/ip-up.new ;\
+	else \
+		$(INSTALL) -b -m 755 ip-up @CONFDIR@/ip-up ;\
+	fi
+	if [ -f @CONFDIR@/ip-up ] ; then \
+		$(INSTALL) -b -m 755 ip-down @CONFDIR@/ip-down.new ;\
+	else \
+		$(INSTALL) -b -m 755 ip-down @CONFDIR@/ip-down ;\
+	fi
 	$(mkinstalldirs) @CHATDIR@ 
 	$(INSTALL_DATA) aolnet.scm @CHATDIR@/aolnet.scm
 	$(INSTALL_DATA) global.scm @CHATDIR@/global.scm

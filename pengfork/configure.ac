@@ -41,6 +41,7 @@ AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_AWK
 AC_PROG_RANLIB
+AC_PROG_YACC
 
 # CFLAGS
 if test "$GCC" = yes; then
@@ -78,10 +79,8 @@ AC_CHECK_LIB(inks, main)
 
 #Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS(fcntl.h sys/ioctl.h sys/time.h syslog.h unistd.h)
-
-# linux tuntap driver
-AC_CHECK_HEADERS([arpa/inet.h fcntl.h libintl.h locale.h netdb.h netinet/in.h stdlib.h string.h strings.h sys/ioctl.h sys/param.h sys/socket.h sys/time.h syslog.h termios.h unistd.h linux/if_tun.h])
+AC_HEADER_STDBOOL
+AC_CHECK_HEADERS([argz.h arpa/inet.h fcntl.h langinfo.h libintl.h limits.h locale.h malloc.h netdb.h netinet/in.h stddef.h stdio_ext.h stdlib.h string.h strings.h sys/ioctl.h sys/param.h sys/socket.h sys/time.h syslog.h termios.h unistd.h linux/if_tun.h])
 
 #Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -90,15 +89,25 @@ AC_TYPE_SIZE_T
 AC_HEADER_TIME
 
 #Checks for library functions.
+AC_C_INLINE
+AC_C_VOLATILE
+AC_FUNC_ALLOCA
+AC_FUNC_MMAP
+AC_FUNC_REALLOC
 AC_FUNC_FORK
 AC_PROG_GCC_TRADITIONAL
 AC_FUNC_MALLOC
 AC_TYPE_SIGNAL
 AC_FUNC_STAT
 AC_FUNC_VPRINTF
-AC_CHECK_FUNCS([bzero gethostbyname getopt_long inet_ntoa memchr memmove memset putenv select setlocale socket strchr strdup strerror strrchr strstr strtol])
+AC_FUNC_SELECT_ARGTYPES
+AC_CHECK_FUNCS([__argz_count __argz_next __argz_stringify bzero dup2 getcwd gethostbyname getopt_long inet_ntoa memchr memmove mempcpy memset munmap nl_langinfo putenv select setlocale socket stpcpy strcasecmp strchr strcspn strdup strerror strrchr strstr strtol strtoul])
 
 AM_CONDITIONAL(NEED_GETOPT, test "$ac_cv_func_getopt_long" != yes)
+
+AM_GNU_GETTEXT([no-libtool])
+AM_GNU_GETTEXT_VERSION
+AM_ICONV
 
 AC_ARG_WITH(confdir,
   AC_HELP_STRING([--with-confdir=PATH], [set configuration path (/etc/pengfork)]),
@@ -353,7 +362,10 @@ fi
 AM_CONFIG_HEADER(config.h)
 
 # Output Files
-AC_CONFIG_FILES([Makefile 
+AC_CONFIG_FILES([	Makefile
+		  intl/Makefile
+		  po/Makefile.in 
+		  m4/Makefile 
 		  doc/Makefile
 		    doc/config/Makefile
 		  lib/Makefile
