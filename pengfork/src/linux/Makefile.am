@@ -20,6 +20,6 @@
 #
 
 INCLUDES = -I$(top_srcdir)/include
-noinst_LIBRARIES = libsystem.a
 
+noinst_LIBRARIES = libsystem.a
 libsystem_a_SOURCES = tun.c

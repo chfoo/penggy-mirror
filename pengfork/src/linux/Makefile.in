@@ -101,8 +101,8 @@ am__quote = @am__quote@
 install_sh = @install_sh@
 
 INCLUDES = -I$(top_srcdir)/include
-noinst_LIBRARIES = libsystem.a
 
+noinst_LIBRARIES = libsystem.a
 libsystem_a_SOURCES = tun.c
 subdir = src/linux
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
