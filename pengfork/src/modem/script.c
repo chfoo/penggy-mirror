@@ -129,6 +129,12 @@ do_else (others, result)
      SCM others;
      SCM *result;
 {
+  SCM  elem;
+  if (gh_length(others) > 0)
+    {
+      elem = gh_car(gh_reverse(others));  
+    }
+  return 0;
 } 
 
 /*
@@ -141,7 +147,7 @@ chat_try (timeout, first, others)
      SCM first;
      SCM others;
 {
-  SCM result, elem;
+  SCM result;
   int t;
   char buffer[1024];
   char *p;
@@ -168,11 +174,7 @@ chat_try (timeout, first, others)
       else
         {
 	/* treat the else case */
-	if (gh_length(others) > 0)
-	  {
-	    elem = gh_car(gh_reverse(others));
-	    
-	  }
+	do_else(others, result);
           end = 1;
         }
     }

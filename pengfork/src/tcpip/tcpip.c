@@ -56,8 +56,8 @@ const access_t tcpip_access = (access_t) {
 int
 tcpip_connect ()
 {
-  int port = PARAM_CABLE_AOL_PORT;
-  char *hostname = PARAM_CABLE_AOL_HOST;
+  int port = PARAM_TCPIP_AOL_PORT;
+  char *hostname = PARAM_TCPIP_AOL_HOST;
 
   struct sockaddr_in aol_addr;
   struct in_addr address;

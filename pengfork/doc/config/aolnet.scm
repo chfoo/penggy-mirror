@@ -29,7 +29,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; general end function
 (define (AOLConnect) 
-  (display "AOLConnect\n")
   (chat-try 120
 	  '("Connected"      (chat-success))
 	  '("Open"           (chat-success))
@@ -48,7 +47,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Login into an ANS server type
 (define (ANSLogin)
-  (display "AnsLogin\n")
   (chat-try 20
 	  '("login"      (begin
 		         (chat-send "aol\r") 
@@ -61,7 +59,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Login into a BBN server type
 (define (BBNLogin2)
-  (display "BBNLogin2\n")
   (chat-send "aolnet\r")
   (chat-try 20
 	  '("Password"   (begin
@@ -71,7 +68,6 @@
 	  '(else         (chat-failure))))
 
 (define (BBNLogin)
-  (display "BBNLogin\n")
   (chat-try 20
 	  '("login"      (BBNTalkToNetwork))
 	  '("NO CARRIER" (chat-failure))
@@ -82,7 +78,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Login into a Sprint server type
 (define (SprintLogin2)
-  (display "SprintLogin2\n")
   (chat-send "aol\r")
   (chat-try 20
 	  '("Password"   (begin
@@ -92,7 +87,6 @@
 	  '(else         (chat-failure))))
 
 (define (SprintLogin)
-  (display "SprintLogin\n")
   (chat-try 20
 	  '("Username"   (SprintLogin2))
 	  '("login"      (SprintLogin2))

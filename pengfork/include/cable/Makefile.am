@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2002 Jean-Charles Salzeber <jc@varspool.net>
+# Copyright (c) 2002  Nicolas Burrus <nes@lrde.epita.fr>
 #
 # This file is part of pengfork program.
 #
@@ -19,21 +19,5 @@
 # 02111-1307, USA.
 #
 
-EXTRA_DIST =	pengfork.cfg	\
-		aol-secrets	\
-		ip-up		\
-		ip-down		\
-		aolnet.scm	\
-		global.scm	\
-		global2.scm
 
-install-data-local: 
-	$(mkinstalldirs) @CONFDIR@ 
-	$(INSTALL_DATA) -b --suffix=.old pengfork.cfg @CONFDIR@/pengfork.cfg
-	$(INSTALL) -b --suffix=.old -m 600 aol-secrets @CONFDIR@/aol-secrets
-	$(INSTALL) -b --suffix=.old -m 755 ip-up @CONFDIR@/ip-up
-	$(INSTALL) -b --suffix=.old -m 755 ip-down @CONFDIR@/ip-down
-	$(mkinstalldirs) @CHATDIR@ 
-	$(INSTALL_DATA) aolnet.scm @CHATDIR@/aolnet.scm
-	$(INSTALL_DATA) global.scm @CHATDIR@/global.scm
-	$(INSTALL_DATA) global2.scm @CHATDIR@/global2.scm
+EXTRA_DIST = 	cable.h

@@ -20,22 +20,56 @@
 #
 
 
-EXTRA_DIST = 	options.h		\
-		misc.h			\
-		p30init.h		\
-		prot30.h		\
-		access.h		\
-		devlock.h		\
-		modem.h			\
-		p30login.h		\
-		tun.h			\
-		buffer.h		\
-		if.h			\
-		p30data.h		\
-		p30tcpip.h		\
-		utils.h			\
-		log.h			\
-		common.h                \
-		cable.h			\
-		vjcompress.h		\
-		bsdtcp.h
+EXTRA_DIST = 	access.h	\
+		checkopt.h	\
+		engine.h	\
+		if.h		\
+		misc.h		\
+		protocol.h	\
+		sighndl.h	\
+		window.h	\
+		buffer.h	\
+		common.h	\
+		fdo.h		\
+		log.h		\
+		options.h	\
+		resolver.h	\
+		utils.h
+
+if BUILD_MODEM
+  MODEM_SUBDIRS = modem
+endif BUILD_MODEM
+
+if BUILD_CABLE
+  CABLE_SUBDIRS = cable
+endif BUILD_CABLE
+
+if BUILD_DSL
+  DSL_SUBDIRS = 
+endif BUILD_DSL
+
+if BUILD_TCPIP
+  TCPIP_SUBDIRS = tcpip
+endif BUILD_TCPIP
+
+if BUILD_TUN
+  TUN_SUBDIRS = tun
+endif BUILD_TUN
+
+if BUILD_P3
+  P3_SUBDIRS = p3
+endif BUILD_P3
+
+if BUILD_L2TP
+  L2TP_SUBDIRS = l2tp
+endif BUILD_L2TP
+
+SUBDIRS = 	fdo			\
+		iptunnel		\
+		$(MODEM_SUBDIRS)	\
+		$(CABLE_SUBDIRS)	\
+		$(DSL_SUBDIRS)		\
+		$(TCPIP_SUBDIRS)	\
+		$(TUN_SUBDIRS)		\
+		$(P3_SUBDIRS)		\
+		$(L2TP_SUBDIRS)

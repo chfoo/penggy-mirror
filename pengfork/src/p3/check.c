@@ -35,7 +35,6 @@ p3_check_header (header)
      struct p3hdr *header;
 {
 
-#if 0
   /* Check sequence number */
   if ( header->type == TYPE_DATA &&
        (header->seq < PACKET_MIN_SEQ || header->seq > PACKET_MAX_SEQ))
@@ -52,7 +51,6 @@ p3_check_header (header)
       debug (3,"\tbad ack: %02x\n", header->ack);
       return 0;
     }
-#endif
 
   /* Check size */
   if (ntohs (header->size) > P3_MAX_SIZE - P3_SIZE_OFFSET ||

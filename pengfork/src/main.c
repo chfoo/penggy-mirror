@@ -45,6 +45,9 @@
 #include <stdlib.h>
 #include <getopt.h>
 #include <signal.h>
+#ifdef WITH_MODEM
+#  include <guile/gh.h>
+#endif
 
 #include "common.h"
 #include "log.h"

@@ -92,9 +92,9 @@ ip_tunnel_config (token, data, data_size)
   struct in_addr dns;
   struct in_addr net;
   int mask;
-  int mtu;
+  int mtu=1500;
   char hostname[255];
-  char *domain;
+  char *domain = NULL;
   int len;
   int nparsed = 0;
 

@@ -123,21 +123,18 @@ enum
   __modem_chat_script,
   __modem_dial_retry,
   __modem_retry_delay,
-  __modem_abort_busy,
-  __modem_abort_dialtone,
 #endif /* WITH_MODEM */
 
 #ifdef WITH_CABLE
-  __cable_aol_host,
-  __cable_aol_port,
-  __cable_interface,
-  __cable_connect_ip,
+  __tcpip_aol_host,
+  __tcpip_aol_port,
 #endif /* WITH_CABLE */
 
   __last_param                  /* not a parameter */
 };
 
 /* Macros for options access facility */
+#define PARAM_CONFIG_FILE             PARAM_STRING(__config_file)
 #define PARAM_ACCESS_METHOD           PARAM_STRING(__access_method)
 #define PARAM_PROTOCOL                PARAM_STRING(__protocol)
 #define PARAM_INTERFACE_TYPE          PARAM_STRING(__interface_type)
@@ -165,19 +162,12 @@ enum
 #  define PARAM_MODEM_CHAT_SCRIPT       PARAM_STRING(__modem_chat_script)
 #  define PARAM_MODEM_DIAL_RETRY        PARAM_INTEGER(__modem_dial_retry)
 #  define PARAM_MODEM_RETRY_DELAY       PARAM_INTEGER(__modem_retry_delay)
-#  define PARAM_MODEM_ABORT_BUSY        PARAM_BOOLEAN(__modem_abort_busy)
-#  define PARAM_MODEM_ABORT_DIALTONE    PARAM_BOOLEAN(__modem_abort_dialtone)
 #endif /* WITH_MODEM */
 
-#ifdef WITH_CABLE
-#  define PARAM_CABLE_AOL_HOST          PARAM_STRING(__cable_aol_host)
-#  define PARAM_CABLE_AOL_PORT          PARAM_INTEGER(__cable_aol_port)
-#  define PARAM_CABLE_INTERFACE         PARAM_STRING(__cable_interface)
-#  define PARAM_CABLE_CONNECT_IP        PARAM_STRING(__cable_connect_ip)
-#endif /* WITH_CABLE */
-
-#define DEFAULT_CONFIG                "/etc/pengfork/pengfork.cfg"
-#define HOME_CONFIG                   "pengfork.cfg"
+#ifdef WITH_TCPIP
+#  define PARAM_TCPIP_AOL_HOST          PARAM_STRING(__tcpip_aol_host)
+#  define PARAM_TCPIP_AOL_PORT          PARAM_INTEGER(__tcpip_aol_port)
+#endif /* WITH_TCPIP */
 
 extern param_t param[PARAM_MAX];
 

@@ -116,12 +116,14 @@ p3_extract_packet (buffer, header, data, data_size)
         return 0;
 
       p = buffer_start (buffer);
-      if (*p != P3_MAGIC)
+      if (*p != P3_MAGIC) {
         /* 
          * There is some unknow data in the buffer they could have sense
          * but it is probably transmission error
          */
         p3_sync_buffer (buffer);
+        p = buffer_start (buffer);
+      }
 
       if (buffer->used < P3_DATA_OFFSET)
         return 0;

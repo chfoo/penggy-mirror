@@ -39,7 +39,7 @@ struct
   size_t filled;
   char *data;
 }
-extra_ip;
+extra_ip = {0, 0, NULL};
 
 int need_extra = 0;
 
@@ -57,7 +57,10 @@ get_ip_aol (token, data, data_size)
     {
       debug(1, "IP tunnel - No extra packet received, cancelling the packet");
       need_extra = 0;
-      free(extra_ip.data);
+      if(extra_ip.data) free(extra_ip.data);
+      extra_ip.data = NULL;
+      extra_ip.filled = 0;
+      extra_ip.len = 0;
       fdo_unregister ( TOKEN ("yd") );
     }
 
@@ -115,7 +118,8 @@ get_ip_extra (token, data, data_size)
   if( extra_ip.filled == extra_ip.len)
     {
       get_uncompressed_ip (extra_ip.data, extra_ip.len);
-      free(extra_ip.data);
+      if(extra_ip.data) free(extra_ip.data);
+      extra_ip.data = NULL;
       extra_ip.filled = 0;
       extra_ip.len = 0;
       need_extra = 0;

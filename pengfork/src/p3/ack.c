@@ -79,7 +79,6 @@ void
 p3_send_nack(header)
      struct p3hdr *header;
 {
-#if 0
   if(header->type == TYPE_PING) 
     {
       p3_put_packet(TYPE_ACK,NULL,0);
@@ -91,5 +90,4 @@ p3_send_nack(header)
       p3_put_packet(TYPE_NACK,NULL,0);
       nack_sent=1;      
     }
-#endif
 }

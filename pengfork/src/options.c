@@ -58,7 +58,7 @@ const char *section_name[__sect_end] = {
 
 param_t param[PARAM_MAX] = {
   /* GENERAL CONFIGURATION */
-  STR('f', "config-file", NULL, DEFAULT_CONFIG, 
+  STR('f', "config-file", NULL, CONFDIR "/pengfork.cfg", 
       "read configuration file PATH.", "PATH", 
       __general, NULL),
 
@@ -162,11 +162,11 @@ param_t param[PARAM_MAX] = {
       "set the PID file to create", "PATH", 
       __general, NULL),
 
-  STR(0, "ip-up", "ip-up_script", "/etc/pengfork/ip-up", 
+  STR(0, "ip-up", "ip-up_script", CONFDIR "/ip-up", 
       "set the script automaticly called when IP is up.", "PATH", 
       __netiface, NULL),
 
-  STR(0, "ip-down", "ip-down_script", "/etc/pengfork/ip-down", 
+  STR(0, "ip-down", "ip-down_script", CONFDIR "/ip-down", 
       "set the script automaticly called when IP is down.", "PATH", 
       __netiface, NULL),
 
@@ -253,7 +253,7 @@ param_t param[PARAM_MAX] = {
       "set the serial line speed.", "SPEED", 
       __modem, check_line_speed),
 
-  STR('c', "chat-script", "chat_script", "/etc/pengfork/chat/aolnet.scm", 
+  STR('c', "chat-script", "chat_script", CHATDIR "/aolnet.scm", 
       "set the chat script used for logging into AOL.", "SCRIPT", 
       __modem, NULL),
 
@@ -264,18 +264,10 @@ param_t param[PARAM_MAX] = {
   INT(0, NULL, "retry_delay", 0, 
       NULL, NULL, 
       __modem, check_natural),
-
-  BOOL(0, NULL, "abort_busy", true, 
-       NULL, NULL, 
-       __modem, NULL),
-
-  BOOL(0, NULL, "abort_dialtone", true, 
-       NULL, NULL, 
-       __modem, NULL),
 #endif /* WITH_MODEM */
 
 
-#ifdef WITH_CABLE
+#ifdef WITH_TCPIP
   /* CABLE SPECIFIC */
   STR(0, NULL, "aol_host", "AmericaOnline.aol.com", 
       NULL, NULL, 
@@ -284,15 +276,7 @@ param_t param[PARAM_MAX] = {
   INT(0, NULL, "aol_port", 5190, 
       NULL, NULL, 
       __cable, check_port),
-
-  STR(0, NULL, "cable_iface", "eth0", 
-      NULL, NULL, 
-      __cable, NULL),
-
-  STR(0, NULL, "connect_ip", "0.0.0.0", 
-      NULL, NULL,
-      __cable, check_ip)
-#endif /* WITH_CABLE */
+#endif /* WITH_TCPIP */
 };
 
 
@@ -653,16 +637,8 @@ check_config (void)
 int
 parse_config ()
 {
-  char *home;
-  char homeconfig[250];
-
-  home = getenv ("HOME");
-  snprintf (homeconfig, 249, "%s/.%s", home, HOME_CONFIG);
-
-  if (!parse_config_file (DEFAULT_CONFIG))
-    debug (5,"No global config found.\n");
-  if (!parse_config_file (homeconfig))
-    debug (5,"No personnal config found.\n");
+  if (!parse_config_file (PARAM_CONFIG_FILE))
+    debug (5,"Unable to open configuration file %s.\n",PARAM_CONFIG_FILE);
 
   debug (5,"\n");
   return 1;
