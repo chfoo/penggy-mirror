@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# This is a sample script for ip-up
+# this script is called when pengfork setup the inteface
+#
+# defined variables:
+# IFNAME : the interface name where tunneling is done
+# ADDRESS : local ip address
+# NETMASK : netmask for the address
+# NETWORK : network for the address
+# BROADCAST : broadcast address
+# GATEWAY : the default gateway
+
+IFCONFIG=/sbin/ifconfig
+ROUTE=/sbin/route
+
+if [ -x $IFCONFIG ]; then
+	$IFCONFIG $IFNAME $ADDRESS pointopoint $GATEWAY netmask $NETMASK broadcast $BROADCAST mtu 1500 up
+else
+	echo "$0: $IFCONFIG not found"
+fi
+
+if [ -x $ROUTE ]; then
+        $ROUTE add default gw $GATEWAY
+else
+        echo "$0: $ROUTE not found"
+fi
+		
