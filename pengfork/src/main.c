@@ -69,10 +69,17 @@ handle_signals ()
     signal (SIGHUP, sig_exit);
 }
 
+#ifndef WITH_MODEM
 int
 main (argc, argv)
      int argc;
      char **argv;
+#else
+void
+main2 (argc, argv)
+     int argc;
+     char **argv;
+#endif
 {
   program_name = argv[0];
 
@@ -108,7 +115,8 @@ main (argc, argv)
     {
       if (!engine_init ())
         {
-          log (LOG_ERR, "Fatal error, exiting.\n");
+	/* Should not happen */
+          log (LOG_ERR, "Unable to init engine, exiting.\n");
           exit (1);
         }
 
@@ -124,5 +132,20 @@ main (argc, argv)
       exit (1);
     }
 
+#ifndef WITH_MODEM
   return 0;
+#else
+  exit(0);
+#endif
 }
+
+#ifdef WITH_MODEM
+int
+main (argc, argv)
+     int argc;
+     char **argv;
+{
+  gh_enter(argc, argv, main2);
+  return 0; /* never reached */
+}
+#endif

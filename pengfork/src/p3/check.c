@@ -36,7 +36,8 @@ p3_check_header (header)
 {
 
   /* Check sequence number */
-  if (header->seq < PACKET_MIN_SEQ || header->seq > PACKET_MAX_SEQ)
+  if ( header->type == TYPE_DATA &&
+       (header->seq < PACKET_MIN_SEQ || header->seq > PACKET_MAX_SEQ))
     {
       debug (2, "P3 - Bad header received\n");
       debug (3,"\tbad sequence: %02x\n", header->seq);

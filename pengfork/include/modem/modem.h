@@ -30,7 +30,6 @@ int modem_init (void);
 int modem_send_init_string (char *string);
 int modem_dial (void);
 int modem_dial_to (char *phone);
-int modem_log_into_aol (void);
 int modem_open (char *filename, int baud, int rtscts);
 void setup_modem (int rtscts);
 void modem_setattr (int rtscts);
@@ -46,7 +45,8 @@ int modem_send_command (char *command, int timeout, char *response,
 int modem_response_value (char *response);
 int modem_wait_for (char *prompt, int timeout);
 int modem_readline (char *response, int timeout, size_t size);
-int modem_sync_write (int fd, char *string, size_t size);
+int modem_sync_write (char *string, size_t size);
 int modem_valid_speed(int speed);
+int modem_readc (char *c);
 
 #endif /* __MODEM_MODEM_H__ */

@@ -75,7 +75,22 @@ tun_open ()
       ioctl (tun_fd, TUNSLMODE, &i);
       ioctl (tun_fd, TUNSIFHEAD, &i);
     }
-  return tun_ready ();
+
+  if(!tun_ready ()) 
+    {
+      if (PARAM_INTERFACE_NAME)
+        {	
+	log(LOG_ERR, "Unable to open tun device /dev/%s: %s(%d).\n", 
+	    PARAM_INTERFACE_NAME, strerror(errno), errno);
+        }
+      else
+        {
+	log(LOG_ERR, "Unable to open a valid tun device.\n");
+        }
+      return 0;
+    }
+  
+  return 1;
 }
 
 int

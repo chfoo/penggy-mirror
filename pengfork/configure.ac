@@ -38,6 +38,9 @@ AC_CANONICAL_HOST
 CFLAGS=$CFLAGS
 AC_LANG_C
 AC_PROG_CC
+AC_PROG_INSTALL
+AC_PROG_AWK
+AC_PROG_RANLIB
 
 # CFLAGS
 if test $GCC = yes; then
@@ -78,7 +81,7 @@ AC_HEADER_STDC
 AC_CHECK_HEADERS(fcntl.h sys/ioctl.h sys/time.h syslog.h unistd.h)
 
 # linux tuntap driver
-AC_CHECK_HEADERS([linux/if_tun.h])
+AC_CHECK_HEADERS([arpa/inet.h fcntl.h libintl.h locale.h netdb.h netinet/in.h stdlib.h string.h strings.h sys/ioctl.h sys/param.h sys/socket.h sys/time.h syslog.h termios.h unistd.h linux/if_tun.h])
 
 #Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -87,9 +90,14 @@ AC_TYPE_SIZE_T
 AC_HEADER_TIME
 
 #Checks for library functions.
+AC_FUNC_FORK
 AC_PROG_GCC_TRADITIONAL
+AC_FUNC_MALLOC
+AC_TYPE_SIGNAL
+AC_FUNC_STAT
 AC_FUNC_VPRINTF
-AC_CHECK_FUNCS(putenv select socket strdup strstr strtol)
+AC_CHECK_FUNCS([bzero gethostbyname inet_ntoa memchr memmove memset putenv select setlocale socket strchr strdup strerror strrchr strstr strtol])
+
 
 # Disable debugging
 AC_ARG_ENABLE(debug,
@@ -112,12 +120,19 @@ AC_ARG_ENABLE(werror,
 )
 
 # Modem driver
+# Note: Guile is required for chat script
 AC_ARG_ENABLE(modem,
   [  --disable-modem	Disable modem driver],
   if test $enableval != "no"; then
      AC_DEFINE([WITH_MODEM],,[ Enable/disable modem driver ])
+     GUILE_FLAGS
+     CFLAGS="$CFLAGS $GUILE_CFLAGS"
+     LDFLAGS="$LDFLAGS $GUILE_LDFLAGS"
   fi,
   AC_DEFINE([WITH_MODEM])
+  GUILE_FLAGS
+  CFLAGS="$CFLAGS $GUILE_CFLAGS"
+  LDFLAGS="$LDFLAGS $GUILE_LDFLAGS"
 )
 
 # Cable driver
@@ -178,6 +193,8 @@ AM_CONFIG_HEADER(config.h)
 # Output Files
 AC_CONFIG_FILES([Makefile 
 		  config/Makefile 
+		  doc/Makefile
+		  doc/config/Makefile
 		  lib/Makefile
 		  src/Makefile 
 		    src/p3/Makefile

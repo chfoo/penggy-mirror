@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2002  Nicolas Burrus <nes@lrde.epita.fr>
+# Copyright (c) 2002 Jean-Charles Salzeber <jc@varspool.net>
 #
 # This file is part of pengfork program.
 #
@@ -19,9 +19,11 @@
 # 02111-1307, USA.
 #
 
-INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib
+cfgdir = $(sysconfdir)/pengfork
+cfg_data = pengfork.cfg
 
-noinst_LIBRARIES = libmodem.a
-libmodem_a_SOURCES = 	modem.c		\
-			devlock.c	\
-			script.c
+ipscriptdir = $(sysconfdir)/pengfork
+ipscript_DATA = ip-up ip-down
+
+chatdir = $(sysconfdir)/pengfork/chat
+chat_DATA = aolnet.scm global.scm global2.scm

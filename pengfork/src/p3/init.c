@@ -20,6 +20,8 @@
  *                
  */
 
+#include <unistd.h>
+
 #include "buffer.h"
 #include "utils.h"
 

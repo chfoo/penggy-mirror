@@ -1,0 +1,108 @@
+<html>
+<head>
+<title>PengFork Documentation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body text="#000000">
+<p>Written Nov 25th - 10:06pm - Pascal Roget (<a href="mailto:pascal@epascal.net">pascal@epascal.net</a>)</p>
+<hr>
+<h1 align="center"><b>PengFork Documentation</b></h1>
+<p><i>Note : this is based on the original Pengaol Handbook written by St&eacute;phane 
+  Guth (birdy57).</i></p>
+<h2> 1. Introduction</h2>
+<p><b>DISCLAIMER: <br>
+  AOL is a registered trademark of America Online, Inc. <br>
+  Pengfork is not endorsed by or affiliated with AOL trademark.</b></p>
+<p>PengFork is a free Linux client for AOL. It allows Linux users to connect to 
+  the Internet using AOL, through an IP tunneling system.<br>
+  Right now, dialup and TCP/IP connections are supported (modem, DSL).<br>
+  It is based on an reverse-engineering of the P3 protocol, therefore nothing 
+  was disassembled. It is a continuation of the Peng project, which was abandonned. 
+  Everything was totally rewritten from scratch, and the P3 implementation is 
+  more rigorous than before. The author (Chupa) does not take responsibilty for 
+  any damage this program could cause to your computer. In other words, if you 
+  computer suddenly blows up, starts dancing to the song that's on the radio, 
+  or calls you names, you are responsible.</p>
+<p>It is provided as a command-line tool. No GUI is currently available.<br>
+  It uses the Universal TUN/TAP device driver, written by Maxim Krasnyansky.</p>
+<p>&nbsp;</p>
+<h2>2. Installation</h2>
+<p>PengFork can be obtained at <a href="https://savannah.nongnu.org/projects/pengfork/">https://savannah.nongnu.org/projects/pengfork/</a><br>
+  Make sure to download the last stable version. If you feel more adventurous, 
+  you can try the CVS version, but this is not guaranteed to work.</p>
+<p>Installation is quite simple. Get the package, which is provided as a .tar.gz 
+  archive, and put it somewhere on your system. Now you need to uncompress and 
+  untar the files contained within the archive. That can be done very simply (we'll 
+  assume your archive is called pengfork.tar.gz)</p>
+<pre>% tar -xvzf pengfork.tar.gz</pre>
+<p>The files should have been decompressed to a directory called pengfork. You 
+  now need to go to that directory and compile the program :</p>
+<pre>% cd pengfork
+   % ./configure &amp;&amp; make &amp;&amp; make install</pre>
+<p>If you need any particular option, such as cross-compiling, you can get some 
+  help by typing :</p>
+<pre>% ./configure --help</pre>
+<p>Now pengfork should be compiled and installed. But we're not all set yet. We 
+  still need to configure it.</p>
+<h2><br>
+  3. Configuration</h2>
+<p>In order to do this we need to create a directory called pengfork in /etc, 
+  which will contain PengFork's configuration files, and copy them there.</p>
+<pre>% mkdir /etc/pengfork
+   % cp doc/pengfork-sample.cfg /etc/pengfork/pengfork.cfg
+   % cp doc/ip-up.sample /etc/pengfork/ip-up
+   % cp doc/ip-down.sample /etc/pengfork/ip-down</pre>
+<p>Last step is configuration. Quite many options are available here.</p>
+<p>If you are connecting with a modem and a phone line, follow these instructions 
+  :</p>
+<pre>% joe /etc/pengfork/pengfork.cfg</pre>
+<p>You need to modify your configuration file and make it look like as follows 
+  :</p>
+<pre>....
+use_screen_name = 1
+screen_name1 = [YourScreenName]
+password1 = [YourPassword]
+# screen_name2 =
+# password2 =
+....
+# auto_reconnect = yes
+# daemon = yes
+....
+modem_device = /dev/modem Note : If this doesn't work, you might want to try    /dev/ttyS0
+phone = [AOL's dialup number]
+phone1 = [An alternative one]
+....</pre>
+<p>Depending on your modem, you might need to change the initialization strings.<br>
+  You can configure PengFork to automatically redial if you get disconnected, 
+  by activating the corresponding option. You can also set it to run as a deamon.</p>
+<p>You can now exit by pressing ctrl+K, thus saving the changes you have made 
+  to the file.</p>
+<h2><br>
+  4. Usage</h2>
+<p>The last step after compiling, installing and configuring is running the software, 
+  and praying for it to work :</p>
+<pre>% pengfork</pre>
+<p>If you get a Fatal Error, you need to check whether the configuration files 
+  are in the good place, and the Tun driver is loaded. If it's not, you can load 
+  it yourself. To do so, type the following command :</p>
+<pre>% modprobe tun</pre>
+<p>If you don't get any output, that's fine. If you get something like &quot;Tun/Tap 
+  Driver version .....&quot;, then fine too. If you get an error message, then 
+  that probably means your kernel wasn't compiled with support for Tun.</p>
+<p>Note :<br>
+  If your computer is used as a router and you were using Peng before, you might 
+  need to change the routing tables.</p>
+<pre>% joe /etc/sysconfig/iptables</pre>
+<p>Change ppp0 to tun0 wherever needed.</p>
+<p>Have fun!</p>
+<p>* If you encounter any problems, or need additional help, you can go to <a href="http://www.peng.apinc.org/forum">http://www.peng.apinc.org/forum</a></p>
+<h2>5. About</h2>
+<p>This little how-to guide was written by <a href="mailto:pascal@epascal.net">Pascal 
+  Roget</a>. If you have any suggestion or want to report a typo or just chat, 
+  feel free to send me an email. I am very likely to respond, and I like getting 
+  mail :)</p>
+<p>The program itself was coded by <a href="mailto:chupa@apinc.org">Chupa.</a> 
+  Greetings to him and to his genius :)</p>
+</body>
+</html>

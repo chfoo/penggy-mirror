@@ -58,6 +58,10 @@ const char *section_name[__sect_end] = {
 
 param_t param[PARAM_MAX] = {
   /* GENERAL CONFIGURATION */
+  STR('f', "config-file", NULL, DEFAULT_CONFIG, 
+      "read configuration file PATH.", "PATH", 
+      __general, NULL),
+
   STR(0, "access-method", "access_method", "modem", 
       "set the media used to access AOL.", "METHOD", 
       __general, check_access_method),
@@ -156,7 +160,7 @@ param_t param[PARAM_MAX] = {
 
   STR(0, "pid-file", "pid_file", "/var/run/pengfork.pid", 
       "set the PID file to create", "PATH", 
-      __netiface, NULL),
+      __general, NULL),
 
   STR(0, "ip-up", "ip-up_script", "/etc/pengfork/ip-up", 
       "set the script automaticly called when IP is up.", "PATH", 
@@ -249,29 +253,9 @@ param_t param[PARAM_MAX] = {
       "set the serial line speed.", "SPEED", 
       __modem, check_line_speed),
 
-  STR(0, NULL, "login_prompt", "ogin:", 
-      NULL, NULL, 
+  STR('c', "chat-script", "chat_script", "/etc/pengfork/chat/aolnet.scm", 
+      "set the chat script used for logging into AOL.", "SCRIPT", 
       __modem, NULL),
-
-  STR(0, NULL, "server_pass_prompt", "assword:", 
-      NULL, NULL, 
-      __modem, NULL),
-
-  STR('l', "server-login", "server_login", "aol", 
-      "set the server login.", "LOGIN",
-      __auth, NULL),
-
-  STR('w', "server-pass", "server_pass", "aol", 
-      "set the server pass.", "PASS", 
-      __auth, NULL),
-
-  STR(0, NULL, "server_connected", "onnected", 
-      NULL, NULL, 
-      __auth, NULL),
-
-  STR(0, NULL, "server_bad_passwd", "assword", 
-      NULL, NULL, 
-      __auth, NULL),
 
   INT(0, NULL, "dial_retry", 3, 
       NULL, NULL, 
@@ -651,7 +635,8 @@ check_config (void)
 	    debug(5, "  %s = (undefined)\n", param[i].name);
 	}
         else
-	debug(8, "  %s = (default)\n", param[i].name);
+	debug(8, "  %s = %s (default)\n", param[i].name, 
+	      (PARAM_STRING(i)==NULL)?"(undefined)":PARAM_STRING(i));
         if(param[i].checkfn.check_string != NULL)
 	good &= param[i].checkfn.check_string (param[i].name, 
 				         PARAM_STRING(i));
@@ -731,6 +716,7 @@ try_param (param, filename, lineno, name, value)
      char *name;
      char *value;
 {
+
   if (param->name && !strcmp (name, param->name))
     {
       if (param->defined) return 1;

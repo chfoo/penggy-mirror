@@ -35,6 +35,7 @@
 #include "log.h"
 #include "modem/modem.h"
 #include "modem/devlock.h"
+#include "modem/script.h"
 #include "options.h"
 #include "utils.h"
 #include "access.h"
@@ -153,21 +154,37 @@ struct termios t, old_t;
 int
 modem_connect ()
 {
-
+  
   if (!modem_open
       (PARAM_MODEM_DEVICE, PARAM_MODEM_LINE_SPEED, PARAM_MODEM_RTSCTS))
     return 0;
   log (LOG_NOTICE, "Using %s device...\n", PARAM_MODEM_DEVICE);
   debug (1, "Device %s opened\n", PARAM_MODEM_DEVICE);
 
-  if (!modem_init () || !modem_dial ())
+  if (!modem_init ())
     return 0;
 
-  if (!modem_log_into_aol ())
+  if (!modem_dial ())
     return 0;
 
-  device_unlock (PARAM_MODEM_DEVICE);
-  return 1;
+  log (LOG_NOTICE, "Executing chat script (%s)...\n", PARAM_MODEM_CHAT_SCRIPT);
+  switch(chat_connect())
+    { 
+    case 1:
+      log (LOG_NOTICE, "Chat success, connected...\n");
+      tcflush (fd, TCIOFLUSH);
+      return 1;
+    case 0:
+      log (LOG_WARNING, "Chat failure, you're not connected...\n");
+      tcflush (fd, TCIOFLUSH);
+      break;
+    default:
+      log (LOG_ERR, "Chat return a non boolean value.\n");
+      log (LOG_ERR, "Please verify your chat script.\n");      
+      tcflush (fd, TCIOFLUSH);
+      return 0;
+    }
+  return 0;
 }
 
 int
@@ -316,33 +333,6 @@ modem_dial_to (phone)
 }
 
 int
-modem_log_into_aol ()
-{
-  log(LOG_NOTICE, "Connecting to provider...\n");
-  debug (1, "Waiting for login prompt\n");
-  if (!modem_wait_for (PARAM_MODEM_LOGIN_PROMPT, 60 * 1000))
-    return 0;
-
-  debug (1, "Sending server's login\n");
-  modem_sync_write (fd, PARAM_MODEM_SERVER_LOGIN,
-                    strlen (PARAM_MODEM_SERVER_LOGIN));
-  modem_sync_write (fd, "\r", 1);
-  tcdrain (fd);
-  debug (1, "Waiting for password prompt\n");
-  if (!modem_wait_for (PARAM_MODEM_PASS_PROMPT, 60 * 1000))
-    return 0;
-  debug (1, "Sending server's password\n");
-  modem_sync_write (fd, PARAM_MODEM_SERVER_PASS,
-                    strlen (PARAM_MODEM_SERVER_PASS));
-  modem_sync_write (fd, "\r", 1);
-  tcdrain (fd);
-  if (!modem_wait_for ("onnected", 60 * 1000))
-    return 0;
-  log (LOG_NOTICE, "Logged into server\n");
-  return 1;
-}
-
-int
 modem_open (filename, _baud, rtscts)
      char *filename;
      int _baud;
@@ -398,7 +388,7 @@ setup_modem (rtscts)
     {
       for (i = 0; i < 5; i++)
         {
-          modem_sync_write (fd, "\r", 1);
+          modem_sync_write ( "\r", 1);
           usleep (10 * 1000);
         }
       tcdrain (fd);
@@ -475,9 +465,9 @@ modem_hangup ()
      we should only do this if we have received any response from the modem
    */
   tcdrain (fd);
-  modem_sync_write (fd, "\r", 1);
+  modem_sync_write ( "\r", 1);
   for (i = 0; !modem_data_ready (200) && i < 10; i++)
-    modem_sync_write (fd, "\r", 1);
+    modem_sync_write ( "\r", 1);
   tcdrain (fd);
 
   /* drop DTR for a while, if still online */
@@ -495,9 +485,9 @@ modem_hangup ()
   if (modem_carrier ())
     {
       /* need to do +++ manual-disconnect stuff */
-      modem_sync_write (fd, "+++", 3);  /* command line mode */
+      modem_sync_write ( "+++", 3);  /* command line mode */
       usleep (1500 * 1000);
-      modem_sync_write (fd, "ATH\r", 4);        /* hang-up command */
+      modem_sync_write ( "ATH\r", 4);        /* hang-up command */
 
       for (i = 0; modem_carrier () && i < 5; i++)
         usleep (100 * 1000);
@@ -604,8 +594,8 @@ modem_send_command (command, timeout, response, size)
 {
   debug (2, "Sending: %s\n", command);
 
-  modem_sync_write (fd, command, strlen (command));
-  modem_sync_write (fd, "\r", 1);
+  modem_sync_write ( command, strlen (command));
+  modem_sync_write ( "\r", 1);
 
   /* Get the response from the modem with/without echo enabled */
   if (!modem_readline (response, timeout, size))
@@ -706,8 +696,7 @@ modem_readline (response, timeout, size)
 
 /* Simulate a synchronous write */
 int
-modem_sync_write (fd, string, size)
-     int fd;
+modem_sync_write ( string, size)
      char *string;
      size_t size;
 {
@@ -750,4 +739,11 @@ modem_valid_speed(speed)
   for(i=0; i<sizeof(speeds); i++)
     if(speed==speeds[i].baud) return 1;
   return 0;
+}
+
+int
+modem_readc ( c )
+     char *c;
+{
+  return read(fd , c, 1);
 }

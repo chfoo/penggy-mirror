@@ -34,6 +34,7 @@
 #include <sys/socket.h>
 #include <net/if.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #include <netdb.h>
 #include <fcntl.h>
 
@@ -57,24 +58,27 @@ tcpip_connect ()
 {
   int port = PARAM_CABLE_AOL_PORT;
   char *hostname = PARAM_CABLE_AOL_HOST;
-  int address;
 
-  struct sockaddr_in intcable;
+  struct sockaddr_in aol_addr;
+  struct in_addr address;
   struct hostent *hp;
 
-  log(LOG_NOTICE, "Resolving %s...\n", hostname);
-  if ((hp = gethostbyname (hostname)) == 0)
+  if( !inet_aton(hostname, &address) )
     {
-      log (LOG_ERR, "Unable to resolve %s: %s (%d)\n",hostname,
-	 strerror(errno), errno);
-      return 0;
+      log(LOG_NOTICE, "Resolving %s...\n", hostname);
+      if ((hp = gethostbyname (hostname)) == 0)
+        {
+	log (LOG_ERR, "Unable to resolve %s: %s (%d)\n", hostname,
+	     hstrerror(h_errno), h_errno);
+	return 0;
+        }
+      address.s_addr= *((unsigned long *) hp->h_addr_list[0]);
     }
-  memset ((char *) &intcable, 0, sizeof (struct sockaddr_in));
-  intcable.sin_family = AF_INET;
-  intcable.sin_port = htons (port);
-  intcable.sin_addr.s_addr = *((unsigned long *) hp->h_addr);
-  address = ntohl(intcable.sin_addr.s_addr);
-  /*  strcpy(PARAM_CABLE_CONNECT_IP,inet_ntoa(adress)); */
+    
+  memset ((char *) &aol_addr, 0, sizeof (struct sockaddr_in));
+  aol_addr.sin_family = AF_INET;
+  aol_addr.sin_port = htons (port);
+  aol_addr.sin_addr = address;
 
   if ((tcpipfd = socket (PF_INET, SOCK_STREAM, 0)) < 0)
     {
@@ -83,11 +87,10 @@ tcpip_connect ()
       return 0;
     }
 
-  log(LOG_NOTICE,"Connecting to %d.%d.%d.%d:%d ...\n", 
-      address>>24 & 0xff, address>>16 & 0xff, address>>8 & 0xff, address & 0xff, 
+  log(LOG_NOTICE,"Connecting to %s:%d ...\n", inet_ntoa(aol_addr.sin_addr), 
       port);
       
-  if (connect (tcpipfd, (struct sockaddr *) &intcable,
+  if (connect (tcpipfd, (struct sockaddr *) &aol_addr,
                sizeof (struct sockaddr_in)) == -1)
     {
       log (LOG_ERR, "Error while connecting to AOL: %s (%d)\n",strerror(errno), 

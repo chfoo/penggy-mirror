@@ -49,6 +49,7 @@ create_buffer (buffer, size)
   buffer->start = 0;
   buffer->used = 0;
   buffer->data = malloc (size);
+  memset(buffer->data,0,buffer->size);
 }
 
 void

@@ -53,7 +53,7 @@ tun_open_old ()
   if (PARAM_INTERFACE_NAME)
     {
       sprintf (tunname, "/dev/%s", PARAM_INTERFACE_NAME);
-      return open (tunname, O_RDWR);
+      tun_fd = open (tunname, O_RDWR);
     }
 
   for (i = 0; i < 255; i++)
@@ -63,9 +63,27 @@ tun_open_old ()
       if ((tun_fd = open (tunname, O_RDWR)) > 0)
         {
           sprintf (PARAM_INTERFACE_NAME, "tun%d", i);
+	break;
         }
     }
-  return tun_ready ();
+
+  if(!tun_ready ()) 
+    {
+      if (PARAM_INTERFACE_NAME)
+        {	
+	log(LOG_ERR, "Unable to open tun device /dev/%s (using 2.2 kernel "
+	    "method): %s(%d).\n", PARAM_INTERFACE_NAME, strerror(errno), 
+	    errno);
+        }
+      else
+        {
+	log(LOG_ERR, "Unable to open a valid tun device (using 2.2 kernel "
+	    "method).\n");
+        }
+      return 0;
+    }
+
+  return 1;
 }
 
 #ifdef HAVE_LINUX_IF_TUN_H      /* New driver support */
@@ -84,9 +102,12 @@ tun_open ()
   struct ifreq ifr;
 
   if ((tun_fd = open ("/dev/net/tun", O_RDWR | O_NONBLOCK)) < 0)
-    return 0;
-  /* We will try old tuntap when new support is ok */
-  /* return tun_open_old (dev); */
+    {
+      log(LOG_WARNING, "Unable to open /dev/net/tun: %s(%d).\n", 
+	strerror(errno), errno);
+      log(LOG_WARNING, "Assuming 2.2 kernel method.\n");
+      return tun_open_old ();
+    }
 
   memset (&ifr, 0, sizeof (ifr));
   ifr.ifr_flags = IFF_TUN | IFF_NO_PI;
@@ -100,12 +121,16 @@ tun_open ()
           /* Try old ioctl */
           if (ioctl (tun_fd, OTUNSETIFF, (void *) &ifr) < 0)
             {
+	    log(LOG_ERR, "Unable to open a valid tun device (using pre "
+	        "2.4.6 kernel method): %s(%d).\n", strerror(errno), errno);
               tun_close ();
               return 0;
             }
         }
       else
         {
+	log(LOG_ERR, "Unable to open a valid tun device (using post "
+	    "2.4.6 kernel method): %s(%d).\n", strerror(errno), errno);
           tun_close ();
           return 0;
         }

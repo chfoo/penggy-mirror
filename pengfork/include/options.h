@@ -24,6 +24,8 @@
 #ifndef __OPTIONS_H__
 #define __OPTIONS_H__
 
+#include "config.h"
+
 typedef enum
 { false = 0, true }
 bool_t;
@@ -68,6 +70,7 @@ param_t;
 /* Be carreful, parameters order *MUST* correspond */ 
 enum
 {
+  __config_file,
   __access_method,
   __protocol,
   __interface_type,
@@ -117,12 +120,7 @@ enum
   __modem_phone4,
   __modem_phone5,
   __modem_line_speed,
-  __modem_login_prompt,
-  __modem_pass_prompt,
-  __modem_server_login,
-  __modem_server_pass,
-  __modem_server_connected,
-  __modem_server_bad_passwd,
+  __modem_chat_script,
   __modem_dial_retry,
   __modem_retry_delay,
   __modem_abort_busy,
@@ -157,30 +155,25 @@ enum
 #define PARAM_IP_DOWN                 PARAM_STRING(__ip_down)
 
 #ifdef WITH_MODEM
-#define PARAM_MODEM_DEVICE            PARAM_STRING(__modem_device)
-#define PARAM_MODEM_RTSCTS            PARAM_BOOLEAN(__modem_rtscts)
-#define PARAM_MODEM_INITSTR(i)        PARAM_STRING(__modem_initstr1 + i - 1)
-#define PARAM_MODEM_DIALSTR           PARAM_STRING(__modem_dialstr)
-#define PARAM_MODEM_DIAL_PREFIX       PARAM_STRING(__modem_dial_prefix)
-#define PARAM_MODEM_PHONE(i)          PARAM_STRING(__modem_phone + i)
-#define PARAM_MODEM_LINE_SPEED        PARAM_INTEGER(__modem_line_speed)
-#define PARAM_MODEM_LOGIN_PROMPT      PARAM_STRING(__modem_login_prompt)
-#define PARAM_MODEM_PASS_PROMPT       PARAM_STRING(__modem_pass_prompt)
-#define PARAM_MODEM_SERVER_LOGIN      PARAM_STRING(__modem_server_login)
-#define PARAM_MODEM_SERVER_PASS       PARAM_STRING(__modem_server_pass)
-#define PARAM_MODEM_SERVER_CONNECTED  PARAM_STRING(__modem_server_connected)
-#define PARAM_MODEM_SERVER_BAD_PASSWD PARAM_STRING(__modem_server_bad_passwd)
-#define PARAM_MODEM_DIAL_RETRY        PARAM_INTEGER(__modem_dial_retry)
-#define PARAM_MODEM_RETRY_DELAY       PARAM_INTEGER(__modem_retry_delay)
-#define PARAM_MODEM_ABORT_BUSY        PARAM_BOOLEAN(__modem_abort_busy)
-#define PARAM_MODEM_ABORT_DIALTONE    PARAM_BOOLEAN(__modem_abort_dialtone)
+#  define PARAM_MODEM_DEVICE            PARAM_STRING(__modem_device)
+#  define PARAM_MODEM_RTSCTS            PARAM_BOOLEAN(__modem_rtscts)
+#  define PARAM_MODEM_INITSTR(i)        PARAM_STRING(__modem_initstr1 + i - 1)
+#  define PARAM_MODEM_DIALSTR           PARAM_STRING(__modem_dialstr)
+#  define PARAM_MODEM_DIAL_PREFIX       PARAM_STRING(__modem_dial_prefix)
+#  define PARAM_MODEM_PHONE(i)          PARAM_STRING(__modem_phone + i)
+#  define PARAM_MODEM_LINE_SPEED        PARAM_INTEGER(__modem_line_speed)
+#  define PARAM_MODEM_CHAT_SCRIPT       PARAM_STRING(__modem_chat_script)
+#  define PARAM_MODEM_DIAL_RETRY        PARAM_INTEGER(__modem_dial_retry)
+#  define PARAM_MODEM_RETRY_DELAY       PARAM_INTEGER(__modem_retry_delay)
+#  define PARAM_MODEM_ABORT_BUSY        PARAM_BOOLEAN(__modem_abort_busy)
+#  define PARAM_MODEM_ABORT_DIALTONE    PARAM_BOOLEAN(__modem_abort_dialtone)
 #endif /* WITH_MODEM */
 
 #ifdef WITH_CABLE
-#define PARAM_CABLE_AOL_HOST          PARAM_STRING(__cable_aol_host)
-#define PARAM_CABLE_AOL_PORT          PARAM_INTEGER(__cable_aol_port)
-#define PARAM_CABLE_INTERFACE         PARAM_STRING(__cable_interface)
-#define PARAM_CABLE_CONNECT_IP        PARAM_STRING(__cable_connect_ip)
+#  define PARAM_CABLE_AOL_HOST          PARAM_STRING(__cable_aol_host)
+#  define PARAM_CABLE_AOL_PORT          PARAM_INTEGER(__cable_aol_port)
+#  define PARAM_CABLE_INTERFACE         PARAM_STRING(__cable_interface)
+#  define PARAM_CABLE_CONNECT_IP        PARAM_STRING(__cable_connect_ip)
 #endif /* WITH_CABLE */
 
 #define DEFAULT_CONFIG                "/etc/pengfork/pengfork.cfg"
