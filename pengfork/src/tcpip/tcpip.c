@@ -74,7 +74,6 @@
 # include <fcntl.h>
 #endif
 
-#include "gettext.h"
 #include "options.h"
 #include "access.h"
 #include "log.h"
@@ -102,10 +101,10 @@ tcpip_connect ()
 
   if (!inet_aton (hostname, &address))
     {
-      log (LOG_NOTICE, gettext ("Resolving %s...\n"), hostname);
+      log (LOG_NOTICE, _("Resolving %s...\n"), hostname);
       if ((hp = gethostbyname (hostname)) == 0)
         {
-          log (LOG_ERR, gettext ("Unable to resolve %s: %s (%d)\n"), hostname,
+          log (LOG_ERR, _("Unable to resolve %s: %s (%d)\n"), hostname,
                hstrerror (h_errno), h_errno);
           return 0;
         }
@@ -119,25 +118,25 @@ tcpip_connect ()
 
   if ((tcpipfd = socket (PF_INET, SOCK_STREAM, 0)) < 0)
     {
-      log (LOG_ERR, gettext ("Error while opening socket: %s (%d)\n"),
+      log (LOG_ERR, _("Error while opening socket: %s (%d)\n"),
            strerror (errno), errno);
       return 0;
     }
 
-  log (LOG_NOTICE, gettext ("Connecting to %s:%d ...\n"), inet_ntoa (aol_addr.sin_addr),
+  log (LOG_NOTICE, _("Connecting to %s:%d ...\n"), inet_ntoa (aol_addr.sin_addr),
        port);
 
   if (connect (tcpipfd, (struct sockaddr *) &aol_addr,
                sizeof (struct sockaddr_in)) == -1)
     {
-      log (LOG_ERR, gettext ("Error while connecting to AOL: %s (%d)\n"),
+      log (LOG_ERR, _("Error while connecting to AOL: %s (%d)\n"),
            strerror (errno), errno);
       return 0;
     }
 
   if (fcntl (tcpipfd, F_SETFL, O_NONBLOCK) < 0)
     {
-      log (LOG_ERR, gettext ("Error while putting the socket non-blocking: %s(%d)\n"),
+      log (LOG_ERR, _("Error while putting the socket non-blocking: %s(%d)\n"),
            strerror (errno), errno);
       return 0;
     }
@@ -152,7 +151,7 @@ tcpip_close ()
     {
       if ((close (tcpipfd)) == -1)
         {
-          log (LOG_WARNING, gettext ("Error while closing socket: %s(%d)\n"),
+          log (LOG_WARNING, _("Error while closing socket: %s(%d)\n"),
                strerror (errno), errno);
           return 0;
         }

@@ -44,7 +44,6 @@
 # include <string.h>
 #endif
 
-#include "gettext.h"
 #include "fdo.h"
 #include "log.h"
 #include "buffer.h"
@@ -120,7 +119,7 @@ get_ip_aol (token, data, data_size)
       debug (3, "IP tunnel - Received a small packet\n");
       ip_data = data + sizeof (*small);
       if (data_size - sizeof (*small) != small->len)
-        log (LOG_WARNING, gettext ("IP tunnel - bad size for a small packet\n"));
+        log (LOG_WARNING, _("IP tunnel - bad size for a small packet\n"));
       else
         get_uncompressed_ip (ip_data, small->len);
     }
@@ -134,7 +133,7 @@ get_ip_extra (token, data, data_size)
 {
   if (data_size + extra_ip.filled > extra_ip.len)
     {
-      log (LOG_ERR, gettext ("IP tunnel - Packet overflow detected\n"));
+      log (LOG_ERR, _("IP tunnel - Packet overflow detected\n"));
       /* drop overflow data */
       data_size = extra_ip.len - extra_ip.filled;
     }
@@ -171,7 +170,7 @@ get_uncompressed_ip (vjip, vjiplen)
       iplen = iphdrlen + (vjiplen - vjhdrlen);
       if (vjhdrlen == -1)
         {
-          log (LOG_WARNING, gettext ("IP tunnel - Unable to uncompress the packet\n"));
+          log (LOG_WARNING, _("IP tunnel - Unable to uncompress the packet\n"));
           return;
         }
       tmp = malloc (iplen);
@@ -186,7 +185,7 @@ get_uncompressed_ip (vjip, vjiplen)
         }
       else
         {
-          log (LOG_CRIT, gettext ("IP tunnel - Unable to allocate memory\n"));
+          log (LOG_CRIT, _("IP tunnel - Unable to allocate memory\n"));
           exit (1);
         }
     }
@@ -206,5 +205,5 @@ get_uncompressed_ip (vjip, vjiplen)
       iface->put (ifout, vjip, vjiplen);
     }
   else
-    log (LOG_WARNING, gettext ("IP tunnel - received an unknown IP packet\n"));
+    log (LOG_WARNING, _("IP tunnel - received an unknown IP packet\n"));
 }

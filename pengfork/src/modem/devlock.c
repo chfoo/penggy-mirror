@@ -65,7 +65,6 @@
 #include "modem/devlock.h"
 #include "options.h"
 #include "log.h"
-#include "gettext.h"
 
 int fd=-1;
 
@@ -116,10 +115,10 @@ device_lock (devicename)
         {
           /* we can create a lockfile now */
           close (fd);
-          log (LOG_WARNING, gettext ("Removing stale lock file %s.\n"), filename);
+          log (LOG_WARNING, _("Removing stale lock file %s.\n"), filename);
           if (unlink (filename))
             {
-              log (LOG_ERR, gettext("Can't remove %s: %s (%d).\n"), 
+              log (LOG_ERR, _("Can't remove %s: %s (%d).\n"), 
 			        filename, strerror(errno), errno);
               return 0;         /* cannot remove lockfile */
             }
@@ -155,7 +154,7 @@ device_unlock (devicename)
 
   if (unlink (filename))
     {
-      log (LOG_WARNING, gettext ("Couldn't remove lock file %s: %s (%d)..\n"), 
+      log (LOG_WARNING, _("Couldn't remove lock file %s: %s (%d)..\n"), 
 	 filename, strerror(errno), errno);
       return 0;
     }

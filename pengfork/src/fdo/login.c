@@ -41,7 +41,6 @@
 # include <string.h>
 #endif
 
-#include "gettext.h"
 #include "options.h"
 #include "getpass.h"
 #include "buffer.h"
@@ -67,7 +66,7 @@ logon ()
   stream_t stream;
   u_int16_t streamid = htons(0x16);
 
-  log (LOG_NOTICE, gettext ("Loging into provider as '%s'\n"), sn);
+  log (LOG_NOTICE, _("Loging into provider as '%s'\n"), sn);
   get_password (sn, &pass);
   len = strlen (sn);
   if (len < 10)
@@ -95,7 +94,6 @@ logon ()
   add_atom(&stream, MAN_PID, MAN_END_CONTEXT, 0);
   add_atom(&stream, UNI_PID, UNI_END_STREAM, 0);
   fdo_send (TOKEN ("Dd"), stream.data, stream.used);
-  printf("Dd atom stream:\n");
   stream_destroy(&stream);
 
   fdo_unregister (TOKEN ("SD"));

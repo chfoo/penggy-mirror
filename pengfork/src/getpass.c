@@ -81,7 +81,7 @@ get_password (sn, pass)
           if (*c != '\0')
             *c = '\0';
           else
-            log (LOG_WARNING, gettext ("%s:%d bad line format\n"), PARAM_SECRET_FILE,
+            log (LOG_WARNING, _("%s:%d bad line format\n"), PARAM_SECRET_FILE,
                  lineno);
 
           c++;

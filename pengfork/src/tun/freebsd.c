@@ -75,7 +75,6 @@
 # include <netinet/ip.h>
 #endif
 
-#include "gettext.h"
 #include "log.h"
 #include "tun/tun.h"
 #include "options.h"
@@ -92,7 +91,7 @@ tun_open ()
   if (PARAM_INTERFACE_NAME)
     {
       sprintf (tunname, "/dev/%s", PARAM_INTERFACE_NAME);
-      tun_fd = open (tunname, O_RDWR | O_NONBLOCK);
+      tun_fd = open (tunname, O_RDWR);
       strncpy (tun_ifname, PARAM_INTERFACE_NAME, sizeof(tun_ifname));
     }
   else
@@ -101,7 +100,7 @@ tun_open ()
         {
           sprintf (tunname, "/dev/tun%d", i);
           /* Open device */
-          if ((tun_fd = open (tunname, O_RDWR | O_NONBLOCK)) > 0)
+          if ((tun_fd = open (tunname, O_RDWR)) > 0)
             {
               sprintf (tun_ifname, "tun%d", i);
               break;
@@ -120,16 +119,17 @@ tun_open ()
     {
       if (PARAM_INTERFACE_NAME)
         {
-          log (LOG_ERR, gettext ("Unable to open tun device /dev/%s: %s(%d).\n"),
+          log (LOG_ERR, _("Unable to open tun device /dev/%s: %s(%d).\n"),
                PARAM_INTERFACE_NAME, strerror (errno), errno);
         }
       else
         {
-          log (LOG_ERR, gettext ("Unable to open a valid tun device.\n"));
+          log (LOG_ERR, _("Unable to open a valid tun device.\n"));
         }
       return 0;
     }
 
+  fcntl(tun_fd, F_SETFL, O_NONBLOCK);
   return 1;
 }
 

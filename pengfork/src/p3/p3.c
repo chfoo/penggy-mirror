@@ -47,7 +47,6 @@
 # include <netinet/in.h>
 #endif
 
-#include "gettext.h"
 #include "log.h"
 #include "buffer.h"
 #include "utils.h"
@@ -96,7 +95,7 @@ p3_register_to_engine (myaccess)
     engine_register (*(myaccess->fd), P3_TIMEOUT, p3_fn);
   else
     log (LOG_ERR,
-         gettext ("Unable to register P3 protocol functions, access is not connected\n"));
+         _("Unable to register P3 protocol functions, access is not connected\n"));
 }
 
 int
@@ -223,7 +222,7 @@ p3_timeout (bufin, bufout, timeout)
           /* Always some data to wait after 40 s...
            * The server seems out or lost
            */
-	log (LOG_WARNING, gettext("Server seems dead, disconnecting...\n"));
+	log (LOG_WARNING, _("Server seems dead, disconnecting...\n"));
 	engine_stop();
         }
       if (timeout > 60)

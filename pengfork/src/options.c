@@ -59,7 +59,6 @@
 #endif
 
 #include "common.h"
-#include "gettext.h"
 #include "getopt.h"
 #include "options.h"
 #include "checkopt.h"
@@ -97,13 +96,13 @@ void
 init_parameters (void)
 {
   char *sections[__sect_end] =  {
-    gettext ("General properties"),
-    gettext ("User authentification"),
-    gettext ("Modem properties"),
-    gettext ("DSL properties"),
-    gettext ("Cable properties"),
-    gettext ("TCP/IP properties"),
-    gettext ("Network interface properties")
+    _("General properties"),
+    _("User authentification"),
+    _("Modem properties"),
+    _("DSL properties"),
+    _("Cable properties"),
+    _("TCP/IP properties"),
+    _("Network interface properties")
   };
 
 #define STR(s,l,n,v,d,p,e,c)  \
@@ -116,64 +115,64 @@ init_parameters (void)
   param_t params[PARAM_MAX] =  {
     /* GENERAL CONFIGURATION */
     STR ('f', "config-file", NULL, DEFAULT_CONFIG_FILE,
-         gettext ("reads configuration file PATH."), "PATH",
+         _("reads configuration file PATH."), "PATH",
          __general, NULL),
     STR (0, "access-method", "access_method", "modem",
-         gettext ("sets the access method for connecting AOL."), "METHOD",
+         _("sets the access method for connecting AOL."), "METHOD",
          __general, check_access_method),
     STR (0, "protocol", "protocol", "p3",
-         gettext ("sets the protocol used for communication with AOL."), "PROT", 
+         _("sets the protocol used for communication with AOL."), "PROT", 
          __general, check_protocol), 
     STR ('t', "interface-type", "interface_type", "tun",
-         gettext ("sets the interface type."), "TYPE", 
+         _("sets the interface type."), "TYPE", 
          __netiface, check_iface_type),
     STR ('i', "interface", "interface_name", NULL,
-         gettext ("sets the interface name."), "NAME", 
+         _("sets the interface name."), "NAME", 
          __netiface, NULL),
     STR (0, NULL, "secret_file", DEFAULT_SECRET_FILE, 
          NULL, NULL, 
-         __auth, NULL), 
+         __auth, check_file), 
     STR ('s', "screen-name", "screen_name", NULL,
-         gettext ("sets the screen-name to use."), "SN", 
+         _("sets the screen-name to use."), "SN", 
          __auth, check_screen_name), 
     BOOL ('r', "auto-reconnect", "auto_reconnect", false,
-	gettext ("enables autoreconnection."), NULL,
+	_("enables autoreconnection."), NULL,
 	__general, NULL),
     INT (0, "reconnect-delay", "reconnect_delay", 5,
-         gettext ("sets the delay between reconnections."), "DELAY",
+         _("sets the delay between reconnections."), "DELAY",
          __general, check_natural), 
     BOOL ('d', "daemon", "daemon", false,
-	gettext ("enables daemon mode, run in background."), NULL, 
+	_("enables daemon mode, run in background."), NULL, 
 	__general, NULL), 
     INT ('D', "debug-level", "debug_level", 0,
-         gettext ("sets the verbosity level of the debug."), "LEVEL",
+         _("sets the verbosity level of the debug."), "LEVEL",
          __general, check_debug_level),
     BOOL (0, "dns", "set_dns", true,
-	gettext ("sets the dns when connected."), NULL, 
+	_("sets the dns when connected."), NULL, 
 	__netiface, NULL),
     STR (0, "pid-file", "pid_file", DEFAULT_PID_FILE,
-         gettext ("sets the PID file to create"), "PATH", 
-         __general, NULL),
+         _("sets the PID file to create"), "PATH", 
+         __general, check_pid_dir),
     STR (0, "ip-up", "ip-up_script", DEFAULT_IPUP_FILE,
-         gettext ("sets the script automaticly called when IP is up."), "PATH", 
+         _("sets the script automaticly called when IP is up."), "PATH", 
          __netiface, NULL), 
     STR (0, "ip-down", "ip-down_script", DEFAULT_IPDOWN_FILE,
-         gettext ("sets the script automaticly called when IP is down."), "PATH", 
+         _("sets the script automaticly called when IP is down."), "PATH", 
          __netiface, NULL)
 
 #if ENABLE_MODEM
     /* MODEM SPECIFIC */
     , STR ('m', "modem", "modem_device", "/dev/modem",
-	 gettext ("sets the serial device to use for the modem."), "PATH",
+	 _("sets the serial device to use for the modem."), "PATH",
 	 __modem, NULL),
     STR (0, NULL, "lock_path", DEFAULT_LOCK_PATH,
          NULL, NULL, 
-         __modem, NULL), 
+         __modem, check_file), 
     BOOL (0, "rtscts", "rtscts", true,
-	gettext ("enables hardware flow control"), NULL,
+	_("enables hardware flow control"), NULL,
 	__modem, NULL),
     STR (0, "init-str", "initstr1", "ATZ",
-         gettext ("sets the primary initialization string sent to the modem."), "STRING", 
+         _("sets the primary initialization string sent to the modem."), "STRING", 
          __modem, NULL), 
     STR (0, NULL, "initstr2", NULL,
          NULL, NULL, 
@@ -200,20 +199,20 @@ init_parameters (void)
          NULL, NULL,
          __modem, NULL),
     STR (0, "dial-str", "dialstr", "ATDT",
-         gettext ("sets the string used to dial."), "STRING", 
+         _("sets the string used to dial."), "STRING", 
          __modem, NULL),
     STR (0, "prefix", "dial_prefix", NULL, 
-         gettext ("uses STRING to obtain an extern line."), "STRING", 
+         _("uses STRING to obtain an extern line."), "STRING", 
          __modem, NULL), 
     STR ('p', "phonetab", "phonetab", DEFAULT_PHONETAB_FILE,
-         gettext ("sets the file where phone numbers will be searched."), "PATH",
-         __modem, NULL),
+         _("sets the file where dialup numbers will be searched."), "PATH",
+         __modem, check_file),
     INT ('l', "line-speed", "line_speed", 115200,
-         gettext ("sets the serial line speed."), "SPEED",
+         _("sets the serial line speed."), "SPEED",
          __modem, check_line_speed),
     STR (0, "chat-path", "chat_path", DEFAULT_CHAT_PATH,
-         gettext ("sets the path where chat files will be searched."), "PATH", 
-         __modem, NULL), 
+         _("sets the path where chat files will be searched."), "PATH", 
+         __modem, check_file), 
     INT (0, NULL, "dial_retry", 3, 
          NULL, NULL, 
          __modem, check_natural),
@@ -248,7 +247,7 @@ usage ()
   int s, i, j, len, ok;
 
   /* FIXME: wow this function is very BIG */
-  printf (gettext ("Usage : %s [OPTIONS]\n"
+  printf (_("Usage : %s [OPTIONS]\n"
 	         "Operation modes :\n"
 	         "  -h, --help                       print this help, then exit.\n"
 	         "  -V, --version                    print version, then exit.\n"),
@@ -344,12 +343,12 @@ version (void)
 {
   printf("\n%s (%s) %s\n\n" , program_name, PACKAGE, VERSION);
   printf("Copyright (C) 2002-2003 Jean-Charles Salzeber.\n");
-  printf(gettext ("%s comes with ABSOLUTELY NO WARRANTY.\n"
+  printf(_("%s comes with ABSOLUTELY NO WARRANTY.\n"
 	        "This is free software, and you are welcome to redistribute it under the terms\n"
 	        "of the GNU General Public License, version 2 or any later version.\n\n")
          , PACKAGE);
 	        
-  printf (gettext ("Compilation options :\n"));
+  printf (_("Compilation options :\n"));
   printf (
 #if DEBUG
 	"DEBUG "
@@ -384,7 +383,6 @@ version (void)
 	"\n");
   printf ("SYSCONFDIR=\"" SYSCONFDIR "\"\n");
   printf ("PKGDATADIR=\"" PKGDATADIR "\"\n");
-  printf ("LOCALSTATEDIR=\"" LOCALSTATEDIR "\"\n\n");
   printf ("PLATFORM="
 #if TARGET_LINUX
 	"Linux"
@@ -562,7 +560,7 @@ parse_command_line (argc, argv)
 	  (c > 257 && option_index>=0 && 
 	   !set_opt_param_long(long_options[option_index].name))) 
           {
-            fprintf (stderr, gettext ("Try `%s --help' for more information.\n"),
+            fprintf (stderr, _("Try `%s --help' for more information.\n"),
                      program_name);
             exit (1);
           }
@@ -681,7 +679,7 @@ parse_config_file (filename)
       strip_comments (line);
       trim (line);
       if (strlen (line) > 0 && !tokenize_line (line, &name, &value))
-        log (LOG_WARNING, gettext ("%s:%d bad line format\n"), filename, lineno);
+        log (LOG_WARNING, _("%s:%d bad line format\n"), filename, lineno);
       else
         {
           if (strlen (line) > 0)
@@ -689,7 +687,7 @@ parse_config_file (filename)
               for (i = 0, found = 0; i < PARAM_MAX && !found; i++)
                 found = try_param (&param[i], filename, lineno, name, value);
               if (!found)
-                log (LOG_WARNING, gettext ("%s:%d unrecognized option - %s\n"),
+                log (LOG_WARNING, _("%s:%d unrecognized option - %s\n"),
                      filename, lineno, name);
             }
         }
@@ -719,7 +717,7 @@ try_param (param, filename, lineno, name, value)
               if (get_boolean (&param->value.boolean, value))
                 param->defined = true;
               else
-                log (LOG_WARNING, gettext ("%s:%d bad boolean value\n"), filename,
+                log (LOG_WARNING, _("%s:%d bad boolean value\n"), filename,
                      lineno);
               break;
             case string:
@@ -731,7 +729,7 @@ try_param (param, filename, lineno, name, value)
               else
                 {
                   log (LOG_CRIT,
-                       gettext ("%s:%d not enough memory to get the parameter\n"),
+                       _("%s:%d not enough memory to get the parameter\n"),
                        filename, lineno);
                   exit (1);
                 }
@@ -740,7 +738,7 @@ try_param (param, filename, lineno, name, value)
               if (get_integer (&param->value.integer, value))
                 param->defined = true;
               else
-                log (LOG_WARNING, gettext ("%s:%d bad integer value\n"), filename,
+                log (LOG_WARNING, _("%s:%d bad integer value\n"), filename,
                      lineno);
               break;
             }

@@ -49,8 +49,10 @@
 #if HAVE_CTYPE_H
 # include <ctype.h>
 #endif
+#if HAVE_SYS_STAT_H
+# include <sys/stat.h>
+#endif
 
-#include "gettext.h"
 #include "options.h"
 #include "log.h"
 #include "utils.h"
@@ -82,6 +84,8 @@ get_line(line, lineno, num)
   char *phone = line;
   char *ppp = NULL;
   char *script = NULL;
+  struct stat st;
+  char script_file[1024];
 
   while (!isspace (*c) && *c != '\0')
     c++;
@@ -120,14 +124,24 @@ get_line(line, lineno, num)
 	else
 	  {
 	    log (LOG_WARNING, 
-	         gettext ("%s:%d bad line format: 2nd field isn't a boolean\n"), 
-	         PARAM_SECRET_FILE, lineno);
+	         _("%s:%d bad line format: 2nd field isn't a "
+		        "boolean\n"), 
+	         PARAM_MODEM_PHONETAB, lineno);
 	    return 0;
 	  }
         }
       if(script)
         {
 	phonetab[num].script=strdup(script);
+	snprintf(script_file, sizeof(script_file),"%s/%s.scm",
+	         PARAM_MODEM_CHAT_PATH, script);
+	if(stat(script_file,&st)) {
+	  log (LOG_WARNING, _("%s:%d %s is an unknown dialup server "
+			        "type, assuming default (%s).\n"), 
+	       PARAM_MODEM_PHONETAB, lineno, script, DEFAULT_CHAT_FILE);
+	  free(phonetab[num].script);
+	  phonetab[num].script = NULL;
+	}
         }
     }
   return 1;
@@ -164,7 +178,7 @@ get_phonetab (void)
     }
   if(num==0)
     {
-      log (LOG_ERR, gettext("phonetab (%s) is empty, edit it first.\n"), 
+      log (LOG_ERR, _("phonetab (%s) is empty, edit it first.\n"), 
 	 PARAM_MODEM_PHONETAB);
       exit(1);
     }

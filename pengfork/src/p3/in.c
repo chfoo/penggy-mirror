@@ -41,7 +41,6 @@
 # include <netinet/in.h>
 #endif
 
-#include "gettext.h"
 #include "buffer.h"
 #include "log.h"
 #include "fdo.h"
@@ -105,7 +104,7 @@ p3_treat_packet (header, data, data_size)
       break;
 
     default:
-      log (LOG_WARNING, gettext ("P3 - Unknow packet type received: type=0x%02x\n"),
+      log (LOG_WARNING, _("P3 - Unknow packet type received: type=0x%02x\n"),
            header->type);
     }
 }

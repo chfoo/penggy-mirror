@@ -53,7 +53,6 @@
 # include <arpa/inet.h>
 #endif
 
-#include "gettext.h"
 #include "buffer.h"
 #include "options.h"
 #include "misc.h"
@@ -134,15 +133,15 @@ ip_tunnel_config (token, data, data_size)
         {
         case TYPE_IP_ADDR:
           address.s_addr = *((in_addr_t *) cfg_data);
-          log (LOG_INFO, gettext ("IP address: %s\n"), inet_ntoa (address));
+          log (LOG_INFO, _("IP address: %s\n"), inet_ntoa (address));
           break;
         case TYPE_DNS_ADDR:
           dns.s_addr = *((in_addr_t *) cfg_data);
-          log (LOG_INFO, gettext ("DNS server: %s\n"), inet_ntoa (dns));
+          log (LOG_INFO, _("DNS server: %s\n"), inet_ntoa (dns));
           break;
         case TYPE_MTU:
           mtu = ntohs (*((u_int16_t *) cfg_data));
-          log (LOG_INFO, gettext ("MTU: %d\n"), mtu);
+          log (LOG_INFO, _("MTU: %d\n"), mtu);
           break;
         case TYPE_HOSTNAME:
           len = cfg_hdr->length;
@@ -154,9 +153,9 @@ ip_tunnel_config (token, data, data_size)
           if (domain)
             domain++;
 
-          log (LOG_INFO, gettext ("Hostname: %s\n"), hostname);
+          log (LOG_INFO, _("Hostname: %s\n"), hostname);
           if (domain)
-            log (LOG_INFO, gettext ("Domain: %s\n"), domain);
+            log (LOG_INFO, _("Domain: %s\n"), domain);
           break;
         case TYPE_SUBNET:
           mask = *((u_int8_t *) cfg_data);
@@ -181,7 +180,7 @@ ip_tunnel_config (token, data, data_size)
 
   fdo_register (TOKEN ("yc"), get_ip_aol);
   need_extra=0;
-  log(LOG_NOTICE, gettext("IP tunnel is working.\n"), domain);
+  log(LOG_NOTICE, _("IP tunnel is working.\n"), domain);
 }
 
 struct in_addr

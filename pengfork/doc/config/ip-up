@@ -6,10 +6,8 @@
 # defined variables:
 # IFNAME : the interface name where tunneling is done
 # ADDRESS : local ip address
-# NETMASK : netmask for the address
-# NETWORK : network for the address
-# BROADCAST : broadcast address
-# GATEWAY : the default gateway
+# DOMAIN : the given domain name
+# DNS : the given DNS ip address
 
 IFCONFIG=/sbin/ifconfig
 ROUTE=/sbin/route

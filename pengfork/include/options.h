@@ -89,7 +89,7 @@ enum
   __ip_up,
   __ip_down,
 
-#ifdef ENABLE_MODEM
+#if ENABLE_MODEM
   __modem_device,
   __modem_lock_path,
   __modem_rtscts,
@@ -111,7 +111,7 @@ enum
   __modem_retry_delay,
 #endif /* ENABLE_MODEM */
 
-#ifdef ENABLE_TCPIP
+#if ENABLE_TCPIP
   __tcpip_aol_host,
   __tcpip_aol_port,
 #endif /* ENABLE_TCPIP */
@@ -136,23 +136,23 @@ enum
 #define PARAM_IP_UP                   PARAM_STRING(__ip_up)
 #define PARAM_IP_DOWN                 PARAM_STRING(__ip_down)
 
-#ifdef ENABLE_MODEM
-#  define PARAM_MODEM_DEVICE            PARAM_STRING(__modem_device)
-#  define PARAM_MODEM_LOCK_PATH         PARAM_STRING(__modem_lock_path)
-#  define PARAM_MODEM_RTSCTS            PARAM_BOOLEAN(__modem_rtscts)
-#  define PARAM_MODEM_INITSTR(i)        PARAM_STRING(__modem_initstr1 + i - 1)
-#  define PARAM_MODEM_DIALSTR           PARAM_STRING(__modem_dialstr)
-#  define PARAM_MODEM_DIAL_PREFIX       PARAM_STRING(__modem_dial_prefix)
-#  define PARAM_MODEM_PHONETAB          PARAM_STRING(__modem_phonetab)
-#  define PARAM_MODEM_LINE_SPEED        PARAM_INTEGER(__modem_line_speed)
-#  define PARAM_MODEM_CHAT_PATH         PARAM_STRING(__modem_chat_path)
-#  define PARAM_MODEM_DIAL_RETRY        PARAM_INTEGER(__modem_dial_retry)
-#  define PARAM_MODEM_RETRY_DELAY       PARAM_INTEGER(__modem_retry_delay)
+#if ENABLE_MODEM
+# define PARAM_MODEM_DEVICE            PARAM_STRING(__modem_device)
+# define PARAM_MODEM_LOCK_PATH         PARAM_STRING(__modem_lock_path)
+# define PARAM_MODEM_RTSCTS            PARAM_BOOLEAN(__modem_rtscts)
+# define PARAM_MODEM_INITSTR(i)        PARAM_STRING(__modem_initstr1 + i - 1)
+# define PARAM_MODEM_DIALSTR           PARAM_STRING(__modem_dialstr)
+# define PARAM_MODEM_DIAL_PREFIX       PARAM_STRING(__modem_dial_prefix)
+# define PARAM_MODEM_PHONETAB          PARAM_STRING(__modem_phonetab)
+# define PARAM_MODEM_LINE_SPEED        PARAM_INTEGER(__modem_line_speed)
+# define PARAM_MODEM_CHAT_PATH         PARAM_STRING(__modem_chat_path)
+# define PARAM_MODEM_DIAL_RETRY        PARAM_INTEGER(__modem_dial_retry)
+# define PARAM_MODEM_RETRY_DELAY       PARAM_INTEGER(__modem_retry_delay)
 #endif /* ENABLE_MODEM */
 
-#ifdef ENABLE_TCPIP
-#  define PARAM_TCPIP_AOL_HOST          PARAM_STRING(__tcpip_aol_host)
-#  define PARAM_TCPIP_AOL_PORT          PARAM_INTEGER(__tcpip_aol_port)
+#if ENABLE_TCPIP
+# define PARAM_TCPIP_AOL_HOST          PARAM_STRING(__tcpip_aol_host)
+# define PARAM_TCPIP_AOL_PORT          PARAM_INTEGER(__tcpip_aol_port)
 #endif /* ENABLE_TCPIP */
 
 /* Default path */
@@ -161,8 +161,14 @@ enum
 #define DEFAULT_IPUP_FILE         (SYSCONFDIR "/" PACKAGE "/ip-up")
 #define DEFAULT_IPDOWN_FILE       (SYSCONFDIR "/" PACKAGE "/ip-down")
 #define DEFAULT_PHONETAB_FILE     (SYSCONFDIR "/" PACKAGE "/phonetab")
-#define DEFAULT_PID_FILE          (LOCALSTATEDIR "/run/" PACKAGE ".pid")
-#define DEFAULT_LOCK_PATH         (LOCALSTATEDIR "/lock")
+#define DEFAULT_PID_FILE          ("/var/run/" PACKAGE ".pid")
+#if TARGET_LINUX
+# define DEFAULT_LOCK_PATH        ("/var/lock")
+#elsif TARGET_SOLARIS
+# define DEFAULT_LOCK_PATH        ("/var/spool/locks")
+#else
+# define DEFAULT_LOCK_PATH        ("/var/spool/lock")
+#endif
 #define DEFAULT_CHAT_PATH         (PKGDATADIR "/chat")
 #define DEFAULT_CHAT_FILE         ("aolnet")
 

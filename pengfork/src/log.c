@@ -39,7 +39,6 @@
 # include <locale.h>
 #endif
 
-#include "gettext.h"
 #include "log.h"
 #include "options.h"
 
@@ -120,7 +119,7 @@ dump_raw (text, data, size)
 
   if (PARAM_DEBUG_LEVEL < DEBUG_MAX)
     return;
-  debug (DEBUG_MAX, gettext ("%s raw dump: \n"), text);
+  debug (DEBUG_MAX, _("%s raw dump: \n"), text);
   for (i = 0; i < size; i += 16)
     {
       debug (DEBUG_MAX, "  %04x: ", i);

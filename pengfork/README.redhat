@@ -1,0 +1,8 @@
+Redhat distribution have two problems:
+  1) The guile package is installed under /usr/local where it should be under /usr
+  2) It will not search for libraries in /usr/local/lib
+
+So if you get the following error while launching penggy:
+penggy: error while loading libraries: libguile.so.12: cannot open shared object file: No such file or directory
+
+add /usr/local/lib in your /etc/ld.so.conf and run ldconfig (as root).

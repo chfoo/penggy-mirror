@@ -65,7 +65,6 @@
 # include <errno.h>
 #endif
 
-#include "gettext.h"
 #include "log.h"
 #include "iptunnel/dns.h"
 
@@ -80,12 +79,12 @@ set_dns (domain, dns)
   struct stat st;
 
   if (!stat ("/etc/resolv.peng", &st))
-    log (LOG_WARNING, gettext ("/etc/resolv.peng exists\n"));
+    log (LOG_WARNING, _("/etc/resolv.peng exists\n"));
   else
     {
       if (rename ("/etc/resolv.conf", "/etc/resolv.peng"))
         {
-          log (LOG_ERR, gettext ("Could not rename /etc/resolv.conf: %s (%d)\n"),
+          log (LOG_ERR, _("Could not rename /etc/resolv.conf: %s (%d)\n"),
                strerror (errno), errno);
           exit (1);
         }

@@ -36,6 +36,13 @@
 # include <syslog.h>
 #endif
 
+#if ENABLE_NLS
+# include "gettext.h"
+# define _(s) gettext(s)
+#else
+# define _(s) s
+#endif
+
 int init_log (void);
 int log_daemon(void);
 int log (int level, char *format, ...);

@@ -81,7 +81,6 @@
 # include <linux/if_tun.h>
 #endif
 
-#include "gettext.h"
 #include "tun/tun.h"
 #include "options.h"
 #include "log.h"
@@ -117,19 +116,20 @@ tun_open_old ()
     {
       if (PARAM_INTERFACE_NAME)
         {
-          log (LOG_ERR, gettext ("Unable to open tun device /dev/%s (using 2.2 kernel "
-			   "method): %s(%d).\n"), 
+          log (LOG_ERR, _("Unable to open tun device /dev/%s (using 2.2 kernel "
+		      "method): %s(%d).\n"), 
 	     PARAM_INTERFACE_NAME, strerror (errno),
                errno);
         }
       else
         {
-          log (LOG_ERR, gettext ("Unable to open a valid tun device (using 2.2 kernel "
-               "method).\n"));
+          log (LOG_ERR, _("Unable to open a valid tun device (using 2.2 kernel "
+		      "method).\n"));
         }
       return 0;
     }
 
+  fcntl(tun_fd, F_SETFL, O_NONBLOCK);
   return 1;
 }
 
@@ -147,11 +147,11 @@ tun_open ()
 {
   struct ifreq ifr;
 
-  if ((tun_fd = open ("/dev/net/tun", O_RDWR | O_NONBLOCK)) < 0)
+  if ((tun_fd = open ("/dev/net/tun", O_RDWR)) < 0)
     {
-      log (LOG_WARNING, gettext ("Unable to open /dev/net/tun: %s(%d).\n"),
+      log (LOG_WARNING, _("Unable to open /dev/net/tun: %s(%d).\n"),
            strerror (errno), errno);
-      log (LOG_WARNING, gettext ("Assuming 2.2 kernel method.\n"));
+      log (LOG_WARNING, _("Assuming 2.2 kernel method.\n"));
       return tun_open_old ();
     }
 
@@ -167,16 +167,16 @@ tun_open ()
           /* Try old ioctl */
           if (ioctl (tun_fd, OTUNSETIFF, (void *) &ifr) < 0)
             {
-              log (LOG_ERR, gettext ("Unable to open a valid tun device (using pre "
-                   "2.4.6 kernel method): %s(%d).\n"), strerror (errno),
-                   errno);
+              log (LOG_ERR, _("Unable to open a valid tun device (using pre "
+			"2.4.6 kernel method): %s(%d).\n"), 
+	         strerror (errno), errno);
               tun_close ();
               return 0;
             }
         }
       else
         {
-          log (LOG_ERR, gettext ("Unable to open a valid tun device (using post "
+          log (LOG_ERR, _("Unable to open a valid tun device (using post "
                "2.4.6 kernel method): %s(%d).\n"), strerror (errno), errno);
           tun_close ();
           return 0;
@@ -184,6 +184,7 @@ tun_open ()
     }
   strcpy(tun_ifname, ifr.ifr_name);
 
+  fcntl(tun_fd, F_SETFL, O_NONBLOCK);
   return 1;
 }
 

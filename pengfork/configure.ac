@@ -26,7 +26,7 @@
 # Autoconf 2.53 needed so that buggy PATH_SEPARATOR is fixed.
 AC_PREREQ(2.53)
 
-AC_INIT(penggy, 0.2.0)
+AC_INIT(penggy, 0.2.1)
 AC_CONFIG_HEADER([config.h])
 
 # Auxiliary files
@@ -86,14 +86,13 @@ esac
 # FIXME: Replace `main' with a function in `-lc':
 AC_CHECK_LIB([c], [main])
 
-
 # Checks for header files.
 AC_FUNC_ALLOCA
 AC_HEADER_STDC
 AC_CHECK_HEADERS([arpa/inet.h fcntl.h langinfo.h libintl.h netdb.h stdio_ext.h sys/ioctl.h sys/time.h syslog.h termios.h])
 
 # Customized checks
-AC_CHECK_HEADERS([assert.h byteswap.h ctype.h errno.h linux/if_tun.h netinet/in.h netinet/in_systm.h netinet/ip.h net/if.h net/if_tun.h net/net_globals.h net/ppp_defs.h signal.h stdarg.h stdio.h sys/byteorder.h sys/uio.h])
+AC_CHECK_HEADERS([assert.h byteswap.h ctype.h errno.h linux/if_tun.h libgen.h netinet/in.h netinet/in_systm.h netinet/ip.h net/if.h net/if_tun.h net/net_globals.h net/ppp_defs.h signal.h stdarg.h stdio.h sys/byteorder.h sys/uio.h])
 
 
 # Checks for typedefs, structures, and compiler characteristics.
@@ -107,6 +106,12 @@ AC_TYPE_SIZE_T
 AC_HEADER_TIME
 AC_HEADER_SYS_WAIT
 
+#HAVE_IN_ADDR_T, HAVE_SOCKLEN_T
+#AC_CHECK_TYPE([in_addr_t],,
+#              [AC_DEFINE_UNQUOTED([in_addr_t], [default],
+#                                  [Define to `default' if
+#                                   <sys/types.h> does not define.])])
+
 # Checks for library functions.
 AM_GNU_GETTEXT
 AM_GNU_GETTEXT_VERSION(0.11.5)
@@ -119,13 +124,17 @@ AC_FUNC_SELECT_ARGTYPES
 AC_TYPE_SIGNAL
 AC_FUNC_STAT
 AC_FUNC_VPRINTF
-AC_CHECK_FUNCS([bzero dup2 gethostbyname inet_ntoa memchr memmove memset nl_langinfo select socket strchr strcspn strerror strrchr strstr strtol])
+AC_CHECK_FUNCS([bzero dup2 memchr memmove memset nl_langinfo select strchr strcspn strerror strrchr strstr strtol])
 
 # Customized checks
 AC_CHECK_FUNCS([getopt_long])
-
+AC_SEARCH_LIBS(socket, socket)
+AC_SEARCH_LIBS(inet_ntoa, nsl)
+AC_SEARCH_LIBS(gethostbyname, resolv nsl)
+AC_SEARCH_LIBS(hstrerror, resolv nsl inetutils,, need_hstrerror=yes)
 
 AM_CONDITIONAL(NEED_GETOPT, test "$ac_cv_func_getopt_long" != yes)
+AM_CONDITIONAL(NEED_HSTRERROR, test "$need_hstrerror" = yes)
 
 #########################################
 # Conditional compile options
@@ -199,7 +208,7 @@ AM_CONDITIONAL(BUILD_MODEM, test "$modem" = yes)
 
 # Cable driver
 AC_ARG_ENABLE(cable,
-  AC_HELP_STRING([--enable-cable], [Disable cable modem support. (EXPERIMENTAL)]),
+  AC_HELP_STRING([--enable-cable], [Enable cable modem support. (EXPERIMENTAL)]),
   [case "${enableval}" in
     yes) cable=yes ;;
     no)  cable=no  ;;
@@ -352,7 +361,6 @@ fi
 
 CPPFLAGS="$CPPFLAGS	-DPKGDATADIR=\\\"\$(pkgdatadir)\\\""
 CPPFLAGS="$CPPFLAGS -DSYSCONFDIR=\\\"\$(sysconfdir)\\\""
-CPPFLAGS="$CPPFLAGS	-DLOCALSTATEDIR=\\\"\$(localstatedir)\\\""
 
 # Output Files
 AC_CONFIG_FILES([Makefile

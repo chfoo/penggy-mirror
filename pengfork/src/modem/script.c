@@ -44,7 +44,6 @@
 #include <libguile.h>
 #include <guile/gh.h>
 
-#include "gettext.h"
 #include "options.h"
 #include "log.h"
 #include "utils.h"
@@ -55,14 +54,14 @@
 SCM
 chat_success (void)
 {
-  log (LOG_NOTICE, gettext ("Script: Chat success\n"));
+  log (LOG_NOTICE, _("Script: Chat success\n"));
   return SCM_BOOL_T;
 }
 
 SCM
 chat_failure (void)
 {
-  log (LOG_NOTICE, gettext ("Script: Chat failure\n"));
+  log (LOG_NOTICE, _("Script: Chat failure\n"));
   return SCM_BOOL_F;
 }
 
@@ -83,7 +82,7 @@ chat_send (string)
         *p=' ';
       p++;
     }
-  log (LOG_NOTICE, gettext ("Script: Send '%s'\n"), print);
+  log (LOG_NOTICE, _("Script: Send '%s'\n"), print);
   free(print);
   modem_sync_write (text, len);
   return SCM_UNDEFINED;
@@ -113,7 +112,7 @@ compare_elem (buffer, elem, result)
 
   if (strstr (bufmin, textmin))
     {
-      log (LOG_NOTICE, gettext ("Script: String '%s' matched\n"), text);
+      log (LOG_NOTICE, _("Script: String '%s' matched\n"), text);
       /* evaluate next elem */
 #if HAVE_R5RS_EVAL
       *result = scm_eval (SCM_CADR (elem), scm_current_module());
@@ -167,7 +166,7 @@ do_else (others, result)
      SCM *result;
 {
   SCM elem;
-  log (LOG_NOTICE, gettext ("Script: No string matched\n"));
+  log (LOG_NOTICE, _("Script: No string matched\n"));
   if (gh_length (others) > 0)
     {
       elem = SCM_CAR (scm_reverse (others));
@@ -263,9 +262,9 @@ chat_connect (filename)
 
   if (!SCM_BOOLP (result))
     {
-      log (LOG_ERR, gettext ("%s: returned value isn't a boolean.\n"),
+      log (LOG_ERR, _("%s: returned value isn't a boolean.\n"),
            filename);
-      log (LOG_ERR, gettext ("Couldn't continue, exiting.\n"));
+      log (LOG_ERR, _("Couldn't continue, exiting.\n"));
       exit (1);
     }
 

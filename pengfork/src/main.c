@@ -42,7 +42,6 @@
 #endif
 
 #include "common.h"
-#include "gettext.h"
 #include "log.h"
 #include "misc.h"
 #include "options.h"
@@ -92,20 +91,19 @@ main2 (closure, argc, argv)
 
   if (!parse_command_line (argc, argv))
     {
-      log (LOG_ERR, gettext ("Error parsing command line, exiting !\n"));
+      log (LOG_ERR, _("Error parsing command line, exiting !\n"));
       exit (1);
     }
 
   if (!parse_config ())
     {
-      log (LOG_ERR,
-           gettext ("Error parsing configuration files, exiting !\n"));
+      log (LOG_ERR,_("Error parsing configuration files, exiting !\n"));
       exit (1);
     }
 
   if (!check_config ())
     {
-      log (LOG_ERR, gettext ("Bad configuration, exiting !\n"));
+      log (LOG_ERR, _("Bad configuration, exiting !\n"));
       exit (1);
     }
 
@@ -125,7 +123,7 @@ main2 (closure, argc, argv)
 
   if (!iface->connect ())
     {
-      log (LOG_ERR, gettext ("Fatal error, exiting.\n"));
+      log (LOG_ERR, _("Fatal error, exiting.\n"));
       clean_exit (1);
     }
   do {
@@ -135,7 +133,7 @@ main2 (closure, argc, argv)
         if (!engine_init ())
 	{
 	  /* Should not happen */
-	  log (LOG_ERR, gettext ("Unable to init engine, exiting.\n"));
+	  log (LOG_ERR, _("Unable to init engine, exiting.\n"));
 	  clean_exit (1);
 	}
         
@@ -149,7 +147,7 @@ main2 (closure, argc, argv)
       {
         if(!PARAM_AUTO_RECONNECT)
 	{
-	log (LOG_ERR, gettext ("Fatal error, exiting.\n"));
+	log (LOG_ERR, _("Fatal error, exiting.\n"));
 	clean_exit (1);
 	}
       }
@@ -158,12 +156,12 @@ main2 (closure, argc, argv)
       {
         if(PARAM_RECONNECT_DELAY)
 	{
-	  log (LOG_NOTICE, gettext ("Reconnection in %d seconds...\n"),
+	  log (LOG_NOTICE, _("Reconnection in %d seconds...\n"),
 	       PARAM_RECONNECT_DELAY);
 	  sleep(PARAM_RECONNECT_DELAY);
 	}
         else
-	log (LOG_NOTICE, gettext ("Immediate reconnection...\n"));
+	log (LOG_NOTICE, _("Immediate reconnection...\n"));
       }
   }
   while (PARAM_AUTO_RECONNECT && status!=sexit);

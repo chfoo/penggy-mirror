@@ -49,9 +49,14 @@
 #if HAVE_ARPA_INET_H
 # include <arpa/inet.h>
 #endif
+#if HAVE_SYS_STAT_H
+# include <sys/stat.h>
+#endif
+#if HAVE_LIBGEN_H
+# include <libgen.h>
+#endif
 
 #include "utils.h"
-#include "gettext.h"
 #include "options.h"
 #include "getpass.h"
 #include "log.h"
@@ -85,7 +90,7 @@ check_multiple (option, value, choices)
       free (tmp);
     }
 
-  log (LOG_ERR, gettext("%s must be "), option);
+  log (LOG_ERR, _("%s must be "), option);
   for (i = 0; choices[i] != NULL; i++)
     {
       log (LOG_ERR, "%s", choices[i]);
@@ -94,7 +99,7 @@ check_multiple (option, value, choices)
           if (choices[i + 2] != NULL)
             log (LOG_ERR, ", ");
           else
-            log (LOG_ERR, gettext(" or "));
+            log (LOG_ERR, _(" or "));
         }
     }
   log (LOG_ERR, ".\n");
@@ -140,9 +145,8 @@ check_screen_name (option, sn)
 
   if (!sn)
     {
-      log (LOG_ERR,
-           gettext ("Screen name not defined, please edit your configuration file (%s).\n"),
-           PARAM_CONFIG_FILE);
+      log (LOG_ERR, _("Screen name not defined, please edit your configuration"
+		  " file (%s).\n"), PARAM_CONFIG_FILE);
       return 0;
     }
   if (get_password (sn, &pass))
@@ -152,7 +156,7 @@ check_screen_name (option, sn)
     }
   else
     {
-      log (LOG_ERR, gettext ("Screen name '%s' not found in %s.\n"), sn,
+      log (LOG_ERR, _("Screen name '%s' not found in %s.\n"), sn,
            PARAM_SECRET_FILE);
       return 0;
     }
@@ -166,7 +170,7 @@ check_debug_level (option, level)
   if (level >= 0 && level <= DEBUG_MAX)
     return 1;
 
-  log (LOG_ERR, gettext("%s must be between 0 and 10.\n"), option);
+  log (LOG_ERR, _("%s must be between 0 and 10.\n"), option);
   return 0;
 }
 
@@ -178,7 +182,43 @@ check_natural (option, num)
   if (num >= 0)
     return 1;
 
-  log (LOG_ERR, gettext("%s must be >=0.\n"), option);
+  log (LOG_ERR, _("%s must be >=0.\n"), option);
+  return 0;
+}
+
+int
+check_file (option, file)
+     char *option;
+     char *file;
+{
+  struct stat st;
+
+  if(!stat(file,&st))
+    return 1;
+
+  log (LOG_ERR, _("File or directory '%s' specified in %s parameter does"
+	        " not exist.\n"), file, option);
+  return 0;
+}
+
+int
+check_pid_dir (option, path)
+     char *option;
+     char *path;
+{
+  struct stat st;
+  char *path2 = strdup(path);
+  char *dir = dirname(path2);
+
+  if(!stat(dir,&st)) {
+    free(path2);
+    return 1;
+  }
+  
+  log (LOG_ERR, _("File specified in %s parameter has to be created in"
+	        " directory '%s' but it doesn't exist.\n"), 
+       option, dir);
+  free(path2);
   return 0;
 }
 
@@ -191,7 +231,7 @@ check_line_speed (option, speed)
   if (modem_valid_speed (speed))
     return 1;
 
-  log (LOG_ERR, gettext("%s has an invalid line speed specicification.\n"), option);
+  log (LOG_ERR, _("%s has an invalid line speed specification.\n"), option);
   return 0;
 }
 #endif /* ENABLE_MODEM */
@@ -205,7 +245,7 @@ check_port (option, port)
   if (port > 0 && port < 65536)
     return 1;
 
-  log (LOG_ERR, gettext("%s must be a valid port (between 1 and 65535).\n"), option);
+  log (LOG_ERR, _("%s must be a valid port (between 1 and 65535).\n"), option);
   return 0;
 }
 

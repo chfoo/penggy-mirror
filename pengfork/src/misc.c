@@ -71,7 +71,6 @@
 # include <errno.h>
 #endif
 
-#include "gettext.h"
 #include "log.h"
 #include "misc.h"
 #include "options.h"
@@ -89,31 +88,31 @@ daemon_mode (void)
   if (pid == 0)
     {
       log_daemon();
-      log (LOG_NOTICE, gettext("%s daemon started\n"), PACKAGE_STRING);
+      log (LOG_NOTICE, _("%s daemon started\n"), PACKAGE_STRING);
       f = open ("/dev/null", O_RDWR);
       if (f < 0)
-        log (LOG_WARNING, gettext ("Unable to open /dev/null: %s (%d)\n"),
+        log (LOG_WARNING, _("Unable to open /dev/null: %s (%d)\n"),
              strerror (errno), errno);
       else
         {
           if (dup2 (f, 0) < 0)
-            log (LOG_WARNING, gettext ("Error calling dup2 stdin: %s (%d)\n"),
+            log (LOG_WARNING, _("Error calling dup2 stdin: %s (%d)\n"),
                  strerror (errno), errno);
           if (dup2 (f, 1) < 0)
             log (LOG_WARNING,
-                 gettext ("Error calling dup2 stdout: %s (%d)\n"),
+                 _("Error calling dup2 stdout: %s (%d)\n"),
                  strerror (errno), errno);
           if (dup2 (f, 2) < 0)
             log (LOG_WARNING,
-                 gettext ("Error calling dup2 stderr: %s (%d)\n"),
+                 _("Error calling dup2 stderr: %s (%d)\n"),
                  strerror (errno), errno);
           if (close (f) < 0)
             log (LOG_WARNING,
-                 gettext ("Error calling close /dev/null: %s (%d)\n"),
+                 _("Error calling close /dev/null: %s (%d)\n"),
                  strerror (errno), errno);
         }
       if (setsid () < 0)
-        log (LOG_WARNING, gettext ("Error calling setsid: %s (%d)\n"),
+        log (LOG_WARNING, _("Error calling setsid: %s (%d)\n"),
              strerror (errno), errno);
     }
   else if (pid > 0)
@@ -122,7 +121,7 @@ daemon_mode (void)
     }
   else
     {
-      log (LOG_ERR, gettext ("Unable to fork: %s (%d)\n"), strerror (errno),
+      log (LOG_ERR, _("Unable to fork: %s (%d)\n"), strerror (errno),
            errno);
       exit (1);
     }
@@ -157,7 +156,7 @@ running_from_pidfile (void)
       if (pid != 0 && kill (pid, 0) == -1)
         {
           /* we can create a pidfile now */
-          log (LOG_WARNING, gettext ("Removing stale pid file %s.\n"), PARAM_PID_FILE);
+          log (LOG_WARNING, _("Removing stale pid file %s.\n"), PARAM_PID_FILE);
 	remove_pidfile ();
 	return 0;
         }
@@ -165,7 +164,7 @@ running_from_pidfile (void)
         {
 	if(pid)
 	  {
-	    log (LOG_ERR, gettext("%s is already running with pid %d.\n"), 
+	    log (LOG_ERR, _("%s is already running with pid %d.\n"), 
 	         PACKAGE, pid);
 	    return 1;               /* we're already running */
 	  }
@@ -194,7 +193,7 @@ write_pidfile (void)
     }
   else
     {
-      log (LOG_WARNING, gettext ("Can't create pid file %s: %s (%d).\n"), 
+      log (LOG_WARNING, _("Can't create pid file %s: %s (%d).\n"), 
 	 PARAM_PID_FILE, strerror(errno), errno);
       return 0;
     }
@@ -205,7 +204,7 @@ remove_pidfile (void)
 {
   if (unlink (PARAM_PID_FILE))
     {
-      log (LOG_ERR, gettext("Can't remove %s: %s (%d).\n"), 
+      log (LOG_ERR, _("Can't remove %s: %s (%d).\n"), 
 	 PARAM_PID_FILE, strerror(errno), errno);
       return 0;         /* cannot remove pidfile */
     }
@@ -244,11 +243,11 @@ launch_ip_up (if_name, if_addr, dns, domain, mtu)
         {
           if (putenv (env_name) || putenv (env_addr) ||
               putenv (env_dns) || putenv (env_domain) || putenv (env_mtu))
-            log (LOG_WARNING, gettext ("Can't set environment variables: %s (%d)\n"),
+            log (LOG_WARNING, _("Can't set environment variables: %s (%d)\n"),
                  strerror (errno), errno);
 
           if (execvp (PARAM_IP_UP, argv))
-            log (LOG_WARNING, gettext ("Can't exec script %s: %s (%d)\n"),
+            log (LOG_WARNING, _("Can't exec script %s: %s (%d)\n"),
                  PARAM_IP_UP, strerror (errno), errno);
           exit (-1);
         }
@@ -259,7 +258,7 @@ launch_ip_up (if_name, if_addr, dns, domain, mtu)
         }
       else
         {
-          log (LOG_WARNING, gettext ("Can't fork: %s (%d)\n"), strerror (errno), errno);
+          log (LOG_WARNING, _("Can't fork: %s (%d)\n"), strerror (errno), errno);
           return 0;
         }
     }
@@ -286,11 +285,11 @@ launch_ip_down (if_name)
       if (pid == 0)
         {
           if (putenv (name))
-            log (LOG_WARNING, gettext ("Can't set environment variables: %s (%d)\n"),
+            log (LOG_WARNING, _("Can't set environment variables: %s (%d)\n"),
                  strerror (errno), errno);
 
           if (execvp (PARAM_IP_DOWN, argv))
-            log (LOG_WARNING, gettext ("Can't exec script %s: %s (%d)\n"),
+            log (LOG_WARNING, _("Can't exec script %s: %s (%d)\n"),
                  PARAM_IP_DOWN, strerror (errno), errno);
           exit (-1);
         }
@@ -301,7 +300,7 @@ launch_ip_down (if_name)
         }
       else
         {
-          log (LOG_WARNING, gettext ("Can't fork: %s (%d)\n"), strerror (errno), errno);
+          log (LOG_WARNING, _("Can't fork: %s (%d)\n"), strerror (errno), errno);
           return 0;
         }
     }

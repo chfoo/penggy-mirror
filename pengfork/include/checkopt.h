@@ -37,6 +37,9 @@ int check_iface_type(char *option, char *type);
 int check_screen_name(char *option, char *sn);
 int check_debug_level(char *option, int level);
 int check_natural(char *option, int num);
+int check_file (char *option, char *file);
+int check_pid_dir (char *option, char *path);
+
 #if ENABLE_MODEM
 int check_line_speed(char *option, int speed);
 #endif

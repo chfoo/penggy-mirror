@@ -33,7 +33,6 @@
 # include <string.h>
 #endif
 
-#include "gettext.h"
 #include "options.h"
 #include "utils.h"
 #include "log.h"
@@ -65,7 +64,7 @@ resolve_access ()
 #if ENABLE_MODEM
       haccess = &modem_access;
 #else
-      log (LOG_ERR, gettext ("Sorry modem support is not compiled in\n"));
+      log (LOG_ERR, _("Sorry modem support is not compiled in\n"));
       return 0;
 #endif
     }
@@ -75,7 +74,7 @@ resolve_access ()
 #if ENABLE_TCPIP
       haccess = &tcpip_access;
 #else
-      log (LOG_ERR, gettext ("Sorry TCP/IP support is not compiled in\n"));
+      log (LOG_ERR, _("Sorry TCP/IP support is not compiled in\n"));
       return 0;
 #endif
     }
@@ -85,7 +84,7 @@ resolve_access ()
 #if ENABLE_CABLE
       haccess = &cable_access;
 #else
-      log (LOG_ERR, gettext ("Sorry cable support is not compiled in\n"));
+      log (LOG_ERR, _("Sorry cable support is not compiled in\n"));
       return 0;
 #endif
     }
@@ -104,7 +103,7 @@ resolve_iface ()
       iface = &tun_iface;
       ifname = tun_ifname;
 #else
-      log (LOG_ERR, gettext ("Sorry tun support is not compiled in\n"));
+      log (LOG_ERR, _("Sorry tun support is not compiled in\n"));
       return 0;
 #endif
     }
@@ -122,7 +121,7 @@ resolve_protocol ()
 #if ENABLE_P3
       protocol = &p3_protocol;
 #else
-      log (LOG_ERR, gettext ("Sorry P3 support is not compiled in\n"));
+      log (LOG_ERR, _("Sorry P3 support is not compiled in\n"));
       return 0;
 #endif
     }
@@ -131,7 +130,7 @@ resolve_protocol ()
 #if ENABLE_FLAP
       protocol = NULL; /*&flap_protocol;*/
 #else
-      log (LOG_ERR, gettext ("Sorry FLAP support is not compiled in\n"));
+      log (LOG_ERR, _("Sorry FLAP support is not compiled in\n"));
       return 0;
 #endif
     }

@@ -58,7 +58,6 @@
 # include <sys/wait.h>
 #endif
 
-#include "gettext.h"
 #include "log.h"
 #include "access.h"
 #include "if.h"
@@ -140,7 +139,7 @@ engine_loop ()
            * well... in fact this should not happen
            * or very rarely
            */
-          log (LOG_WARNING, gettext ("engine - No data to wait\n"));
+          log (LOG_WARNING, _("engine - No data to wait\n"));
           sleep (ENGINE_TIMEOUT);
           fds = 0;              /* simulate a timeout */
         }
@@ -154,7 +153,7 @@ engine_loop ()
       /* FIXME: find a better way of doing this */
       if(!haccess->is_connected())
         {
-	log (LOG_WARNING, gettext ("Server drop the connection.\n"));
+	log (LOG_WARNING, _("Server drop the connection.\n"));
 	engine_stop();
         }
       
@@ -285,7 +284,7 @@ engine_set_readers (fdset, maxfd)
       else
         {
           /* Normally the input buffer mustn't be full */
-          log (LOG_ERR, gettext ("engine - An input buffer is full\n"));
+          log (LOG_ERR, _("engine - An input buffer is full\n"));
           buffer_free (&client[i].in, client[i].in.used);
           debug (1, "\tBuffer flushed\n", i);
         }
