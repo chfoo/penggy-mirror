@@ -23,7 +23,7 @@
 # $Id$
 #
 
-INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib
+INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib -I$(top_srcdir)/intl
 
 p3_c = p3.c check.c misc.c init.c ack.c out.c in.c
 

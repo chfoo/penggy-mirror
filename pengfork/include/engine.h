@@ -62,8 +62,10 @@ void engine_set_readers (fd_set * fdset, int *maxfd);
 void engine_set_writers (fd_set * fdset, int *maxfd);
 void engine_read (fd_set * fdset);
 void engine_write (fd_set * fdset);
-void engine_timeout ();
-void engine_end_clients ();
+void engine_timeout (void);
+void engine_end_clients (void);
+void engine_wait_pid (pid_t pid);
+void engine_wait_pids (void);
 
 
 #endif /* __ENGINE_H__ */

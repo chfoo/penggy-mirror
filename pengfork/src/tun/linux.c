@@ -26,6 +26,8 @@
 # include "config.h"
 #endif
 
+#if TARGET_LINUX
+
 #if STDC_HEADERS
 # include <stdlib.h>
 # include <stddef.h>
@@ -84,7 +86,6 @@
 #include "options.h"
 #include "log.h"
 
-extern int tun_fd;
 
 /* Allocate TUN device,
  */
@@ -98,6 +99,7 @@ tun_open_old ()
     {
       sprintf (tunname, "/dev/%s", PARAM_INTERFACE_NAME);
       tun_fd = open (tunname, O_RDWR);
+      strncpy (tun_ifname, PARAM_INTERFACE_NAME, sizeof(tun_ifname));
     }
 
   for (i = 0; i < 255; i++)
@@ -106,7 +108,7 @@ tun_open_old ()
       /* Open device */
       if ((tun_fd = open (tunname, O_RDWR)) > 0)
         {
-          sprintf (PARAM_INTERFACE_NAME, "tun%d", i);
+          sprintf (tun_ifname, "tun%d", i);
           break;
         }
     }
@@ -131,10 +133,7 @@ tun_open_old ()
   return 1;
 }
 
-#ifdef HAVE_LINUX_IF_TUN_H      /* New driver support */
 #if HAVE_LINUX_IF_TUN_H
-# include <linux/if_tun.h>
-#endif
 
 /* pre 2.4.6 compatibility */
 #define OTUNSETNOCSUM  (('T'<< 8) | 200)
@@ -159,7 +158,7 @@ tun_open ()
   memset (&ifr, 0, sizeof (ifr));
   ifr.ifr_flags = IFF_TUN | IFF_NO_PI;
   if (PARAM_INTERFACE_NAME)
-    strncpy (ifr.ifr_name, PARAM_INTERFACE_NAME, IFNAMSIZ);
+      strncpy (ifr.ifr_name, PARAM_INTERFACE_NAME, IFNAMSIZ);
 
   if (ioctl (tun_fd, TUNSETIFF, (void *) &ifr) < 0)
     {
@@ -183,13 +182,8 @@ tun_open ()
           return 0;
         }
     }
+  strcpy(tun_ifname, ifr.ifr_name);
 
-  /*
-   * FIXME: total mess with allocation of parameters.
-   * Can't strcpy in a constant string, but we should not always strdup.
-   * And we don't know when to free old value (can be string constant).
-   */
-  PARAM_INTERFACE_NAME = strdup (ifr.ifr_name);
   return 1;
 }
 
@@ -250,3 +244,5 @@ tun_put (buffer, data, data_size)
   memcpy (p, data, data_size);
   return 1;
 }
+
+#endif /* TARGET_LINUX */

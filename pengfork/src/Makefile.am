@@ -26,6 +26,7 @@
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@
 
+INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib -I$(top_srcdir)/intl
 
 datadir = @datadir@
 localedir = $(datadir)/locale
@@ -49,8 +50,6 @@ penggy_SOURCES = 	buffer.c		\
 			stream.c		\
 			window.c
 
-INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib
-
 if BUILD_MODEM
   MODEM_LIBS = $(top_builddir)/src/modem/libmodem.a
 endif BUILD_MODEM
@@ -68,8 +67,7 @@ if BUILD_TCPIP
 endif BUILD_TCPIP
 
 if BUILD_TUN
-  TUN_LIBS =	$(top_builddir)/src/tun/libtun.a	\
-		$(top_builddir)/src/tun/@ARCH_DIR@/libsystem.a
+  TUN_LIBS =	$(top_builddir)/src/tun/libtun.a
 endif BUILD_TUN
 
 if BUILD_P3

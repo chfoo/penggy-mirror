@@ -24,6 +24,6 @@
 chatdir = ${pkgdatadir}/chat
 confdir = ${sysconfdir}/${PACKAGE}
 
-chat_DATA = aolnet.scm global.scm global2.scm
-conf_DATA = penggy.cfg aol-secrets phonetab
-conf_SCRIPTS = ip-up ip-down
+dist_chat_DATA = aolnet.scm global.scm global2.scm csnet.scm
+dist_conf_DATA = penggy.cfg aol-secrets phonetab
+dist_conf_SCRIPTS = ip-up ip-down

@@ -46,6 +46,7 @@
 const access_t *haccess;
 const protocol_t *protocol;
 const iface_t *iface;
+char *ifname;
 
 int
 resolve_functions ()
@@ -101,6 +102,7 @@ resolve_iface ()
     {
 #if ENABLE_TUN
       iface = &tun_iface;
+      ifname = tun_ifname;
 #else
       log (LOG_ERR, gettext ("Sorry tun support is not compiled in\n"));
       return 0;

@@ -73,6 +73,7 @@ buffer_t *acout, *ifout;
 
 int ipnum = 0;
 int ip_recv = 0;
+int mtu;
 
 struct vjcompress vj_comp;
 #define MAX_VJHEADER 16         /* Maximum size of compressed header */
@@ -104,7 +105,7 @@ ip_tunnel_ready (bufin)
 {
   if ((bufin->used == bufin->size) && protocol->ready ())
     get_ip_client (bufin);
-  return protocol->ready ();
+  return (bufin->size - bufin->used) > mtu;
 }
 
 void
@@ -119,12 +120,12 @@ ip_tunnel_config (token, data, data_size)
   struct in_addr dns;
   struct in_addr net;
   int mask;
-  int mtu = 1500;
   char hostname[255];
   char *domain = NULL;
   int len;
   int nparsed = 0;
 
+  mtu = 1472; /* Default to 1472 */
   while (nparsed < data_size)
     {
       cfg_hdr = (struct ip_config_header *) (data + nparsed);
@@ -171,7 +172,7 @@ ip_tunnel_config (token, data, data_size)
 
   if(PARAM_SET_DNS) 
     set_dns (domain, dns);
-  launch_ip_up (PARAM_INTERFACE_NAME, address, dns, domain, mtu);
+  launch_ip_up (ifname, address, dns, domain, mtu);
 
   vj_compress_init (&vj_comp, -1);
 
@@ -201,8 +202,8 @@ init_iface (in, out)
      buffer_t *out;
 {
   ifout = out;
-  create_buffer (in, 2 * 1500);
-  create_buffer (out, 2 * 1500);
+  create_buffer (in, 2 * mtu);
+  create_buffer (out, 2 * mtu);
 }
 
 int
@@ -213,7 +214,7 @@ destroy_iface (in, out)
   fdo_unregister (TOKEN ("ya"));
   fdo_unregister (TOKEN ("yc"));
   fdo_unregister (TOKEN ("yd"));
-  launch_ip_down (PARAM_INTERFACE_NAME);
+  launch_ip_down (ifname);
   if(PARAM_SET_DNS) 
     unset_dns ();
   return 1;

@@ -23,14 +23,11 @@
 # $Id$
 #
 
-DIST_SUBDIRS = linux openbsd freebsd
+INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib -I$(top_srcdir)/intl
 
-INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib
-
-tun_c = tun.c
+tun_c = tun.c linux.c freebsd.c generic.c openbsd.c
 
 if BUILD_TUN
-SUBDIRS = @ARCH_DIR@
 noinst_LIBRARIES = libtun.a
 libtun_a_SOURCES = $(tun_c)
 else !BUILD_TUN

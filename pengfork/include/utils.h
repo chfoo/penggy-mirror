@@ -36,7 +36,9 @@
 # include <byteswap.h>
 #endif
 
-#define MAX(a,b) ((a)>(b) ? (a):(b))
+#ifndef MAX
+# define MAX(a,b) ((a)>(b) ? (a):(b))
+#endif
 
 /* Host to Little Endian */
 #if WORDS_BIGENDIAN

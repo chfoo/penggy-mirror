@@ -29,15 +29,12 @@
 # include "config.h"
 #endif
 
-#if HAVE_GUILE_GH_H
-# include <guile/gh.h>
-#endif
+#include <libguile.h>
 
 SCM chat_success (void);
 SCM chat_failure (void);
 SCM chat_send (SCM string);
 SCM chat_try (SCM timeout, SCM first, SCM others);
 int chat_connect (char *filename);
-
 
 #endif /* __MODEM_SCRIPT_H__ */

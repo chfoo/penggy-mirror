@@ -32,11 +32,12 @@ AC_CONFIG_HEADER([config.h])
 # Auxiliary files
 AC_CONFIG_AUX_DIR(config)
 
-AM_INIT_AUTOMAKE([gnu 1.6 dist-bzip2])
-AM_MAINTAINER_MODE
-
 # Check host type
 AC_CANONICAL_HOST
+AC_CANONICAL_SYSTEM
+
+AM_INIT_AUTOMAKE([gnu 1.6 dist-bzip2])
+AM_MAINTAINER_MODE
 
 # Look for a C compiler
 # CFLAGS must be defined to avoid AC_PROG_CC adding default FLAGS
@@ -56,23 +57,30 @@ if test "$GCC" = yes; then
 fi
 
 # Check arch specific source directory
-# Use @ARCH_DIR@ in Makefile.am files.
-case "$host" in
+case "$target" in
   *-*-linux*)
-    ARCH_DIR="linux"
+    AC_DEFINE([TARGET_LINUX], 1,[Are we running on Linux?])
     ;;
   *-*-freebsd*)
-    ARCH_DIR="freebsd"
+    AC_DEFINE([TARGET_FREEBSD], 1, [Are we running on FreeBSD?])
     ;;
   *-*-openbsd*)
-    ARCH_DIR="openbsd"
+    AC_DEFINE([TARGET_OPENBSD], 1, [Are we running on OpenBSD?])
+    ;;
+  *-*-netbsd*)
+    AC_DEFINE([TARGET_NETBSD], 1, [Are we running on NetBSD?])
+    ;;
+  *-*-darwin*)
+    AC_DEFINE([TARGET_DARWIN], 1, [Are we running on Mac OS X?])
+    CPPFLAGS="$CPPFLAGS -no-cpp-precomp"
+    ;;
+  *-*-solaris*)
+    AC_DEFINE([TARGET_SOLARIS], 1, [Are we running on Solaris?])
     ;;
   *)
-    # Default is linux
-    ARCH_DIR="linux"
+    AC_DEFINE([TARGET_UNKNOW], 1, [Are we running on an unsupported platform?])
     ;;
 esac
-AC_SUBST([ARCH_DIR])
 
 #Checks for libraries.
 # FIXME: Replace `main' with a function in `-lc':
@@ -82,7 +90,7 @@ AC_CHECK_LIB([c], [main])
 # Checks for header files.
 AC_FUNC_ALLOCA
 AC_HEADER_STDC
-AC_CHECK_HEADERS([arpa/inet.h fcntl.h langinfo.h libintl.h netdb.h netinet/in.h stdio_ext.h sys/ioctl.h sys/time.h syslog.h termios.h])
+AC_CHECK_HEADERS([arpa/inet.h fcntl.h langinfo.h libintl.h netdb.h stdio_ext.h sys/ioctl.h sys/time.h syslog.h termios.h])
 
 # Customized checks
 AC_CHECK_HEADERS([assert.h byteswap.h ctype.h errno.h linux/if_tun.h netinet/in.h netinet/in_systm.h netinet/ip.h net/if.h net/if_tun.h net/net_globals.h net/ppp_defs.h signal.h stdarg.h stdio.h sys/byteorder.h sys/uio.h])
@@ -97,6 +105,7 @@ AC_C_BIGENDIAN
 AC_TYPE_PID_T
 AC_TYPE_SIZE_T
 AC_HEADER_TIME
+AC_HEADER_SYS_WAIT
 
 # Checks for library functions.
 AM_GNU_GETTEXT
@@ -176,7 +185,6 @@ if test "$modem" = yes; then
   GUILE_FLAGS
   CFLAGS="$CFLAGS $GUILE_CFLAGS"
   LDFLAGS="$LDFLAGS $GUILE_LDFLAGS"
-  AC_CHECK_HEADERS([guile/gh.h libguile.h])
   AC_MSG_CHECKING(whether scm_eval conforms to R5RS)
   AC_CACHE_VAL(guile_r5rs_eval, [
     AC_TRY_COMPILE([#include <guile/gh.h>], [SCM e, m; scm_eval(e, m);],
@@ -346,18 +354,14 @@ CPPFLAGS="$CPPFLAGS	-DPKGDATADIR=\\\"\$(pkgdatadir)\\\""
 CPPFLAGS="$CPPFLAGS -DSYSCONFDIR=\\\"\$(sysconfdir)\\\""
 CPPFLAGS="$CPPFLAGS	-DLOCALSTATEDIR=\\\"\$(localstatedir)\\\""
 
-AC_DEFINE_UNQUOTED(COMPILATION_HOST, "$host", [System where the build has occured])
-
 # Output Files
 AC_CONFIG_FILES([Makefile
                  config/Makefile
-                 doc/Makefile
-                 doc/config/Makefile
                  include/Makefile
                  include/cable/Makefile
                  include/dsl/Makefile
                  include/fdo/Makefile
-		 include/fdo/atoms/Makefile
+                 include/fdo/atoms/Makefile
                  include/iptunnel/Makefile
                  include/l2tp/Makefile
                  include/modem/Makefile
@@ -371,15 +375,14 @@ AC_CONFIG_FILES([Makefile
                  src/cable/Makefile
                  src/dsl/Makefile
                  src/fdo/Makefile
-		 src/fdo/atoms/Makefile
+                 src/fdo/atoms/Makefile
                  src/iptunnel/Makefile
                  src/l2tp/Makefile
                  src/modem/Makefile
                  src/p3/Makefile
                  src/tcpip/Makefile
                  src/tun/Makefile
-                 src/tun/freebsd/Makefile
-                 src/tun/linux/Makefile
-                 src/tun/openbsd/Makefile
-                 po/Makefile.in])
+                 po/Makefile.in
+                 doc/Makefile
+                 doc/config/Makefile])
 AC_OUTPUT

@@ -203,16 +203,16 @@ init_parameters (void)
          gettext ("sets the string used to dial."), "STRING", 
          __modem, NULL),
     STR (0, "prefix", "dial_prefix", NULL, 
-         NULL, NULL, 
+         gettext ("uses STRING to obtain an extern line."), "STRING", 
          __modem, NULL), 
     STR ('p', "phonetab", "phonetab", DEFAULT_PHONETAB_FILE,
          gettext ("sets the file where phone numbers will be searched."), "PATH",
          __modem, NULL),
-    INT ('s', "line-speed", "line_speed", 115200,
+    INT ('l', "line-speed", "line_speed", 115200,
          gettext ("sets the serial line speed."), "SPEED",
          __modem, check_line_speed),
     STR (0, "chat-path", "chat_path", DEFAULT_CHAT_PATH,
-         gettext ("sets the path where chat files will be searched."), "SCRIPT", 
+         gettext ("sets the path where chat files will be searched."), "PATH", 
          __modem, NULL), 
     INT (0, NULL, "dial_retry", 3, 
          NULL, NULL, 
@@ -384,7 +384,24 @@ version (void)
 	"\n");
   printf ("SYSCONFDIR=\"" SYSCONFDIR "\"\n");
   printf ("PKGDATADIR=\"" PKGDATADIR "\"\n");
-  printf ("LOCALSTATEDIR=\"" LOCALSTATEDIR "\"\n");
+  printf ("LOCALSTATEDIR=\"" LOCALSTATEDIR "\"\n\n");
+  printf ("PLATFORM="
+#if TARGET_LINUX
+	"Linux"
+#elif TARGET_FREEBSD
+	"FreeBSD"
+#elif TARGET_OPENBSD
+	"OpenBSD"
+#elif TARGET_NETBSD
+	"NetBSD"
+#elif TARGET_DARWIN
+	"Darwin"
+#elif TARGET_SOLARIS
+	"Solaris"
+#elif TARGET_UNKNOW
+	"unknow - unsupported"
+#endif
+	"\n");
   exit (0);
 }
 

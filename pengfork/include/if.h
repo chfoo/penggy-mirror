@@ -48,9 +48,11 @@ typedef struct
 iface_t;
 
 extern const iface_t *iface;
+extern char *ifname;
 
 #if ENABLE_TUN
 extern const iface_t tun_iface;
+extern char tun_ifname[8];
 #endif
 
 #endif /* __IF_H__ */

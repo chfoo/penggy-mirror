@@ -11,9 +11,9 @@ lib/getopt.c
 src/p3/in.c
 src/p3/p3.c
 src/fdo/login.c
-src/tun/linux/tun.c
-src/tun/freebsd/tun.c
-src/tun/openbsd/tun.c
+src/tun/linux.c
+src/tun/freebsd.c
+src/tun/openbsd.c
 src/resolver.c
 src/modem/devlock.c
 src/modem/script.c

@@ -32,6 +32,7 @@
 #include "tun/tun.h"
 
 int tun_fd = -1;
+char tun_ifname[8];
 
 const iface_t tun_iface = (iface_t) {
   tun_open,

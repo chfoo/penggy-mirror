@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: penggy 0.1\n"
-"POT-Creation-Date: 2003-01-01 22:38+0100\n"
+"POT-Creation-Date: 2003-01-06 15:46+0100\n"
 "PO-Revision-Date: 2003-01-01 15:45+0100\n"
 "Last-Translator: Sebastian Schmidt <yath@yath.eu.org>\n"
 "Language-Team: German <yath@yath.eu.org>\n"
@@ -87,27 +87,27 @@ msgstr "Server erscheint tot, Verbindung wird getrennt...\n"
 msgid "Loging into provider as '%s'\n"
 msgstr "Einloggen beim Provider als '%s'\n"
 
-#: src/tun/linux/tun.c:118
+#: src/tun/linux.c:120
 #, c-format
 msgid "Unable to open tun device /dev/%s (using 2.2 kernel method): %s(%d).\n"
 msgstr ""
 "Konnte tun-Device /dev/%s nicht öffnen (Methode von Kernel 2.2): %s (%d).\n"
 
-#: src/tun/linux/tun.c:125
+#: src/tun/linux.c:127
 msgid "Unable to open a valid tun device (using 2.2 kernel method).\n"
 msgstr ""
 "Konnte kein gültiges tun-Device öffnen (Methode von Kernel 2.2): %s (%d).\n"
 
-#: src/tun/linux/tun.c:153
+#: src/tun/linux.c:152
 #, c-format
 msgid "Unable to open /dev/net/tun: %s(%d).\n"
 msgstr "Konnte /dev/net/tun nicht öffnen: %s (%d).\n"
 
-#: src/tun/linux/tun.c:155
+#: src/tun/linux.c:154
 msgid "Assuming 2.2 kernel method.\n"
 msgstr "Benutze Methode des Kernels 2.2\n"
 
-#: src/tun/linux/tun.c:171
+#: src/tun/linux.c:170
 #, c-format
 msgid ""
 "Unable to open a valid tun device (using pre 2.4.6 kernel method): %s(%d).\n"
@@ -115,7 +115,7 @@ msgstr ""
 "Konnte kein gültiges tun-Device öffnen (Methode von Kernel <2.4.6): %s (%"
 "d).\n"
 
-#: src/tun/linux/tun.c:180
+#: src/tun/linux.c:179
 #, c-format
 msgid ""
 "Unable to open a valid tun device (using post 2.4.6 kernel method): %s(%d).\n"
@@ -123,32 +123,32 @@ msgstr ""
 "Konnte kein gültiges tun-Device öffnen (Methode von Kernel >2.4.6): %s (%"
 "d).\n"
 
-#: src/tun/freebsd/tun.c:119 src/tun/openbsd/tun.c:118
+#: src/tun/freebsd.c:123 src/tun/openbsd.c:119
 #, c-format
 msgid "Unable to open tun device /dev/%s: %s(%d).\n"
 msgstr "Konnte tun-Device /dev/%s nicht öffnen: %s (%d).\n"
 
-#: src/tun/freebsd/tun.c:124 src/tun/openbsd/tun.c:123
+#: src/tun/freebsd.c:128 src/tun/openbsd.c:124
 msgid "Unable to open a valid tun device.\n"
 msgstr "Konnte kein gültiges tun-Device öffnen.\n"
 
-#: src/resolver.c:67
+#: src/resolver.c:68
 msgid "Sorry modem support is not compiled in\n"
 msgstr "Modem-Unterstützung wurde nicht einkompiliert\n"
 
-#: src/resolver.c:77
+#: src/resolver.c:78
 msgid "Sorry TCP/IP support is not compiled in\n"
 msgstr "TCP/IP-Unterstützung wurde nicht einkompiliert\n"
 
-#: src/resolver.c:87
+#: src/resolver.c:88
 msgid "Sorry cable support is not compiled in\n"
 msgstr "Kabel-Unterstützung wurde nicht einkompiliert\n"
 
-#: src/resolver.c:105
+#: src/resolver.c:107
 msgid "Sorry tun support is not compiled in\n"
 msgstr "tun-Unterstützung wurde nicht einkompiliert\n"
 
-#: src/resolver.c:123
+#: src/resolver.c:125
 msgid "Sorry P3 support is not compiled in\n"
 msgstr "P3-Unterstützung wurde nicht einkompiliert\n"
 
@@ -157,7 +157,7 @@ msgstr "P3-Unterstützung wurde nicht einkompiliert\n"
 msgid "Removing stale lock file %s.\n"
 msgstr "Lösche alte Lockdatei %s.\n"
 
-#: src/modem/devlock.c:122 src/misc.c:207
+#: src/modem/devlock.c:122 src/misc.c:208
 #, c-format
 msgid "Can't remove %s: %s (%d).\n"
 msgstr "Kann %s nicht entfernen: %s (%d).\n"
@@ -167,34 +167,34 @@ msgstr "Kann %s nicht entfernen: %s (%d).\n"
 msgid "Couldn't remove lock file %s: %s (%d)..\n"
 msgstr "Konnte Lockdatei %s nicht entfernen: %s (%d).\n"
 
-#: src/modem/script.c:62
+#: src/modem/script.c:58
 msgid "Script: Chat success\n"
 msgstr "Skript: Chat erfolgreich\n"
 
-#: src/modem/script.c:69
+#: src/modem/script.c:65
 msgid "Script: Chat failure\n"
 msgstr "Skript: Chat erfolglos\n"
 
-#: src/modem/script.c:90
+#: src/modem/script.c:86
 #, c-format
 msgid "Script: Send '%s'\n"
 msgstr "Skript: '%s' gesendet\n"
 
-#: src/modem/script.c:120
+#: src/modem/script.c:116
 #, c-format
 msgid "Script: String '%s' matched\n"
 msgstr "Skript: Zeichenkette '%s' traf zu\n"
 
-#: src/modem/script.c:174
+#: src/modem/script.c:170
 msgid "Script: No string matched\n"
 msgstr "Skript: Keine Zeichenkette traf zu\n"
 
-#: src/modem/script.c:270
+#: src/modem/script.c:266
 #, c-format
 msgid "%s: returned value isn't a boolean.\n"
 msgstr "%s: Rückgabewert ist kein Bool'scher\n"
 
-#: src/modem/script.c:272
+#: src/modem/script.c:268
 msgid "Couldn't continue, exiting.\n"
 msgstr "Konnte nicht weitermachen, Ende.\n"
 
@@ -229,9 +229,9 @@ msgstr ""
 "Bitte Telefonnummer und Wählkommand überprüfen\n"
 
 #: src/modem/modem.c:331
-#, fuzzy, c-format
+#, c-format
 msgid "Connection at %db/s done.\n"
-msgstr "Verbunden mit %sb/s.\n"
+msgstr "Verbunden mit %db/s.\n"
 
 #: src/modem/modem.c:337
 msgid "No carrier detected\n"
@@ -285,7 +285,6 @@ msgid "Chat failure, you're not connected...\n"
 msgstr "Chat erfolglos, nicht verbunden...\n"
 
 #: src/modem/modem.c:398
-#, fuzzy
 msgid ""
 "Chat returned a non boolean value.\n"
 "Please verify your chat script.\n"
@@ -297,19 +296,19 @@ msgid "Device %s is locked\n"
 msgstr "Gerät %s ist gesperrt\n"
 
 #: src/modem/modem.c:432
-#, fuzzy, c-format
+#, c-format
 msgid "Can't open device %s: %s (%d)\n"
-msgstr "Kann %s nicht entfernen: %s (%d).\n"
+msgstr "Kann Gerät %s nicht öffnen: %s (%d).\n"
 
 #: src/modem/phonetab.c:123
-#, fuzzy, c-format
+#, c-format
 msgid "%s:%d bad line format: 2nd field isn't a boolean\n"
-msgstr "%s: Rückgabewert ist kein Bool'scher\n"
+msgstr "%s:%d: falsches Zeilenformat: 2. Feld ist kein Bool'scher Wert\n"
 
 #: src/modem/phonetab.c:167
 #, c-format
 msgid "phonetab (%s) is empty, edit it first.\n"
-msgstr ""
+msgstr "Telefonbuch (%s) ist leer, bitte zuerst editieren.\n"
 
 #: src/tcpip/tcpip.c:105
 #, c-format
@@ -391,48 +390,48 @@ msgstr "Konnte /etc/resolv.conf nicht löschen: %s (%d)\n"
 msgid "Could not rename /etc/resolv.peng: %s (%d)\n"
 msgstr "Konnte /etc/resolv.peng nicht umbenennen: %s (%d)\n"
 
-#: src/iptunnel/init.c:136
+#: src/iptunnel/init.c:137
 #, c-format
 msgid "IP address: %s\n"
 msgstr "IP-Adresse: %s\n"
 
-#: src/iptunnel/init.c:140
+#: src/iptunnel/init.c:141
 #, c-format
 msgid "DNS server: %s\n"
 msgstr "DNS-Server: %s\n"
 
-#: src/iptunnel/init.c:144
+#: src/iptunnel/init.c:145
 #, c-format
 msgid "MTU: %d\n"
 msgstr "MTU: %d\n"
 
-#: src/iptunnel/init.c:156
+#: src/iptunnel/init.c:157
 #, c-format
 msgid "Hostname: %s\n"
 msgstr "Hostname: %s\n"
 
-#: src/iptunnel/init.c:158
+#: src/iptunnel/init.c:159
 #, c-format
 msgid "Domain: %s\n"
 msgstr "Domäne: %s\n"
 
-#: src/iptunnel/init.c:182
+#: src/iptunnel/init.c:183
 msgid "IP tunnel is working.\n"
 msgstr "IP-Tunnel erfolgreich hergestellt.\n"
 
-#: src/engine.c:133
+#: src/engine.c:143
 msgid "engine - No data to wait\n"
 msgstr "engine - Auf keine Daten zu warten\n"
 
-#: src/engine.c:147
+#: src/engine.c:157
 msgid "Server drop the connection.\n"
 msgstr "Server beendete die Verbindung.\n"
 
-#: src/engine.c:278
+#: src/engine.c:288
 msgid "engine - An input buffer is full\n"
 msgstr "engine - Ein Eingabepuffer ist voll\n"
 
-#: src/getpass.c:84 src/options.c:667
+#: src/getpass.c:84 src/options.c:684
 #, c-format
 msgid "%s:%d bad line format\n"
 msgstr "%s:%d: falsches Zeilenformat\n"
@@ -457,7 +456,6 @@ msgstr "Schwerer Ausnahmefehler, Ende\n"
 msgid "Unable to init engine, exiting.\n"
 msgstr "Konnte engine nicht initialisieren, Ende\n"
 
-# sorry %-)
 #: src/main.c:161
 #, c-format
 msgid "Reconnection in %d seconds...\n"
@@ -467,72 +465,72 @@ msgstr "Wiederverbindung in %d Sekunden...\n"
 msgid "Immediate reconnection...\n"
 msgstr "Sofortige Wiederverbindung\n"
 
-#: src/misc.c:91
+#: src/misc.c:92
 #, c-format
 msgid "%s daemon started\n"
 msgstr "%s-Daemon gestartet\n"
 
-#: src/misc.c:94
+#: src/misc.c:95
 #, c-format
 msgid "Unable to open /dev/null: %s (%d)\n"
 msgstr "Konnte /dev/null nicht öffnen: %s (%d)\n"
 
-#: src/misc.c:99
+#: src/misc.c:100
 #, c-format
 msgid "Error calling dup2 stdin: %s (%d)\n"
 msgstr "Fehler beim Aufruf von dup2 auf stdin: %s (%d)\n"
 
-#: src/misc.c:103
+#: src/misc.c:104
 #, c-format
 msgid "Error calling dup2 stdout: %s (%d)\n"
 msgstr "Fehler beim Aufruf von dup2 auf stdout: %s (%d)\n"
 
-#: src/misc.c:107
+#: src/misc.c:108
 #, c-format
 msgid "Error calling dup2 stderr: %s (%d)\n"
 msgstr "Fehler beim Aufruf von dup2 auf stderr: %s (%d)\n"
 
-#: src/misc.c:111
+#: src/misc.c:112
 #, c-format
 msgid "Error calling close /dev/null: %s (%d)\n"
 msgstr "Fehler beim Schließen von /dev/null: %s (%d)\n"
 
-#: src/misc.c:115
+#: src/misc.c:116
 #, c-format
 msgid "Error calling setsid: %s (%d)\n"
 msgstr "Fehler beim Aufruf von setsid: %s (%d)\n"
 
-#: src/misc.c:124
+#: src/misc.c:125
 #, c-format
 msgid "Unable to fork: %s (%d)\n"
 msgstr "Konnte keinen neuen Prozess starten: %s (%d)\n"
 
-#: src/misc.c:159
+#: src/misc.c:160
 #, c-format
 msgid "Removing stale pid file %s.\n"
 msgstr "Lösche alte PID-Datei %s.\n"
 
-#: src/misc.c:167
+#: src/misc.c:168
 #, c-format
 msgid "%s is already running with pid %d.\n"
 msgstr "%s läuft bereits mit PID %d.\n"
 
-#: src/misc.c:196
+#: src/misc.c:197
 #, c-format
 msgid "Can't create pid file %s: %s (%d).\n"
 msgstr "Konnte PID-Datei %s nicht erstellen: %s (%d).\n"
 
-#: src/misc.c:245 src/misc.c:286
+#: src/misc.c:247 src/misc.c:289
 #, c-format
 msgid "Can't set environment variables: %s (%d)\n"
 msgstr "Konnte Umgebungsvariablen nicht setzen: %s (%d)\n"
 
-#: src/misc.c:250 src/misc.c:290
+#: src/misc.c:251 src/misc.c:293
 #, c-format
 msgid "Can't exec script %s: %s (%d)\n"
 msgstr "Konnte Skript %s nicht ausführen: %s (%d)\n"
 
-#: src/misc.c:260 src/misc.c:300
+#: src/misc.c:262 src/misc.c:304
 #, c-format
 msgid "Can't fork: %s (%d)\n"
 msgstr "Konnte keinen neuen Prozess erzeugen: %s (%d)\n"
@@ -550,9 +548,8 @@ msgid "Modem properties"
 msgstr "Modem-Optionen"
 
 #: src/options.c:103
-#, fuzzy
 msgid "DSL properties"
-msgstr "Kabel-Optionen"
+msgstr "DSLl-Optionen"
 
 #: src/options.c:104
 msgid "Cable properties"
@@ -567,108 +564,92 @@ msgid "Network interface properties"
 msgstr "Netzwerkschnittstellen-Optionen"
 
 #: src/options.c:119
-#, fuzzy
 msgid "reads configuration file PATH."
 msgstr "Konfigurationsdatei PATH lesen."
 
 #: src/options.c:122
-#, fuzzy
 msgid "sets the access method for connecting AOL."
-msgstr "Setzt das Protokoll, das für die Verbindung mit AOL genutzt wird."
+msgstr "Setzt die Zugangsart, die für die Verbindung mit AOL genutzt wird."
 
 #: src/options.c:125
-#, fuzzy
 msgid "sets the protocol used for communication with AOL."
-msgstr "Setzt das Protokoll, das für die Verbindung mit AOL genutzt wird."
+msgstr "Setzt das Protokoll, das für die Kommunikation mit AOL genutzt wird."
 
 #: src/options.c:128
-#, fuzzy
 msgid "sets the interface type."
 msgstr "Setzt den Schnittstellentyp."
 
 #: src/options.c:131
-#, fuzzy
 msgid "sets the interface name."
 msgstr "Setzt den Schnittstellennamen."
 
 #: src/options.c:137
-#, fuzzy
 msgid "sets the screen-name to use."
 msgstr "Setzt den zu benutzenden AOL-Namen."
 
 #: src/options.c:140
-#, fuzzy
 msgid "enables autoreconnection."
 msgstr "Aktiviert automatische Wiederverbindung."
 
 #: src/options.c:143
-#, fuzzy
 msgid "sets the delay between reconnections."
 msgstr "Setzt die Verzögerung zwischen den Wiederverbindungen."
 
 #: src/options.c:146
-#, fuzzy
 msgid "enables daemon mode, run in background."
 msgstr "Aktiviert Daemon-Modus (Programm läuft im Hintergrund)."
 
 #: src/options.c:149
-#, fuzzy
 msgid "sets the verbosity level of the debug."
 msgstr "Setzt den Informationsgehalt des Debugs."
 
 #: src/options.c:152
-#, fuzzy
 msgid "sets the dns when connected."
 msgstr "Setzt den DNS-Server, wenn verbunden."
 
 #: src/options.c:155
-#, fuzzy
 msgid "sets the PID file to create"
 msgstr "Setzt die zu erstellende PID-Datei."
 
 #: src/options.c:158
-#, fuzzy
 msgid "sets the script automaticly called when IP is up."
 msgstr "Setzt das auszuführende Skript, wenn verbunden."
 
 #: src/options.c:161
-#, fuzzy
 msgid "sets the script automaticly called when IP is down."
 msgstr "Setzt das auszuführende Skript, wenn getrennt."
 
 #: src/options.c:167
-#, fuzzy
 msgid "sets the serial device to use for the modem."
 msgstr "Setzt die zu benutzende Gerätedatei für das Modem."
 
 #: src/options.c:173
-#, fuzzy
 msgid "enables hardware flow control"
 msgstr "Aktiviert Flusskontrolle per Hardware"
 
 #: src/options.c:176
-#, fuzzy
 msgid "sets the primary initialization string sent to the modem."
 msgstr "Setzt die primäre Initialisierungszeichenkette für das Modem."
 
 #: src/options.c:203
-#, fuzzy
 msgid "sets the string used to dial."
 msgstr "Setzt die Zeichenkette zum Wählen."
 
+#: src/options.c:206
+msgid "uses STRING to obtain an extern line."
+msgstr "benutzt STRING als Amtsholung."
+
 #: src/options.c:209
-#, fuzzy
 msgid "sets the file where phone numbers will be searched."
 msgstr "Setzt die primäre Telefonnummer."
 
 #: src/options.c:212
-#, fuzzy
 msgid "sets the serial line speed."
 msgstr "Setzt die serielle Geschwindigkeit."
 
 #: src/options.c:215
 msgid "sets the path where chat files will be searched."
-msgstr ""
+msgstr "Setzt den Pfad, in dem nach Chat-Skripten gesucht wird."
 
 #: src/options.c:251
 #, c-format
@@ -682,7 +663,7 @@ msgstr ""
 "Betriebsoptionen:\n"
 "  -h, --help                       Gibt diese Hilfe aus und beendet sich.\n"
 "  -V, --version                    Gibt die Versionsnummer aus und beendet "
-"sich..\n"
+"sich.\n"
 
 #: src/options.c:347
 #, c-format
@@ -703,27 +684,27 @@ msgstr ""
 msgid "Compilation options :\n"
 msgstr "Kompilierungsoptionen:\n"
 
-#: src/options.c:548
+#: src/options.c:565
 #, c-format
 msgid "Try `%s --help' for more information.\n"
 msgstr "Benutzen Sie `%s --help' für nähere Informationen\n"
 
-#: src/options.c:675
+#: src/options.c:692
 #, c-format
 msgid "%s:%d unrecognized option - %s\n"
 msgstr "%s:%d: unbekannte Option - %s\n"
 
-#: src/options.c:705
+#: src/options.c:722
 #, c-format
 msgid "%s:%d bad boolean value\n"
 msgstr "%s:%d: Kein Bool'scher Wert\n"
 
-#: src/options.c:717
+#: src/options.c:734
 #, c-format
 msgid "%s:%d not enough memory to get the parameter\n"
 msgstr "%s:%d: Nicht genügend Speicher, um den Parameter zu lesen\n"
 
-#: src/options.c:726
+#: src/options.c:743
 #, c-format
 msgid "%s:%d bad integer value\n"
 msgstr "%s:%d: Kein ganzzahliger Wert\n"
@@ -750,33 +731,24 @@ msgstr "AOL-Name '%s' nicht in %s gefunden.\n"
 #: src/checkopt.c:169
 #, c-format
 msgid "%s must be between 0 and 10.\n"
-msgstr ""
+msgstr "%s muss zwischen 0 und 10 liegen.\n"
 
 #: src/checkopt.c:181
-#, fuzzy, c-format
+#, c-format
 msgid "%s must be >=0.\n"
-msgstr "%s muss eines der folgenden Werte sein: "
+msgstr "%s muss >= 0 sein.\n"
 
 #: src/checkopt.c:194
 #, c-format
 msgid "%s has an invalid line speed specicification.\n"
-msgstr ""
+msgstr "%s hat eine ungültige Geschwindigkeitsangabe.\n"
 
 #: src/checkopt.c:208
 #, c-format
 msgid "%s must be a valid port (between 1 and 65535).\n"
-msgstr ""
+msgstr "%s muss ein gültiger port (zwischen 1 und 65535) sein.\n"
 
 #: src/sighndl.c:53
 #, c-format
 msgid "%s received, exiting.\n"
 msgstr "%s empfangen, Ende.\n"
-
-#~ msgid "Please verify your chat script.\n"
-#~ msgstr "Bitte Chatskript überprüfen.\n"
-
-#~ msgid "set the media used to access AOL."
-#~ msgstr "Setzt das Medium, das für die Verbindung mit AOL genutzt wird."
-
-#~ msgid "set the chat script used for logging into AOL."
-#~ msgstr "Setzt das Chat-Skript, das für das Einloggen zu AOL verwendet wird."

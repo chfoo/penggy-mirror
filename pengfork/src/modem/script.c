@@ -41,12 +41,8 @@
 # include <string.h>
 #endif
 
-#if HAVE_LIBGUILE_H
-# include <libguile.h>
-#endif
-#if HAVE_GUILE_GH_H
-# include <guile/gh.h>
-#endif
+#include <libguile.h>
+#include <guile/gh.h>
 
 #include "gettext.h"
 #include "options.h"

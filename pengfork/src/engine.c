@@ -54,6 +54,9 @@
 # endif
 # include <string.h>
 #endif
+#if HAVE_SYS_WAIT_H
+# include <sys/wait.h>
+#endif
 
 #include "gettext.h"
 #include "log.h"
@@ -78,8 +81,12 @@ struct
 }
 client[MAX_CLIENTS];
 
-int nbclients;
+static int nbclients;
 int exiting;
+
+#define MAX_PID_TO_WAIT 16
+static pid_t pid_to_wait[MAX_PID_TO_WAIT];
+static int nbpid;
 
 int
 engine_init ()
@@ -123,6 +130,9 @@ engine_loop ()
       maxfd = -1;
       engine_set_readers (&rfdset, &maxfd);
       engine_set_writers (&wfdset, &maxfd);
+
+      /* Wait for the end of created process to avoid zombie */
+      engine_wait_pids();
 
       if (maxfd == -1)
         {
@@ -385,4 +395,31 @@ engine_end_clients ()
       else
         engine_unregister (client[i--].fd);
     }
+}
+
+void
+engine_wait_pid(pid)
+     pid_t pid;
+{
+  if(nbpid<MAX_PID_TO_WAIT)
+    pid_to_wait[nbpid++]=pid;
+}
+
+void
+engine_wait_pids()
+{
+  int i;
+
+  for(i=0; i<nbpid; i++)
+    if(waitpid(pid_to_wait[i], NULL, WNOHANG) == pid_to_wait[i])
+      {
+        if (i < nbclients - 1)
+	{
+	  /* Shift all next clients */
+	  memmove (&pid_to_wait[i], &pid_to_wait[i + 1], 
+		 (nbpid - i) * sizeof (pid_to_wait[0]));
+	}
+        nbpid--;
+        if(nbpid>0) i--;
+      }
 }

@@ -23,7 +23,7 @@
 # $Id$
 #
 
-INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib
+INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib -I$(top_srcdir)/intl
 
 noinst_LIBRARIES = libiptunnel.a
 libiptunnel_a_SOURCES = init.c		\

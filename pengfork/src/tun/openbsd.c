@@ -26,6 +26,8 @@
 # include "config.h"
 #endif
 
+#if TARGET_OPENBSD
+
 #if STDC_HEADERS
 # include <stdlib.h>
 # include <stddef.h>
@@ -46,7 +48,10 @@
 #ifdef HAVE_FCNTL_H
 # include <fcntl.h>
 #endif
-#ifdef HAVE_stdio_H
+#if HAVE_ERRNO_H
+# include <errno.h>
+#endif
+#ifdef HAVE_STDIO_H
 # include <stdio.h>
 #endif
 #ifdef HAVE_SYSLOG_H
@@ -65,9 +70,6 @@
 #ifdef HAVE_IOCTL_H
 # include <sys/ioctl.h>
 #endif
-#ifdef HAVE_NET_IF_TUN_H
-# include <net/if_tun.h>
-#endif
 
 #ifdef HAVE_NETINET_IN_H
 # include <netinet/in.h>
@@ -84,8 +86,6 @@
 #include "log.h"
 #include "tun/tun.h"
 
-extern int tun_fd;
-
 int
 tun_open ()
 {
@@ -96,6 +96,7 @@ tun_open ()
     {
       snprintf (tunname, sizeof (tunname), "/dev/%s", PARAM_INTERFACE_NAME);
       tun_fd = open (tunname, O_RDWR | O_NONBLOCK);
+      strncpy(tun_ifname, PARAM_INTERFACE_NAME, sizeof(tun_ifname));
     }
   else
     {
@@ -105,7 +106,7 @@ tun_open ()
           /* Open device */
           if ((tun_fd = open (tunname, O_RDWR | O_NONBLOCK)) > 0)
             {
-              sprintf (PARAM_INTERFACE_NAME, "tun%d", i);
+              sprintf (tun_ifname, "tun%d", i);
               break;
             }
         }
@@ -156,12 +157,12 @@ tun_get (buffer, data, data_size)
   *data_size = 0;
   if (buffer->used < sizeof (struct ip) + sizeof (u_int32_t))
     return 0;
-  if (buffer->used < ip->ip_len + sizeof (u_int32_t))
+  if (buffer->used < ntohs(ip->ip_len) + sizeof (u_int32_t))
     return 0;
 
   *data = (char *) ip;
-  *data_size = ip->ip_len;
-  buffer_free (buffer, ip->ip_len + sizeof (u_int32_t));
+  *data_size = ntohs(ip->ip_len);
+  buffer_free (buffer, ntohs(ip->ip_len) + sizeof (u_int32_t));
   return 1;
 }
 
@@ -181,3 +182,5 @@ tun_put (buffer, data, data_size)
   memcpy (p, data, data_size);
   return 1;
 }
+
+#endif /* TARGET_OPENBSD */
