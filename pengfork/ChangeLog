@@ -1,3 +1,10 @@
+2002-08-29  Jean-Charles Salzeber <jc@varspool.net>
+
+	* src/modem.c: trivial cleanups
+	* include/prot30.h, src/p30tcpip.c, src/prot30.c: More robust protocol 
+	handling
+	* src/modem.c: fixed a bug in wait_for
+	
 2002-08-29  Nicolas Burrus  <nes@lrde.epita.fr>
 
 	* src/log.c, include/log.h: New files.

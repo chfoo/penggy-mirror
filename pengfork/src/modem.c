@@ -626,7 +626,7 @@ modem_wait_for (prompt, timeout)
       if ((count = read (fd, p, sizeof(buffer) - nread)) < 0)
 	return 0;
       nread += count;
-      p += nread;
+      p += count;
       *p = '\0';
       if (strstr (buffer, prompt))
         return 1;
