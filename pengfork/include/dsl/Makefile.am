@@ -24,4 +24,4 @@
 #
 
 
-EXTRA_DIST = 	
+noinst_HEADERS = 

@@ -24,21 +24,21 @@
 #
 
 
-EXTRA_DIST = 	access.h		\
-		checkopt.h	\
-		engine.h		\
-		if.h		\
-		misc.h		\
-		protocol.h	\
-		sighndl.h		\
-		window.h		\
-		buffer.h		\
-		common.h		\
-		fdo.h		\
-		log.h		\
-		options.h		\
-		getpass.h		\
-		resolver.h	\
-		utils.h
+noinst_HEADERS = 	access.h	\
+			checkopt.h	\
+			engine.h	\
+			if.h		\
+			misc.h		\
+			protocol.h	\
+			sighndl.h	\
+			window.h	\
+			buffer.h	\
+			common.h	\
+			fdo.h		\
+			log.h		\
+			options.h	\
+			getpass.h	\
+			resolver.h	\
+			utils.h
 
 SUBDIRS = fdo iptunnel modem cable dsl tcpip tun p3 l2tp

@@ -47,7 +47,7 @@ protocol_t;
 
 extern const protocol_t *protocol;
 
-#ifdef WITH_P3
+#if ENABLE_P3
 extern const protocol_t p3_protocol;
 #endif
 

@@ -23,11 +23,11 @@
  * $Id$
  *               
  */
-#if defined(WITH_CABLE) && !defined(__CABLE_CABLE_H__)
+#ifndef __CABLE_CABLE_H__
 #define __CABLE_CABLE_H__
 
 int cable_connect (void);
 int cable_close (void);
 int cable_connected (void);
 
-#endif /* defined(WITH_CABLE) && !defined(__CABLE_CABLE_H__) */
+#endif /* __CABLE_CABLE_H__ */

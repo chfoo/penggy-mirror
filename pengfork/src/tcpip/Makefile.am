@@ -25,9 +25,11 @@
 
 INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib
 
+tcpip_c = tcpip.c
+
 if BUILD_TCPIP
 noinst_LIBRARIES = libtcpip.a
-libtcpip_a_SOURCES =	tcpip.c
+libtcpip_a_SOURCES = $(tcpip_c)
 else !BUILD_TCPIP
-EXTRA_DIST = tcpip.c
+EXTRA_libtcpip_a_SOURCES = $(tcpip_c)
 endif !BUILD_TCPIP

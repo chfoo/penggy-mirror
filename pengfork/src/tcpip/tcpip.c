@@ -28,8 +28,6 @@
 # include "config.h"
 #endif
 
-#ifdef WITH_TCPIP
-
 #if STDC_HEADERS
 # include <stdlib.h>
 # include <stddef.h>
@@ -169,5 +167,3 @@ tcpip_connected ()
 {
   return (tcpipfd != -1);
 }
-
-#endif

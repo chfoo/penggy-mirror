@@ -25,9 +25,11 @@
 
 INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib
 
+cable_c = cable.c
+
 if BUILD_CABLE
 noinst_LIBRARIES = libcable.a
-libcable_a_SOURCES = 	cable.c
+libcable_a_SOURCES = $(cable_c)
 else !BUILD_CABLE
-EXTRA_DIST = cable.c
+EXTRA_libcable_a_SOURCES = $(cable_c)
 endif !BUILD_CABLE

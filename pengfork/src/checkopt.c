@@ -166,7 +166,7 @@ check_debug_level (option, level)
   if (level >= 0 && level <= DEBUG_MAX)
     return 1;
 
-  log (LOG_ERR, "%s must be between 0 and 10.\n", option);
+  log (LOG_ERR, gettext("%s must be between 0 and 10.\n"), option);
   return 0;
 }
 
@@ -178,11 +178,11 @@ check_natural (option, num)
   if (num >= 0)
     return 1;
 
-  log (LOG_ERR, "%s must be >=0.\n", option);
+  log (LOG_ERR, gettext("%s must be >=0.\n"), option);
   return 0;
 }
 
-#ifdef WITH_MODEM
+#if ENABLE_MODEM
 int
 check_line_speed (option, speed)
      char *option;
@@ -191,12 +191,12 @@ check_line_speed (option, speed)
   if (modem_valid_speed (speed))
     return 1;
 
-  log (LOG_ERR, "%s has an invalid line speed specicification.\n", option);
+  log (LOG_ERR, gettext("%s has an invalid line speed specicification.\n"), option);
   return 0;
 }
-#endif /* WITH_MODEM */
+#endif /* ENABLE_MODEM */
 
-#ifdef WITH_TCPIP
+#if ENABLE_TCPIP
 int
 check_port (option, port)
      char *option;
@@ -205,21 +205,8 @@ check_port (option, port)
   if (port > 0 && port < 65536)
     return 1;
 
-  log (LOG_ERR, "%s must be a valid port (between 1 and 65535).\n", option);
+  log (LOG_ERR, gettext("%s must be a valid port (between 1 and 65535).\n"), option);
   return 0;
 }
 
-int
-check_ip (option, ip)
-     char *option;
-     char *ip;
-{
-  struct in_addr inp;
-
-  if (inet_aton (ip, &inp))
-    return 1;
-
-  log (LOG_ERR, "%s must be a valid IP address.\n", option);
-  return 0;
-}
-#endif /* WITH_TCPIP */
+#endif /* ENABLE_TCPIP */

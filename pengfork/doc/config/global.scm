@@ -28,47 +28,44 @@
 ;;                                                                  ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define (GlobalRequestAttn)
-  (chat-send "...\r")
-  (chat-try 25 
-	  '("SITA NETWORK"  (GlobalSetupEnvironment))
-	  '("ANSNET"        (chat-failure))
-	  '("SATURN.BBN"    (chat-failure))
-	  '("SPRINT-IP"     (chat-failure))
-	  '("TERMINAL="     (chat-failure))
-	  '("TERMINAL ="    (chat-failure))
-	  '("\r\n@"         (chat-failure))
-	  '("\r\n ?"        (chat-failure))
-	  '("LOCAL"         (chat-failure))
-	  '("ERROR"         (chat-failure))
-	  '("NO CARRIER"    (chat-failure))
-	  '(else            (begin
-			  (set! tries (+ tries 1))
-			  (if (<= (tries) 3)
-			      (GlobalRequestAttn)
-			      (chat-failure))))))
+(define (GlobalRequestAttn tries)
+  (if (> tries 3) 
+      (chat-failure)
+
+      (chat-send "...\r")
+      (chat-try 25 
+	      '("SITA NETWORK"  (GlobalSetupEnvironment 0))
+	      '("ANSNET"        (chat-failure))
+	      '("SATURN.BBN"    (chat-failure))
+	      '("SPRINT-IP"     (chat-failure))
+	      '("TERMINAL="     (chat-failure))
+	      '("TERMINAL ="    (chat-failure))
+	      '("\r\n@"         (chat-failure))
+	      '("\r\n ?"        (chat-failure))
+	      '("LOCAL"         (chat-failure))
+	      '("ERROR"         (chat-failure))
+	      '("NO CARRIER"    (chat-failure))
+	      '(else            (GlobalRequestAttn (+ tries 1))))))
 
 (define (GlobalSetupEnvironment)
   (chat-send "SET 1:0,2:0,21:0\r")
   (sleep 1)
-  (set! tries 1)
   (GlobalTalkToNetwork))
 
-(define (GlobalTalkToNetwork)
-  (sleep 1)
-  (chat-send "NUI 22500001\r")
-  (chat-try 10 
-	  '("XXXXXX"     (GlobalReqAuth))
-	  '("\r\n ?"     (chat-failure))
-	  '("ERROR"      (chat-failure))
-	  '("NO CARRIER" (chat-failure))
-	  '(else         (begin
-		         (set! tries (+ tries 1))
-		         (if (<= (tries) 4)
-			   (GlobalTalkToNetwork)
-			   (chat-failure))))))
+(define (GlobalTalkToNetwork tries)
+  (if (> (tries) 4) 
+      (chat-failure)
+
+      (sleep 1)
+      (chat-send "NUI 22500001\r")
+      (chat-try 10 
+	      '("XXXXXX"     (GlobalReqAuth))
+	      '("\r\n ?"     (chat-failure))
+	      '("ERROR"      (chat-failure))
+	      '("NO CARRIER" (chat-failure))
+	      '(else         (GlobalTalkToNetwork (+ tries 1))))))
                               
-(define (GlobalReqAuth)
+(define (GlobalReqAuth tries)
   (sleep 1)
   (chat-send "OPXY9F\r")
   (chat-try 10 
@@ -76,7 +73,7 @@
     '("\r\n ?"     (chat-failure))
     '("ERROR"      (chat-failure))
     '("NO CARRIER" (chat-failure))
-    '(else         (GlobalTalkToNetwork))))
+    '(else         (GlobalTalkToNetwork tries))))
 
 (define (GlobalConnect)
   (sleep 1)
@@ -109,5 +106,4 @@
 ;; Main entry point
 (define (chat-connect)
   (sleep 5)
-  (define (tries) 1)
-  (GlobalRequestAttn))
+  (GlobalRequestAttn 0))

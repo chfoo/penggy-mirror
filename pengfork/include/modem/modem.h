@@ -38,6 +38,7 @@ int modem_init (void);
 int modem_send_init_string (char *string);
 int modem_dial (void);
 int modem_dial_to (char *phone);
+int modem_exec_script (char *filename);
 int modem_open (char *filename, int baud, int rtscts);
 void setup_modem (int rtscts);
 void modem_setattr (int rtscts);

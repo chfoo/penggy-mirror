@@ -26,26 +26,6 @@
 # include "config.h"
 #endif
 
-/* Check configure options */
-#if !defined(WITH_P3) && !defined(WITH_L2TP)
-#  error "No protocol will be compiled."
-#  error "You must choose P3, L2TP or both."
-#  error "Try ./configure --help for more information."
-#endif
-
-#if !defined(WITH_MODEM) && !defined(WITH_CABLE) && \
-    !defined(WITH_DSL) && !defined(WITH_TCPIP)
-#  error "No access method will be compiled."
-#  error "You must choose between modem, cable, dsl and tcpip."
-#  error "Try ./configure --help for more information."
-#endif
-
-#if !defined(WITH_TUN)
-#  error "No interface will be compiled."
-#  error "You must choose tun."
-#  error "Try ./configure --help for more information."
-#endif
-
 #if STDC_HEADERS
 # include <stdlib.h>
 # include <stddef.h>
@@ -57,7 +37,7 @@
 #if HAVE_UNISTD_H
 # include <unistd.h>
 #endif
-#ifdef WITH_MODEM
+#ifdef ENABLE_MODEM
 #  include <guile/gh.h>
 #endif
 
@@ -92,7 +72,7 @@ clean_exit(n)
 }
 
 
-#ifndef WITH_MODEM
+#ifndef ENABLE_MODEM
 int
 main (argc, argv)
      int argc;
@@ -186,14 +166,14 @@ main2 (argc, argv)
   if(PARAM_PID_FILE) 
     remove_pidfile ();
 
-#ifndef WITH_MODEM
+#ifndef ENABLE_MODEM
   return 0;
 #else
   exit (0);
 #endif
 }
 
-#ifdef WITH_MODEM
+#ifdef ENABLE_MODEM
 int
 main (argc, argv)
      int argc;

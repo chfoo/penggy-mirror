@@ -24,11 +24,11 @@
 #
 
 
-EXTRA_DIST = 	ack.h		\
-		check.h		\
-		header.h	\
-		in.h		\
-		init.h		\
-		misc.h		\
-		out.h		\
-		p3.h
+noinst_HEADERS = 	ack.h		\
+			check.h		\
+			header.h	\
+			in.h		\
+			init.h		\
+			misc.h		\
+			out.h		\
+			p3.h

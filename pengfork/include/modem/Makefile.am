@@ -24,6 +24,7 @@
 #
 
 
-EXTRA_DIST = 	devlock.h		\
-		modem.h		\
-		script.h
+noinst_HEADERS = 	devlock.h	\
+			modem.h		\
+			phonetab.h	\
+			script.h

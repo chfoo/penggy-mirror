@@ -49,7 +49,7 @@ iface_t;
 
 extern const iface_t *iface;
 
-#ifdef WITH_TUN
+#if ENABLE_TUN
 extern const iface_t tun_iface;
 #endif
 

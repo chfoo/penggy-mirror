@@ -24,4 +24,4 @@
 #
 
 
-EXTRA_DIST = 	cable.h
+noinst_HEADERS = cable.h

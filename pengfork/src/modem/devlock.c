@@ -63,6 +63,7 @@
 #endif
 
 #include "modem/devlock.h"
+#include "options.h"
 #include "log.h"
 #include "gettext.h"
 
@@ -91,7 +92,7 @@ device_lock (devicename)
   else
     p = devicename;
 
-  snprintf (filename, sizeof(filename), "/var/lock/LCK..%s", p);
+  snprintf (filename, sizeof(filename), "%s/LCK..%s", PARAM_MODEM_LOCK_PATH, p);
 
   fd = open (filename, O_RDWR | O_EXCL | O_CREAT, 0644);
 
@@ -147,7 +148,7 @@ device_unlock (devicename)
   else
     p = devicename;
 
-  snprintf (filename, sizeof(filename), "/var/lock/LCK..%s", p);
+  snprintf (filename, sizeof(filename), "%s/LCK..%s", PARAM_MODEM_LOCK_PATH, p);
   if( fd != -1)
     close(fd);
   fd=-1;

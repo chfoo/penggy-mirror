@@ -52,7 +52,7 @@
 #if HAVE_UNISTD_H
 # include <unistd.h>
 #endif
-#ifdef WITH_MODEM
+#if ENABLE_MODEM
 # if HAVE_GUILE_GH_H
 #  include <guile/gh.h>
 # endif
@@ -67,7 +67,7 @@
 #include "log.h"
 
 enum
-{ __general, __auth, __modem, __cable, __tcpip, __netiface, __sect_end };
+{ __general, __auth, __modem, __dsl, __cable, __tcpip, __netiface, __sect_end };
 char *section_name[__sect_end];
 
 param_t param[PARAM_MAX];
@@ -100,6 +100,7 @@ init_parameters (void)
     gettext ("General properties"),
     gettext ("User authentification"),
     gettext ("Modem properties"),
+    gettext ("DSL properties"),
     gettext ("Cable properties"),
     gettext ("TCP/IP properties"),
     gettext ("Network interface properties")
@@ -114,62 +115,65 @@ init_parameters (void)
 
   param_t params[PARAM_MAX] =  {
     /* GENERAL CONFIGURATION */
-    STR ('f', "config-file", NULL, CONFDIR "/" PACKAGE ".cfg",
-         gettext ("read configuration file PATH."), "PATH",
+    STR ('f', "config-file", NULL, DEFAULT_CONFIG_FILE,
+         gettext ("reads configuration file PATH."), "PATH",
          __general, NULL),
     STR (0, "access-method", "access_method", "modem",
-         gettext ("set the media used to access AOL."), "METHOD",
+         gettext ("sets the access method for connecting AOL."), "METHOD",
          __general, check_access_method),
     STR (0, "protocol", "protocol", "p3",
-         gettext ("set the protocol used for communication with AOL."), "PROT", 
+         gettext ("sets the protocol used for communication with AOL."), "PROT", 
          __general, check_protocol), 
     STR ('t', "interface-type", "interface_type", "tun",
-         gettext ("set the interface type."), "TYPE", 
+         gettext ("sets the interface type."), "TYPE", 
          __netiface, check_iface_type),
     STR ('i', "interface", "interface_name", NULL,
-         gettext ("set the interface name."), "NAME", 
+         gettext ("sets the interface name."), "NAME", 
          __netiface, NULL),
-    STR (0, NULL, "secret_file", CONFDIR "/aol-secrets", 
+    STR (0, NULL, "secret_file", DEFAULT_SECRET_FILE, 
          NULL, NULL, 
          __auth, NULL), 
     STR ('s', "screen-name", "screen_name", NULL,
-         gettext ("set the screen-name to use."), "SN", 
+         gettext ("sets the screen-name to use."), "SN", 
          __auth, check_screen_name), 
     BOOL ('r', "auto-reconnect", "auto_reconnect", false,
-	gettext ("enable autoreconnection."), NULL,
+	gettext ("enables autoreconnection."), NULL,
 	__general, NULL),
-    INT (0, "reconnect-delay", "reconnect_delay", 0,
-         gettext ("set the delay between reconnections."), "DELAY",
+    INT (0, "reconnect-delay", "reconnect_delay", 5,
+         gettext ("sets the delay between reconnections."), "DELAY",
          __general, check_natural), 
     BOOL ('d', "daemon", "daemon", false,
-	gettext ("enable daemon mode, run in background."), NULL, 
+	gettext ("enables daemon mode, run in background."), NULL, 
 	__general, NULL), 
     INT ('D', "debug-level", "debug_level", 0,
-         gettext ("set the verbosity level of the debug."), "LEVEL",
+         gettext ("sets the verbosity level of the debug."), "LEVEL",
          __general, check_debug_level),
     BOOL (0, "dns", "set_dns", true,
-	gettext ("set the dns when connected."), NULL, 
+	gettext ("sets the dns when connected."), NULL, 
 	__netiface, NULL),
-    STR (0, "pid-file", "pid_file", "/var/run/" PACKAGE ".pid",
-         gettext ("set the PID file to create"), "PATH", 
+    STR (0, "pid-file", "pid_file", DEFAULT_PID_FILE,
+         gettext ("sets the PID file to create"), "PATH", 
          __general, NULL),
-    STR (0, "ip-up", "ip-up_script", CONFDIR "/ip-up",
-         gettext ("set the script automaticly called when IP is up."), "PATH", 
+    STR (0, "ip-up", "ip-up_script", DEFAULT_IPUP_FILE,
+         gettext ("sets the script automaticly called when IP is up."), "PATH", 
          __netiface, NULL), 
-    STR (0, "ip-down", "ip-down_script", CONFDIR "/ip-down",
-         gettext ("set the script automaticly called when IP is down."), "PATH", 
+    STR (0, "ip-down", "ip-down_script", DEFAULT_IPDOWN_FILE,
+         gettext ("sets the script automaticly called when IP is down."), "PATH", 
          __netiface, NULL)
 
-#ifdef WITH_MODEM
+#if ENABLE_MODEM
     /* MODEM SPECIFIC */
     , STR ('m', "modem", "modem_device", "/dev/modem",
-	 gettext ("set the serial device to use for the modem."), "PATH",
+	 gettext ("sets the serial device to use for the modem."), "PATH",
 	 __modem, NULL),
+    STR (0, NULL, "lock_path", DEFAULT_LOCK_PATH,
+         NULL, NULL, 
+         __modem, NULL), 
     BOOL (0, "rtscts", "rtscts", true,
-	gettext ("enable hardware flow control"), NULL,
+	gettext ("enables hardware flow control"), NULL,
 	__modem, NULL),
     STR (0, "init-str", "initstr1", "ATZ",
-         gettext ("set the primary initialization string sent to the modem."), "STRING", 
+         gettext ("sets the primary initialization string sent to the modem."), "STRING", 
          __modem, NULL), 
     STR (0, NULL, "initstr2", NULL,
          NULL, NULL, 
@@ -196,50 +200,37 @@ init_parameters (void)
          NULL, NULL,
          __modem, NULL),
     STR (0, "dial-str", "dialstr", "ATDT",
-         gettext ("set the string used to dial."), "STRING", 
+         gettext ("sets the string used to dial."), "STRING", 
          __modem, NULL),
-    STR (0, NULL, "dial_prefix", NULL, 
+    STR (0, "prefix", "dial_prefix", NULL, 
          NULL, NULL, 
          __modem, NULL), 
-    STR ('n', "phone", "phone", NULL,
-         gettext ("set the primary phone number to use."), "NUMBER",
+    STR ('p', "phonetab", "phonetab", DEFAULT_PHONETAB_FILE,
+         gettext ("sets the file where phone numbers will be searched."), "PATH",
          __modem, NULL),
-    STR (0, NULL, "phone1", NULL, 
-         NULL, NULL, 
-         __modem, NULL), 
-    STR (0, NULL, "phone2", NULL,
-         NULL, NULL,
-         __modem, NULL),
-    STR (0, NULL, "phone3", NULL, 
-         NULL, NULL, 
-         __modem, NULL), 
-    STR (0, NULL, "phone4", NULL,
-         NULL, NULL,
-         __modem, NULL),
-    STR (0, NULL, "phone5", NULL, NULL, NULL, __modem, NULL), 
     INT ('s', "line-speed", "line_speed", 115200,
-         gettext ("set the serial line speed."), "SPEED",
+         gettext ("sets the serial line speed."), "SPEED",
          __modem, check_line_speed),
-    STR ('c', "chat-script", "chat_script", CHATDIR "/aolnet.scm",
-         gettext ("set the chat script used for logging into AOL."), "SCRIPT", 
+    STR (0, "chat-path", "chat_path", DEFAULT_CHAT_PATH,
+         gettext ("sets the path where chat files will be searched."), "SCRIPT", 
          __modem, NULL), 
     INT (0, NULL, "dial_retry", 3, 
          NULL, NULL, 
          __modem, check_natural),
-    INT (0, NULL, "retry_delay", 0, 
+    INT (0, NULL, "retry_delay", 2, 
          NULL, NULL, 
          __modem, check_natural)
-#endif /* WITH_MODEM */
+#endif /* ENABLE_MODEM */
 
-#ifdef WITH_TCPIP
-    /* CABLE SPECIFIC */
+#if ENABLE_TCPIP
+    /* TCPIP SPECIFIC */
     , STR (0, NULL, "aol_host", "AmericaOnline.aol.com",
 	 NULL, NULL,
-	 __cable, NULL),
+	 __tcpip, NULL),
     INT (0, NULL, "aol_port", 5190, 
          NULL, NULL,
-         __cable, check_port)
-#endif /* WITH_TCPIP */
+         __tcpip, check_port)
+#endif /* ENABLE_TCPIP */
   };
 
 #undef STR
@@ -359,22 +350,41 @@ version (void)
          , PACKAGE);
 	        
   printf (gettext ("Compilation options :\n"));
-#ifdef WITH_MODEM
-  printf ("WITH_MODEM ");
+  printf (
+#if DEBUG
+	"DEBUG "
 #endif
-#ifdef WITH_CABLE
-  printf ("WITH_CABLE ");
+#if ENABLE_MODEM
+	"ENABLE_MODEM "
 #endif
-#ifdef WITH_DSL
-  printf ("WITH_DSL ");
+#if ENABLE_CABLE
+	"ENABLE_CABLE "
 #endif
-#ifdef WITH_TCPIP
-  printf ("WITH_TCPIP ");
+#if ENABLE_DSL
+	"ENABLE_DSL "
 #endif
-#ifdef WITH_TUN
-  printf ("WITH_TUN ");
+#if ENABLE_TCPIP
+	"ENABLE_TCPIP "
 #endif
-  printf ("\n");
+#if ENABLE_TUN
+	"ENABLE_TUN "
+#endif
+#if ENABLE_P3
+	"ENABLE_P3 "
+#endif
+#if ENABLE_L2TP
+	"ENABLE_L2TP "
+#endif
+#if WORDS_BIGENDIAN
+	"WORDS_BIGENDIAN "
+#endif
+#if ENABLE_NLS
+	"ENABLE_NLS "
+#endif
+	"\n");
+  printf ("SYSCONFDIR=\"" SYSCONFDIR "\"\n");
+  printf ("PKGDATADIR=\"" PKGDATADIR "\"\n");
+  printf ("LOCALSTATEDIR=\"" LOCALSTATEDIR "\"\n");
   exit (0);
 }
 

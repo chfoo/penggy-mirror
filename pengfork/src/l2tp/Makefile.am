@@ -25,9 +25,11 @@
 
 INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib
 
+l2tp_c = dummy.c
+
 if BUILD_L2TP
 noinst_LIBRARIES = libl2tp.a
-libl2tp_a_SOURCES =	dummy.c 
+libl2tp_a_SOURCES = $(l2tp_c)
 else !BUILD_L2TP
-EXTRA_DIST = dummy.c
+EXTRA_libl2tp_a_SOURCES = $(l2tp_c)
 endif !BUILD_L2TP

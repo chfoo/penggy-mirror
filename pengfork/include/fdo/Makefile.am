@@ -24,4 +24,4 @@
 #
 
 
-EXTRA_DIST = init.h login.h
+noinst_HEADERS = init.h login.h

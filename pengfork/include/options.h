@@ -25,7 +25,9 @@
 #ifndef __OPTIONS_H__
 #define __OPTIONS_H__
 
-#include "config.h"
+#if HAVE_CONFIG_H
+# include "config.h"
+#endif
 
 typedef enum
 { false = 0, true }
@@ -34,7 +36,7 @@ bool_t;
 typedef struct
 {
   char shortopt;  /* h & V are reserved */
-  char *longopt;  /* help & version are reserver */
+  char *longopt;  /* help & version are reserved */
   char *name;
   enum
   { boolean, integer, string }
@@ -87,8 +89,9 @@ enum
   __ip_up,
   __ip_down,
 
-#ifdef WITH_MODEM
+#ifdef ENABLE_MODEM
   __modem_device,
+  __modem_lock_path,
   __modem_rtscts,
   __modem_initstr1,
   __modem_initstr2,
@@ -101,22 +104,17 @@ enum
   __modem_initstr9,
   __modem_dialstr,
   __modem_dial_prefix,
-  __modem_phone,
-  __modem_phone1,
-  __modem_phone2,
-  __modem_phone3,
-  __modem_phone4,
-  __modem_phone5,
+  __modem_phonetab,
   __modem_line_speed,
-  __modem_chat_script,
+  __modem_chat_path,
   __modem_dial_retry,
   __modem_retry_delay,
-#endif /* WITH_MODEM */
+#endif /* ENABLE_MODEM */
 
-#ifdef WITH_TCPIP
+#ifdef ENABLE_TCPIP
   __tcpip_aol_host,
   __tcpip_aol_port,
-#endif /* WITH_TCPIP */
+#endif /* ENABLE_TCPIP */
 
   __last_param                  /* not a parameter */
 };
@@ -138,23 +136,35 @@ enum
 #define PARAM_IP_UP                   PARAM_STRING(__ip_up)
 #define PARAM_IP_DOWN                 PARAM_STRING(__ip_down)
 
-#ifdef WITH_MODEM
+#ifdef ENABLE_MODEM
 #  define PARAM_MODEM_DEVICE            PARAM_STRING(__modem_device)
+#  define PARAM_MODEM_LOCK_PATH         PARAM_STRING(__modem_lock_path)
 #  define PARAM_MODEM_RTSCTS            PARAM_BOOLEAN(__modem_rtscts)
 #  define PARAM_MODEM_INITSTR(i)        PARAM_STRING(__modem_initstr1 + i - 1)
 #  define PARAM_MODEM_DIALSTR           PARAM_STRING(__modem_dialstr)
 #  define PARAM_MODEM_DIAL_PREFIX       PARAM_STRING(__modem_dial_prefix)
-#  define PARAM_MODEM_PHONE(i)          PARAM_STRING(__modem_phone + i)
+#  define PARAM_MODEM_PHONETAB          PARAM_STRING(__modem_phonetab)
 #  define PARAM_MODEM_LINE_SPEED        PARAM_INTEGER(__modem_line_speed)
-#  define PARAM_MODEM_CHAT_SCRIPT       PARAM_STRING(__modem_chat_script)
+#  define PARAM_MODEM_CHAT_PATH         PARAM_STRING(__modem_chat_path)
 #  define PARAM_MODEM_DIAL_RETRY        PARAM_INTEGER(__modem_dial_retry)
 #  define PARAM_MODEM_RETRY_DELAY       PARAM_INTEGER(__modem_retry_delay)
-#endif /* WITH_MODEM */
+#endif /* ENABLE_MODEM */
 
-#ifdef WITH_TCPIP
+#ifdef ENABLE_TCPIP
 #  define PARAM_TCPIP_AOL_HOST          PARAM_STRING(__tcpip_aol_host)
 #  define PARAM_TCPIP_AOL_PORT          PARAM_INTEGER(__tcpip_aol_port)
-#endif /* WITH_TCPIP */
+#endif /* ENABLE_TCPIP */
+
+/* Default path */
+#define DEFAULT_CONFIG_FILE       (SYSCONFDIR "/" PACKAGE "/" PACKAGE ".cfg")
+#define DEFAULT_SECRET_FILE       (SYSCONFDIR "/" PACKAGE "/aol-secrets")
+#define DEFAULT_IPUP_FILE         (SYSCONFDIR "/" PACKAGE "/ip-up")
+#define DEFAULT_IPDOWN_FILE       (SYSCONFDIR "/" PACKAGE "/ip-down")
+#define DEFAULT_PHONETAB_FILE     (SYSCONFDIR "/" PACKAGE "/phonetab")
+#define DEFAULT_PID_FILE          (LOCALSTATEDIR "/run/" PACKAGE ".pid")
+#define DEFAULT_LOCK_PATH         (LOCALSTATEDIR "/lock")
+#define DEFAULT_CHAT_PATH         (PKGDATADIR "/chat")
+#define DEFAULT_CHAT_FILE         ("aolnet")
 
 extern param_t param[PARAM_MAX];
 

@@ -25,9 +25,11 @@
 
 INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib
 
+p3_c = p3.c check.c misc.c init.c ack.c out.c in.c
+
 if BUILD_P3
 noinst_LIBRARIES = libp3.a
-libp3_a_SOURCES = 	p3.c check.c misc.c init.c ack.c out.c in.c
+libp3_a_SOURCES = $(p3_c)
 else !BUILD_P3
-EXTRA_DIST = p3.c check.c misc.c init.c ack.c out.c in.c
+EXTRA_libp3_a_SOURCES= $(p3_c)
 endif !BUILD_P3

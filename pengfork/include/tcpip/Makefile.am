@@ -24,4 +24,4 @@
 #
 
 
-EXTRA_DIST = 	tcpip.h
+noinst_HEADERS = 	tcpip.h

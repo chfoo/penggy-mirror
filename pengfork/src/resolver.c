@@ -61,7 +61,7 @@ resolve_access ()
 
   if (strstr (PARAM_ACCESS_METHOD, "modem"))
     {
-#ifdef WITH_MODEM
+#if ENABLE_MODEM
       haccess = &modem_access;
 #else
       log (LOG_ERR, gettext ("Sorry modem support is not compiled in\n"));
@@ -71,7 +71,7 @@ resolve_access ()
 
   else if (strstr (PARAM_ACCESS_METHOD, "tcpip"))
     {
-#ifdef WITH_TCPIP
+#if ENABLE_TCPIP
       haccess = &tcpip_access;
 #else
       log (LOG_ERR, gettext ("Sorry TCP/IP support is not compiled in\n"));
@@ -81,7 +81,7 @@ resolve_access ()
 
   else if (strstr (PARAM_ACCESS_METHOD, "cable"))
     {
-#ifdef WITH_CABLE
+#if ENABLE_CABLE
       haccess = &cable_access;
 #else
       log (LOG_ERR, gettext ("Sorry cable support is not compiled in\n"));
@@ -99,7 +99,7 @@ resolve_iface ()
     lowerize (PARAM_INTERFACE_TYPE);
   if (strstr (PARAM_INTERFACE_TYPE, "tun"))
     {
-#ifdef WITH_TUN
+#if ENABLE_TUN
       iface = &tun_iface;
 #else
       log (LOG_ERR, gettext ("Sorry tun support is not compiled in\n"));
@@ -117,7 +117,7 @@ resolve_protocol ()
     lowerize (PARAM_PROTOCOL);
   if (strstr (PARAM_PROTOCOL, "p3"))
     {
-#ifdef WITH_P3
+#if ENABLE_P3
       protocol = &p3_protocol;
 #else
       log (LOG_ERR, gettext ("Sorry P3 support is not compiled in\n"));

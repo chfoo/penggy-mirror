@@ -24,4 +24,4 @@
 #
 
 
-EXTRA_DIST = 	tun.h
+noinst_HEADERS = 	tun.h

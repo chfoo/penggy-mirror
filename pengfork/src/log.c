@@ -53,7 +53,7 @@ init_log (void)
   textdomain (PACKAGE);
 
   if (PARAM_DAEMON)
-    openlog ("penggy", 0, LOG_DAEMON);
+    openlog (PACKAGE, 0, LOG_DAEMON);
 
   return 1;
 }

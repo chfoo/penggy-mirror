@@ -25,9 +25,11 @@
 
 INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib
 
+dsl_c = dummy.c
+
 if BUILD_DSL
 noinst_LIBRARIES = libdsl.a
-libdsl_a_SOURCES = 	dummy.c
+libdsl_a_SOURCES = $(dsl_c)
 else !BUILD_DSL
-EXTRA_DIST = dummy.c
+EXTRA_libdsl_a_SOURCES = $(dsl_c)
 endif !BUILD_DSL

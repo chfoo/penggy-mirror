@@ -45,8 +45,10 @@ struct p3state
   int want_ssr; /* an SS is received, but no SSR is send */
 };
 
-#define WINDOW_SIZE 32          /* Packet we can send/receive without ack */
-#define WINDOW_HIGH 24          /* when the window is considered near closed */
+/* Packet we can send/receive without ack */
+#define WINDOW_SIZE (PACKET_MAX_SEQ - PACKET_MIN_SEQ)
+/* when the window is considered near closed */
+#define WINDOW_HIGH (WINDOW_SIZE - 30)
 
 #define P3_TIMEOUT 5
 

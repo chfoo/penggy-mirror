@@ -25,11 +25,11 @@
 
 INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib
 
+modem_c = modem.c devlock.c phonetab.c script.c
+
 if BUILD_MODEM
 noinst_LIBRARIES = libmodem.a
-libmodem_a_SOURCES = 	modem.c		\
-			devlock.c		\
-			script.c
+libmodem_a_SOURCES = $(modem_c)
 else !BUILD_MODEM
-EXTRA_DIST = modem.c devlock.c script.c
+EXTRA_libmodem_a_SOURCES = $(modem_c)
 endif !BUILD_MODEM

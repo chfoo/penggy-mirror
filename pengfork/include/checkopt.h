@@ -25,7 +25,9 @@
 #ifndef __CHECKOPT_H__
 #define __CHECKOPT_H__
 
-#include "config.h"
+#if HAVE_CONFIG_H
+# include "config.h"
+#endif
 
 int check_multiple(char *option, char *value, char **choices);
 
@@ -35,12 +37,11 @@ int check_iface_type(char *option, char *type);
 int check_screen_name(char *option, char *sn);
 int check_debug_level(char *option, int level);
 int check_natural(char *option, int num);
-#ifdef WITH_MODEM
+#if ENABLE_MODEM
 int check_line_speed(char *option, int speed);
 #endif
-#ifdef WITH_CABLE
+#if ENABLE_TCPIP
 int check_port(char *option, int port);
-int check_ip(char *option, char *ip);
 #endif
 
 #endif /* __CHECKOPT_H__ */

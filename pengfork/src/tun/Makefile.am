@@ -27,10 +27,12 @@ DIST_SUBDIRS = linux openbsd freebsd
 
 INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib
 
+tun_c = tun.c
+
 if BUILD_TUN
 SUBDIRS = @ARCH_DIR@
 noinst_LIBRARIES = libtun.a
-libtun_a_SOURCES = 	tun.c
+libtun_a_SOURCES = $(tun_c)
 else !BUILD_TUN
-EXTRA_DIST = tun.c
+EXTRA_libtun_a_SOURCES = $(tun_c)
 endif !BUILD_TUN

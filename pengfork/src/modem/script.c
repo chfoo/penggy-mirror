@@ -227,7 +227,8 @@ chat_try (timeout, first, others)
   Call the function (chat-connect)
  */
 int
-chat_connect ()
+chat_connect (filename)
+     char *filename;
 {
   SCM result = SCM_UNDEFINED;
   SCM connect;
@@ -237,14 +238,14 @@ chat_connect ()
   gh_new_procedure ("chat-send", chat_send, 1, 0, 0);
   gh_new_procedure ("chat-try", chat_try, 2, 0, 1);
 
-  gh_eval_file (PARAM_MODEM_CHAT_SCRIPT);
+  gh_eval_file (filename);
   connect = gh_lookup ("chat-connect");
   result = gh_call0 (connect);
 
   if (!gh_boolean_p (result))
     {
       log (LOG_ERR, gettext ("%s: returned value isn't a boolean.\n"),
-           PARAM_MODEM_CHAT_SCRIPT);
+           filename);
       log (LOG_ERR, gettext ("Couldn't continue, exiting.\n"));
       exit (1);
     }

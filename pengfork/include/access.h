@@ -25,7 +25,9 @@
 #ifndef __ACCESS_H__
 #define __ACCESS_H__
 
-#include "config.h"
+#if HAVE_CONFIG_H
+# include "config.h"
+#endif
 
 typedef struct
 {
@@ -38,13 +40,13 @@ access_t;
 
 extern const access_t *haccess;
 
-#ifdef WITH_MODEM
+#if ENABLE_MODEM
 extern const access_t modem_access;
 #endif
 
-#ifdef WITH_TCPIP
+#if ENABLE_TCPIP
 extern const access_t tcpip_access;
-#  ifdef WITH_CABLE
+#  if ENABLE_CABLE
 extern const access_t cable_access;
 #  endif
 #endif

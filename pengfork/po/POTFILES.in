@@ -18,6 +18,7 @@ src/resolver.c
 src/modem/devlock.c
 src/modem/script.c
 src/modem/modem.c
+src/modem/phonetab.c
 src/tcpip/tcpip.c
 src/iptunnel/aol2cli.c
 src/iptunnel/dns.c

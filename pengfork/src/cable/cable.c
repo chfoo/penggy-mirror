@@ -28,7 +28,7 @@
 # include "config.h"
 #endif
 
-#ifdef WITH_CABLE
+#if ENABLE_CABLE
 
 #include "access.h"
 #include "cable/cable.h"

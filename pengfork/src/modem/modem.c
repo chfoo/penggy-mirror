@@ -70,6 +70,7 @@
 #include "modem/modem.h"
 #include "modem/devlock.h"
 #include "modem/script.h"
+#include "modem/phonetab.h"
 #include "options.h"
 #include "utils.h"
 #include "access.h"
@@ -195,31 +196,10 @@ modem_connect ()
   log (LOG_NOTICE, gettext ("Using %s device...\n"), PARAM_MODEM_DEVICE);
   debug (1, "Device %s opened\n", PARAM_MODEM_DEVICE);
 
-  if (!modem_init ())
-    return 0;
-
   if (!modem_dial ())
     return 0;
 
-  log (LOG_NOTICE, gettext ("Executing chat script (%s)...\n"),
-       PARAM_MODEM_CHAT_SCRIPT);
-  switch (chat_connect ())
-    {
-    case 1:
-      log (LOG_NOTICE, gettext ("Chat success, connected...\n"));
-      tcflush (fd, TCIOFLUSH);
-      return 1;
-    case 0:
-      log (LOG_WARNING, gettext ("Chat failure, you're not connected...\n"));
-      tcflush (fd, TCIOFLUSH);
-      break;
-    default:
-      log (LOG_ERR, gettext ("Chat return a non boolean value.\n"));
-      log (LOG_ERR, gettext ("Please verify your chat script.\n"));
-      tcflush (fd, TCIOFLUSH);
-      return 0;
-    }
-  return 0;
+  return 1;
 }
 
 int
@@ -271,18 +251,28 @@ modem_send_init_string (string)
 int
 modem_dial ()
 {
-  int i;
+  int i, j;
+  int connected = 0;
+  char script_file[1024];
 
   log (LOG_NOTICE, gettext ("Dialing provider...\n"));
-  for (i = 0; i < PARAM_MODEM_DIAL_RETRY; i++)
-    if (modem_dial_to (PARAM_MODEM_PHONE (0)) ||
-        modem_dial_to (PARAM_MODEM_PHONE (1)) ||
-        modem_dial_to (PARAM_MODEM_PHONE (2)) ||
-        modem_dial_to (PARAM_MODEM_PHONE (3)) ||
-        modem_dial_to (PARAM_MODEM_PHONE (4)) ||
-        modem_dial_to (PARAM_MODEM_PHONE (5)))
-      break;
-  if (i >= PARAM_MODEM_DIAL_RETRY)
+  if(!get_phonetab())
+    return 0;
+  for (i = 0; !connected && i < PARAM_MODEM_DIAL_RETRY; i++)
+    {
+      for(j=0; phonetab[j].phone; j++)
+        if(modem_dial_to (phonetab[j].phone))
+	{
+	  snprintf(script_file, sizeof(script_file),"%s/%s.scm",
+		 PARAM_MODEM_CHAT_PATH, 
+		 phonetab[j].script? phonetab[j].script : DEFAULT_CHAT_FILE);
+	  if(modem_exec_script(script_file))
+	    connected = 1;
+	}
+    }
+  if(connected)
+    free_phonetab ();
+  if(!connected)
     {
       if(status!=sexit)
         log (LOG_ERR, gettext ("Too many failures, dialing process aborted.\n"));
@@ -302,6 +292,9 @@ modem_dial_to (phone)
   if (!phone || status == sexit)
     return 0;
 
+  if (!modem_init ())
+    return 0;
+
   log (LOG_INFO, gettext ("Dialing %s\n"), phone);
   if (!PARAM_MODEM_DIAL_PREFIX)
     snprintf (dialcmd, sizeof (dialcmd), "%s%s", PARAM_MODEM_DIALSTR, phone);
@@ -315,7 +308,7 @@ modem_dial_to (phone)
     {
     case RESPONSE_ERROR:       /* ERROR */
       log (LOG_ERR, gettext ("Bad string\n"
-           "Please verify the phone number, dial string and prefix\n"));
+		         "Please verify the phone number, dial string and prefix\n"));
       return 0;
       break;
 
@@ -359,7 +352,7 @@ modem_dial_to (phone)
 
     case RESPONSE_FAX:         /* FCLASS */
       log (LOG_WARNING, gettext ("You have been connected to a fax\n"
-           "Please verify the phone number\n"));
+			   "Please verify the phone number\n"));
       return 0;
       break;
 
@@ -373,6 +366,30 @@ modem_dial_to (phone)
 
     default:                   /* TIMEOUT */
       log (LOG_WARNING, gettext ("Modem timed out during dialing\n"));
+      return 0;
+    }
+  return 0;
+}
+
+int
+modem_exec_script (filename)
+     char *filename;
+{
+  log (LOG_NOTICE, gettext ("Executing chat script (%s)...\n"),filename);
+  switch (chat_connect (filename))
+    {
+    case 1:
+      log (LOG_NOTICE, gettext ("Chat success, connected...\n"));
+      tcflush (fd, TCIOFLUSH);
+      return 1;
+    case 0:
+      log (LOG_WARNING, gettext ("Chat failure, you're not connected...\n"));
+      tcflush (fd, TCIOFLUSH);
+      break;
+    default:
+      log (LOG_ERR, gettext ("Chat returned a non boolean value.\n"
+		         "Please verify your chat script.\n"));
+      tcflush (fd, TCIOFLUSH);
       return 0;
     }
   return 0;
@@ -466,14 +483,49 @@ modem_setattr (rtscts)
 {
   /* set up the terminal characteristics.
      see "man tcsetattr" for more information about these options. */
-  t.c_iflag &= ~(BRKINT | ISTRIP | IUCLC | IXON | IXANY | IXOFF | IMAXBEL);
+
+  /* input flags */
+  t.c_iflag &= ~(BRKINT | ISTRIP | IXON | IXOFF);
+#ifdef IUCLC
+  t.c_iflag &= ~IUCLC;
+#endif
+#ifdef IXANY
+  t.c_iflag &= ~IXANY;
+#endif
+#ifdef IMAXBEL
+  t.c_iflag &= ~IMAXBEL;
+#endif
   t.c_iflag |= (IGNBRK | IGNPAR);
+
+  /* output flags */
+#ifdef OLCUC
   t.c_oflag &= ~(OLCUC);
+#else
+  t.c_oflag = 0;
+#endif
+
+  /* control flags */
   t.c_cflag &= ~(CSIZE | CSTOPB | PARENB | PARODD);
   t.c_cflag |= (CS8 | CREAD | HUPCL | CLOCAL);
   if (rtscts)
-    t.c_cflag |= CRTSCTS;
-  t.c_lflag &= ~(ISIG | XCASE | ECHO);
+    {
+#ifdef CRTSCTS
+# ifdef CCTS_OFLOW
+      t.c_cflag |= CCTS_OFLOW;
+# else
+      t.c_cflag |= CRTSCTS;
+# endif
+#endif
+#ifdef CRTS_IFLOW
+      t.c_cflag |= CRTS_IFLOW;
+#endif
+    }
+
+  /* local flags */
+  t.c_lflag &= ~(ISIG | ECHO);
+#ifdef XCASE
+  t.c_lflag &= ~XCASE;
+#endif
 
   tcsetattr (fd, TCSANOW, &t);
 

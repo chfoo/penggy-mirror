@@ -25,6 +25,10 @@
 #ifndef __COMMON_H__
 # define __COMMON_H__
 
+#if HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 extern char *program_name;
 
 typedef enum {sinit, sconnect, srun, sexit} status_t;

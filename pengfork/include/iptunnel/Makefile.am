@@ -24,10 +24,10 @@
 #
 
 
-EXTRA_DIST = 	aol2cli.h	\
-		bsdtcp.h	\
-		cli2aol.h	\
-		dns.h		\
-		init.h		\
-		tunnel.h	\
-		vjcompress.h
+noinst_HEADERS = 	aol2cli.h	\
+			bsdtcp.h	\
+			cli2aol.h	\
+			dns.h		\
+			init.h		\
+			tunnel.h	\
+			vjcompress.h

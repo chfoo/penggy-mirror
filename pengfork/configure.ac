@@ -26,7 +26,7 @@
 # Autoconf 2.53 needed so that buggy PATH_SEPARATOR is fixed.
 AC_PREREQ(2.53)
 
-AC_INIT(penggy, 0.1.0)
+AC_INIT(penggy, 0.1.0+CVS)
 AC_CONFIG_HEADER([config.h])
 
 # Auxiliary files
@@ -45,6 +45,7 @@ AC_LANG_C
 
 # Checks for programs.
 AC_PROG_CC
+AC_ISC_POSIX
 AC_PROG_INSTALL
 AC_PROG_RANLIB
 AC_PROG_YACC
@@ -91,10 +92,11 @@ AC_CHECK_HEADERS([assert.h byteswap.h ctype.h errno.h linux/if_tun.h net/if.h ne
 AC_HEADER_STDBOOL
 AC_C_CONST
 AC_C_INLINE
+AC_C_VOLATILE
+AC_C_BIGENDIAN
 AC_TYPE_PID_T
 AC_TYPE_SIZE_T
 AC_HEADER_TIME
-AC_C_VOLATILE
 
 # Checks for library functions.
 AM_GNU_GETTEXT
@@ -108,32 +110,13 @@ AC_FUNC_SELECT_ARGTYPES
 AC_TYPE_SIGNAL
 AC_FUNC_STAT
 AC_FUNC_VPRINTF
-AC_CHECK_FUNCS([bzero dup2 gethostbyname inet_ntoa memchr memmove  memset nl_langinfo select socket strchr strcspn strerror strrchr strstr strtol])
+AC_CHECK_FUNCS([bzero dup2 gethostbyname inet_ntoa memchr memmove memset nl_langinfo select socket strchr strcspn strerror strrchr strstr strtol])
 
 # Customized checks
 AC_CHECK_FUNCS([getopt_long])
 
 
-
 AM_CONDITIONAL(NEED_GETOPT, test "$ac_cv_func_getopt_long" != yes)
-
-AC_ARG_WITH(confdir,
-  AC_HELP_STRING([--with-confdir=PATH], [set configuration path (/etc/penggy)]),
-  CONFDIR=$withval, 
-  CONFDIR="/etc/penggy")
-
-AC_DEFINE_UNQUOTED([CONFDIR], "$CONFDIR", [ Path passed to configure where configuration files are stored ])
-AC_SUBST([CONFDIR])
-
-
-AC_ARG_WITH(chatdir,
-  AC_HELP_STRING([--with-chatdir=PATH], [set chat script files path (CONFDIR/chat)]),
-  CHATDIR=$withval, 
-  CHATDIR="$CONFDIR/chat")
-
-AC_DEFINE_UNQUOTED([CHATDIR], "$CHATDIR", [ Path passed to configure where chat script files are stored ])
-AC_SUBST([CHATDIR])
-
 
 #########################################
 # Conditional compile options
@@ -151,7 +134,7 @@ AC_ARG_ENABLE(debug,
 
 if test "$debug" = yes; then
   CFLAGS="$CFLAGS -g"
-  AC_DEFINE([DEBUG],,[ Enable/disable debugging ])
+  AC_DEFINE([DEBUG], 1,[ Enable/disable debugging ])
 else
   CFLAGS="$CFLAGS -O2"
   LDFLAGS="$LDFLAGS -s"
@@ -189,7 +172,7 @@ AC_ARG_ENABLE(modem,
 )
 
 if test "$modem" = yes; then
-  AC_DEFINE([WITH_MODEM],,[ Enable/disable modem driver ])
+  AC_DEFINE([ENABLE_MODEM], 1,[ Enable/disable modem driver ])
   GUILE_FLAGS
   AC_CHECK_HEADERS([guile/gh.h])
   CFLAGS="$CFLAGS $GUILE_CFLAGS"
@@ -199,25 +182,25 @@ if test "$modem" = yes; then
     AC_TRY_COMPILE([#include <guile/gh.h>], [SCM e, m; scm_eval(e, m);],
       guile_r5rs_eval=yes, guile_r5rs_eval=no)])
   AC_MSG_RESULT($guile_r5rs_eval)
-  if test $guile_r5rs_eval = yes; then
-    AC_DEFINE([HAVE_R5RS_EVAL],,[Enabled if scm_eval is R5RS compliant])
+  if test "$guile_r5rs_eval" = yes; then
+    AC_DEFINE([HAVE_R5RS_EVAL], 1,[Enabled if scm_eval is R5RS compliant])
   fi
 fi
 AM_CONDITIONAL(BUILD_MODEM, test "$modem" = yes)
 
 # Cable driver
 AC_ARG_ENABLE(cable,
-  AC_HELP_STRING([--disable-cable], [Disable cable modem support.]),
+  AC_HELP_STRING([--enable-cable], [Disable cable modem support. (EXPERIMENTAL)]),
   [case "${enableval}" in
     yes) cable=yes ;;
     no)  cable=no  ;;
     *) AC_MSG_ERROR(bad value ${enableval} for --disable-cable) ;;
   esac],
- [cable=yes]
+ [cable=no]
 )
 
 if test "$cable" = yes; then
-  AC_DEFINE([WITH_CABLE],,[ Enable/disable cable driver ])
+  AC_DEFINE([ENBALE_CABLE], 1,[ Enable/disable cable driver ])
 fi
 AM_CONDITIONAL(BUILD_CABLE, test "$cable" = yes)
  
@@ -234,7 +217,7 @@ AC_ARG_ENABLE(dsl,
 )
 
 if test "$dsl" = yes; then
-  AC_DEFINE([WITH_DSL],,[ Enable/disable DSL driver ])
+  AC_DEFINE([ENABLE_DSL], 1,[ Enable/disable DSL driver ])
 fi
 AM_CONDITIONAL(BUILD_DSL, test "$dsl" = yes)
 
@@ -251,7 +234,7 @@ AC_ARG_ENABLE(tcpip,
 )
 
 if test "$tcpip" = yes; then
-  AC_DEFINE([WITH_TCPIP],,[ Enable/disable TCP/IP driver ])
+  AC_DEFINE([ENABLE_TCPIP], 1,[ Enable/disable TCP/IP driver ])
 fi
 AM_CONDITIONAL(BUILD_TCPIP, test "$tcpip" = yes)
 
@@ -268,7 +251,7 @@ AC_ARG_ENABLE(tun,
 )
 
 if test "$tun" = yes; then
-  AC_DEFINE([WITH_TUN],,[ Enable/disable tun driver ])
+  AC_DEFINE([ENABLE_TUN], 1,[ Enable/disable tun driver ])
 fi
 AM_CONDITIONAL(BUILD_TUN, test "$tun" = yes)
 
@@ -284,7 +267,7 @@ AC_ARG_ENABLE(p3,
 )
 
 if test "$p3" = yes; then
-  AC_DEFINE([WITH_P3],,[ Enable/disable P3 protocol ])
+  AC_DEFINE([ENABLE_P3], 1,[ Enable/disable P3 protocol ])
 fi
 AM_CONDITIONAL(BUILD_P3, test "$p3" = yes)
 
@@ -301,7 +284,7 @@ AC_ARG_ENABLE(l2tp,
 )
 
 if test "$l2tp" = yes; then
-  AC_DEFINE([WITH_L2TP],,[ Enable/disable L2TP protocol ])
+  AC_DEFINE([ENABLE_L2TP], 1,[ Enable/disable L2TP protocol ])
 fi
 AM_CONDITIONAL(BUILD_L2TP, test "$l2tp" = yes)
 
@@ -358,6 +341,11 @@ if test "$tun" != yes; then
 ])
 fi
 
+CPPFLAGS="$CPPFLAGS	-DPKGDATADIR=\\\"\$(pkgdatadir)\\\""
+CPPFLAGS="$CPPFLAGS -DSYSCONFDIR=\\\"\$(sysconfdir)\\\""
+CPPFLAGS="$CPPFLAGS	-DLOCALSTATEDIR=\\\"\$(localstatedir)\\\""
+
+AC_DEFINE_UNQUOTED(COMPILATION_HOST, "$host", [System where the build has occured])
 
 # Output Files
 AC_CONFIG_FILES([Makefile
