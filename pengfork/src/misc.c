@@ -68,28 +68,32 @@ launch_ip_up (if_name, if_addr, if_netmask, if_network, if_broadcast,
             if_gateway >> 16 & 0xff,
             if_gateway >> 8 & 0xff, if_gateway & 0xff);
 
-  pid = fork ();
-  if (pid == 0)
+  if (PARAM_IP_UP)
     {
-      if (putenv (name) ||
-          putenv (addr) ||
-          putenv (netmask) ||
-          putenv (network) || putenv (broadcast) || putenv (gateway))
-        perror ("putenv");
-
-      if (execv (PARAM_IP_UP, args))
-        perror ("execv");
-      exit (-1);
+      pid = fork ();
+      if (pid == 0)
+	{
+	  if (putenv (name) ||
+	      putenv (addr) ||
+	      putenv (netmask) ||
+	      putenv (network) || putenv (broadcast) || putenv (gateway))
+	    perror ("putenv");
+	  
+	  if (execv (PARAM_IP_UP, args))
+	    perror ("execv");
+	  exit (-1);
+	}
+      else if (pid > 0)
+	{
+	  return 1;
+	}
+      else
+	{
+	  perror ("fork");
+	  return 0;
+	}
     }
-  else if (pid > 0)
-    {
-      return 1;
-    }
-  else
-    {
-      perror ("fork");
-      return 0;
-    }
+  return 1;
 }
 
 
@@ -133,26 +137,29 @@ launch_down_up (if_name, if_addr, if_netmask, if_network, if_broadcast,
             if_gateway >> 16 & 0xff,
             if_gateway >> 8 & 0xff, if_gateway & 0xff);
 
-  pid = fork ();
-  if (pid > 0)
+  if (PARAM_IP_DOWN)
     {
-      if (putenv (name) ||
-          putenv (addr) ||
-          putenv (netmask) ||
-          putenv (network) || putenv (broadcast) || putenv (gateway))
-        perror ("putenv");
-
-      if (execv (PARAM_IP_DOWN, args))
-        perror ("execv");
-      exit (-1);
-    }
-  else if (pid == 0)
-    {
-    }
-  else
-    {
-      perror ("fork");
-      return 0;
+      pid = fork ();
+      if (pid > 0)
+	{
+	  if (putenv (name) ||
+	      putenv (addr) ||
+	      putenv (netmask) ||
+	      putenv (network) || putenv (broadcast) || putenv (gateway))
+	    perror ("putenv");
+	  
+	  if (execv (PARAM_IP_DOWN, args))
+	    perror ("execv");
+	  exit (-1);
+	}
+      else if (pid == 0)
+	{
+	}
+      else
+	{
+	  perror ("fork");
+	  return 0;
+	}
     }
   return 1;
 }
