@@ -1,1 +1,17 @@
- 
+pengfork 0.1 INSTALL instructions
+=================================
+
+FIXME: to be rewritten
+
+$ ./configure && make && make install
+
+Configure insteresting options
+==============================
+
+--prefix=$PATH	: specifies installation root directory.
+
+--enable-modem	: Enable modem driver (default).
+--disable-modem : Disable modem driver.
+
+--enable-tun  	: Enable tuntap driver (default).
+--disable-tun	: Disable tuntap driver.
