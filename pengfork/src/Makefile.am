@@ -36,7 +36,8 @@ pengfork_SOURCES = 	buffer.c		\
 			p30init.c		\
 			p30tcpip.c		\
 			utils.c			\
-			log.c
+			log.c			\
+			vjcompress.c
 
 INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib
 
