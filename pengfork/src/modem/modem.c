@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002-2003  Jean-Charles Salzeber <jc@varspool.net>
+ * Copyright (C) 2002-2003  Jean-Charles Salzeber <chupa@penggy.org>
  *
  * This file is part of penggy.
  *
@@ -270,7 +270,7 @@ modem_dial ()
     return 0;
   for (i = 0; !connected && i < PARAM_MODEM_DIAL_RETRY; i++)
     {
-      for(j=0; phonetab[j].phone; j++)
+      for(j=0; phonetab[j].phone && !connected; j++)
         if(modem_dial_to (phonetab[j].phone))
 	{
 	  snprintf(script_file, sizeof(script_file),"%s/%s.scm",

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002-2003  Jean-Charles Salzeber <jc@varspool.net>
+ * Copyright (C) 2002-2003  Jean-Charles Salzeber <chupa@penggy.org>
  *
  * This file is part of penggy.
  *
@@ -51,6 +51,7 @@
 #include "modem/script.h"
 
 
+/* We're connected */
 SCM
 chat_success (void)
 {
@@ -58,6 +59,7 @@ chat_success (void)
   return SCM_BOOL_T;
 }
 
+/* The script failed to connect */
 SCM
 chat_failure (void)
 {
@@ -65,6 +67,7 @@ chat_failure (void)
   return SCM_BOOL_F;
 }
 
+/* Send a simple a plain text string */
 SCM
 chat_send (string)
      SCM string;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002-2003  Jean-Charles Salzeber <jc@varspool.net>
+ * Copyright (C) 2002-2003  Jean-Charles Salzeber <chupa@penggy.org>
  *
  * This file is part of penggy.
  *
@@ -68,6 +68,7 @@ struct ip_config_header
 
 int ip_tunnel_init ();
 int ip_tunnel_ready (buffer_t *bufin);
+int imap_response (token_t token, char *data, size_t data_size);
 int ip_tunnel_config (token_t token, char *data, size_t data_size);
 struct in_addr netmask(int bits);
 void init_iface (buffer_t *in, buffer_t *out);

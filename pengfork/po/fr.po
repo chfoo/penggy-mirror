@@ -1,17 +1,17 @@
 # French translations for penggy package
 # Traduction anglaise du package penggy.
-# Copyright (C) 2002 Jean-Charles Salzeber <jc@varspool.net>
+# Copyright (C) 2002 Jean-Charles Salzeber <chupa@penggy.org>
 # This file is distributed under the same license as the penggy package.
-# Jean-Charles Salzeber <jc@varspool.net>, 2002.
+# Jean-Charles Salzeber <chupa@penggy.org>, 2002.
 #
 # $Id$
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: penggy 0.2.0\n"
-"POT-Creation-Date: 2003-02-08 00:02+0100\n"
+"POT-Creation-Date: 2003-05-15 17:16+0200\n"
 "PO-Revision-Date: 2003-02-08 00:33+0100\n"
-"Last-Translator: Jean-Charles Salzeber <jc@varspool.net>\n"
+"Last-Translator: Jean-Charles Salzeber <chupa@penggy.org>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
@@ -418,32 +418,32 @@ msgstr "Ne peut supprimer /etc/resov.conf: %s (%d)\n"
 msgid "Could not rename /etc/resolv.peng: %s (%d)\n"
 msgstr "Ne peut renommer /etc/resolv.peng: %s (%d)\n"
 
-#: src/iptunnel/init.c:137
+#: src/iptunnel/init.c:171
 #, c-format
 msgid "IP address: %s\n"
 msgstr "Adresse IP: %s\n"
 
-#: src/iptunnel/init.c:141
+#: src/iptunnel/init.c:175
 #, c-format
 msgid "DNS server: %s\n"
 msgstr "Serveur DNS: %s\n"
 
-#: src/iptunnel/init.c:145
+#: src/iptunnel/init.c:179
 #, c-format
 msgid "MTU: %d\n"
 msgstr "MTU: %d\n"
 
-#: src/iptunnel/init.c:157
+#: src/iptunnel/init.c:191
 #, c-format
 msgid "Hostname: %s\n"
 msgstr "Nom d'hôte: %s\n"
 
-#: src/iptunnel/init.c:159
+#: src/iptunnel/init.c:193
 #, c-format
 msgid "Domain: %s\n"
 msgstr "Domaine: %s\n"
 
-#: src/iptunnel/init.c:184
+#: src/iptunnel/init.c:219
 msgid "IP tunnel is working.\n"
 msgstr "Le tunnel IP fonctionne.\n"
 
@@ -459,7 +459,7 @@ msgstr "Le serveur a fermé la connexion.\n"
 msgid "engine - An input buffer is full\n"
 msgstr "engine - Un buffer d'entrée est plein\n"
 
-#: src/getpass.c:84 src/options.c:682
+#: src/getpass.c:84 src/options.c:702
 #, c-format
 msgid "%s:%d bad line format\n"
 msgstr "%s:%d mauvais format de ligne\n"
@@ -679,7 +679,7 @@ msgstr "définit la vitesse du port série."
 msgid "sets the path where chat files will be searched."
 msgstr "définit le chemin où les fichiers de dialogues seront recherchés."
 
-#: src/options.c:250
+#: src/options.c:269
 #, c-format
 msgid ""
 "Usage : %s [OPTIONS]\n"
@@ -692,7 +692,7 @@ msgstr ""
 "  -h, --help                       affiche cette aide.\n"
 "  -V, --version                    affiche la version.\n"
 
-#: src/options.c:346
+#: src/options.c:365
 #, c-format
 msgid ""
 "%s comes with ABSOLUTELY NO WARRANTY.\n"
@@ -707,31 +707,31 @@ msgstr ""
 "de la GNU General Public License, version 2 ou ultérieure.\n"
 "\n"
 
-#: src/options.c:351
+#: src/options.c:370
 msgid "Compilation options :\n"
 msgstr "Options de compilation :\n"
 
-#: src/options.c:563
+#: src/options.c:583
 #, c-format
 msgid "Try `%s --help' for more information.\n"
 msgstr "Essayez '%s --help' pour plus d'information.\n"
 
-#: src/options.c:690
+#: src/options.c:710
 #, c-format
 msgid "%s:%d unrecognized option - %s\n"
 msgstr "%s:%d option non reconnue - %s\n"
 
-#: src/options.c:720
+#: src/options.c:740
 #, c-format
 msgid "%s:%d bad boolean value\n"
 msgstr "%s:%d mauvaise valeur booléenne\n"
 
-#: src/options.c:732
+#: src/options.c:752
 #, c-format
 msgid "%s:%d not enough memory to get the parameter\n"
 msgstr "%s:%d pas assez de mémoire pour traiter les paramètres\n"
 
-#: src/options.c:741
+#: src/options.c:761
 #, c-format
 msgid "%s:%d bad integer value\n"
 msgstr "%s:%d mauvaise valeur entière\n"

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002-2003  Jean-Charles Salzeber <jc@varspool.net>
+ * Copyright (C) 2002-2003  Jean-Charles Salzeber <chupa@penggy.org>
  *
  * This file is part of penggy.
  *
@@ -68,6 +68,9 @@
 #include "iptunnel/aol2cli.h"
 #include "iptunnel/cli2aol.h"
 
+#include "stream.h"
+#include "fdo/bytecode.h"
+
 buffer_t *acout, *ifout;
 
 int ipnum = 1;
@@ -98,6 +101,37 @@ ip_tunnel_init ()
 
   fdo_register (TOKEN ("ya"), ip_tunnel_config);
 
+  return 1;
+}
+
+int
+imap_response (token, data, data_size)
+     token_t token;
+     char *data;
+     size_t data_size;
+{
+  log (LOG_INFO, "IMAP response!!!\n");
+  return 1;
+}
+
+int
+imap_request ()
+{
+  /*char request[]= {
+    0x00, 0x01, 0x00, 0x02, 0x00, 0x03, 0x00, 0x02, 
+    0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 
+    0x00, 0x02, 0x00, 0x20, 0x00, 0x04, 0x00, 0x01, 
+    0x00 };*/
+
+  char smtp_request[]= {
+    0x00, 0x01, 0x00, 0x02, 0x00, 0x04, 0x00, 0x02,
+    0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03,
+    0x00, 0x02, 0x00, 0x20, 0x00, 0x04, 0x00, 0x01,
+    0x00 };
+  fdo_send (TOKEN ("yO"), smtp_request, sizeof (smtp_request));
+
+  log(LOG_INFO, "IMAP request\n");
+  fdo_register (TOKEN ("yO"), imap_response);
   return 1;
 }
 
@@ -170,7 +204,7 @@ ip_tunnel_config (token, data, data_size)
       nparsed += sizeof (struct ip_config_header) + cfg_hdr->length;
     }
 
-  if(PARAM_SET_DNS) 
+  /*if(PARAM_SET_DNS) 
     set_dns (domain, dns);
   launch_ip_up (ifname, address, dns, domain, mtu);
 
@@ -180,7 +214,8 @@ ip_tunnel_config (token, data, data_size)
   engine_register (*(iface->fd), 0, ip_tunnel_fn);
 
   fdo_register (TOKEN ("yc"), get_ip_aol);
-  need_extra=0;
+  need_extra=0;*/
+  imap_request();
   log(LOG_NOTICE, _("IP tunnel is working.\n"), domain);
 
   return 1;

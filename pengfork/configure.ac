@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2002-2003  Jean-Charles Salzeber <jc@varspool.net>
+# Copyright (c) 2002-2003  Jean-Charles Salzeber <chupa@penggy.org>
 #
 # This file is part of penggy program.
 #
@@ -358,11 +358,8 @@ if test "$tun" != yes; then
 fi
 
 AC_CONFIG_LINKS([include/gettext.h:lib/gettext.h])
-if test "$gt_included_intl" = yes; then
-  AC_CONFIG_LINKS([include/libintl.h:intl/libgnuintl.h])
-fi
 
-DEFAULT_INCLUDES="-I\$(top_builddir)/include"
+DEFAULT_INCLUDES="-I\$(top_builddir)/include -I\$(top_builddir)/intl"
 
 CPPFLAGS="$CPPFLAGS	-DPKGDATADIR=\\\"\$(pkgdatadir)\\\""
 CPPFLAGS="$CPPFLAGS -DSYSCONFDIR=\\\"\$(sysconfdir)\\\""
@@ -397,5 +394,8 @@ AC_CONFIG_FILES([Makefile
                  src/tun/Makefile
                  po/Makefile.in
                  doc/Makefile
-                 doc/config/Makefile])
+                 doc/config/Makefile
+                 doc/manpage/Makefile
+                 doc/manpage/en/Makefile
+                 doc/manpage/fr/Makefile])
 AC_OUTPUT

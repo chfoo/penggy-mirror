@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002-2003  Jean-Charles Salzeber <jc@varspool.net>
+ * Copyright (C) 2002-2003  Jean-Charles Salzeber <chupa@penggy.org>
  *
  * This file is part of penggy.
  *
@@ -33,7 +33,7 @@
 # include <sys/types.h>
 #endif
 
-#define P3_MAX_SIZE 1550
+#define P3_MAX_SIZE 1800
 
 #define P3_SIZE_OFFSET   3
 #define P3_DATA_OFFSET   8

@@ -2,5 +2,175 @@
      options -->
 
 <para>
-  Ici description des options
+  <command>&pkgname;</command> peut s'utiliser sans options, avec des
+  options courtes (-) ou longues (--)
 </para>
+<refsect2><title>Information Générales</title>
+<variablelist>
+  <varlistentry>
+    <term><option>-h</option>, <option>--help</option></term>
+    <listitem>
+       <para>Affiche la liste des options.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><option>-V</option>, <option>--version</option></term>
+    <listitem>
+       <para>Affiche le numéro de version de <command>&pkgname;</command> 
+	ainsi que les options de compilations.</para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+</refsect2>
+
+<refsect2><title>Authentification de l'utilisateur</title>
+<variablelist>
+  <varlistentry>
+    <term><option>-s</option> <parameter>USER</parameter>, <option>--screen-name</option> <parameter>USER</parameter></term>
+    <listitem>
+       <para>Lance <command>&pkgname;</command> en tant que l'utilisateur
+       <parameter>USER</parameter>. Celui-ci doit être obligatoirement
+        défini, ainsi que son mot de passe, dans
+       <filename>/etc/&pkgname;/&pkgpasswd;</filename></para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+</refsect2>
+
+<refsect2><title>Propriétés Générales</title>
+<variablelist>
+  <varlistentry>
+    <term><option>--access-method</option> <parameter>METHOD</parameter></term>
+    <listitem>
+       <para><parameter>METHOD</parameter> indique par quel moyen
+       <command>&pkgname;</command> va se connecter. Celui-ci peut
+       avoir comme valeur : <symbol>modem</symbol> pour une connexion par
+       modem de type analogique ou numérique/<acronym>RNIS</acronym> via les 
+       périphériques d'émulation modem <filename>/dev/ttyI*</filename>, 
+       <symbol>cable</symbol> pour une connexion par modem câble, 
+       <symbol>dsl</symbol> pour une connexion par modem <acronym>xDSL</acronym>, 
+       <symbol>tcpip</symbol> pour une connexion via un réseau.</para>
+       <important><title>Attention</title>
+	 <para>Pour l'instant, seul la connexion par
+	 <symbol>modem</symbol> fonctionne.</para>
+       </important>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>-d</option>, <option>--daemon</option></term>
+    <listitem>
+       <para>Lance <command>&pkgname;</command> en mode démon. 
+       Le mode démon signifie que <command>&pkgname;</command> tournera en tâche de
+       fond. Les messages seront aussi envoyés via des appels <function>syslog</function>.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><option>-f</option> <parameter>FILE</parameter>, <option>--config-file</option> <parameter>FILE</parameter></term>
+    <listitem>
+       <para>Définie <parameter>FILE</parameter> comme fichier de configuration à utiliser.
+        Voir le fichier <filename>&pkgconfig;</filename> comme exemple. Par défaut
+	celui-ci est <filename>/etc/&pkgname;/&pkgconfig;</filename></para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><option>--protocol</option> <parameter>PROT</parameter></term>
+    <listitem>
+       <para>Définie le protocole de connexion <parameter>PROT</parameter>.
+       Celui-ci peut prendre <symbol>P3</symbol> ou <symbol>FLAP</symbol>
+        comme argument. Par défaut, celui-ci est <symbol>P3</symbol></para>
+	<important><title>Attention</title>
+	  <para>Le protocole <symbol>FLAP</symbol> est en cours de
+	  développement et n'est pas disponible dans cette version.</para>
+	</important>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><option>-r</option>, <option>--auto-reconnect</option></term>
+    <listitem>
+       <para>Active la reconnexion automatique. Peut s'utiliser
+       avec l'option <parameter class='option'>--reconnect-delay</parameter>
+       qui suit. Par défaut, la reconnexion est inactive.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><option>--reconnect-delay</option> <parameter>DELAY</parameter></term>
+    <listitem>
+       <para><parameter>DELAY</parameter> indique le temps d'attente
+       avant la reconnexion. Celui-ci s'exprime en secondes. Par défaut
+       le temps d'attente est de 5 secondes.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><option>-D</option> <parameter>LEVEL</parameter>, <option>--debug-level</option> <parameter>LEVEL</parameter></term>
+    <listitem>
+       <para>Définie le niveau des informations de débogage. Celui-ce peut
+       aller de 0 (aucune information) à 10 (maximum d'informations).
+       Par défaut cette valeur est à 0</para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+</refsect2>
+
+<refsect2><title>Propriétés du modem</title>
+<para>Les propriétés du modem ne sont pertinantes que si l'accés à AOL
+est configuré sur <symbol>modem</symbol>, soit dans le fichier de
+configuration <filename>/etc/&pkgname;/&pkgconfig;</filename>, soit avec
+l'option <parameter class='option'>--access-method</parameter></para>
+<variablelist>
+  <varlistentry>
+    <term><option>--chat-path</option> <parameter>PATH</parameter></term>
+    <listitem>
+       <para>Défini le chemin d'accès aux fichiers de script résolvant
+       la connexion aux serveurs AOL. Par défaut le répertoire est
+       <filename>/usr/share/&pkgname;/chat/</filename></para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><option>--rtscts</option></term>
+    <listitem>
+       <para>Cette option active le contrôle de flux matériel. Celui-ci
+       est activé par défaut.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><option>--init-str</option> <parameter>STRING</parameter></term>
+    <listitem>
+       <para>Permet de modifier la permière chaîne d'initialisation
+       envoyée au modem. Par défaut celle-ci est <symbol>ATZ</symbol></para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><option>--dial-str</option> <parameter>STRING</parameter></term>
+    <listitem>
+       <para>Permet de modifier la chaîne <parameter>STRING</parameter> utilisée
+       pour numéroter. Par défaut celle-ci est <symbol>ATDT</symbol> ce qui correspond 
+       à une numérotation par fréquence vocale.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><option>--prefix</option> <parameter>STRING</parameter></term>
+    <listitem>
+       <para>Permet de définir la chaîne <parameter>STRING</parameter>
+       utilisée pour obtenir une ligne externe si l'accès se fait par
+       exemple par un standard. Par défaut cette chaîne n'est pas définie.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><option>-p</option> <parameter>FILE</parameter>, <option>--phonetab</option> <parameter>FILE</parameter></term>
+    <listitem>
+       <para>Définie <parameter>FILE</parameter> comme fichier de contenant les numéros
+        de téléphone à composer. Voir le fichier <filename>&pkgphonetab;</filename> comme exemple.
+	Par défaut celui-ci est <filename>/etc/&pkgname;/&pkgphonetab;</filename></para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><option>-l</option> <parameter>SPEED</parameter>, <option>--line-speed</option> <parameter>SPEED</parameter></term>
+    <listitem>
+       <para>Définie <parameter>SPEED</parameter> comme la vitesse du port
+        série. Par défaut celle-ci est de 115200 <acronym>bps</acronym> ce qui 
+        correspond à la valeur maximale que peut supporter un <acronym>UART</acronym>. 
+        Les autres valeurs acceptées étant: 300, 1200, 2400, 4800, 9600, 19200, 38400, 57600.</para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+</refsect2>

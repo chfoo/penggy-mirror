@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002  Jean-Charles Salzeber <jc@varspool.net>
+ * Copyright (C) 2002  Jean-Charles Salzeber <chupa@penggy.org>
  *
  * This file is part of penggy.
  *

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2002-2003  Jean-Charles Salzeber <jc@varspool.net>
+# Copyright (c) 2002-2003  Jean-Charles Salzeber <chupa@penggy.org>
 #
 # This file is part of penggy program.
 #
@@ -25,5 +25,5 @@ chatdir = ${pkgdatadir}/chat
 confdir = ${sysconfdir}/${PACKAGE}
 
 dist_chat_DATA = aolnet.scm global.scm global2.scm csnet.scm
-dist_conf_DATA = penggy.cfg aol-secrets phonetab
+dist_conf_DATA = penggy.conf aol-secrets phonetab
 dist_conf_SCRIPTS = ip-up ip-down

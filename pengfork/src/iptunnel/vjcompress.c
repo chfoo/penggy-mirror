@@ -33,7 +33,7 @@
  */
 
 /*
-  Modified by Jean-Charles Salzeber <jc@varspool.net>
+  Modified by Jean-Charles Salzeber <chupa@penggy.org>
   to fit penggy needs
  */
 #if HAVE_CONFIG_H

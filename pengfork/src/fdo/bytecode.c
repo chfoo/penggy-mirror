@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002-2003  Jean-Charles Salzeber <jc@varspool.net>
+ * Copyright (C) 2002-2003  Jean-Charles Salzeber <chupa@penggy.org>
  *
  * This file is part of penggy.
  *
@@ -56,6 +56,8 @@
 #include "fdo/stream.h"
 #include "fdo/atoms.h"
 
+#include "log.h"
+
 int
 fdo_lookup_atom(pid, aid, def)
      int pid;
@@ -77,7 +79,7 @@ fdo_lookup_atom(pid, aid, def)
   return 0;
 }
 
-/*
+
 void
 display_raw_arg(arg,length)
      unsigned char *arg;
@@ -85,9 +87,9 @@ display_raw_arg(arg,length)
 {
   int i;
 
-  printf("#x");
+  debug(9, "#x");
   for(i=0;i<length;i++)
-    printf("%02x", arg[i]);
+    debug(9, "%02x", arg[i]);
 }
 
 void
@@ -97,7 +99,7 @@ display_dword_arg(arg, length)
 {
   u_int32_t dword = 0;
   memcpy( ((char *)&dword) + (sizeof(dword)-length), arg, length);
-  printf("%d", ntohl(dword));
+  debug(9, "%d", ntohl(dword));
 }
 
 void
@@ -108,7 +110,7 @@ display_string_arg(arg, length)
   char str[length+1];
   memcpy(str,arg,length);
   str[length]=0;
-  printf("\"%s\"", str);
+  debug(9, "\"%s\"", str);
 }
 
 void
@@ -119,10 +121,10 @@ display_atom(atom)
 
   if(fdo_lookup_atom(atom.protid, atom.atomid, &def))
     {
-      printf("\t(%s", def->name);
+      debug(9, "\t(%s", def->name);
       if(atom.arg_length > 0)
         {
-	printf(" ");
+	debug(9, " ");
 	switch(def->arg)
 	  {
 	  default:
@@ -138,20 +140,20 @@ display_atom(atom)
 	    break;
 	  }
         }
-      printf(")\n");
+      debug(9, ")\n");
     }
   else
     {
-      printf("\tunknown_atom(p%d,a%d)", atom.protid, atom.atomid);
+      debug(9, "\tunknown_atom(p%d,a%d)", atom.protid, atom.atomid);
       if(atom.arg_length > 0)
         {
-	printf(" ");
+	debug(9, " ");
 	display_raw_arg(atom.arg, atom.arg_length);
         }
-      printf("\n");
+      debug(9, "\n");
     }
 }
-*/
+
 
 void
 extract_atoms(id, length, stream)
@@ -167,6 +169,7 @@ extract_atoms(id, length, stream)
   char data;
   fdo_stream_t *f;
 
+  debug(9, "Atom stream (id=%d):\n", id);
   while( nread < length )
     {
       f = get_stream(id);
@@ -243,10 +246,11 @@ extract_atoms(id, length, stream)
       atom.protid += prot_add;
       atom.atomid += atom_add;
       f->last_pid = atom.protid;
-      if(is_eos_atom(atom.protid, atom.atomid))
-        close_stream(id);
-      /*display_atom(atom);*/
+      /*if(is_eos_atom(atom.protid, atom.atomid))
+        close_stream(id);*/
+      display_atom(atom);
     }
+  debug(9, "\n");
 }
 
 void

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002-2003  Jean-Charles Salzeber <jc@varspool.net>
+ * Copyright (C) 2002-2003  Jean-Charles Salzeber <chupa@penggy.org>
  *
  * This file is part of penggy.
  *
@@ -116,6 +116,14 @@ enum
   __tcpip_aol_port,
 #endif /* ENABLE_TCPIP */
 
+#if ENABLE_CONTROL
+  __control_enable_control,
+  __control_enable_admin,
+  __control_socket_path,
+  __control_connect_on_run,
+  __control_max_connections,
+#endif /* ENABLE_CONTROL */
+
   __last_param                  /* not a parameter */
 };
 
@@ -155,8 +163,16 @@ enum
 # define PARAM_TCPIP_AOL_PORT          PARAM_INTEGER(__tcpip_aol_port)
 #endif /* ENABLE_TCPIP */
 
+#if ENABLE_CONTROL
+# define PARAM_CONTROL_ENABLE_CONTROL  PARAM_BOOLEAN(__control_enable_control)
+# define PARAM_CONTROL_ENABLE_ADMIN    PARAM_BOOLEAN(__control_enable_admin)
+# define PARAM_CONTROL_SOCKET_PATH     PARAM_STRING(__control_socket_path)
+# define PARAM_CONTROL_CONNECT_ON_RUN  PARAM_BOOLEAN(__control_connect_on_run)
+# define PARAM_CONTROL_MAX_CONNECTIONS PARAM_INTEGER(__control_max_connections)
+#endif /* ENABLE_CONTROL */
+
 /* Default path */
-#define DEFAULT_CONFIG_FILE       (SYSCONFDIR "/" PACKAGE "/" PACKAGE ".cfg")
+#define DEFAULT_CONFIG_FILE       (SYSCONFDIR "/" PACKAGE "/" PACKAGE ".conf")
 #define DEFAULT_SECRET_FILE       (SYSCONFDIR "/" PACKAGE "/aol-secrets")
 #define DEFAULT_IPUP_FILE         (SYSCONFDIR "/" PACKAGE "/ip-up")
 #define DEFAULT_IPDOWN_FILE       (SYSCONFDIR "/" PACKAGE "/ip-down")
@@ -171,6 +187,7 @@ enum
 #endif
 #define DEFAULT_CHAT_PATH         (PKGDATADIR "/chat")
 #define DEFAULT_CHAT_FILE         ("aolnet")
+#define DEFAULT_SOCKET_PATH       ("/var/run/penggy")
 
 extern param_t param[PARAM_MAX];
 

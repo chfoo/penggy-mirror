@@ -2,5 +2,12 @@
      command -->
 
 <para>
-  Ici description de Pengfork
+  <command>&pkgname;</command> permet à un utilisateur de se connecter à
+  internet s'il dispose d'un compte AOL.
+</para>
+<para>
+  Actuellement <command>&pkgname;</command> permet de se connecter via
+  une ligne "classique" (modem analogique, numérique), et bientôt haut-débit
+  (cable, xDSL). <command>&pkgname;</command> établit un tunnel IP
+  en utilisant le protocole propriétaire d'AOL.
 </para>

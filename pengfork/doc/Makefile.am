@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2002-2003  Jean-Charles Salzeber <jc@varspool.net>
+# Copyright (c) 2002-2003  Jean-Charles Salzeber <chupa@penggy.org>
 #
 # This file is part of penggy program.
 #
@@ -24,5 +24,5 @@
 #
 
 
-SUBDIRS = config
+SUBDIRS = config manpage
 

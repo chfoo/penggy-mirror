@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002-2003  Jean-Charles Salzeber <jc@varspool.net>
+ * Copyright (C) 2002-2003  Jean-Charles Salzeber <chupa@penggy.org>
  *
  * This file is part of penggy.
  *
@@ -97,7 +97,7 @@ main2 (closure, argc, argv)
 
   if (!parse_config ())
     {
-      log (LOG_ERR,_("Error parsing configuration files, exiting !\n"));
+      log (LOG_ERR, _("Error parsing configuration files, exiting !\n"));
       exit (1);
     }
 

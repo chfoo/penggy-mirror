@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002-2003  Jean-Charles Salzeber <jc@varspool.net>
+ * Copyright (C) 2002-2003  Jean-Charles Salzeber <chupa@penggy.org>
  *
  * This file is part of penggy.
  *
@@ -230,6 +230,25 @@ init_parameters (void)
          NULL, NULL,
          __tcpip, check_port)
 #endif /* ENABLE_TCPIP */
+
+#if ENABLE_CONTROL
+    /* CONTROL SPECIFIC */
+    , BOOL (0, NULL, "enable_control", true,
+	 NULL, NULL,
+	 __control, NULL),
+    BOOL (0, NULL, "enable_admin", false, 
+         NULL, NULL,
+         __control, NULL),
+    STR (0, NULL, "socket_path", DEFAULT_SOCKET_PATH, 
+         NULL, NULL,
+         __control, NULL),
+    BOOL (0, NULL, "connect_on_run", DEFAULT_SOCKET_PATH, 
+         NULL, NULL,
+         __control, NULL),
+    BOOL (0, NULL, "connect_on_run", DEFAULT_SOCKET_PATH, 
+         NULL, NULL,
+         __control, NULL),
+#endif /* ENABLE_CONTROL */
   };
 
 #undef STR
@@ -803,11 +822,25 @@ void
 strip_comments (line)
      char *line;
 {
-  char *comment;
+  char *linedup = strdup(line);
+  char *duped = linedup;
+  int i = 0, quote = 0, escape = 0;
 
-  comment = strchr (line, '#');
-  if (comment != NULL)
-    *comment = '\0';
+  for (; *linedup != '\0'; linedup++) {
+    if (escape) {
+      line[i++] = *linedup;
+      escape = 0;
+    } else if (*linedup == '\\')
+      escape = 1;
+    else if (*linedup == '#' && !quote)
+      break;
+    else if (*linedup == '"')
+      quote ^= 1;
+    else
+      line[i++] = *linedup;
+  }
+  line[i] = '\0';
+  free(duped);
 }
 
 int
