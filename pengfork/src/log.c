@@ -29,13 +29,8 @@
 int 
 init_log (void)
 {
-  int flags = 0;
-
-#ifdef LOG_PERROR
-  flags = LOG_PERROR;
-#endif
-  openlog ("pengfork", flags, LOG_DAEMON);
-  return 1;
+  openlog ("pengfork", 0, LOG_DAEMON);
+  return 0;
 }
 
 int 
@@ -44,10 +39,10 @@ log (int level, char *format, ...)
   va_list ap;
   va_start (ap, format);
   
-#ifndef LOG_ERROR
-  vfprintf (stderr, format, ap);
-#endif
-  syslog (level, format, ap);
+  if (!PARAM_DAEMON)
+    vfprintf (stderr, format, ap);
+  else
+    syslog (level, format, ap);
   return 0;
 }
 
@@ -58,7 +53,7 @@ debug (int level, char *format, ...)
 
   va_start (ap, format);
   if (level <= PARAM_DEBUG_LEVEL)
-    vfprintf (stderr, format, ap);
+    vfprintf (stdout, format, ap);
 
   return 0;
 }
