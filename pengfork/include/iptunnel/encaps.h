@@ -17,20 +17,31 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
  * 02111-1307, USA.
- *                
+ *
  */
 
-#ifndef __MISC_H__
-#define __MISC_H__
+#ifndef __IPTUNNEL_ENCAPS_H__
+#define __IPTUNNEL_ENCAPS_H__
 
-#include <netinet/in.h>
 
-int launch_ip_up (char *if_name, in_addr_t if_addr, in_addr_t if_netmask,
-                  in_addr_t if_network, in_addr_t if_broadcast,
-                  in_addr_t if_gateway);
+struct short_ip
+{
+  u_int8_t ipnum;
+  u_int8_t len;
+  char ip_data;
+}
+__attribute__ ((packed));
 
-int launch_ip_down (char *if_name, in_addr_t if_addr, in_addr_t if_netmask,
-                    in_addr_t if_network, in_addr_t if_broadcast,
-                    in_addr_t if_gateway);
+struct long_ip
+{
+  u_int8_t ipnum;
+  u_int16_t len;
+  char ip_data;
+}
+__attribute__ ((packed));
 
-#endif /* __MISC_H__ */
+#define LONG_IP_BIT 0x80
+#define LONG_IP_MASK 0x7fff
+
+
+#endif /* __IPTUNNEL_ENCAPS_H__ */

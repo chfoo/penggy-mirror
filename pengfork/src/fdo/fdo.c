@@ -62,6 +62,8 @@ fdo_recv (out, data, data_size)
     return;
 
   *token = ntohs (*token);
+  data += sizeof(token_t);
+  data_size -= sizeof(token_t);
   for (i = 0; i < nbmodules; i++)
     {
       if (module[i].token == *token && module[i].handler != NULL)
@@ -73,7 +75,7 @@ fdo_recv (out, data, data_size)
   if (index != -1)
     module[index].handler (*token, data, data_size, out);
   else
-    log (LOG_NOTICE, "FDO - unregistered token received.",
+    log (LOG_NOTICE, "FDO - unregistered token received: '%c%c'\n",
          (*token >> 8) & 0xff, *token & 0xff);
 }
 

@@ -64,12 +64,20 @@ p3_check_packet (header, data, data_size)
 
   /* Check packet is 0x0d terminated */
   if (p[data_size] != P3_STOP)
-    return 0;
+    {
+      debug(1,"P3 - Bad packet received:\n");
+      debug(1,"\tnot 0x0d terminated\n");
+      return 0;
+    }
 
   /* Check CRC */
   crc = htons (p3_crc16 ((char *) &header->size, data_size + 5));
   if (crc != header->checksum)
-    return 0;
+    {
+      debug(1,"P3 - Bad packet received:\n");
+      debug(1,"\tbad CRC checksum\n");
+      return 0;
+    }
 
   /* So it seems to be a valid packet */
 
@@ -81,11 +89,21 @@ p3_check_ordering (header)
      struct p3hdr *header;
 {
   if (header->type == TYPE_DATA && header->seq != p3_next_seq (srv.lastseq))
-    /* packet is data and the seq isn't what we are waiting for */
-    return 0;
-  if (header->type != TYPE_DATA && header->seq != srv.lastseq)
-    /* packet is not data and the seq has changed */
-    return 0;
+    {
+      debug (1, "P3 - Bad ordering for data packet received\n");
+      debug (1, "\tseq received: %d\n", header->seq);
+      debug (1, "\tseq expected: %d\n", p3_next_seq (srv.lastseq));
+      /* packet is data and the seq isn't what we expect */
+      return 0;
+    }
+  /*if (header->type != TYPE_DATA && header->seq != srv.lastseq)
+    {
+      debug (1, "P3 - Bad ordering for packet received\n");
+      debug (1, "\tseq received: %d\n", header->seq);
+      debug (1, "\tseq expected: %d\n", srv.lastseq);
+      /* packet is not data and the seq has changed */
+  /*return 0;
+    }*/
 
   return 1;
 }

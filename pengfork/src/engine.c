@@ -235,7 +235,7 @@ engine_set_readers (fdset, maxfd)
         }
       else
         /* Normally the input buffer mustn't be full */
-        log (LOG_ERR, "engine - A input buffer is full\n");
+        log (LOG_ERR, "engine - An input buffer is full\n");
     }
 }
 

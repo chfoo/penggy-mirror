@@ -73,7 +73,6 @@ p3_init (bufin, bufout)
   create_buffer (bufin, BUFFER_SIZE);
   create_buffer (bufout, BUFFER_SIZE);
   p3_send_init_packet (bufout);
-  dump_raw (buffer_start (bufout), bufout->used);
 }
 
 void
@@ -86,7 +85,10 @@ p3_loop (bufin, bufout, timeout)
   char *data;
   size_t data_size;
 
-  while (p3_get_packet (bufin, &header, &data, &data_size))
+  if(srv.lastack != cli.lastseq && timeout>1)
+    p3_put_packet (bufout, TYPE_ACK, NULL, 0);
+
+  while (p3_get_packet (bufin, bufout, &header, &data, &data_size))
     {
       if (!header->client)
         {
@@ -99,9 +101,10 @@ p3_loop (bufin, bufout, timeout)
           switch (header->type)
             {
             case TYPE_DATA:
-              debug (2, "P3 - Received a data packet:\n");
+              debug (2, "P3 - Received a DATA packet:\n");
 
-              dump_raw ((char *) header, data_size + P3_DATA_OFFSET + 1);
+              dump_raw ("P3 - input", (char *) header, 
+		    data_size + P3_DATA_OFFSET + 1);
 
               fdo_recv (bufout, data, data_size);
 
@@ -110,32 +113,32 @@ p3_loop (bufin, bufout, timeout)
               break;
 
             case TYPE_SS:
-              debug (2, "P3 - Received a ss packet\n");
+              debug (2, "P3 - Received a SS packet\n");
               break;
 
             case TYPE_SSR:
-              debug (2, "P3 - Received a ssr packet\n");
+              debug (2, "P3 - Received a SSR packet\n");
               break;
 
             case TYPE_INIT:
-              debug (2, "P3 - Received an init packet\n");
+              debug (2, "P3 - Received an INIT packet\n");
               /* AFAIK should not happen */
               p3_recv_init_packet ((char *) data, data_size);
               break;
 
             case TYPE_ACK:
-              debug (2, "P3 - Received an ack packet\n");
+              debug (2, "P3 - Received an ACK packet\n");
               /* Nothing to do */
               break;
 
             case TYPE_PING:
-              debug (2, "P3 - Received a ping packet\n");
+              debug (2, "P3 - Received a PING packet\n");
               /* OK we send an ack */
               p3_put_packet (bufout, TYPE_ACK, NULL, 0);
               break;
 
             case TYPE_NACK:
-              debug (2, "P3 - Received a resync packet\n");
+              debug (2, "P3 - Received a NACK packet\n");
               /* The server did not receive some packets */
 
               /* $$$ TODO $$$ */
@@ -147,7 +150,7 @@ p3_loop (bufin, bufout, timeout)
               break;
 
             default:
-              debug (0, "P3 - Unknow packet type receive: type=0x%x\n",
+              debug (0, "P3 - Unknow packet type received: type=0x%02x\n",
                      header->type);
             }
         }
@@ -165,8 +168,9 @@ p3_put_data (buffer, data, data_size)
 }
 
 int
-p3_get_packet (buffer, header, data, data_size)
+p3_get_packet (buffer, out, header, data, data_size)
      buffer_t *buffer;
+     buffer_t *out;
      struct p3hdr **header;
      char **data;
      size_t *data_size;
@@ -204,7 +208,7 @@ p3_get_packet (buffer, header, data, data_size)
 
       if (!p3_check_header (h))
         {
-          debug (0, "P3 - Bad header received\n");
+          log (LOG_WARNING, "P3 - Bad header received\n");
           p3_sync_buffer (buffer);
           continue;
         }
@@ -214,18 +218,20 @@ p3_get_packet (buffer, header, data, data_size)
 
       if (p3_check_packet (h, d, ds) && p3_check_ordering (h))
         {
-          /* Good we have an entire and well done packet */
-          *header = h;
-          h->size = s;
-          h->checksum = ntohs (h->checksum);
-          *data = d;
-          *data_size = ds;
-          loop = 0;
+	/* Good we have an entire and well done packet */
+	*header = h;
+	h->size = s;
+	h->checksum = ntohs (h->checksum);
+	*data = d;
+	*data_size = ds;
+	loop = 0;
         }
       else
         {
-          debug (0, "P3 - Bad packet received\n");
-          p3_sync_buffer (buffer);
+	p3_sync_buffer (buffer);
+	/* Ask the server to retransmit the bad packet if any */
+	if(p3_check_ordering (h) && h->seq > p3_next_seq(cli.lastack))
+	  p3_put_packet (out, TYPE_NACK, NULL, 0);
         }
     }
 
@@ -267,6 +273,10 @@ p3_put_packet (buffer, type, data, data_size)
       pdata[data_size] = P3_STOP;
 
       buffer_alloc (buffer, data_size + P3_DATA_OFFSET + 1);
+
+      if (type == TYPE_DATA || type == TYPE_INIT)
+        dump_raw ("P3 - output", (char *) header, 
+	        data_size + P3_DATA_OFFSET + 1);
 
     }
   else

@@ -20,17 +20,15 @@
  *                
  */
 
-#ifndef __MISC_H__
-#define __MISC_H__
+#ifndef __IPTUNNEL_AOL2CLI_H__
+#define __IPTUNNEL_AOL2CLI_H__
 
-#include <netinet/in.h>
+#include <sys/types.h>
+#include "fdo.h"
+#include "buffer.h"
 
-int launch_ip_up (char *if_name, in_addr_t if_addr, in_addr_t if_netmask,
-                  in_addr_t if_network, in_addr_t if_broadcast,
-                  in_addr_t if_gateway);
+void get_ip_aol (token_t token, char *data, size_t data_size, buffer_t *out);
+void get_uncompressed_ip (char *vjip, size_t vjiplen);
 
-int launch_ip_down (char *if_name, in_addr_t if_addr, in_addr_t if_netmask,
-                    in_addr_t if_network, in_addr_t if_broadcast,
-                    in_addr_t if_gateway);
 
-#endif /* __MISC_H__ */
+#endif /* __IPTUNNEL_AOL2CLI_H__ */

@@ -20,17 +20,11 @@
  *                
  */
 
-#ifndef __MISC_H__
-#define __MISC_H__
+#ifndef __IPTUNNEL_CLI2AOL_H__
+#define __IPTUNNEL_CLI2AOL_H__
 
-#include <netinet/in.h>
+#include "buffer.h"
 
-int launch_ip_up (char *if_name, in_addr_t if_addr, in_addr_t if_netmask,
-                  in_addr_t if_network, in_addr_t if_broadcast,
-                  in_addr_t if_gateway);
+void get_ip_client (buffer_t *in, buffer_t *out, int timeout);
 
-int launch_ip_down (char *if_name, in_addr_t if_addr, in_addr_t if_netmask,
-                    in_addr_t if_network, in_addr_t if_broadcast,
-                    in_addr_t if_gateway);
-
-#endif /* __MISC_H__ */
+#endif /* __IPTUNNEL_CLI2AOL_H__ */

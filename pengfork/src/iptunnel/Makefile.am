@@ -22,6 +22,8 @@
 INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir) -I$(top_srcdir)/lib
 
 noinst_LIBRARIES = libiptunnel.a
-libiptunnel_a_SOURCES = tcpip.c		\
+libiptunnel_a_SOURCES = init.c		\
+			aol2cli.c	\
+			cli2aol.c	\
 			vjcompress.c
 

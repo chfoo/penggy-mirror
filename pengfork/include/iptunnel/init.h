@@ -20,8 +20,11 @@
  *
  */
 
-#ifndef __FDO_TCPIP_H__
-#define __FDO_TCPIP_H__
+#ifndef __IPTUNNEL_INIT_H__
+#define __IPTUNNEL_INIT_H__
+
+#include <sys/types.h>
+#include <netinet/in.h>
 
 struct ip_config_request
 {
@@ -29,40 +32,27 @@ struct ip_config_request
 }
 __attribute__ ((packed));
 
+
 struct ip_config_reply
 {
   u_int8_t unknow1[2];
   in_addr_t address;
   u_int8_t unknow2[8];
   in_addr_t dns_address;
-  u_int8_t unknow3[9];
+  u_int8_t unknow3[8];
+  u_int8_t hostname_len;
   char hostname;
 }
 __attribute__ ((packed));
 
-struct short_ip
-{
-  u_int8_t ipnum;
-  u_int8_t len;
-  char ip_data;
-}
-__attribute__ ((packed));
-
-struct long_ip
-{
-  u_int8_t ipnum;
-  u_int16_t len;
-  char ip_data;
-}
-__attribute__ ((packed));
-
-#define LONG_IP_BIT 0x80
-#define LONG_IP_MASK 0x7fff
-
-
 #define DEFAULT_IP_CONFIG_REQUEST (struct ip_config_request)\
   { {0x07, 0x01, 0x01, 0x0c, 0x01, 0x01, 0x0d, 0x01, 0x01} }
 
-extern int mtu;
 
-#endif /* __FDO_TCPIP_H__ */
+void ip_tunnel_init (buffer_t *buffer);
+void ip_tunnel_config (token_t token, char *data, size_t data_size, 
+		   buffer_t *out);
+void init_iface (buffer_t *in, buffer_t *out);
+
+
+#endif /* __IPTUNNEL_INIT_H__ */

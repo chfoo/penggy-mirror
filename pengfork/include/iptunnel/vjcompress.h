@@ -22,8 +22,11 @@
  *	- Initial distribution.
  */
 
-#ifndef _VJCOMPRESS_H_
-#define _VJCOMPRESS_H_
+#ifndef __IPTUNNEL_VJCOMPRESS_H__
+#define __IPTUNNEL_VJCOMPRESS_H__
+
+#include <net/ppp_defs.h>
+#include <netinet/ip.h>
 
 #define MAX_STATES 16           /* must be > 2 and < 256 */
 #define MAX_HDR	   128
@@ -145,4 +148,4 @@ extern int vj_uncompress_tcp __P ((u_char * buf, int buflen, int total_len,
                                    struct vjcompress * comp, u_char ** hdrp,
                                    u_int * hlenp));
 
-#endif /* _VJCOMPRESS_H_ */
+#endif /* __IPTUNNEL_VJCOMPRESS_H__ */

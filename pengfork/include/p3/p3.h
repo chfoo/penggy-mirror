@@ -52,8 +52,8 @@ void p3_register_to_engine (const access_t * myaccess);
 void p3_init (buffer_t * bufin, buffer_t * bufout);
 void p3_loop (buffer_t * bufin, buffer_t * bufout, int timeout);
 void p3_put_data (buffer_t * buffer, char *data, size_t data_size);
-int p3_get_packet (buffer_t * buffer, struct p3hdr **header, char **data,
-                   size_t * data_size);
+int p3_get_packet (buffer_t * buffer, buffer_t * out, 
+	         struct p3hdr **header, char **data, size_t * data_size);
 void p3_put_packet (buffer_t * buffer, int type, char *data,
                     size_t data_size);
 

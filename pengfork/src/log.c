@@ -76,14 +76,15 @@ debug (int level, char *format, ...)
    only useful for debug
 */
 void
-dump_raw (packet, size)
-     char *packet;
+dump_raw (text, data, size)
+     char *text;
+     char *data;
      size_t size;
 {
   int i, j;
-  unsigned char *p = packet;
+  unsigned char *p = data;
 
-  debug (3, "P3 - Raw dump: \n");
+  debug (3, "%s raw dump: \n",text);
   for (i = 0; i < size; i += 16)
     {
       debug (3, "  %04x: ", i);

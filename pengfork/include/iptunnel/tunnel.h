@@ -20,17 +20,33 @@
  *                
  */
 
-#ifndef __MISC_H__
-#define __MISC_H__
+#ifndef __IPTUNNEL_TUNNEL_H__
+#define __IPTUNNEL_TUNNEL_H__
 
-#include <netinet/in.h>
+#include <sys/types.h>
+#include "buffer.h"
+#include "iptunnel/vjcompress.h"
 
-int launch_ip_up (char *if_name, in_addr_t if_addr, in_addr_t if_netmask,
-                  in_addr_t if_network, in_addr_t if_broadcast,
-                  in_addr_t if_gateway);
+struct short_ip
+{
+  u_int8_t ipnum;
+  u_int8_t len;
+};
 
-int launch_ip_down (char *if_name, in_addr_t if_addr, in_addr_t if_netmask,
-                    in_addr_t if_network, in_addr_t if_broadcast,
-                    in_addr_t if_gateway);
+struct long_ip
+{
+  u_int8_t ipnum;
+  u_int16_t len;
+}
+__attribute__ ((packed));
 
-#endif /* __MISC_H__ */
+#define LONG_IP_BIT 0x80
+#define LONG_IP_MASK 0x7fff
+
+extern struct vjcompress vj_comp;
+extern buffer_t *acout, *ifout;
+
+extern int ipnum;
+extern int mtu;
+
+#endif /* __IPTUNNEL_TUNNEL_H__ */

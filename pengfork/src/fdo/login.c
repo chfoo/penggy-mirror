@@ -24,9 +24,11 @@
 
 #include "options.h"
 #include "buffer.h"
+#include "log.h"
 
 #include "fdo.h"
 #include "fdo/login.h"
+#include "iptunnel/init.h"
 
 void
 logon (buffer)
@@ -62,7 +64,7 @@ logon (buffer)
                 login_info.login_size + 15 + 1 + login_info.pass_size + 6);
   data = fdo + sizeof (token_t);
 
-  memcpy (data, &login_info, 21 + 1);
+  memcpy (data, login_info.unknow1, 21 + 1);
   len = 21 + 1;
   memcpy (&data[len], login_info.login, login_info.login_size);
   len += login_info.login_size;
@@ -73,10 +75,11 @@ logon (buffer)
   memcpy (&data[len], login_info.unknow3, 6);
   len += 6;
 
-  fdo_send (buffer, TOKEN ("Dd"), data, len);
+  fdo_send (buffer, TOKEN ("Dd"), fdo, len);
+  log(LOG_NOTICE,"FDO - Login token sended\n");
   free (fdo);
 
-  fdo_register (TOKEN ("AT"), login_confirm);
+  fdo_register (TOKEN ("At"), login_confirm);
 }
 
 void
@@ -86,5 +89,8 @@ login_confirm (token, data, data_size, out)
      size_t data_size;
      buffer_t *out;
 {
-  fdo_unregister (TOKEN ("AT"));
+  log(LOG_NOTICE,"FDO - Login confirm received\n");
+  fdo_unregister (TOKEN ("At"));
+
+  ip_tunnel_init(out);
 }
