@@ -27,6 +27,7 @@
 #include <string.h>
 #include <errno.h>
 
+#include "log.h"
 #include "buffer.h"
 
 void
@@ -152,7 +153,7 @@ buffer_recv (buffer, fd)
       total+=total2;
     }
 
-  printf ("%d bytes received\n", total);
+  debug (3, "%d bytes received\n", total);
   return 1;
 }
 
@@ -185,7 +186,7 @@ buffer_send (buffer, fd)
 
   buffer_free (buffer, total);
 
-  printf ("%d bytes sended\n", total);
+  debug (3, "%d bytes sended\n", total);
   return 1;
 }
 

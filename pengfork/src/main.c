@@ -31,6 +31,7 @@
 #include "access.h"
 #include "if.h"
 
+/* defined in common.hh */
 char *program_name;
 
 int
